@@ -1,0 +1,23 @@
+{
+  "name": "org-parser",
+  "version": "0.0.1",
+  "description": "Simple and dumb org-mode parser",
+  "type": "module",
+  "scripts": {
+    "start": "node --loader tsm src/index.ts",
+    "build": "tsc --project tsconfig.json",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "main": "index.js",
+  "author": "me <artawower@mail.ru> (https://du-blog.ru/)",
+  "license": "GPL3",
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "jest": "^29.0.2",
+    "jest-ts-webcompat-resolver": "^1.0.0",
+    "ts-jest": "^28.0.8",
+    "tsm": "^2.2.2",
+    "typescript": "^4.8.2"
+  }
+}
