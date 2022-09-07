@@ -3,6 +3,7 @@ export enum NodeType {
   Operator = 'operator',
   Headline = 'headline',
   Text = 'text',
+  TodoKeyword = 'todoKeyword',
 }
 
 export interface Token {

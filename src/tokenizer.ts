@@ -1,7 +1,9 @@
 import { NodeType, Token } from 'types';
 
 class Tokenizer {
-  private delimiter = ' ';
+  private readonly delimiter = ' ';
+  // TODO: check other todos keywords. Make them customizable
+  private readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED'];
 
   private tokens: Token[] = [];
 
@@ -47,6 +49,13 @@ class Tokenizer {
 
   private handleText(c: string): void {
     this.upsertToken({ type: NodeType.Text, value: c });
+    this.checkIsLastTextTokenKeyword();
+  }
+
+  private checkIsLastTextTokenKeyword(): void {
+    if (this.todoKeywords.find((t) => t === this.prevOperator.value)) {
+      this.prevOperator.type = NodeType.TodoKeyword;
+    }
   }
 
   private buildTokens(c: string) {
