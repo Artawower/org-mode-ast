@@ -1,4 +1,4 @@
-import { NodeType } from './types';
+import { TokenType } from './types';
 import { tokenize } from './tokenizer';
 
 describe('Tokenizer', () => {
@@ -6,8 +6,8 @@ describe('Tokenizer', () => {
     const headline = '* Hello world';
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Hello world' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Hello world' },
     ]);
   });
 
@@ -15,8 +15,8 @@ describe('Tokenizer', () => {
     const headline = '* Hello world ';
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Hello world ' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Hello world ' },
     ]);
   });
 
@@ -29,18 +29,18 @@ describe('Tokenizer', () => {
 * And again 1 level headline`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Hello world\n' },
-      { type: NodeType.Headline, value: '** ' },
-      { type: NodeType.Text, value: 'Nested headline\n' },
-      { type: NodeType.Headline, value: '*** ' },
-      { type: NodeType.Text, value: 'Another one headline!\n' },
-      { type: NodeType.Headline, value: '**** ' },
-      { type: NodeType.Text, value: 'And 4 headline level\n' },
-      { type: NodeType.Headline, value: '***** ' },
-      { type: NodeType.Text, value: 'And 5 headline level\n' },
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'And again 1 level headline' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Hello world\n' },
+      { type: TokenType.Headline, value: '** ' },
+      { type: TokenType.Text, value: 'Nested headline\n' },
+      { type: TokenType.Headline, value: '*** ' },
+      { type: TokenType.Text, value: 'Another one headline!\n' },
+      { type: TokenType.Headline, value: '**** ' },
+      { type: TokenType.Text, value: 'And 4 headline level\n' },
+      { type: TokenType.Headline, value: '***** ' },
+      { type: TokenType.Text, value: 'And 5 headline level\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'And again 1 level headline' },
     ]);
   });
 
@@ -50,12 +50,12 @@ describe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Hello world\n' },
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Headline 2\n' },
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Headline 3' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Hello world\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Headline 2\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Headline 3' },
     ]);
   });
 
@@ -65,14 +65,14 @@ describe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.TodoKeyword, value: 'TODO' },
-      { type: NodeType.Text, value: ' Hello world\n' },
-      { type: NodeType.Headline, value: '*** ' },
-      { type: NodeType.TodoKeyword, value: 'DONE' },
-      { type: NodeType.Text, value: ' Headline 2\n' },
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Headline 3' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.TodoKeyword, value: 'TODO' },
+      { type: TokenType.Text, value: ' Hello world\n' },
+      { type: TokenType.Headline, value: '*** ' },
+      { type: TokenType.TodoKeyword, value: 'DONE' },
+      { type: TokenType.Text, value: ' Headline 2\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Headline 3' },
     ]);
   });
 
@@ -82,12 +82,63 @@ describe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'This is not a TODO\n' },
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'And this is not a DONE\n' },
-      { type: NodeType.Headline, value: '* ' },
-      { type: NodeType.Text, value: 'Headline 3' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'This is not a TODO\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'And this is not a DONE\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Headline 3' },
+    ]);
+  });
+
+  it('Should create tokens for headline with priority', () => {
+    const headline = `* [#A] Most important headline
+*** [#B] Third most important headline
+* Headline 3`;
+    const result = tokenize(headline);
+    expect(result).toEqual([
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Bracket, value: '[' },
+      { type: TokenType.Comment, value: '#A' },
+      { type: TokenType.Bracket, value: ']' },
+      { type: TokenType.Text, value: ' Most important headline\n' },
+      { type: TokenType.Headline, value: '*** ' },
+      { type: TokenType.Bracket, value: '[' },
+      { type: TokenType.Comment, value: '#B' },
+      { type: TokenType.Bracket, value: ']' },
+      { type: TokenType.Text, value: ' Third most important headline\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.Text, value: 'Headline 3' },
+    ]);
+  });
+
+  it('Should create tokens for headlines with todo keyword and priority', () => {
+    const headline = `* TODO [#A] Most important headline
+*** DONE [#B] Third most important headline
+* HOLD [#c] Headline 3`;
+    const result = tokenize(headline);
+    expect(result).toEqual([
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.TodoKeyword, value: 'TODO' },
+      { type: TokenType.Text, value: ' ' },
+      { type: TokenType.Bracket, value: '[' },
+      { type: TokenType.Comment, value: '#A' },
+      { type: TokenType.Bracket, value: ']' },
+      { type: TokenType.Text, value: ' Most important headline\n' },
+      { type: TokenType.Headline, value: '*** ' },
+      { type: TokenType.TodoKeyword, value: 'DONE' },
+      { type: TokenType.Text, value: ' ' },
+      { type: TokenType.Bracket, value: '[' },
+      { type: TokenType.Comment, value: '#B' },
+      { type: TokenType.Bracket, value: ']' },
+      { type: TokenType.Text, value: ' Third most important headline\n' },
+      { type: TokenType.Headline, value: '* ' },
+      { type: TokenType.TodoKeyword, value: 'HOLD' },
+      { type: TokenType.Text, value: ' ' },
+      { type: TokenType.Bracket, value: '[' },
+      { type: TokenType.Comment, value: '#c' },
+      { type: TokenType.Bracket, value: ']' },
+      { type: TokenType.Text, value: ' Headline 3' },
     ]);
   });
 });

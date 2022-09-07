@@ -6,8 +6,17 @@ export enum NodeType {
   TodoKeyword = 'todoKeyword',
 }
 
+export enum TokenType {
+  Headline = 'headline',
+  Text = 'text',
+  TodoKeyword = 'todoKeyword',
+  Priority = 'priority',
+  Bracket = 'bracket',
+  Comment = 'comment',
+}
+
 export interface Token {
-  type: NodeType;
+  type: TokenType;
   value: string;
 }
 
