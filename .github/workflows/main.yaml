@@ -1,0 +1,17 @@
+name: Main org mode ast
+on:
+  push:
+    branches:
+      - master
+jobs:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: install dependencies
+        run: yarn
+      - name: run tests
+        run: |
+          yarn test
