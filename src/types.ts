@@ -9,10 +9,10 @@ export enum NodeType {
 export enum TokenType {
   Headline = 'headline',
   Text = 'text',
-  TodoKeyword = 'todoKeyword',
-  Priority = 'priority',
+  Keyword = 'keyword',
   Bracket = 'bracket',
   Comment = 'comment',
+  Operator = 'operator',
 }
 
 export interface Token {
@@ -29,26 +29,31 @@ interface WithChildren {
   children: OrgData[];
 }
 
-export interface Headline extends WithRange, WithChildren {
+interface WithParent {
+  parent?: OrgData;
+}
+
+export interface Headline extends WithRange, WithChildren, WithParent {
   type: NodeType.Headline;
   level: number;
 }
 
-export interface Operator extends WithRange {
+export interface Operator extends WithRange, WithParent {
   type: NodeType.Operator;
   value: string;
 }
 
-export interface OrgRoot extends WithRange, WithChildren {
+export interface OrgRoot extends WithRange, WithChildren, WithParent {
   type: NodeType.Root;
 }
 
-export interface Text extends WithRange {
+export interface Text extends WithRange, WithParent {
   type: NodeType.Text;
   value: string;
 }
 
-export type OrgData = Headline | Operator | OrgRoot | Text;
+export type OrgData = Headline | OrgRoot | Operator | Text;
+export type OrgNode = Headline | OrgRoot;
 
 export interface Node {
   type: NodeType;

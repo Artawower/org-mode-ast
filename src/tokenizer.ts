@@ -1,6 +1,6 @@
 import { TokenType, Token } from 'types';
 
-class Tokenizer {
+export class Tokenizer {
   private readonly delimiter = ' ';
   // TODO: check other todos keywords. Make them customizable
   private readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED'];
@@ -19,6 +19,9 @@ class Tokenizer {
       '*': (c: string) => this.handleAsterisk(c),
       [this.delimiter]: (c: string) => this.handleDelimiter(c),
       '#': (c: string) => this.handleNumberSign(c),
+      '-': (c: string) => this.handleDash(c),
+      '+': (c: string) => this.handlePlus(c),
+      ':': (c: string) => this.handleCommon(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -31,13 +34,27 @@ class Tokenizer {
     };
   }
 
-  get prevOperator(): Token {
+  get prevToken(): Token {
     return this.tokens?.[this.tokens.length - 1];
   }
 
-  get prevTokenIsNewLine(): boolean {
-    const prev = this.prevOperator;
+  get isPrevTokenIsNewLine(): boolean {
+    if (!this.prevToken) {
+      return true;
+    }
+    const prev = this.prevToken;
     return prev?.type === TokenType.Text && prev.value?.[prev.value.length - 1] === '\n';
+  }
+
+  get nextChar(): string {
+    return this.text[this.point + 1];
+  }
+
+  get isPrevTokenEndsWithSpace(): boolean {
+    if (!this.prevToken) {
+      return false;
+    }
+    return this.prevToken.value?.[this.prevToken.value.length - 1] === this.delimiter;
   }
 
   tokenize(): Token[] {
@@ -45,13 +62,13 @@ class Tokenizer {
       const c = this.text[this.point];
       this.buildTokens(c);
     }
-    console.log(this.tokens);
+    // console.log(this.tokens);
 
     return this.tokens;
   }
 
   private handleAsterisk(c: string): void {
-    if (!this.prevOperator || this.prevTokenIsNewLine) {
+    if (!this.prevToken || this.isPrevTokenIsNewLine) {
       this.tokens.push({ type: TokenType.Headline, value: c });
       return;
     }
@@ -59,11 +76,19 @@ class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
+    if (this.isDelimiter(this.nextChar)) {
+      this.upsertToken({ type: TokenType.Text, value: c });
+      return;
+    }
     this.handleBracket(c);
   }
 
   private handleDelimiter(c: string): void {
-    if (this.isPrevToken(TokenType.Headline)) {
+    if (this.isPrevToken(TokenType.Headline) && !this.isPrevTokenEndsWithSpace) {
+      this.appendPrevValue(c);
+      return;
+    }
+    if (this.shouldFormatterHasSpaceAtTheEnd()) {
       this.appendPrevValue(c);
       return;
     }
@@ -72,6 +97,26 @@ class Tokenizer {
 
   private handleNumberSign(c: string): void {
     this.upsertToken({ type: TokenType.Comment, value: c });
+  }
+
+  private handleDash(c: string): void {
+    if (this.isPrevTokenIsNewLine || !this.prevToken) {
+      this.tokens.push({ type: TokenType.Operator, value: c });
+      return;
+    }
+    this.upsertToken({ type: TokenType.Text, value: c });
+  }
+
+  private handlePlus(c: string): void {
+    if (this.isPrevTokenIsNewLine || !this.prevToken) {
+      this.tokens.push({ type: TokenType.Operator, value: c });
+      return;
+    }
+    this.handleBracket(c);
+  }
+
+  private handleCommon(c: string): void {
+    this.tokens.push({ type: TokenType.Operator, value: c });
   }
 
   private handleBracket(c: string): void {
@@ -83,14 +128,29 @@ class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
-    this.upsertToken({ type: TokenType.Text, value: c });
+    if (this.isPrevTokenIsNewLine) {
+      this.tokens.push({ type: TokenType.Text, value: c });
+    } else {
+      this.upsertToken({ type: TokenType.Text, value: c });
+    }
+
     this.checkIsLastTextTokenKeyword();
   }
 
   private checkIsLastTextTokenKeyword(): void {
-    if (this.todoKeywords.find((t) => t === this.prevOperator.value)) {
-      this.prevOperator.type = TokenType.TodoKeyword;
+    if (this.todoKeywords.find((t) => t === this.prevToken.value)) {
+      this.prevToken.type = TokenType.Keyword;
+      return;
     }
+  }
+
+  private formattersWithSpaceAtTheEnd = ['-', '+'];
+
+  private shouldFormatterHasSpaceAtTheEnd(): boolean {
+    if (!this.prevToken || this.prevToken.type !== TokenType.Operator) {
+      return false;
+    }
+    return this.formattersWithSpaceAtTheEnd.includes(this.prevToken.value);
   }
 
   private buildTokens(c: string) {
@@ -103,7 +163,7 @@ class Tokenizer {
   }
 
   private upsertToken(token: Token) {
-    if (this.prevOperator.type === token.type) {
+    if (this.prevToken?.type === token.type) {
       this.appendPrevValue(token.value);
       return;
     }
@@ -111,12 +171,17 @@ class Tokenizer {
   }
 
   private appendPrevValue(c: string) {
-    this.prevOperator.value += c;
+    this.prevToken.value += c;
   }
 
   private isPrevToken(...tokens: TokenType[]): boolean {
-    return tokens.some((t) => t === this.prevOperator.type);
+    if (!this.prevToken) {
+      return false;
+    }
+    return tokens.some((t) => t === this.prevToken.type);
   }
+
+  private isTokenFromEndEqualTo() {}
 
   private isDelimiter(char: string): boolean {
     return char === this.delimiter;
