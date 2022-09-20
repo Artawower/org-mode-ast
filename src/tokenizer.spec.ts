@@ -337,4 +337,15 @@ Some text`;
       { type: TokenType.Operator, value: ':' },
     ]);
   });
+
+  it('Should parse bold text from start of line correctly', () => {
+    const orgDoc = `*bold text*`;
+    const result = tokenize(orgDoc);
+
+    expect(result).toEqual([
+      { type: TokenType.Bracket, value: '*' },
+      { type: TokenType.Text, value: 'bold text' },
+      { type: TokenType.Bracket, value: '*' },
+    ]);
+  });
 });

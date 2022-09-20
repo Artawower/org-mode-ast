@@ -4,7 +4,7 @@ export class Tokenizer {
   private readonly delimiter = ' ';
   // TODO: check other todos keywords. Make them customizable
   private readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED'];
-  private readonly brackets = ['_', '=', '+', '[', ']', '/', '*'];
+  private readonly brackets = ['=', '+', '[', ']', '/', '*'];
 
   private tokens: Token[] = [];
   private point: number = 0;
@@ -62,13 +62,12 @@ export class Tokenizer {
       const c = this.text[this.point];
       this.buildTokens(c);
     }
-    // console.log(this.tokens);
 
     return this.tokens;
   }
 
   private handleAsterisk(c: string): void {
-    if (!this.prevToken || this.isPrevTokenIsNewLine) {
+    if ((this.isDelimiter(this.nextChar) || this.isNextChar('*')) && (!this.prevToken || this.isPrevTokenIsNewLine)) {
       this.tokens.push({ type: TokenType.Headline, value: c });
       return;
     }
@@ -179,6 +178,10 @@ export class Tokenizer {
       return false;
     }
     return tokens.some((t) => t === this.prevToken.type);
+  }
+
+  private isNextChar(c: string): boolean {
+    return this.nextChar === c;
   }
 
   private isTokenFromEndEqualTo() {}

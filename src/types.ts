@@ -1,9 +1,11 @@
 export enum NodeType {
   Root = 'root',
-  Operator = 'operator',
   Headline = 'headline',
   Text = 'text',
   TodoKeyword = 'todoKeyword',
+  Unresolved = 'unresolved',
+  Operator = 'operator',
+  Bold = 'bold',
 }
 
 export enum TokenType {
@@ -52,8 +54,25 @@ export interface Text extends WithRange, WithParent {
   value: string;
 }
 
-export type OrgData = Headline | OrgRoot | Operator | Text;
+// Special type for temporary nodes. Should not be exist after parsing.
+// Probably could be replaced by simple text...
+export interface Unresolved extends WithRange, WithParent {
+  type: NodeType.Unresolved;
+  value: string;
+}
+
+export interface OrgBold extends WithRange, WithChildren, WithParent {
+  type: NodeType.Bold;
+}
+
+export type OrgData = Headline | OrgRoot | Operator | Text | Unresolved | OrgBold;
+
+// TODO: delete
 export type OrgNode = Headline | OrgRoot;
+
+export interface UniversalOrgNode extends Headline, OrgRoot, Operator, Text, Unresolved {
+  type: any;
+}
 
 export interface Node {
   type: NodeType;
