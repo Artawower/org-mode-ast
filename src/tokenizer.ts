@@ -107,7 +107,7 @@ export class Tokenizer {
   }
 
   private handlePlus(c: string): void {
-    if (this.isPrevTokenIsNewLine || !this.prevToken) {
+    if (this.isNextChar(this.delimiter) && (this.isPrevTokenIsNewLine || !this.prevToken)) {
       this.tokens.push({ type: TokenType.Operator, value: c });
       return;
     }

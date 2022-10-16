@@ -1,74 +1,9 @@
 import { parse } from './parser';
 import { NodeType, OrgData } from './types';
 
-export function removeInformationAboutParents(node: OrgData): void {
-  delete node.parent;
-  (node as any).children?.forEach((child) => {
-    delete child.parent;
-    removeInformationAboutParents(child);
-  });
-}
+import { removeInformationAboutParents } from './test.helper';
 
-describe('Headline tests', () => {
-  it('should parse first level headline', () => {
-    const headline = '* Hello world';
-    const result = parse(headline);
-    removeInformationAboutParents(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 13,
-      children: [
-        {
-          type: 'headline',
-          level: 1,
-          start: 0,
-          end: 13,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Hello world', start: 2, end: 13 },
-          ],
-        },
-      ],
-    });
-  });
-
-  it('Should parse headline with long start space', () => {
-    const headline = '*        Hello world';
-    const result = parse(headline);
-    removeInformationAboutParents(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 20,
-      children: [
-        {
-          type: 'headline',
-          level: 1,
-          start: 0,
-          end: 20,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: '       Hello world', start: 2, end: 20 },
-          ],
-        },
-      ],
-    });
-  });
-
-  it('Should not parse text with start space and asterisk as headline', () => {
-    const headline = ' * Hello world';
-    const result = parse(headline);
-    removeInformationAboutParents(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 14,
-      children: [{ type: NodeType.Text, value: ' * Hello world', start: 0, end: 14 }],
-    });
-  });
-
-  // Bold here
+describe('Bold test', () => {
   it('Should not parse text as bold with single asterisk', () => {
     const headline = 'Hello *world';
     const result = parse(headline);
@@ -85,7 +20,6 @@ describe('Headline tests', () => {
     const headline = 'Hello world*';
     const result = parse(headline);
     removeInformationAboutParents(result);
-    // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -152,7 +86,7 @@ describe('Headline tests', () => {
     });
   });
 
-  fit('Should parse bold text from headline', () => {
+  it('Should parse bold text from headline', () => {
     const orgData = '* Hello *world*';
     const result = parse(orgData);
     removeInformationAboutParents(result);
@@ -179,6 +113,92 @@ describe('Headline tests', () => {
                 { type: NodeType.Operator, value: '*', start: 8, end: 9 },
                 { type: NodeType.Text, value: 'world', start: 9, end: 14 },
                 { type: NodeType.Operator, value: '*', start: 14, end: 15 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  it('Should parse bold text inside nested headline', () => {
+    const orgData = `* Hello world
+** Hello *world*`;
+    const result = parse(orgData);
+    removeInformationAboutParents(result);
+
+    expect(result).toEqual({
+      type: 'root',
+      start: 0,
+      end: 30,
+      children: [
+        {
+          type: NodeType.Headline,
+          level: 1,
+          start: 0,
+          end: 14,
+          children: [
+            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
+            { type: NodeType.Text, value: 'Hello world\n', start: 2, end: 14 },
+          ],
+          section: {
+            type: NodeType.Section,
+            start: 14,
+            end: 30,
+            children: [
+              {
+                type: NodeType.Headline,
+                level: 2,
+                start: 14,
+                end: 30,
+                children: [
+                  { type: NodeType.Operator, value: '** ', start: 14, end: 17 },
+                  { type: NodeType.Text, value: 'Hello ', start: 17, end: 23 },
+                  {
+                    type: NodeType.Bold,
+                    start: 23,
+                    end: 30,
+                    children: [
+                      { type: NodeType.Operator, value: '*', start: 23, end: 24 },
+                      { type: NodeType.Text, value: 'world', start: 24, end: 29 },
+                      { type: NodeType.Operator, value: '*', start: 29, end: 30 },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    });
+  });
+
+  it('Should parse bold with that started from brackets symbols', () => {
+    const orgData = `* Hello +[*world*`;
+    const result = parse(orgData);
+    removeInformationAboutParents(result);
+    // console.log(JSON.stringify(result, null, 2));
+    expect(result).toEqual({
+      type: 'root',
+      start: 0,
+      end: 17,
+      children: [
+        {
+          type: NodeType.Headline,
+          level: 1,
+          start: 0,
+          end: 17,
+          children: [
+            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
+            { type: NodeType.Text, value: 'Hello +[', start: 2, end: 10 },
+            {
+              type: NodeType.Bold,
+              start: 10,
+              end: 17,
+              children: [
+                { type: NodeType.Operator, value: '*', start: 10, end: 11 },
+                { type: NodeType.Text, value: 'world', start: 11, end: 16 },
+                { type: NodeType.Operator, value: '*', start: 16, end: 17 },
               ],
             },
           ],

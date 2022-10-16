@@ -348,4 +348,15 @@ Some text`;
       { type: TokenType.Bracket, value: '*' },
     ]);
   });
+
+  it('Should parse plus as bracket when it doesnt start as list', () => {
+    const orgDoc = `+bold text+`;
+    const result = tokenize(orgDoc);
+
+    expect(result).toEqual([
+      { type: TokenType.Bracket, value: '+' },
+      { type: TokenType.Text, value: 'bold text' },
+      { type: TokenType.Bracket, value: '+' },
+    ]);
+  });
 });
