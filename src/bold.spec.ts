@@ -16,6 +16,27 @@ describe('Bold test', () => {
     });
   });
 
+  it('Should not parse bold text started from single asterisk', () => {
+    const orgText = '*Not a bold text';
+    const result = parse(orgText);
+    removeInformationAboutParents(result);
+    console.log(JSON.stringify(result, null, 2));
+
+    expect(result).toEqual({
+      type: 'root',
+      start: 0,
+      end: 16,
+      children: [
+        {
+          type: NodeType.Text,
+          value: '*Not a bold text',
+          start: 0,
+          end: 16,
+        },
+      ],
+    });
+  });
+
   it('Should not parse text as bold with asterisk at the end', () => {
     const headline = 'Hello world*';
     const result = parse(headline);
@@ -90,7 +111,6 @@ describe('Bold test', () => {
     const orgData = '* Hello *world*';
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
       type: 'root',
@@ -177,7 +197,6 @@ describe('Bold test', () => {
     const orgData = `* Hello +[*world*`;
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,

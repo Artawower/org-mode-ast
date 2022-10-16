@@ -165,15 +165,14 @@ class Parser {
   }
 
   private clearBracketsPairs(): void {
-    // TODO: clear brackets pairs. We didn't found closed bracket
-
     let childIndexOffset = 0;
 
     this.bracketsStackPositions.forEach((bracket) => {
       const neighbors = (bracket.node.parent as OrgRoot).children;
-      const childIndex = bracket.childIndex + childIndexOffset;
+      let childIndex = bracket.childIndex + childIndexOffset;
       const leftChild = neighbors[childIndex - 1];
       const rightChild = neighbors[childIndex + 1];
+
       // Offset after position changed
       bracket.node.type = NodeType.Text;
 
@@ -182,15 +181,18 @@ class Parser {
         bracket.node.start = leftChild.start;
         (bracket.node as OrgText).value = (leftChild as OrgText).value + (bracket.node as OrgText).value;
         childIndexOffset--;
+        childIndex--;
       }
 
       if (rightChild?.type === NodeType.Text) {
-        neighbors.splice(childIndex, 1);
+        neighbors.splice(childIndex + 1, 1);
         bracket.node.end = rightChild.end;
         (bracket.node as OrgText).value += (rightChild as OrgText).value;
         childIndexOffset--;
       }
     });
+
+    this.bracketsStackPositions = [];
   }
 
   private handleBracket(): OrgData {
@@ -292,50 +294,51 @@ class Parser {
 
     const found = foundPairIndex !== -1;
 
-    if (found) {
-      const pair = reversedBracketsStack[foundPairIndex];
-      pair.node.type = NodeType.Operator;
-
-      o.type = NodeType.Operator;
-
-      const realChildren = (pair.node.parent as UniversalOrgNode).children as OrgData[];
-      const updatedChildren = realChildren.slice(0, pair.childIndex);
-
-      const nestedChildren = this.mergeUnresolvedNodes(realChildren.slice(pair.childIndex, realChildren.length));
-      const isCheckBox = this.isNodesCheckbox(nestedChildren as Array<OrgData & WithValue>);
-      const checked = (nestedChildren[1] as WithValue)?.value?.toLowerCase() === 'x';
-
-      const orgData: OrgBold | OrgCrossed | OrgCheckbox = isCheckBox
-        ? ({
-            type: NodeType.Checkbox,
-            start: pair.node.start,
-            end: o.end,
-            checked,
-            value: this.getRawValueFromNodes(nestedChildren as WithValue[]),
-            children: [],
-            parent: o.parent,
-          } as OrgCheckbox)
-        : {
-            type: this.charNodeTypeMap[pairToDetect],
-            start: pair.node.start,
-            end: o.end,
-            children: nestedChildren,
-            parent: o.parent,
-          };
-
-      updatedChildren.push(orgData);
-      this.lastNode = orgData;
-      (pair.node.parent as UniversalOrgNode).children = updatedChildren;
-
-      if (isCheckBox && pair.node.parent.type === NodeType.Headline) {
-        (pair.node.parent as Headline).checked = checked;
-      }
-
-      reversedBracketsStack.splice(foundPairIndex, 1);
-      this.bracketsStackPositions = reversedBracketsStack.reverse();
-      return orgData;
+    if (!found) {
+      return;
     }
-    return;
+
+    const pair = reversedBracketsStack[foundPairIndex];
+    pair.node.type = NodeType.Operator;
+
+    o.type = NodeType.Operator;
+
+    const realChildren = (pair.node.parent as UniversalOrgNode).children as OrgData[];
+    const updatedChildren = realChildren.slice(0, pair.childIndex);
+
+    const nestedChildren = this.mergeUnresolvedNodes(realChildren.slice(pair.childIndex, realChildren.length));
+    const isCheckBox = this.isNodesCheckbox(nestedChildren as Array<OrgData & WithValue>);
+    const checked = (nestedChildren[1] as WithValue)?.value?.toLowerCase() === 'x';
+
+    const orgData: OrgBold | OrgCrossed | OrgCheckbox | OrgItalic = isCheckBox
+      ? ({
+          type: NodeType.Checkbox,
+          start: pair.node.start,
+          end: o.end,
+          checked,
+          value: this.getRawValueFromNodes(nestedChildren as WithValue[]),
+          children: [],
+          parent: o.parent,
+        } as OrgCheckbox)
+      : {
+          type: this.textFormattersNodeTypeMap[pairToDetect],
+          start: pair.node.start,
+          end: o.end,
+          children: nestedChildren,
+          parent: o.parent,
+        };
+
+    updatedChildren.push(orgData);
+    this.lastNode = orgData;
+    (pair.node.parent as UniversalOrgNode).children = updatedChildren;
+
+    if (isCheckBox && pair.node.parent.type === NodeType.Headline) {
+      (pair.node.parent as Headline).checked = checked;
+    }
+
+    reversedBracketsStack.splice(foundPairIndex, 1);
+    this.bracketsStackPositions = reversedBracketsStack.reverse();
+    return orgData;
   }
 
   private getOpenedBracket(openedBracket: string): string {

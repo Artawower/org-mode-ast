@@ -28,11 +28,29 @@ describe('Crossed tests', () => {
     });
   });
 
+  it('Shpuld not parse text as crossed when it starts from single plus', () => {
+    const orgText = '+Not a crossed text';
+    const result = parse(orgText);
+    removeInformationAboutParents(result);
+    expect(result).toEqual({
+      type: 'root',
+      start: 0,
+      end: 19,
+      children: [
+        {
+          type: NodeType.Text,
+          start: 0,
+          end: 19,
+          value: '+Not a crossed text',
+        },
+      ],
+    });
+  });
+
   it('Should parse crossed text inside headline', () => {
     const orgData = `* Hello +world+`;
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,
