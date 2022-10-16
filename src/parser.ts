@@ -15,6 +15,7 @@ import {
   WithValue,
   List,
   ListItem,
+  OrgItalic,
 } from './types';
 // import 'jsonify-console';
 
@@ -218,19 +219,22 @@ class Parser {
     return orgData;
   }
 
-  // TODO: master  rewrite as map of methods
-  // private operatorHandlers: { [key: string]: () => OrgData } = {
-  //   '- ':
-  // }
-
   private handleOperator(): OrgData {
     // TODO: need to create common handler for such operators
-    if (this.token.value === '- ') {
+    // this.attachToTree()
+    const orgData = this.buildOrgDataForOperator(this.token.value);
+    if (!orgData) {
+      throw new Error(`Couldn't handle opereator ${this.token.value}`);
+    }
+    this.attachToTree(orgData);
+    return orgData;
+  }
+
+  private buildOrgDataForOperator(operator: string): OrgData {
+    if (operator === '- ') {
       const orgData = this.handleListItem();
-      this.attachToTree(orgData);
       return orgData;
     }
-    // this.attachToTree()
   }
 
   private handleListItem(): OrgData {
@@ -274,9 +278,9 @@ class Parser {
     this.saveLastNode(orgData);
   }
 
-  private readonly charNodeTypeMap: { [key: string]: NodeType.Bold | NodeType.Crossed } = {
+  private readonly textFormattersNodeTypeMap: { [key: string]: NodeType.Bold | NodeType.Crossed | NodeType.Italic } = {
     '*': NodeType.Bold,
-    // '/': NodeType.Italic,
+    '/': NodeType.Italic,
     '+': NodeType.Crossed,
   };
 
@@ -338,6 +342,7 @@ class Parser {
 
     reversedBracketsStack.splice(foundPairIndex, 1);
     this.bracketsStackPositions = reversedBracketsStack.reverse();
+    console.log('🦄: [line 345][parser.ts] [35mthis.bracketsStackPositions: ', this.bracketsStackPositions);
     return orgData;
   }
 

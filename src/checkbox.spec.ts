@@ -8,7 +8,6 @@ describe('Checkbox tests', () => {
     const orgData = `* [ ] Hello world`;
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -40,7 +39,6 @@ describe('Checkbox tests', () => {
     const orgData = `* [X] Hello world`;
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,

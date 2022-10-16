@@ -67,7 +67,6 @@ describe('Headline tests', () => {
 some text`;
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -99,7 +98,6 @@ some text`;
 *** Headline level 3`;
     const result = parse(headline);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,

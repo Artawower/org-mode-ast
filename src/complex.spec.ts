@@ -8,7 +8,6 @@ describe('Bold test', () => {
     const orgData = '* Hello +*world*+';
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,

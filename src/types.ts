@@ -11,6 +11,7 @@ export enum NodeType {
   Checkbox = 'checkbox',
   List = 'list',
   ListItem = 'listItem',
+  Italic = 'italic',
 }
 
 export enum TokenType {
@@ -98,6 +99,10 @@ export interface OrgCheckbox extends WithRange, WithParent, WithCheckStatus {
   type: NodeType.Checkbox;
 }
 
+export interface OrgItalic extends WithRange, WithChildren, WithParent {
+  type: NodeType.Italic;
+}
+
 export type OrgData =
   | Headline
   | OrgRoot
@@ -106,6 +111,7 @@ export type OrgData =
   | Unresolved
   | OrgBold
   | OrgCrossed
+  | OrgItalic
   | Section
   | List
   | ListItem
