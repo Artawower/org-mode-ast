@@ -12,6 +12,7 @@ export enum NodeType {
   List = 'list',
   ListItem = 'listItem',
   Italic = 'italic',
+  InlineCode = 'inlineCode',
 }
 
 export enum TokenType {
@@ -103,6 +104,10 @@ export interface OrgItalic extends WithRange, WithChildren, WithParent {
   type: NodeType.Italic;
 }
 
+export interface OrgInlineCode extends WithRange, WithChildren, WithParent {
+  type: NodeType.InlineCode;
+}
+
 export type OrgData =
   | Headline
   | OrgRoot
@@ -115,7 +120,8 @@ export type OrgData =
   | Section
   | List
   | ListItem
-  | OrgCheckbox;
+  | OrgCheckbox
+  | OrgInlineCode;
 
 // TODO: delete
 export type OrgNode = Headline | OrgRoot;

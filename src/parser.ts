@@ -16,6 +16,7 @@ import {
   List,
   ListItem,
   OrgItalic,
+  OrgInlineCode,
 } from './types';
 // import 'jsonify-console';
 
@@ -278,10 +279,13 @@ class Parser {
     this.saveLastNode(orgData);
   }
 
-  private readonly textFormattersNodeTypeMap: { [key: string]: NodeType.Bold | NodeType.Crossed | NodeType.Italic } = {
+  private readonly textFormattersNodeTypeMap: {
+    [key: string]: NodeType.Bold | NodeType.Crossed | NodeType.Italic | NodeType.InlineCode;
+  } = {
     '*': NodeType.Bold,
     '/': NodeType.Italic,
     '+': NodeType.Crossed,
+    '=': NodeType.InlineCode,
   };
 
   private tryHandlePairBracket(o: OrgData): OrgData {
@@ -314,7 +318,7 @@ class Parser {
     const isCheckBox = this.isNodesCheckbox(nestedChildren as Array<OrgData & WithValue>);
     const checked = (nestedChildren[1] as WithValue)?.value?.toLowerCase() === 'x';
 
-    const orgData: OrgBold | OrgCrossed | OrgCheckbox | OrgItalic = isCheckBox
+    const orgData: OrgBold | OrgCrossed | OrgCheckbox | OrgItalic | OrgInlineCode = isCheckBox
       ? ({
           type: NodeType.Checkbox,
           start: pair.node.start,
@@ -342,7 +346,7 @@ class Parser {
 
     reversedBracketsStack.splice(foundPairIndex, 1);
     this.bracketsStackPositions = reversedBracketsStack.reverse();
-    console.log('🦄: [line 345][parser.ts] [35mthis.bracketsStackPositions: ', this.bracketsStackPositions);
+
     return orgData;
   }
 
