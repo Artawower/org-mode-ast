@@ -50,6 +50,10 @@ export class Tokenizer {
     return this.text[this.point + 1];
   }
 
+  get prevChar(): string {
+    return this.text[this.point - 1];
+  }
+
   get isPrevTokenEndsWithSpace(): boolean {
     if (!this.prevToken) {
       return false;
@@ -75,7 +79,7 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
-    if (this.isDelimiter(this.nextChar)) {
+    if (this.isDelimiter(this.nextChar) && this.isDelimiter(this.prevChar)) {
       this.upsertToken({ type: TokenType.Text, value: c });
       return;
     }

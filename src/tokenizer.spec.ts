@@ -359,4 +359,19 @@ Some text`;
       { type: TokenType.Bracket, value: '+' },
     ]);
   });
+
+  it('Should tokenize nested italic text', () => {
+    const orgDoc = `This is */italic with bold/* text`;
+    const result = tokenize(orgDoc);
+
+    expect(result).toEqual([
+      { type: TokenType.Text, value: 'This is ' },
+      { type: TokenType.Bracket, value: '*' },
+      { type: TokenType.Bracket, value: '/' },
+      { type: TokenType.Text, value: 'italic with bold' },
+      { type: TokenType.Bracket, value: '/' },
+      { type: TokenType.Bracket, value: '*' },
+      { type: TokenType.Text, value: ' text' },
+    ]);
+  });
 });
