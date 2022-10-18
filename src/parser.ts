@@ -11,7 +11,6 @@ import {
   OrgRoot,
   UniversalOrgNode,
   OrgBold,
-  Section,
   OrgCrossed,
   OrgCheckbox,
   WithValue,
@@ -92,7 +91,7 @@ class Parser {
     }
 
     this.astBuilder.preserveLastPositionSnapshot(orgData);
-    this.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
+    this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
     const lineBreak = this.isNewLine || this.isLastToken;
     if (lineBreak) {
@@ -357,18 +356,6 @@ class Parser {
   private getRawValueFromNodes(nodes: WithValue[]): string {
     // TODO: nested nodes!
     return nodes.map((n) => n?.value).join('');
-  }
-
-  private appendLengthToParentNodes(length: number, node?: OrgData): void {
-    if (!node || !length) {
-      return;
-    }
-
-    node.end = length;
-    if (!node.parent) {
-      return;
-    }
-    this.appendLengthToParentNodes(length, node.parent);
   }
 }
 

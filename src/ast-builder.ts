@@ -81,7 +81,7 @@ export class AstBuilder {
     this.lastNode = orgData;
   }
 
-  private appendLengthToParentNodes(length: number, node?: OrgData): void {
+  public appendLengthToParentNodes(length: number, node?: OrgData): void {
     if (!node || !length) {
       return;
     }
