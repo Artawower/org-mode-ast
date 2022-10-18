@@ -1,3 +1,5 @@
+import { AstBuilder } from 'ast-builder';
+import { BracketHandler } from 'bracket-handler';
 import { tokenize } from 'tokenizer';
 import {
   Headline,
@@ -21,20 +23,15 @@ import {
 // import 'jsonify-console';
 
 class Parser {
-  constructor() {}
+  // TODO: add common token iterator class
+  constructor(private bracketHandler: BracketHandler, private astBuilder: AstBuilder) {}
 
   // TODO: master init from separated class
-  private nodeTree: OrgData;
-  public lastNode: OrgData;
   private tokens: Token[];
   private token: Token;
   private tokenPosition: number;
-  private lastSection: Section;
-  private insideHeadline: boolean = false;
 
   private bracketsStackPositions: Array<{ childIndex: number; node: OrgData }> = [];
-
-  private lastPos: number = 0;
 
   get isLastToken(): boolean {
     return this.tokenPosition === this.tokens.length - 1;
@@ -49,7 +46,7 @@ class Parser {
   }
 
   private checkIfInsideList(node?: OrgData): boolean {
-    node ||= this.lastNode;
+    node ||= this.astBuilder.lastNode;
 
     if (node.type === NodeType.ListItem || node.type === NodeType.List) {
       return true;
@@ -60,26 +57,11 @@ class Parser {
     return false;
   }
 
-  private isLastTokenTypeEqual(type: TokenType): boolean {
-    return this.tokens[this.tokenPosition - 1]?.type === type;
-  }
-
   public parse(text: string): OrgData {
     this.tokens = tokenize(text);
-    this.initRootNode();
     this.buildTree();
 
-    return this.nodeTree;
-  }
-
-  private initRootNode(): void {
-    this.nodeTree = {
-      type: NodeType.Root,
-      start: 0,
-      end: 0,
-      children: [],
-    };
-    this.preserveLastPositionSnapshot(this.nodeTree);
+    return this.astBuilder.nodeTree;
   }
 
   private buildTree(): void {
@@ -109,49 +91,32 @@ class Parser {
       throw new Error(m);
     }
 
-    this.preserveLastPositionSnapshot(orgData);
-    this.appendLengthToParentNodes(this.lastPos, this.lastNode?.parent);
+    this.astBuilder.preserveLastPositionSnapshot(orgData);
+    this.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
     const lineBreak = this.isNewLine || this.isLastToken;
     if (lineBreak) {
       this.clearBracketsPairs();
     }
     // NOT A TOKEN! FIND PARENT HEADLINE WHEN WE ARE INSIDE HEADLINE
-    if (this.isNewLine && this.insideHeadline) {
-      this.initNewSection();
-      this.insideHeadline = false;
+    if (this.isNewLine && this.astBuilder.insideHeadline) {
+      this.astBuilder.initNewSection();
+      this.astBuilder.insideHeadline = false;
     }
     // this.nodeStack.push(orgData);
   }
 
-  /*
-   * Create new nested section
-   */
-  private initNewSection(): void {
-    const headline = this.lastNode.parent as Headline;
-    const section: Section = {
-      type: NodeType.Section,
-      start: headline.end,
-      end: headline.end,
-      children: [],
-      parent: headline?.parent,
-    };
-
-    headline.section = section;
-    this.lastSection = section;
-  }
-
   private handleHeadline(): OrgData {
-    this.insideHeadline = true;
-    const end = this.lastPos + this.token.value.length;
+    this.astBuilder.insideHeadline = true;
+    const end = this.astBuilder.lastPos + this.token.value.length;
     const orgData: Headline = {
       type: NodeType.Headline,
       level: this.token.value.trim().length,
-      start: this.lastPos,
+      start: this.astBuilder.lastPos,
       end,
-      children: [{ type: NodeType.Operator, value: this.token.value, start: this.lastPos, end }],
+      children: [{ type: NodeType.Operator, value: this.token.value, start: this.astBuilder.lastPos, end }],
     };
-    this.attachToTree(orgData);
+    this.astBuilder.attachToTree(orgData);
     return orgData;
   }
 
@@ -159,10 +124,10 @@ class Parser {
     const orgData: OrgText = {
       type: NodeType.Text,
       value: this.token.value,
-      start: this.lastPos,
-      end: this.lastPos + this.token.value.length,
+      start: this.astBuilder.lastPos,
+      end: this.astBuilder.lastPos + this.token.value.length,
     };
-    this.attachToTree(orgData);
+    this.astBuilder.attachToTree(orgData);
     return orgData;
   }
 
@@ -201,10 +166,10 @@ class Parser {
     const orgData: OrgData = {
       type: NodeType.Unresolved,
       value: this.token.value,
-      start: this.lastPos,
-      end: this.lastPos + this.token.value.length,
+      start: this.astBuilder.lastPos,
+      end: this.astBuilder.lastPos + this.token.value.length,
     };
-    this.attachToTree(orgData);
+    this.astBuilder.attachToTree(orgData);
 
     // TODO: master method for find last bracket from end
     const nodeAfterPairBracketClosed = this.tryHandlePairBracket(orgData);
@@ -227,7 +192,7 @@ class Parser {
     if (!orgData) {
       throw new Error(`Couldn't handle opereator ${this.token.value}`);
     }
-    this.attachToTree(orgData);
+    this.astBuilder.attachToTree(orgData);
     return orgData;
   }
 
@@ -248,8 +213,8 @@ class Parser {
     const orgData: OrgData = {
       type: NodeType.Operator,
       value: this.token.value,
-      start: this.lastPos,
-      end: this.lastPos + this.token.value.length,
+      start: this.astBuilder.lastPos,
+      end: this.astBuilder.lastPos + this.token.value.length,
     };
 
     return orgData;
@@ -263,20 +228,20 @@ class Parser {
       ordered,
       children: [],
     };
-    this.attachToTree(list);
-    this.saveLastNode(list);
+    this.astBuilder.attachToTree(list);
+    this.astBuilder.saveLastNode(list);
     return list;
   }
 
   private createNewListItem(): void {
     const orgData: ListItem = {
       type: NodeType.ListItem,
-      start: this.lastPos,
+      start: this.astBuilder.lastPos,
       end: 0,
       children: [],
     };
-    this.attachToTree(orgData);
-    this.saveLastNode(orgData);
+    this.astBuilder.attachToTree(orgData);
+    this.astBuilder.saveLastNode(orgData);
   }
 
   private readonly textFormattersNodeTypeMap: {
@@ -337,7 +302,7 @@ class Parser {
         };
 
     updatedChildren.push(orgData);
-    this.lastNode = orgData;
+    this.astBuilder.lastNode = orgData;
     (pair.node.parent as UniversalOrgNode).children = updatedChildren;
 
     if (isCheckBox && pair.node.parent.type === NodeType.Headline) {
@@ -394,60 +359,6 @@ class Parser {
     return nodes.map((n) => n?.value).join('');
   }
 
-  private attachToTree(orgData: OrgData): void {
-    const parentNode = this.findParentForNodeType(orgData);
-    (parentNode as OrgRoot).children.push(orgData);
-    orgData.parent = parentNode;
-  }
-
-  private findParentForNodeType(srcNode: OrgData, dstNode?: OrgData): OrgData {
-    if (!this.insideHeadline && this.lastSection) {
-      return this.lastSection as any;
-    }
-
-    dstNode ||= this.lastNode;
-
-    if (!dstNode) {
-      throw new Error(`Something wen wrong, couldn't find parent`);
-    }
-
-    if (dstNode.type === NodeType.Root) {
-      return dstNode;
-    }
-
-    const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
-    const isTargetNodeHeadline = dstNode.type === NodeType.Headline;
-
-    if (isSourceNodeHeadline && isTargetNodeHeadline && (<Headline>srcNode).level > (<Headline>dstNode).level) {
-      return (dstNode as Headline).section;
-    }
-
-    const isSrcListItem = srcNode.type === NodeType.ListItem;
-    const isTargetList = dstNode.type === NodeType.List;
-
-    if (isSrcListItem) {
-      return isTargetList ? dstNode : this.findParentForNodeType(srcNode, dstNode.parent);
-    }
-
-    if (
-      !isSourceNodeHeadline &&
-      [NodeType.Root, NodeType.Headline, NodeType.Section, NodeType.Checkbox, NodeType.ListItem].includes(dstNode.type)
-    ) {
-      return dstNode;
-    }
-
-    return this.findParentForNodeType(srcNode, dstNode.parent);
-  }
-
-  private preserveLastPositionSnapshot(orgData: OrgData): void {
-    this.lastPos = orgData.end;
-    this.saveLastNode(orgData);
-  }
-
-  private saveLastNode(orgData: OrgData): void {
-    this.lastNode = orgData;
-  }
-
   private appendLengthToParentNodes(length: number, node?: OrgData): void {
     if (!node || !length) {
       return;
@@ -462,6 +373,8 @@ class Parser {
 }
 
 export function parse(text: string): OrgData {
-  const parser = new Parser();
+  const astBuilder = new AstBuilder();
+  const bracketHandler = new BracketHandler();
+  const parser = new Parser(bracketHandler, astBuilder);
   return parser.parse(text);
 }
