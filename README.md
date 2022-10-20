@@ -9,5 +9,5 @@ Abstract syntax tree via typescript for org mode.
 
 
 ## Also see
-- [Uniorg](https://github.com/rasendubi/uniorg) - another one ast for og mode.
+- [Uniorg](https://github.com/rasendubi/uniorg) - another one ast for org mode.
 
