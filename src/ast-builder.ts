@@ -1,4 +1,4 @@
-import { Headline, NodeType, OrgData, OrgRoot, Section } from 'types';
+import { Headline, NodeType, OrgData, OrgRoot, OrgText, Section, WithValue } from 'types';
 
 export class AstBuilder {
   public lastNode: OrgData;
@@ -108,5 +108,44 @@ export class AstBuilder {
 
     headline.section = section;
     this.lastSection = section;
+  }
+
+  public mergeUnresolvedNodes(nodes: OrgData[]): OrgData[] {
+    const mergedNodes: OrgData[] = [];
+    nodes.forEach((n) => {
+      const lastNode = mergedNodes[mergedNodes.length - 1];
+
+      if (n.type === NodeType.Unresolved) {
+        (n as OrgData).type = NodeType.Text;
+      }
+
+      if (!lastNode) {
+        mergedNodes.push(n);
+        return;
+      }
+      if (lastNode.type === NodeType.Text && n.type === NodeType.Text) {
+        lastNode.end = n.end;
+        (lastNode as OrgText).value += (n as OrgText).value;
+        return;
+      }
+      mergedNodes.push(n);
+    });
+    return mergedNodes;
+  }
+
+  // Section of helpers function. Consider moving them to separate class
+
+  public isNodesCheckbox(nodes: Array<OrgData & WithValue>): boolean {
+    return (
+      nodes.length === 3 &&
+      nodes[0]?.value === '[' &&
+      (nodes[1]?.value === ' ' || nodes[1]?.value.toLowerCase() === 'x') &&
+      nodes[2]?.value === ']'
+    );
+  }
+
+  public getRawValueFromNodes(nodes: WithValue[]): string {
+    // TODO: nested nodes!
+    return nodes.map((n) => n?.value).join('');
   }
 }
