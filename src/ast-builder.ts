@@ -1,4 +1,4 @@
-import { Headline, NodeType, OrgData, OrgRoot, OrgText, Section, WithValue } from 'types';
+import { Headline, NodeType, OrgData, OrgRoot, OrgText, Section, WithValue, WithChildren, OrgInlineCode } from 'types';
 
 export class AstBuilder {
   public lastNode: OrgData;
@@ -142,6 +142,30 @@ export class AstBuilder {
       (nodes[1]?.value === ' ' || nodes[1]?.value.toLowerCase() === 'x') &&
       nodes[2]?.value === ']'
     );
+  }
+
+  public getRawValueFromNode(node: OrgData): string {
+    if ((node as WithValue).value) {
+      return (node as WithValue).value;
+    }
+    if ((node as WithChildren).children) {
+      return (node as WithChildren).children.map((n) => this.getRawValueFromNode(n)).join('');
+    }
+  }
+
+  public parentNodeExist(node: OrgData, types: NodeType | NodeType[]): boolean {
+    if (!Array.isArray(types)) {
+      types = [types];
+    }
+
+    console.log('🦄: [line 161][ast-builder.ts] [35mnode.parent: ', node.parent);
+    if (!node.parent) {
+      return false;
+    }
+    if (types.includes(node.parent.type)) {
+      return true;
+    }
+    return this.parentNodeExist(node.parent, types);
   }
 
   public getRawValueFromNodes(nodes: WithValue[]): string {

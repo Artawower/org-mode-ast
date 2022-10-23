@@ -13,6 +13,7 @@ import {
   OrgRoot,
   OrgText,
   UniversalOrgNode,
+  WithChildren,
   WithValue,
 } from 'types';
 
@@ -39,12 +40,9 @@ export class BracketHandler implements OrgHandler {
     };
     this.astBuilder.attachToTree(orgData);
 
-    // TODO: master method for find last bracket from end
     const nodeAfterPairBracketClosed = this.tryHandlePairBracket(orgData);
     if (nodeAfterPairBracketClosed) {
-      // console.log('We found bracket mathing');
-      // We found pair bracket matching
-      // this.attachToTree(nodeAfterPairBracketClosed);
+      this.tryRemoveNestedInlineCode(nodeAfterPairBracketClosed);
       return nodeAfterPairBracketClosed;
     }
 
@@ -114,7 +112,39 @@ export class BracketHandler implements OrgHandler {
     reversedBracketsStack.splice(foundPairIndex, 1);
     this.bracketsStackPositions = reversedBracketsStack.reverse();
 
+    if (orgData.type === NodeType.InlineCode) {
+      this.removeNestedFormattingForInlineCode(orgData);
+    }
     return orgData;
+  }
+
+  private tryRemoveNestedInlineCode(orgNode: OrgData): void {
+    if (![NodeType.Bold, NodeType.Crossed, NodeType.Italic].includes(orgNode.type)) {
+      return;
+    }
+
+    const nestedNode = (orgNode as WithChildren).children[1] as UniversalOrgNode;
+
+    if (nestedNode?.type !== NodeType.InlineCode) {
+      return;
+    }
+
+    nestedNode.type = NodeType.Text;
+    nestedNode.value = this.astBuilder.getRawValueFromNode(nestedNode);
+    nestedNode.children = undefined;
+  }
+
+  private removeNestedFormattingForInlineCode(inlineCodeNode: OrgInlineCode): OrgInlineCode {
+    const value = this.astBuilder.getRawValueFromNode(inlineCodeNode.children[1]);
+
+    inlineCodeNode.children[1] = {
+      value,
+      start: inlineCodeNode.children[1].start,
+      end: inlineCodeNode.children[1].start + value.length,
+      type: NodeType.Text,
+    } as OrgText;
+
+    return inlineCodeNode;
   }
 
   private getOpenedBracket(openedBracket: string): string {

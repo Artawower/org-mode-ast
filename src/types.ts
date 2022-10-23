@@ -34,7 +34,7 @@ interface WithRange {
   end: number;
 }
 
-interface WithChildren {
+export interface WithChildren {
   children: OrgData[];
 }
 
