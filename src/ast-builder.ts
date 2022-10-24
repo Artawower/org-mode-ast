@@ -158,7 +158,6 @@ export class AstBuilder {
       types = [types];
     }
 
-    console.log('🦄: [line 161][ast-builder.ts] [35mnode.parent: ', node.parent);
     if (!node.parent) {
       return false;
     }
