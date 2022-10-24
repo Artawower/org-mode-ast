@@ -95,7 +95,7 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
-    this.upsertToken({ type: TokenType.Text, value: c });
+    this.appendTextNode(c);
   }
 
   private handleNumberSign(c: string): void {
@@ -131,13 +131,16 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
+    this.appendTextNode(c);
+    this.checkIsLastTextTokenKeyword();
+  }
+
+  private appendTextNode(c: string): void {
     if (this.isPrevTokenIsNewLine) {
       this.tokens.push({ type: TokenType.Text, value: c });
-    } else {
-      this.upsertToken({ type: TokenType.Text, value: c });
+      return;
     }
-
-    this.checkIsLastTextTokenKeyword();
+    this.upsertToken({ type: TokenType.Text, value: c });
   }
 
   private checkIsLastTextTokenKeyword(): void {

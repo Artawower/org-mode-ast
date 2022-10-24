@@ -374,4 +374,21 @@ Some text`;
       { type: TokenType.Text, value: ' text' },
     ]);
   });
+
+  it('Should tokenize list content as well', () => {
+    const orgDoc = `- List element
+- Second list element
+  Oh! i'am an nested section content`;
+
+    const result = tokenize(orgDoc);
+    console.log('🦄: [line 384][tokenizer.spec.ts] [35mresult: ', result);
+
+    expect(result).toEqual([
+      { type: TokenType.Operator, value: '- ' },
+      { type: TokenType.Text, value: 'List element\n' },
+      { type: TokenType.Operator, value: '- ' },
+      { type: TokenType.Text, value: 'Second list element\n' },
+      { type: TokenType.Text, value: `  Oh! i'am an nested section content` },
+    ]);
+  });
 });
