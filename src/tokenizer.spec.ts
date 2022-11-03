@@ -391,4 +391,26 @@ Some text`;
       { type: TokenType.Text, value: `  Oh! i'am an nested section content` },
     ]);
   });
+
+  it('Should tokenize nested lists', () => {
+    const orgDoc = `- List item 1 1
+  - List item 2 1
+  - List item 2 2
+- List item 1 2`;
+
+    const result = tokenize(orgDoc);
+    console.log('🦄: [line 402][tokenizer.spec.ts] [35mresult: ', result);
+    expect(result).toEqual([
+      { type: TokenType.Operator, value: '- ' },
+      { type: TokenType.Text, value: 'List item 1 1\n' },
+      { type: TokenType.Text, value: '  ' },
+      { type: TokenType.Operator, value: '- ' },
+      { type: TokenType.Text, value: 'List item 2 1\n' },
+      { type: TokenType.Text, value: '  ' },
+      { type: TokenType.Operator, value: '- ' },
+      { type: TokenType.Text, value: 'List item 2 2\n' },
+      { type: TokenType.Operator, value: '- ' },
+      { type: TokenType.Text, value: 'List item 1 2' },
+    ]);
+  });
 });

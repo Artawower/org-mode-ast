@@ -87,6 +87,10 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
+    if (this.isPrevToken(TokenType.Operator) && this.prevToken.value.endsWith('-')) {
+      this.appendPrevValue(c);
+      return;
+    }
     if (this.isPrevToken(TokenType.Headline) && !this.isPrevTokenEndsWithSpace) {
       this.appendPrevValue(c);
       return;
@@ -103,6 +107,10 @@ export class Tokenizer {
   }
 
   private handleDash(c: string): void {
+    if (!this.isPrevTokenIsNewLine && this.prevToken && !this.prevToken.value.trim()) {
+      this.upsertToken({ type: TokenType.Operator, value: c });
+      return;
+    }
     if (this.isPrevTokenIsNewLine || !this.prevToken) {
       this.tokens.push({ type: TokenType.Operator, value: c });
       return;
@@ -168,9 +176,10 @@ export class Tokenizer {
     this.handleText(c);
   }
 
-  private upsertToken(token: Token) {
-    if (this.prevToken?.type === token.type) {
+  private upsertToken(token: Token, force = false): void {
+    if (this.prevToken?.type === token.type || force) {
       this.appendPrevValue(token.value);
+      this.prevToken.type = token.type;
       return;
     }
     this.tokens.push(token);
@@ -190,8 +199,6 @@ export class Tokenizer {
   private isNextChar(c: string): boolean {
     return this.nextChar === c;
   }
-
-  private isTokenFromEndEqualTo() {}
 
   private isDelimiter(char: string): boolean {
     return char === this.delimiter;
