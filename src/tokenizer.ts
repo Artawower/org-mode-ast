@@ -1,10 +1,12 @@
-import { TokenType, Token } from 'types';
+import { TokenType, Token, RawToken } from 'types';
 
 export class Tokenizer {
   private readonly delimiter = ' ';
   // TODO: check other todos keywords. Make them customizable
   private readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED'];
   private readonly brackets = ['=', '+', '[', ']', '/', '*'];
+  private begin: number = 0;
+  private end: number = 0;
 
   private tokens: Token[] = [];
   private point: number = 0;
@@ -72,7 +74,7 @@ export class Tokenizer {
 
   private handleAsterisk(c: string): void {
     if ((this.isDelimiter(this.nextChar) || this.isNextChar('*')) && (!this.prevToken || this.isPrevTokenIsNewLine)) {
-      this.tokens.push({ type: TokenType.Headline, value: c });
+      this.addToken({ type: TokenType.Headline, value: c });
       return;
     }
     if (this.isPrevToken(TokenType.Headline)) {
@@ -112,7 +114,7 @@ export class Tokenizer {
       return;
     }
     if (this.isPrevTokenIsNewLine || !this.prevToken) {
-      this.tokens.push({ type: TokenType.Operator, value: c });
+      this.addToken({ type: TokenType.Operator, value: c });
       return;
     }
     this.upsertToken({ type: TokenType.Text, value: c });
@@ -120,18 +122,18 @@ export class Tokenizer {
 
   private handlePlus(c: string): void {
     if (this.isNextChar(this.delimiter) && (this.isPrevTokenIsNewLine || !this.prevToken)) {
-      this.tokens.push({ type: TokenType.Operator, value: c });
+      this.addToken({ type: TokenType.Operator, value: c });
       return;
     }
     this.handleBracket(c);
   }
 
   private handleCommon(c: string): void {
-    this.tokens.push({ type: TokenType.Operator, value: c });
+    this.addToken({ type: TokenType.Operator, value: c });
   }
 
   private handleBracket(c: string): void {
-    this.tokens.push({ type: TokenType.Bracket, value: c });
+    this.addToken({ type: TokenType.Bracket, value: c });
   }
 
   private handleText(c: string): void {
@@ -145,7 +147,7 @@ export class Tokenizer {
 
   private appendTextNode(c: string): void {
     if (this.isPrevTokenIsNewLine) {
-      this.tokens.push({ type: TokenType.Text, value: c });
+      this.addToken({ type: TokenType.Text, value: c });
       return;
     }
     this.upsertToken({ type: TokenType.Text, value: c });
@@ -176,17 +178,25 @@ export class Tokenizer {
     this.handleText(c);
   }
 
-  private upsertToken(token: Token, force = false): void {
+  private addToken(token: RawToken) {
+    this.begin = this.end;
+    this.end = this.begin + token.value.length;
+    this.tokens.push({ ...token, begin: this.begin, end: this.end });
+  }
+
+  private upsertToken(token: RawToken, force = false): void {
     if (this.prevToken?.type === token.type || force) {
       this.appendPrevValue(token.value);
       this.prevToken.type = token.type;
       return;
     }
-    this.tokens.push(token);
+    this.addToken(token);
   }
 
   private appendPrevValue(c: string) {
+    this.end += c.length;
     this.prevToken.value += c;
+    this.prevToken.end = this.end;
   }
 
   private isPrevToken(...tokens: TokenType[]): boolean {

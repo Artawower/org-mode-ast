@@ -13,6 +13,8 @@ export enum NodeType {
   ListItem = 'listItem',
   Italic = 'italic',
   InlineCode = 'inlineCode',
+  // TODO: need to think about this type, could be redindand...
+  Indent = 'indent',
 }
 
 export enum TokenType {
@@ -29,7 +31,7 @@ export interface Token {
   value: string;
 }
 
-interface WithRange {
+export interface WithRange {
   start: number;
   end: number;
 }
@@ -50,14 +52,17 @@ export interface WithCheckStatus {
   checked: boolean;
 }
 
+export interface WithSection {
+  section?: Section;
+}
+
 export interface Section extends WithRange, WithChildren, WithParent {
   type: NodeType.Section;
 }
 
-export interface Headline extends WithRange, WithChildren, WithParent {
+export interface Headline extends WithRange, WithChildren, WithParent, WithSection {
   type: NodeType.Headline;
   level: number;
-  section?: Section;
   checked?: boolean;
 }
 
@@ -76,9 +81,10 @@ export interface OrgText extends WithRange, WithParent, WithValue {
 export interface List extends WithRange, WithChildren, WithParent {
   type: NodeType.List;
   ordered: boolean;
+  level: number;
 }
 
-export interface ListItem extends WithRange, WithChildren, WithParent {
+export interface ListItem extends WithRange, WithChildren, WithParent, WithSection {
   type: NodeType.ListItem;
 }
 
@@ -126,7 +132,23 @@ export type OrgData =
 // TODO: delete
 export type OrgNode = Headline | OrgRoot;
 
-export interface UniversalOrgNode extends Headline, OrgRoot, Operator, OrgText, Unresolved {
+// export interface UniversalOrgNode extends Headline, OrgRoot, Operator, OrgText, Unresolved, ListItem {
+//   type: any;
+// }
+
+// export type UniversalOrgNode = Headline | OrgRoot | Operator | OrgText | Unresolved | ListItem | Section | List;
+
+// interface AllMergedOrgNodeInterfaces extends Headline, OrgRoot, Operator, OrgText, Unresolved, ListItem, List {
+//   type: any;
+// }
+
+// export interface UniversalOrgNode extends Partial<AllMergedOrgNodeInterfaces> {
+//   type: any;
+// }
+
+type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange;
+
+export interface UniversalOrgNode extends Partial<OrgNodeProperties> {
   type: any;
 }
 
