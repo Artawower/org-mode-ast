@@ -1,13 +1,14 @@
 import { AstBuilder } from 'ast-builder';
+import { AstContext } from 'ast-context';
 import { BracketHandler } from 'bracket-handler';
 import { ListHandler } from 'list-handler';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
-import { Headline, NodeType, OrgData, OrgText, TokenType, List, ListItem } from './types';
-// import 'jsonify-console';
+import { Headline, NodeType, OrgData, OrgIndent, OrgText, TokenType, WithValue } from './types';
 
 class Parser {
   constructor(
+    private ctx: AstContext,
     private tokenIterator: TokenIterator,
     private astBuilder: AstBuilder,
     private bracketHandler: BracketHandler,
@@ -26,11 +27,12 @@ class Parser {
     });
   }
 
-  private tokensHandlers: { [key: string]: () => OrgData } = {
+  private tokensHandlers: { [key: string]: () => OrgData | void } = {
     [TokenType.Headline]: () => this.handleHeadline(),
     [TokenType.Text]: () => this.handleText(),
     [TokenType.Bracket]: () => this.bracketHandler.handle(),
     [TokenType.Operator]: () => this.handleOperator(),
+    [TokenType.Indent]: () => this.handleIndent(),
   };
 
   private handleToken(): void {
@@ -41,8 +43,11 @@ class Parser {
     }
     const orgData = handler();
     if (!orgData) {
+      // TODO: check by token, only indent could return empty value
       const m = `Handler for token ${this.tokenIterator.type} returned undefined`;
-      throw new Error(m);
+      console.warn(m);
+      return;
+      // throw new Error(m);
     }
 
     this.astBuilder.preserveLastPositionSnapshot(orgData);
@@ -51,53 +56,87 @@ class Parser {
     const lineBreak = this.tokenIterator.isNewLine || this.tokenIterator.isLastToken;
     if (lineBreak) {
       this.bracketHandler.clearBracketsPairs();
+      this.astBuilder.insideListItem = false;
     }
-    // NOT A TOKEN! FIND PARENT HEADLINE WHEN WE ARE INSIDE HEADLINE
     if (this.tokenIterator.isNewLine && this.astBuilder.insideHeadline) {
-      this.astBuilder.initNewSection();
+      this.astBuilder.getLastSessionOrCreate();
       this.astBuilder.insideHeadline = false;
     }
-    // this.nodeStack.push(orgData);
   }
 
   private handleHeadline(): OrgData {
     this.astBuilder.insideHeadline = true;
-    const end = this.astBuilder.lastPos + this.tokenIterator.value.length;
+    const end = this.astBuilder.lastPos + this.tokenIterator.currentValue.length;
     const orgData: Headline = {
       type: NodeType.Headline,
-      level: this.tokenIterator.value.trim().length,
+      level: this.tokenIterator.currentValue.trim().length,
       start: this.astBuilder.lastPos,
       end,
-      children: [{ type: NodeType.Operator, value: this.tokenIterator.value, start: this.astBuilder.lastPos, end }],
+      children: [
+        { type: NodeType.Operator, value: this.tokenIterator.currentValue, start: this.astBuilder.lastPos, end },
+      ],
     };
     this.astBuilder.attachToTree(orgData);
     return orgData;
   }
 
   private handleText(): OrgData {
+    // TODO: master TOKEN SHOULD BE SELF SUFFICIENT, AND CONTAIN SUCH METHODS
+    // FOR DETERMINE TOKEN STATE (space, new line, additional information about token properties)
+    const lastTokenWasNewLine = (this.astBuilder.lastNode as WithValue).value?.endsWith('\n');
+    // const currentTokenStartsWithSpace = this.tokenIterator.currentValue.startsWith(' ');
+    // const insideListSection = currentTokenStartsWithSpace && this.listHandler.lastListItem;
+
     const orgData: OrgText = {
       type: NodeType.Text,
-      value: this.tokenIterator.value,
+      value: this.tokenIterator.currentValue,
       start: this.astBuilder.lastPos,
-      end: this.astBuilder.lastPos + this.tokenIterator.value.length,
+      end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
+
+    // If we are inside LIST and last node contain new line and ! we have not space at the start
+    // else if (insideListSection) {
+    //   console.log('AMMA INSIDE LIST SECTION');
+    //   this.astBuilder.initNewSection(this.listHandler.lastListItem);
+    //   this.listHandler.lastListItem = null;
+    // }
+
     this.astBuilder.attachToTree(orgData);
+
+    if (lastTokenWasNewLine && this.astBuilder.lastNode.type !== NodeType.Indent) {
+      this.ctx.exitList();
+    }
+
     return orgData;
   }
 
   private handleOperator(): OrgData {
     // TODO: need to create common handler for such operators
     // this.attachToTree()
-    const orgData = this.buildOrgDataForOperator(this.tokenIterator.value);
+    const orgData = this.buildOrgDataForOperator(this.tokenIterator.currentValue);
     if (!orgData) {
-      throw new Error(`Couldn't handle opereator ${this.tokenIterator.value}`);
+      throw new Error(`Couldn't handle opereator ${this.tokenIterator.currentValue}`);
     }
     this.astBuilder.attachToTree(orgData);
     return orgData;
   }
 
+  private handleIndent(): OrgIndent {
+    const indentNode = this.astBuilder.createIndentNode();
+
+    if (this.astBuilder.isListOperator(this.tokenIterator.nextToken.value)) {
+      console.log('LIST INDENT OPERATOR');
+      this.ctx.nextIndentNode = indentNode;
+      this.astBuilder.increaseLastPosition(this.tokenIterator.currentValue);
+      return;
+    }
+    this.astBuilder.getLastSessionOrCreate();
+    this.astBuilder.attachToTree(indentNode);
+    return indentNode;
+  }
+
   private buildOrgDataForOperator(operator: string): OrgData {
-    if (operator === '- ') {
+    if (this.astBuilder.isListOperator(operator)) {
       const orgData = this.listHandler.handle();
       return orgData;
     }
@@ -105,11 +144,12 @@ class Parser {
 }
 
 export function parse(text: string): OrgData {
+  const ctx = new AstContext();
   const tokenizer = new Tokenizer(text);
   const tokenIterator = new TokenIterator(tokenizer);
-  const astBuilder = new AstBuilder();
+  const astBuilder = new AstBuilder(ctx, tokenIterator);
   const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
-  const listHandler = new ListHandler(astBuilder, tokenIterator);
-  const parser = new Parser(tokenIterator, astBuilder, bracketHandler, listHandler);
+  const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
+  const parser = new Parser(ctx, tokenIterator, astBuilder, bracketHandler, listHandler);
   return parser.parse();
 }

@@ -1,4 +1,5 @@
 import { OrgData } from 'types';
+import * as fs from 'fs';
 
 export function removeInformationAboutParents(node: OrgData): void {
   delete node.parent;
@@ -13,3 +14,7 @@ export function removeInformationAboutParents(node: OrgData): void {
     removeInformationAboutParents(child);
   });
 }
+
+export const saveTree = (data: any): void => {
+  fs.writeFileSync('last-test.json', JSON.stringify(data, null, 2));
+};

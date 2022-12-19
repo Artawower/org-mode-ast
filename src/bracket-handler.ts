@@ -34,9 +34,9 @@ export class BracketHandler implements OrgHandler {
   public handle(): OrgData {
     const orgData: OrgData = {
       type: NodeType.Unresolved,
-      value: this.tokenIterator.value,
+      value: this.tokenIterator.currentValue,
       start: this.astBuilder.lastPos,
-      end: this.astBuilder.lastPos + this.tokenIterator.value.length,
+      end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
     this.astBuilder.attachToTree(orgData);
 
@@ -59,7 +59,7 @@ export class BracketHandler implements OrgHandler {
     const reversedBracketsStack = this.bracketsStackPositions.slice().reverse();
 
     // TODO: master expose this logic as composition entity
-    const pairToDetect = this.getOpenedBracket(this.tokenIterator.value);
+    const pairToDetect = this.getOpenedBracket(this.tokenIterator.currentValue);
 
     const foundPairIndex = reversedBracketsStack.findIndex((r) => (r.node as UniversalOrgNode).value === pairToDetect);
 

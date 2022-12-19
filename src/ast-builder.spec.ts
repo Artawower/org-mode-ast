@@ -1,11 +1,13 @@
 import { AstBuilder } from './ast-builder';
+import { AstContext } from './ast-context';
 import { NodeType, OrgData } from './types';
 
 describe('AST builder tests', () => {
   let builder: AstBuilder;
 
   beforeEach(() => {
-    builder = new AstBuilder();
+    const ctx = new AstContext();
+    builder = new AstBuilder(ctx, {} as any);
   });
 
   it('Should correct collect nested value from ast tree', () => {

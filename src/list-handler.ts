@@ -1,65 +1,74 @@
 import { AstBuilder } from 'ast-builder';
+import { AstContext } from 'ast-context';
 import { OrgHandler } from 'internal.types';
 import { TokenIterator } from 'token-iterator';
 import { List, ListItem, NodeType, OrgData } from 'types';
 
 export class ListHandler implements OrgHandler {
-  constructor(private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
-
-  get insideList(): boolean {
-    return this.checkIfInsideList();
-  }
+  // public lastListItem: ListItem;
+  constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
   public handle() {
-    if (!this.insideList) {
-      const isOrdered = this.tokenIterator.value?.[0] === '1';
-      this.createEmptyList(isOrdered);
+    // TODO: level and indent offset
+    const isNestedList = this.ctx.setupNewParentListByLevel();
+    const isSameLevelList = this.ctx.lastList?.level === this.ctx.listLevel;
+
+    // INIT NEW SECTION! ONLY WHEN PREVIOUS SECTION HASN'T CHILD ON THE SAME LIST LEVEL?
+    if (isNestedList && !isSameLevelList) {
+      this.astBuilder.getLastSessionOrCreate(this.ctx.lastListItem);
     }
+
+    if (!this.ctx.nestedLists.length || (isNestedList && !isSameLevelList)) {
+      const isOrdered = this.tokenIterator.currentValue?.[0] === '1';
+      this.createEmptyList(isOrdered, this.ctx.listLevel);
+    }
+
     this.createNewListItem();
+
+    if (this.ctx.nextIndentNode) {
+      this.astBuilder.attachToTree(this.ctx.nextIndentNode);
+      this.ctx.resetIndent();
+    }
 
     const orgData: OrgData = {
       type: NodeType.Operator,
-      value: this.tokenIterator.value,
+      value: this.tokenIterator.currentValue,
       start: this.astBuilder.lastPos,
-      end: this.astBuilder.lastPos + this.tokenIterator.value.length,
+      end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
+
+    // this.astBuilder.exitSection();
 
     return orgData;
   }
 
-  private createEmptyList(ordered: boolean): OrgData {
+  private createEmptyList(ordered: boolean, level: number = 0): OrgData {
     const list: List = {
       type: NodeType.List,
-      start: 0,
-      end: 0,
+      start: this.astBuilder.lastNode.end,
+      end: this.astBuilder.lastNode.end,
+      level,
       ordered,
       children: [],
     };
     this.astBuilder.attachToTree(list);
     this.astBuilder.saveLastNode(list);
+    this.ctx.addNestedList(list);
     return list;
   }
 
   private createNewListItem(): void {
+    const start = this.ctx.nextIndentNode ? this.ctx.nextIndentNode.start : this.astBuilder.lastPos;
     const orgData: ListItem = {
       type: NodeType.ListItem,
-      start: this.astBuilder.lastPos,
+      start,
       end: 0,
+      parent: this.ctx.lastParentList,
       children: [],
     };
     this.astBuilder.attachToTree(orgData);
     this.astBuilder.saveLastNode(orgData);
-  }
-
-  private checkIfInsideList(node?: OrgData): boolean {
-    node ||= this.astBuilder.lastNode;
-
-    if (node.type === NodeType.ListItem || node.type === NodeType.List) {
-      return true;
-    }
-    if (node.parent) {
-      return this.checkIfInsideList(node.parent);
-    }
-    return false;
+    // this.lastListItem = orgData;
+    this.astBuilder.insideListItem = true;
   }
 }

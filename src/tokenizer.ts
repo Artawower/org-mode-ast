@@ -1,5 +1,6 @@
 import { TokenType, Token, RawToken } from 'types';
 
+// TODO: master DELETE BEGIN/END ??? think about it, its very redundant
 export class Tokenizer {
   private readonly delimiter = ' ';
   // TODO: check other todos keywords. Make them customizable
@@ -89,7 +90,14 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
-    if (this.isPrevToken(TokenType.Operator) && this.prevToken.value.endsWith('-')) {
+    if (this.isPrevTokenIsNewLine) {
+      this.addToken({ type: TokenType.Indent, value: c });
+      return;
+    }
+    if (
+      this.isPrevToken(TokenType.Indent) ||
+      (this.isPrevToken(TokenType.Operator) && this.prevToken.value.endsWith('-'))
+    ) {
       this.appendPrevValue(c);
       return;
     }
@@ -181,7 +189,7 @@ export class Tokenizer {
   private addToken(token: RawToken) {
     this.begin = this.end;
     this.end = this.begin + token.value.length;
-    this.tokens.push({ ...token, begin: this.begin, end: this.end });
+    this.tokens.push({ ...token, start: this.begin, end: this.end });
   }
 
   private upsertToken(token: RawToken, force = false): void {

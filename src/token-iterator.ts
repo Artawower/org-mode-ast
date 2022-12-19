@@ -14,7 +14,7 @@ export class TokenIterator {
     return this.token?.type;
   }
 
-  get currentTokenValue(): string {
+  get currentValue(): string {
     return this.token?.value;
   }
 
@@ -35,7 +35,11 @@ export class TokenIterator {
   }
 
   get isNewLine(): boolean {
-    return this.token.value.endsWith('\n');
+    return this.isTokenNewLine(this.token);
+  }
+
+  public isTokenNewLine(token?: Token): boolean {
+    return token?.value.endsWith('\n');
   }
 
   constructor(private tokenizer: Tokenizer) {}
@@ -49,7 +53,7 @@ export class TokenIterator {
 
       this.#token = {
         ...token,
-        begin: this.#begin,
+        start: this.#begin,
         end: this.#end,
       };
 

@@ -58,7 +58,10 @@ describe('Headline tests', () => {
       type: 'root',
       start: 0,
       end: 14,
-      children: [{ type: NodeType.Text, value: ' * Hello world', start: 0, end: 14 }],
+      children: [
+        { type: NodeType.Indent, value: ' ', start: 0, end: 1 },
+        { type: NodeType.Text, value: '* Hello world', start: 1, end: 14 },
+      ],
     });
   });
 

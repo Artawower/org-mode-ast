@@ -7,8 +7,8 @@ fdescribe('Tokenizer', () => {
     const headline = '* Hello world';
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'Hello world', begin: 2, end: 13 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
     ]);
   });
 
@@ -16,8 +16,8 @@ fdescribe('Tokenizer', () => {
     const headline = '* Hello world ';
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'Hello world ', begin: 2, end: 14 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Hello world ', start: 2, end: 14 },
     ]);
   });
 
@@ -25,8 +25,8 @@ fdescribe('Tokenizer', () => {
     const headline = '*    Hello world';
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: '   Hello world', begin: 2, end: 16 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: '   Hello world', start: 2, end: 16 },
     ]);
   });
 
@@ -39,18 +39,18 @@ fdescribe('Tokenizer', () => {
 * And again 1 level headline`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'Hello world\n', begin: 2, end: 14 },
-      { type: TokenType.Headline, value: '** ', begin: 14, end: 17 },
-      { type: TokenType.Text, value: 'Nested headline\n', begin: 17, end: 33 },
-      { type: TokenType.Headline, value: '*** ', begin: 33, end: 37 },
-      { type: TokenType.Text, value: 'Another one headline!\n', begin: 37, end: 59 },
-      { type: TokenType.Headline, value: '**** ', begin: 59, end: 64 },
-      { type: TokenType.Text, value: 'And 4 headline level\n', begin: 64, end: 85 },
-      { type: TokenType.Headline, value: '***** ', begin: 85, end: 91 },
-      { type: TokenType.Text, value: 'And 5 headline level\n', begin: 91, end: 112 },
-      { type: TokenType.Headline, value: '* ', begin: 112, end: 114 },
-      { type: TokenType.Text, value: 'And again 1 level headline', begin: 114, end: 140 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Hello world\n', start: 2, end: 14 },
+      { type: TokenType.Headline, value: '** ', start: 14, end: 17 },
+      { type: TokenType.Text, value: 'Nested headline\n', start: 17, end: 33 },
+      { type: TokenType.Headline, value: '*** ', start: 33, end: 37 },
+      { type: TokenType.Text, value: 'Another one headline!\n', start: 37, end: 59 },
+      { type: TokenType.Headline, value: '**** ', start: 59, end: 64 },
+      { type: TokenType.Text, value: 'And 4 headline level\n', start: 64, end: 85 },
+      { type: TokenType.Headline, value: '***** ', start: 85, end: 91 },
+      { type: TokenType.Text, value: 'And 5 headline level\n', start: 91, end: 112 },
+      { type: TokenType.Headline, value: '* ', start: 112, end: 114 },
+      { type: TokenType.Text, value: 'And again 1 level headline', start: 114, end: 140 },
     ]);
   });
 
@@ -60,28 +60,31 @@ fdescribe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'Hello world\n', begin: 2, end: 14 },
-      { type: TokenType.Headline, value: '* ', begin: 14, end: 16 },
-      { type: TokenType.Text, value: 'Headline 2\n', begin: 16, end: 27 },
-      { type: TokenType.Headline, value: '* ', begin: 27, end: 29 },
-      { type: TokenType.Text, value: 'Headline 3', begin: 29, end: 39 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Hello world\n', start: 2, end: 14 },
+      { type: TokenType.Headline, value: '* ', start: 14, end: 16 },
+      { type: TokenType.Text, value: 'Headline 2\n', start: 16, end: 27 },
+      { type: TokenType.Headline, value: '* ', start: 27, end: 29 },
+      { type: TokenType.Text, value: 'Headline 3', start: 29, end: 39 },
     ]);
   });
 
-  it('Should correct parse tokens for string with first space and aasterisk', () => {
+  it('Should correct parse tokens for string with first space and asterisk', () => {
     const headline = ` * Hello world`;
     const result = tokenize(headline);
-    expect(result).toEqual([{ type: TokenType.Text, value: ' * Hello world', begin: 0, end: 14 }]);
+    expect(result).toEqual([
+      { type: TokenType.Indent, value: ' ', start: 0, end: 1 },
+      { type: TokenType.Text, value: '* Hello world', start: 1, end: 14 },
+    ]);
   });
 
   it('Should correct parse tokens for string with first space and aasterisk before word', () => {
     const headline = ` *Hello world`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Text, value: ' ', begin: 0, end: 1 },
-      { type: TokenType.Bracket, value: '*', begin: 1, end: 2 },
-      { type: TokenType.Text, value: 'Hello world', begin: 2, end: 13 },
+      { type: TokenType.Indent, value: ' ', start: 0, end: 1 },
+      { type: TokenType.Bracket, value: '*', start: 1, end: 2 },
+      { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
     ]);
   });
 
@@ -91,14 +94,14 @@ fdescribe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Keyword, value: 'TODO', begin: 2, end: 6 },
-      { type: TokenType.Text, value: ' Hello world\n', begin: 6, end: 19 },
-      { type: TokenType.Headline, value: '*** ', begin: 19, end: 23 },
-      { type: TokenType.Keyword, value: 'DONE', begin: 23, end: 27 },
-      { type: TokenType.Text, value: ' Headline 2\n', begin: 27, end: 39 },
-      { type: TokenType.Headline, value: '* ', begin: 39, end: 41 },
-      { type: TokenType.Text, value: 'Headline 3', begin: 41, end: 51 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
+      { type: TokenType.Text, value: ' Hello world\n', start: 6, end: 19 },
+      { type: TokenType.Headline, value: '*** ', start: 19, end: 23 },
+      { type: TokenType.Keyword, value: 'DONE', start: 23, end: 27 },
+      { type: TokenType.Text, value: ' Headline 2\n', start: 27, end: 39 },
+      { type: TokenType.Headline, value: '* ', start: 39, end: 41 },
+      { type: TokenType.Text, value: 'Headline 3', start: 41, end: 51 },
     ]);
   });
 
@@ -108,12 +111,12 @@ fdescribe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'This is not a TODO\n', begin: 2, end: 21 },
-      { type: TokenType.Headline, value: '* ', begin: 21, end: 23 },
-      { type: TokenType.Text, value: 'And this is not a DONE\n', begin: 23, end: 46 },
-      { type: TokenType.Headline, value: '* ', begin: 46, end: 48 },
-      { type: TokenType.Text, value: 'Headline 3', begin: 48, end: 58 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'This is not a TODO\n', start: 2, end: 21 },
+      { type: TokenType.Headline, value: '* ', start: 21, end: 23 },
+      { type: TokenType.Text, value: 'And this is not a DONE\n', start: 23, end: 46 },
+      { type: TokenType.Headline, value: '* ', start: 46, end: 48 },
+      { type: TokenType.Text, value: 'Headline 3', start: 48, end: 58 },
     ]);
   });
 
@@ -123,18 +126,18 @@ fdescribe('Tokenizer', () => {
 * Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', begin: 2, end: 3 },
-      { type: TokenType.Comment, value: '#A', begin: 3, end: 5 },
-      { type: TokenType.Bracket, value: ']', begin: 5, end: 6 },
-      { type: TokenType.Text, value: ' Most important headline\n', begin: 6, end: 31 },
-      { type: TokenType.Headline, value: '*** ', begin: 31, end: 35 },
-      { type: TokenType.Bracket, value: '[', begin: 35, end: 36 },
-      { type: TokenType.Comment, value: '#B', begin: 36, end: 38 },
-      { type: TokenType.Bracket, value: ']', begin: 38, end: 39 },
-      { type: TokenType.Text, value: ' Third most important headline\n', begin: 39, end: 70 },
-      { type: TokenType.Headline, value: '* ', begin: 70, end: 72 },
-      { type: TokenType.Text, value: 'Headline 3', begin: 72, end: 82 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
+      { type: TokenType.Comment, value: '#A', start: 3, end: 5 },
+      { type: TokenType.Bracket, value: ']', start: 5, end: 6 },
+      { type: TokenType.Text, value: ' Most important headline\n', start: 6, end: 31 },
+      { type: TokenType.Headline, value: '*** ', start: 31, end: 35 },
+      { type: TokenType.Bracket, value: '[', start: 35, end: 36 },
+      { type: TokenType.Comment, value: '#B', start: 36, end: 38 },
+      { type: TokenType.Bracket, value: ']', start: 38, end: 39 },
+      { type: TokenType.Text, value: ' Third most important headline\n', start: 39, end: 70 },
+      { type: TokenType.Headline, value: '* ', start: 70, end: 72 },
+      { type: TokenType.Text, value: 'Headline 3', start: 72, end: 82 },
     ]);
   });
 
@@ -144,27 +147,27 @@ fdescribe('Tokenizer', () => {
 * HOLD [#c] Headline 3`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Keyword, value: 'TODO', begin: 2, end: 6 },
-      { type: TokenType.Text, value: ' ', begin: 6, end: 7 },
-      { type: TokenType.Bracket, value: '[', begin: 7, end: 8 },
-      { type: TokenType.Comment, value: '#A', begin: 8, end: 10 },
-      { type: TokenType.Bracket, value: ']', begin: 10, end: 11 },
-      { type: TokenType.Text, value: ' Most important headline\n', begin: 11, end: 36 },
-      { type: TokenType.Headline, value: '*** ', begin: 36, end: 40 },
-      { type: TokenType.Keyword, value: 'DONE', begin: 40, end: 44 },
-      { type: TokenType.Text, value: ' ', begin: 44, end: 45 },
-      { type: TokenType.Bracket, value: '[', begin: 45, end: 46 },
-      { type: TokenType.Comment, value: '#B', begin: 46, end: 48 },
-      { type: TokenType.Bracket, value: ']', begin: 48, end: 49 },
-      { type: TokenType.Text, value: ' Third most important headline\n', begin: 49, end: 80 },
-      { type: TokenType.Headline, value: '* ', begin: 80, end: 82 },
-      { type: TokenType.Keyword, value: 'HOLD', begin: 82, end: 86 },
-      { type: TokenType.Text, value: ' ', begin: 86, end: 87 },
-      { type: TokenType.Bracket, value: '[', begin: 87, end: 88 },
-      { type: TokenType.Comment, value: '#c', begin: 88, end: 90 },
-      { type: TokenType.Bracket, value: ']', begin: 90, end: 91 },
-      { type: TokenType.Text, value: ' Headline 3', begin: 91, end: 102 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
+      { type: TokenType.Text, value: ' ', start: 6, end: 7 },
+      { type: TokenType.Bracket, value: '[', start: 7, end: 8 },
+      { type: TokenType.Comment, value: '#A', start: 8, end: 10 },
+      { type: TokenType.Bracket, value: ']', start: 10, end: 11 },
+      { type: TokenType.Text, value: ' Most important headline\n', start: 11, end: 36 },
+      { type: TokenType.Headline, value: '*** ', start: 36, end: 40 },
+      { type: TokenType.Keyword, value: 'DONE', start: 40, end: 44 },
+      { type: TokenType.Text, value: ' ', start: 44, end: 45 },
+      { type: TokenType.Bracket, value: '[', start: 45, end: 46 },
+      { type: TokenType.Comment, value: '#B', start: 46, end: 48 },
+      { type: TokenType.Bracket, value: ']', start: 48, end: 49 },
+      { type: TokenType.Text, value: ' Third most important headline\n', start: 49, end: 80 },
+      { type: TokenType.Headline, value: '* ', start: 80, end: 82 },
+      { type: TokenType.Keyword, value: 'HOLD', start: 82, end: 86 },
+      { type: TokenType.Text, value: ' ', start: 86, end: 87 },
+      { type: TokenType.Bracket, value: '[', start: 87, end: 88 },
+      { type: TokenType.Comment, value: '#c', start: 88, end: 90 },
+      { type: TokenType.Bracket, value: ']', start: 90, end: 91 },
+      { type: TokenType.Text, value: ' Headline 3', start: 91, end: 102 },
     ]);
   });
 
@@ -172,17 +175,17 @@ fdescribe('Tokenizer', () => {
     const headline = `* TODO [50%] [#A] Most important headline`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Keyword, value: 'TODO', begin: 2, end: 6 },
-      { type: TokenType.Text, value: ' ', begin: 6, end: 7 },
-      { type: TokenType.Bracket, value: '[', begin: 7, end: 8 },
-      { type: TokenType.Text, value: '50%', begin: 8, end: 11 },
-      { type: TokenType.Bracket, value: ']', begin: 11, end: 12 },
-      { type: TokenType.Text, value: ' ', begin: 12, end: 13 },
-      { type: TokenType.Bracket, value: '[', begin: 13, end: 14 },
-      { type: TokenType.Comment, value: '#A', begin: 14, end: 16 },
-      { type: TokenType.Bracket, value: ']', begin: 16, end: 17 },
-      { type: TokenType.Text, value: ' Most important headline', begin: 17, end: 41 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
+      { type: TokenType.Text, value: ' ', start: 6, end: 7 },
+      { type: TokenType.Bracket, value: '[', start: 7, end: 8 },
+      { type: TokenType.Text, value: '50%', start: 8, end: 11 },
+      { type: TokenType.Bracket, value: ']', start: 11, end: 12 },
+      { type: TokenType.Text, value: ' ', start: 12, end: 13 },
+      { type: TokenType.Bracket, value: '[', start: 13, end: 14 },
+      { type: TokenType.Comment, value: '#A', start: 14, end: 16 },
+      { type: TokenType.Bracket, value: ']', start: 16, end: 17 },
+      { type: TokenType.Text, value: ' Most important headline', start: 17, end: 41 },
     ]);
   });
 
@@ -190,13 +193,13 @@ fdescribe('Tokenizer', () => {
     const headline = `* [1/2] Headline 123`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', begin: 2, end: 3 },
-      { type: TokenType.Text, value: '1', begin: 3, end: 4 },
-      { type: TokenType.Bracket, value: '/', begin: 4, end: 5 },
-      { type: TokenType.Text, value: '2', begin: 5, end: 6 },
-      { type: TokenType.Bracket, value: ']', begin: 6, end: 7 },
-      { type: TokenType.Text, value: ' Headline 123', begin: 7, end: 20 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
+      { type: TokenType.Text, value: '1', start: 3, end: 4 },
+      { type: TokenType.Bracket, value: '/', start: 4, end: 5 },
+      { type: TokenType.Text, value: '2', start: 5, end: 6 },
+      { type: TokenType.Bracket, value: ']', start: 6, end: 7 },
+      { type: TokenType.Text, value: ' Headline 123', start: 7, end: 20 },
     ]);
   });
 
@@ -204,13 +207,13 @@ fdescribe('Tokenizer', () => {
     const headline = `* [1/2]Headline 123`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', begin: 2, end: 3 },
-      { type: TokenType.Text, value: '1', begin: 3, end: 4 },
-      { type: TokenType.Bracket, value: '/', begin: 4, end: 5 },
-      { type: TokenType.Text, value: '2', begin: 5, end: 6 },
-      { type: TokenType.Bracket, value: ']', begin: 6, end: 7 },
-      { type: TokenType.Text, value: 'Headline 123', begin: 7, end: 19 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
+      { type: TokenType.Text, value: '1', start: 3, end: 4 },
+      { type: TokenType.Bracket, value: '/', start: 4, end: 5 },
+      { type: TokenType.Text, value: '2', start: 5, end: 6 },
+      { type: TokenType.Bracket, value: ']', start: 6, end: 7 },
+      { type: TokenType.Text, value: 'Headline 123', start: 7, end: 19 },
     ]);
   });
 
@@ -218,13 +221,13 @@ fdescribe('Tokenizer', () => {
     const headline = `* [1/2]      Headline 123`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', begin: 2, end: 3 },
-      { type: TokenType.Text, value: '1', begin: 3, end: 4 },
-      { type: TokenType.Bracket, value: '/', begin: 4, end: 5 },
-      { type: TokenType.Text, value: '2', begin: 5, end: 6 },
-      { type: TokenType.Bracket, value: ']', begin: 6, end: 7 },
-      { type: TokenType.Text, value: '      Headline 123', begin: 7, end: 25 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
+      { type: TokenType.Text, value: '1', start: 3, end: 4 },
+      { type: TokenType.Bracket, value: '/', start: 4, end: 5 },
+      { type: TokenType.Text, value: '2', start: 5, end: 6 },
+      { type: TokenType.Bracket, value: ']', start: 6, end: 7 },
+      { type: TokenType.Text, value: '      Headline 123', start: 7, end: 25 },
     ]);
   });
 
@@ -233,9 +236,9 @@ fdescribe('Tokenizer', () => {
 * Headline 123`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Text, value: 'Some text\n', begin: 0, end: 10 },
-      { type: TokenType.Headline, value: '* ', begin: 10, end: 12 },
-      { type: TokenType.Text, value: 'Headline 123', begin: 12, end: 24 },
+      { type: TokenType.Text, value: 'Some text\n', start: 0, end: 10 },
+      { type: TokenType.Headline, value: '* ', start: 10, end: 12 },
+      { type: TokenType.Text, value: 'Headline 123', start: 12, end: 24 },
     ]);
   });
 
@@ -244,9 +247,9 @@ fdescribe('Tokenizer', () => {
 Some text`;
     const result = tokenize(headline);
     expect(result).toEqual([
-      { type: TokenType.Headline, value: '* ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'Headline 123\n', begin: 2, end: 15 },
-      { type: TokenType.Text, value: 'Some text', begin: 15, end: 24 },
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Headline 123\n', start: 2, end: 15 },
+      { type: TokenType.Text, value: 'Some text', start: 15, end: 24 },
     ]);
   });
 
@@ -254,7 +257,7 @@ Some text`;
   it('Should tokenize simple text', () => {
     const headline = `Some text`;
     const result = tokenize(headline);
-    expect(result).toEqual([{ type: TokenType.Text, value: 'Some text', begin: 0, end: 9 }]);
+    expect(result).toEqual([{ type: TokenType.Text, value: 'Some text', start: 0, end: 9 }]);
   });
 
   it('Should not create token from empty imput string', () => {
@@ -270,28 +273,28 @@ Some text`;
 - [ ] List item 3`;
     const result = tokenize(orgData);
     expect(result).toEqual([
-      { type: TokenType.Operator, value: '- ', begin: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', begin: 2, end: 3 },
-      { type: TokenType.Text, value: ' ', begin: 3, end: 4 },
-      { type: TokenType.Bracket, value: ']', begin: 4, end: 5 },
-      { type: TokenType.Text, value: ' List item\n', begin: 5, end: 16 },
-      { type: TokenType.Operator, value: '- ', begin: 16, end: 18 },
-      { type: TokenType.Bracket, value: '[', begin: 18, end: 19 },
-      { type: TokenType.Text, value: ' ', begin: 19, end: 20 },
-      { type: TokenType.Bracket, value: ']', begin: 20, end: 21 },
-      { type: TokenType.Text, value: ' List item 2\n', begin: 21, end: 34 },
-      { type: TokenType.Operator, value: '- ', begin: 34, end: 36 },
-      { type: TokenType.Bracket, value: '[', begin: 36, end: 37 },
-      { type: TokenType.Text, value: ' ', begin: 37, end: 38 },
-      { type: TokenType.Bracket, value: ']', begin: 38, end: 39 },
-      { type: TokenType.Text, value: ' List item 3', begin: 39, end: 51 },
+      { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
+      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
+      { type: TokenType.Text, value: ' ', start: 3, end: 4 },
+      { type: TokenType.Bracket, value: ']', start: 4, end: 5 },
+      { type: TokenType.Text, value: ' List item\n', start: 5, end: 16 },
+      { type: TokenType.Operator, value: '- ', start: 16, end: 18 },
+      { type: TokenType.Bracket, value: '[', start: 18, end: 19 },
+      { type: TokenType.Text, value: ' ', start: 19, end: 20 },
+      { type: TokenType.Bracket, value: ']', start: 20, end: 21 },
+      { type: TokenType.Text, value: ' List item 2\n', start: 21, end: 34 },
+      { type: TokenType.Operator, value: '- ', start: 34, end: 36 },
+      { type: TokenType.Bracket, value: '[', start: 36, end: 37 },
+      { type: TokenType.Text, value: ' ', start: 37, end: 38 },
+      { type: TokenType.Bracket, value: ']', start: 38, end: 39 },
+      { type: TokenType.Text, value: ' List item 3', start: 39, end: 51 },
     ]);
   });
 
   it('Should tokenize the dash as text when the dash is not at the start position', () => {
     const orgData = `Some text - with dash`;
     const result = tokenize(orgData);
-    expect(result).toEqual([{ type: TokenType.Text, value: 'Some text - with dash', begin: 0, end: 21 }]);
+    expect(result).toEqual([{ type: TokenType.Text, value: 'Some text - with dash', start: 0, end: 21 }]);
   });
 
   it('Should tokenize list values with plus', () => {
@@ -300,21 +303,21 @@ Some text`;
 + [ ] List item 3`;
     const result = tokenize(orgDoc);
     expect(result).toEqual([
-      { type: TokenType.Operator, value: '+ ', begin: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', begin: 2, end: 3 },
-      { type: TokenType.Text, value: ' ', begin: 3, end: 4 },
-      { type: TokenType.Bracket, value: ']', begin: 4, end: 5 },
-      { type: TokenType.Text, value: ' List item\n', begin: 5, end: 16 },
-      { type: TokenType.Operator, value: '+ ', begin: 16, end: 18 },
-      { type: TokenType.Bracket, value: '[', begin: 18, end: 19 },
-      { type: TokenType.Text, value: ' ', begin: 19, end: 20 },
-      { type: TokenType.Bracket, value: ']', begin: 20, end: 21 },
-      { type: TokenType.Text, value: ' List item 2\n', begin: 21, end: 34 },
-      { type: TokenType.Operator, value: '+ ', begin: 34, end: 36 },
-      { type: TokenType.Bracket, value: '[', begin: 36, end: 37 },
-      { type: TokenType.Text, value: ' ', begin: 37, end: 38 },
-      { type: TokenType.Bracket, value: ']', begin: 38, end: 39 },
-      { type: TokenType.Text, value: ' List item 3', begin: 39, end: 51 },
+      { type: TokenType.Operator, value: '+ ', start: 0, end: 2 },
+      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
+      { type: TokenType.Text, value: ' ', start: 3, end: 4 },
+      { type: TokenType.Bracket, value: ']', start: 4, end: 5 },
+      { type: TokenType.Text, value: ' List item\n', start: 5, end: 16 },
+      { type: TokenType.Operator, value: '+ ', start: 16, end: 18 },
+      { type: TokenType.Bracket, value: '[', start: 18, end: 19 },
+      { type: TokenType.Text, value: ' ', start: 19, end: 20 },
+      { type: TokenType.Bracket, value: ']', start: 20, end: 21 },
+      { type: TokenType.Text, value: ' List item 2\n', start: 21, end: 34 },
+      { type: TokenType.Operator, value: '+ ', start: 34, end: 36 },
+      { type: TokenType.Bracket, value: '[', start: 36, end: 37 },
+      { type: TokenType.Text, value: ' ', start: 37, end: 38 },
+      { type: TokenType.Bracket, value: ']', start: 38, end: 39 },
+      { type: TokenType.Text, value: ' List item 3', start: 39, end: 51 },
     ]);
   });
 
@@ -324,17 +327,17 @@ Some text`;
 :END:`;
     const result = tokenize(orgDoc);
     expect(result).toEqual([
-      { type: TokenType.Operator, value: ':', begin: 0, end: 1 },
-      { type: TokenType.Text, value: 'PROPERTIES', begin: 1, end: 11 },
-      { type: TokenType.Operator, value: ':', begin: 11, end: 12 },
-      { type: TokenType.Text, value: '\n', begin: 12, end: 13 },
-      { type: TokenType.Operator, value: ':', begin: 13, end: 14 },
-      { type: TokenType.Text, value: 'ID', begin: 14, end: 16 },
-      { type: TokenType.Operator, value: ':', begin: 16, end: 17 },
-      { type: TokenType.Text, value: '      123\n', begin: 17, end: 27 },
-      { type: TokenType.Operator, value: ':', begin: 27, end: 28 },
-      { type: TokenType.Text, value: 'END', begin: 28, end: 31 },
-      { type: TokenType.Operator, value: ':', begin: 31, end: 32 },
+      { type: TokenType.Operator, value: ':', start: 0, end: 1 },
+      { type: TokenType.Text, value: 'PROPERTIES', start: 1, end: 11 },
+      { type: TokenType.Operator, value: ':', start: 11, end: 12 },
+      { type: TokenType.Text, value: '\n', start: 12, end: 13 },
+      { type: TokenType.Operator, value: ':', start: 13, end: 14 },
+      { type: TokenType.Text, value: 'ID', start: 14, end: 16 },
+      { type: TokenType.Operator, value: ':', start: 16, end: 17 },
+      { type: TokenType.Text, value: '      123\n', start: 17, end: 27 },
+      { type: TokenType.Operator, value: ':', start: 27, end: 28 },
+      { type: TokenType.Text, value: 'END', start: 28, end: 31 },
+      { type: TokenType.Operator, value: ':', start: 31, end: 32 },
     ]);
   });
 
@@ -343,9 +346,9 @@ Some text`;
     const result = tokenize(orgDoc);
 
     expect(result).toEqual([
-      { type: TokenType.Bracket, value: '*', begin: 0, end: 1 },
-      { type: TokenType.Text, value: 'bold text', begin: 1, end: 10 },
-      { type: TokenType.Bracket, value: '*', begin: 10, end: 11 },
+      { type: TokenType.Bracket, value: '*', start: 0, end: 1 },
+      { type: TokenType.Text, value: 'bold text', start: 1, end: 10 },
+      { type: TokenType.Bracket, value: '*', start: 10, end: 11 },
     ]);
   });
 
@@ -354,9 +357,9 @@ Some text`;
     const result = tokenize(orgDoc);
 
     expect(result).toEqual([
-      { type: TokenType.Bracket, value: '+', begin: 0, end: 1 },
-      { type: TokenType.Text, value: 'bold text', begin: 1, end: 10 },
-      { type: TokenType.Bracket, value: '+', begin: 10, end: 11 },
+      { type: TokenType.Bracket, value: '+', start: 0, end: 1 },
+      { type: TokenType.Text, value: 'bold text', start: 1, end: 10 },
+      { type: TokenType.Bracket, value: '+', start: 10, end: 11 },
     ]);
   });
 
@@ -365,13 +368,13 @@ Some text`;
     const result = tokenize(orgDoc);
 
     expect(result).toEqual([
-      { type: TokenType.Text, value: 'This is ', begin: 0, end: 8 },
-      { type: TokenType.Bracket, value: '*', begin: 8, end: 9 },
-      { type: TokenType.Bracket, value: '/', begin: 9, end: 10 },
-      { type: TokenType.Text, value: 'italic with bold', begin: 10, end: 26 },
-      { type: TokenType.Bracket, value: '/', begin: 26, end: 27 },
-      { type: TokenType.Bracket, value: '*', begin: 27, end: 28 },
-      { type: TokenType.Text, value: ' text', begin: 28, end: 33 },
+      { type: TokenType.Text, value: 'This is ', start: 0, end: 8 },
+      { type: TokenType.Bracket, value: '*', start: 8, end: 9 },
+      { type: TokenType.Bracket, value: '/', start: 9, end: 10 },
+      { type: TokenType.Text, value: 'italic with bold', start: 10, end: 26 },
+      { type: TokenType.Bracket, value: '/', start: 26, end: 27 },
+      { type: TokenType.Bracket, value: '*', start: 27, end: 28 },
+      { type: TokenType.Text, value: ' text', start: 28, end: 33 },
     ]);
   });
 
@@ -381,14 +384,14 @@ Some text`;
   Oh! i'am an nested section content`;
 
     const result = tokenize(orgDoc);
-    console.log('🦄: [line 384][tokenizer.spec.ts] [35mresult: ', result);
 
     expect(result).toEqual([
-      { type: TokenType.Operator, value: '- ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'List element\n', begin: 2, end: 15 },
-      { type: TokenType.Operator, value: '- ', begin: 15, end: 17 },
-      { type: TokenType.Text, value: 'Second list element\n', begin: 17, end: 37 },
-      { type: TokenType.Text, value: `  Oh! i'am an nested section content`, begin: 37, end: 73 },
+      { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'List element\n', start: 2, end: 15 },
+      { type: TokenType.Operator, value: '- ', start: 15, end: 17 },
+      { type: TokenType.Text, value: 'Second list element\n', start: 17, end: 37 },
+      { type: TokenType.Indent, value: '  ', start: 37, end: 39 },
+      { type: TokenType.Text, value: `Oh! i'am an nested section content`, start: 39, end: 73 },
     ]);
   });
 
@@ -399,18 +402,43 @@ Some text`;
 - List item 1 2`;
 
     const result = tokenize(orgDoc);
-    console.log('🦄: [line 402][tokenizer.spec.ts] [35mresult: ', result);
     expect(result).toEqual([
-      { type: TokenType.Operator, value: '- ', begin: 0, end: 2 },
-      { type: TokenType.Text, value: 'List item 1 1\n', begin: 2, end: 16 },
-      { type: TokenType.Text, value: '  ', begin: 16, end: 18 },
-      { type: TokenType.Operator, value: '- ', begin: 18, end: 20 },
-      { type: TokenType.Text, value: 'List item 2 1\n', begin: 20, end: 34 },
-      { type: TokenType.Text, value: '  ', begin: 34, end: 36 },
-      { type: TokenType.Operator, value: '- ', begin: 36, end: 38 },
-      { type: TokenType.Text, value: 'List item 2 2\n', begin: 38, end: 52 },
-      { type: TokenType.Operator, value: '- ', begin: 52, end: 54 },
-      { type: TokenType.Text, value: 'List item 1 2', begin: 54, end: 67 },
+      { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'List item 1 1\n', start: 2, end: 16 },
+      { type: TokenType.Indent, value: '  ', start: 16, end: 18 },
+      { type: TokenType.Operator, value: '- ', start: 18, end: 20 },
+      { type: TokenType.Text, value: 'List item 2 1\n', start: 20, end: 34 },
+      { type: TokenType.Indent, value: '  ', start: 34, end: 36 },
+      { type: TokenType.Operator, value: '- ', start: 36, end: 38 },
+      { type: TokenType.Text, value: 'List item 2 2\n', start: 38, end: 52 },
+      { type: TokenType.Operator, value: '- ', start: 52, end: 54 },
+      { type: TokenType.Text, value: 'List item 1 2', start: 54, end: 67 },
+    ]);
+  });
+
+  it('Should parse tokens with indents', () => {
+    const orgDoc = `- List item 1
+  - Nested list item 1
+  - Nested list item 2
+- List item 2
+
+  Text with indent`;
+
+    const result = tokenize(orgDoc);
+    expect(result).toEqual([
+      { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'List item 1\n', start: 2, end: 14 },
+      { type: TokenType.Indent, value: '  ', start: 14, end: 16 },
+      { type: TokenType.Operator, value: '- ', start: 16, end: 18 },
+      { type: TokenType.Text, value: 'Nested list item 1\n', start: 18, end: 37 },
+      { type: TokenType.Indent, value: '  ', start: 37, end: 39 },
+      { type: TokenType.Operator, value: '- ', start: 39, end: 41 },
+      { type: TokenType.Text, value: 'Nested list item 2\n', start: 41, end: 60 },
+      { type: TokenType.Operator, value: '- ', start: 60, end: 62 },
+      { type: TokenType.Text, value: 'List item 2\n', start: 62, end: 74 },
+      { type: TokenType.Text, value: '\n', start: 74, end: 75 },
+      { type: TokenType.Indent, value: '  ', start: 75, end: 77 },
+      { type: TokenType.Text, value: 'Text with indent', start: 77, end: 93 },
     ]);
   });
 });

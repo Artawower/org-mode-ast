@@ -24,11 +24,19 @@ export enum TokenType {
   Bracket = 'bracket',
   Comment = 'comment',
   Operator = 'operator',
+  Indent = 'indent',
 }
 
-export interface Token {
+export interface RawToken {
   type: TokenType;
   value: string;
+}
+
+// TODO: master add token begin end positions. Use this position for build nodes
+// instead manual range calculation
+export interface Token extends RawToken {
+  start: number;
+  end: number;
 }
 
 export interface WithRange {
@@ -114,6 +122,10 @@ export interface OrgInlineCode extends WithRange, WithChildren, WithParent {
   type: NodeType.InlineCode;
 }
 
+export interface OrgIndent extends WithRange, WithValue, WithParent {
+  type: NodeType.Indent;
+}
+
 export type OrgData =
   | Headline
   | OrgRoot
@@ -127,7 +139,8 @@ export type OrgData =
   | List
   | ListItem
   | OrgCheckbox
-  | OrgInlineCode;
+  | OrgInlineCode
+  | OrgIndent;
 
 // TODO: delete
 export type OrgNode = Headline | OrgRoot;
