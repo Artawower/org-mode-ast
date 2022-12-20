@@ -103,7 +103,7 @@ describe('InlineCode', () => {
     const orgText = '=*console.log(123)*=';
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -142,7 +142,7 @@ describe('InlineCode', () => {
     const orgText = '*=not inline code=*';
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
       type: NodeType.Root,

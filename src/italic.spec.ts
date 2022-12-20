@@ -194,7 +194,7 @@ describe('Italic', () => {
     const orgText = `This is /+italic text that wrapped crossed text+/ and this is not italic text`;
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -264,7 +264,7 @@ describe('Italic', () => {
     const orgText = `/italic and *bold* text/`;
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,

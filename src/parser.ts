@@ -56,16 +56,16 @@ class Parser {
     const lineBreak = this.tokenIterator.isNewLine || this.tokenIterator.isLastToken;
     if (lineBreak) {
       this.bracketHandler.clearBracketsPairs();
-      this.astBuilder.insideListItem = false;
+      this.ctx.insideListItem = false;
     }
-    if (this.tokenIterator.isNewLine && this.astBuilder.insideHeadline) {
+    if (this.tokenIterator.isNewLine && this.ctx.insideHeadline) {
       this.astBuilder.getLastSessionOrCreate();
-      this.astBuilder.insideHeadline = false;
+      this.ctx.insideHeadline = false;
     }
   }
 
   private handleHeadline(): OrgData {
-    this.astBuilder.insideHeadline = true;
+    this.ctx.insideHeadline = true;
     const end = this.astBuilder.lastPos + this.tokenIterator.currentValue.length;
     const orgData: Headline = {
       type: NodeType.Headline,
@@ -84,8 +84,6 @@ class Parser {
     // TODO: master TOKEN SHOULD BE SELF SUFFICIENT, AND CONTAIN SUCH METHODS
     // FOR DETERMINE TOKEN STATE (space, new line, additional information about token properties)
     const lastTokenWasNewLine = (this.astBuilder.lastNode as WithValue).value?.endsWith('\n');
-    // const currentTokenStartsWithSpace = this.tokenIterator.currentValue.startsWith(' ');
-    // const insideListSection = currentTokenStartsWithSpace && this.listHandler.lastListItem;
 
     const orgData: OrgText = {
       type: NodeType.Text,
@@ -93,13 +91,6 @@ class Parser {
       start: this.astBuilder.lastPos,
       end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
-
-    // If we are inside LIST and last node contain new line and ! we have not space at the start
-    // else if (insideListSection) {
-    //   console.log('AMMA INSIDE LIST SECTION');
-    //   this.astBuilder.initNewSection(this.listHandler.lastListItem);
-    //   this.listHandler.lastListItem = null;
-    // }
 
     this.astBuilder.attachToTree(orgData);
 
@@ -111,8 +102,6 @@ class Parser {
   }
 
   private handleOperator(): OrgData {
-    // TODO: need to create common handler for such operators
-    // this.attachToTree()
     const orgData = this.buildOrgDataForOperator(this.tokenIterator.currentValue);
     if (!orgData) {
       throw new Error(`Couldn't handle opereator ${this.tokenIterator.currentValue}`);
@@ -125,7 +114,6 @@ class Parser {
     const indentNode = this.astBuilder.createIndentNode();
 
     if (this.astBuilder.isListOperator(this.tokenIterator.nextToken.value)) {
-      console.log('LIST INDENT OPERATOR');
       this.ctx.nextIndentNode = indentNode;
       this.astBuilder.increaseLastPosition(this.tokenIterator.currentValue);
       return;

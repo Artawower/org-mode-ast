@@ -5,7 +5,6 @@ import { TokenIterator } from 'token-iterator';
 import { List, ListItem, NodeType, OrgData } from 'types';
 
 export class ListHandler implements OrgHandler {
-  // public lastListItem: ListItem;
   constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
   public handle() {
@@ -68,7 +67,6 @@ export class ListHandler implements OrgHandler {
     };
     this.astBuilder.attachToTree(orgData);
     this.astBuilder.saveLastNode(orgData);
-    // this.lastListItem = orgData;
-    this.astBuilder.insideListItem = true;
+    this.ctx.insideListItem = true;
   }
 }

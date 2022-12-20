@@ -8,7 +8,7 @@ describe('Crossed tests', () => {
     const orgData = `+Crossed text+`;
     const result = parse(orgData);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
       start: 0,

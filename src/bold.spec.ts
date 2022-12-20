@@ -20,7 +20,7 @@ describe('Bold test', () => {
     const orgText = '*Not a bold text';
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(JSON.stringify(result, null, 2));
+    // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
       type: 'root',

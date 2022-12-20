@@ -4,6 +4,9 @@ export class AstContext {
   #nextIndentNode: OrgIndent;
   #nestedLists: List[] = [];
 
+  public insideHeadline: boolean = null;
+  public insideListItem: boolean = false;
+
   get lastParentList(): List {
     if (!this.#nestedLists.length) {
       return null;

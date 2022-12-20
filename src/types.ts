@@ -142,23 +142,6 @@ export type OrgData =
   | OrgInlineCode
   | OrgIndent;
 
-// TODO: delete
-export type OrgNode = Headline | OrgRoot;
-
-// export interface UniversalOrgNode extends Headline, OrgRoot, Operator, OrgText, Unresolved, ListItem {
-//   type: any;
-// }
-
-// export type UniversalOrgNode = Headline | OrgRoot | Operator | OrgText | Unresolved | ListItem | Section | List;
-
-// interface AllMergedOrgNodeInterfaces extends Headline, OrgRoot, Operator, OrgText, Unresolved, ListItem, List {
-//   type: any;
-// }
-
-// export interface UniversalOrgNode extends Partial<AllMergedOrgNodeInterfaces> {
-//   type: any;
-// }
-
 type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange;
 
 export interface UniversalOrgNode extends Partial<OrgNodeProperties> {

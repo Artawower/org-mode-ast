@@ -1,6 +1,6 @@
 import { parse } from './parser';
 
-import { removeInformationAboutParents, saveTree } from './test.helper';
+import { removeInformationAboutParents } from './test.helper';
 import { prettyTreePrint } from './tools';
 
 fdescribe('List tests', () => {
@@ -10,7 +10,7 @@ fdescribe('List tests', () => {
 - Item 3`;
 
     const result = parse(orgData);
-    console.log(prettyTreePrint(result));
+    // console.log(prettyTreePrint(result));
 
     removeInformationAboutParents(result);
 
@@ -245,7 +245,7 @@ fdescribe('List tests', () => {
  I'am subgroup with *bold* text
 - Item 2`;
     const result = parse(orgText);
-    console.log(prettyTreePrint(result));
+    // console.log(prettyTreePrint(result));
     removeInformationAboutParents(result);
     expect(prettyTreePrint(result)).toEqual(`root [0-49]
   list [0-49]
@@ -274,7 +274,7 @@ fdescribe('List tests', () => {
 
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(prettyTreePrint(result));
+    // console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-26]
   list [0-26]
       :unordered:
@@ -298,7 +298,7 @@ This text will end list
 
     const result = parse(orgText);
     removeInformationAboutParents(result);
-    console.log(prettyTreePrint(result));
+    // console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-109]
   list [0-58]
       :unordered:
@@ -502,7 +502,7 @@ This text will end list
     const result = parse(orgText);
     removeInformationAboutParents(result);
     // console.log(JSON.stringify(result, null, 2));
-    console.log(prettyTreePrint(result));
+    // console.log(prettyTreePrint(result));
 
     // Experemental test flow for nice pretty print ;)
     expect(prettyTreePrint(result)).toEqual(`root [0-71]
