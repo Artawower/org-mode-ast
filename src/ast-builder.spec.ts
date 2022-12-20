@@ -66,4 +66,22 @@ describe('AST builder tests', () => {
     const rawValue = builder.getRawValueFromNode(nestedOrgData);
     expect(rawValue).toBe('=*console.log(123)*=');
   });
+
+  it('Should correct determine list operator', () => {
+    expect(builder.isListOperator('- ')).toBe(true);
+    expect(builder.isListOperator('+ ')).toBe(true);
+    expect(builder.isListOperator('1) ')).toBe(true);
+    expect(builder.isListOperator('100500) ')).toBe(true);
+  });
+
+  it('Should not correct determine list operator', () => {
+    expect(builder.isListOperator(' -')).toBe(false);
+    expect(builder.isListOperator('-')).toBe(false);
+    expect(builder.isListOperator(' +')).toBe(false);
+    expect(builder.isListOperator('+')).toBe(false);
+    expect(builder.isListOperator('0) ')).toBe(false);
+    expect(builder.isListOperator('100500 ')).toBe(false);
+    expect(builder.isListOperator(') ')).toBe(false);
+    expect(builder.isListOperator(')')).toBe(false);
+  });
 });

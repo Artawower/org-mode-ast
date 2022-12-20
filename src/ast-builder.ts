@@ -18,12 +18,6 @@ export class AstBuilder {
   public lastNode: OrgData;
   public lastPos: number = 0;
 
-  // TODO: move inside context container
-  // this flag is necessary to prevent the tree from moving backward to find the parent
-  public insideHeadline: boolean = null;
-  public insideListItem: boolean = false;
-  // TODO: master move to list handler
-
   private lastSection: Section;
   #nodeTree: OrgData;
 
@@ -50,10 +44,7 @@ export class AstBuilder {
   }
 
   public attachToTree(orgData: OrgData): void {
-    console.log('✎: [line 53][ast-builder.ts] orgData: ', orgData);
     const parentNode = this.findParentForNodeType(orgData);
-    console.log('parent node: ', parentNode);
-
     (parentNode as OrgRoot).children.push(orgData);
     orgData.parent = parentNode;
   }
@@ -83,10 +74,7 @@ export class AstBuilder {
       !this.ctx.nextIndentNode && this.tokenIterator.isTokenNewLine(this.tokenIterator.prevToken);
 
     if (notIndentAfterNewLine && exitFromTopList && !this.isListOperator(this.tokenIterator.currentValue)) {
-      console.log('AMMA OPERATOR FOR LIST BLA!: ', (srcNode as any).value, '\n');
-
       const parent = this.ctx.topLevelList.parent;
-      // this.ctx.exitList();
       return parent;
     }
 
@@ -95,10 +83,10 @@ export class AstBuilder {
     const isNestedList = (this.lastSection?.parent?.parent as List)?.level < (srcNode as List).level;
 
     if (
-      !this.insideHeadline &&
+      !this.ctx.insideHeadline &&
       this.lastSection &&
       srcNode.type !== NodeType.ListItem &&
-      !this.insideListItem &&
+      !this.ctx.insideListItem &&
       (this.lastSection.parent.type !== NodeType.ListItem || isNestedList)
     ) {
       return this.lastSection as any;
@@ -126,10 +114,6 @@ export class AstBuilder {
       return isTargetList ? dstNode : this.findParentForNodeType(srcNode, dstNode.parent);
     }
 
-    if (srcNode.type === NodeType.Indent) {
-      console.log('INDENT!?');
-    }
-
     if (
       !isSourceNodeHeadline &&
       [
@@ -145,16 +129,6 @@ export class AstBuilder {
     }
 
     return this.findParentForNodeType(srcNode, dstNode.parent);
-  }
-
-  private findListParent(node: OrgData): OrgData {
-    while (node) {
-      if (node.type === NodeType.List) {
-        return node.parent;
-      }
-      node = node.parent;
-    }
-    return;
   }
 
   public preserveLastPositionSnapshot(orgData: OrgData): void {
@@ -190,7 +164,6 @@ export class AstBuilder {
       (this.findFirstParentNodeWithType(NodeType.Headline, NodeType.Section, NodeType.ListItem) as UniversalOrgNode);
     const parentSectionAlreadyExists = nodeWithSection?.section || nodeWithSection?.type === NodeType.Section;
 
-    console.log('✎: [line 179][ast-builder.ts] parentSectionAlreadyExists: ', parentSectionAlreadyExists);
     if (parentSectionAlreadyExists || !nodeWithSection) {
       return;
     }
@@ -287,10 +260,10 @@ export class AstBuilder {
     };
   }
 
-  public readonly listOperators = ['- ', '+ '];
-
-  // TODO: operator matcher?
   public isListOperator(token: string): boolean {
-    return this.listOperators.includes(token);
+    // NOTE: + ,- , 1), 1. - strings indicated list operator
+    // https://regex101.com/r/4qq9Ob/1
+    const listOperatorsRegexp = /^((\-|\+) )|([1-9][0-9]*((\)|\.)) )$/;
+    return !!listOperatorsRegexp.exec(token);
   }
 }
