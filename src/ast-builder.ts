@@ -210,12 +210,16 @@ export class AstBuilder {
   // Section of helpers function. Consider moving them to separate class
 
   public isNodesCheckbox(nodes: Array<OrgData & WithValue>): boolean {
-    // TODO: master SPREAD OPERATOR
+    if (nodes.length !== 3) {
+      return false;
+    }
+    const [openBracket, checkbox, closeBracket] = nodes;
+    const potentialCheckboxValues = [' ', 'x', '-'];
+
     return (
-      nodes.length === 3 &&
-      nodes[0]?.value === '[' &&
-      (nodes[1]?.value === ' ' || nodes[1]?.value.toLowerCase() === 'x') &&
-      nodes[2]?.value === ']'
+      openBracket?.value === '[' &&
+      potentialCheckboxValues.includes(checkbox?.value.toLocaleLowerCase()) &&
+      closeBracket?.value === ']'
     );
   }
 
@@ -243,8 +247,7 @@ export class AstBuilder {
   }
 
   public getRawValueFromNodes(nodes: WithValue[]): string {
-    // TODO: nested nodes!
-    return nodes.map((n) => n?.value).join('');
+    return nodes.map((n) => n?.value || this.getRawValueFromNodes([n])).join('');
   }
 
   public createIndentNode(start?: number, val?: string): OrgIndent {

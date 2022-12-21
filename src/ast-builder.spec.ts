@@ -84,4 +84,151 @@ describe('AST builder tests', () => {
     expect(builder.isListOperator(') ')).toBe(false);
     expect(builder.isListOperator(')')).toBe(false);
   });
+
+  it('Should correct determine empty checkbox operator', () => {
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: ' ',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(true);
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: 'x',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(true);
+
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: 'X',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(true);
+
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: '-',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(true);
+  });
+
+  it('Should not determine empty checkbox operator', () => {
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: 'x',
+        },
+        {
+          type: NodeType.Text,
+          value: ' ',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(false);
+
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: '  ',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(false);
+
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: '  ',
+        },
+        {
+          type: NodeType.Text,
+          value: '] ',
+        },
+      ] as any)
+    ).toBe(false);
+
+    expect(
+      builder.isNodesCheckbox([
+        {
+          type: NodeType.Text,
+          value: ' ',
+        },
+        {
+          type: NodeType.Text,
+          value: '[',
+        },
+        {
+          type: NodeType.Text,
+          value: 'X',
+        },
+        {
+          type: NodeType.Text,
+          value: ']',
+        },
+      ] as any)
+    ).toBe(false);
+  });
 });
