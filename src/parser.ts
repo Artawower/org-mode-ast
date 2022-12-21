@@ -1,7 +1,7 @@
 import { AstBuilder } from 'ast-builder';
 import { AstContext } from 'ast-context';
 import { BracketHandler } from 'bracket-handler';
-import { HandlerNotFoundError, UnsupportedOperator } from 'errors';
+import { HandlerDidNotReturnValue, HandlerNotFoundError, UnsupportedOperator } from 'errors';
 import { ListHandler } from 'list-handler';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
@@ -42,12 +42,10 @@ class Parser {
       throw new HandlerNotFoundError(this.tokenIterator.type);
     }
     const orgData = handler();
+
     if (!orgData) {
-      // TODO: check by token, only indent could return empty value
-      const m = `Handler for token ${this.tokenIterator.type} returned undefined`;
-      console.warn(m);
+      this.handleEmptyHandlerValue();
       return;
-      // throw new Error(m);
     }
 
     this.astBuilder.preserveLastPositionSnapshot(orgData);
@@ -62,6 +60,14 @@ class Parser {
       this.astBuilder.getLastSessionOrCreate();
       this.ctx.insideHeadline = false;
     }
+  }
+
+  private handleEmptyHandlerValue(): void {
+    const tokenWithPotentialUndefinedResult = [TokenType.Indent];
+    if (tokenWithPotentialUndefinedResult.includes(this.tokenIterator.type)) {
+      return;
+    }
+    throw new HandlerDidNotReturnValue(this.tokenIterator.token);
   }
 
   private handleHeadline(): OrgData {

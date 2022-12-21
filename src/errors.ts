@@ -1,3 +1,5 @@
+import { Token } from 'types';
+
 export class HandlerNotFoundError extends Error {
   public readonly type = 'HandlerNotFoundError';
 
@@ -7,17 +9,26 @@ export class HandlerNotFoundError extends Error {
   }
 }
 
+export class UnsupportedOperator extends Error {
+  public readonly type = 'HandlerDidNotReturnValue';
+
+  constructor(public operator: string) {
+    super();
+    this.message = `Handler for operator: ${this.operator} did not return a value`;
+  }
+}
+
 /**
  * This exception should not occur in a normal use case.
  * Only in development mode
  *
  * @param {string} operator
  */
-export class UnsupportedOperator extends Error {
+export class HandlerDidNotReturnValue extends Error {
   public readonly type = 'UnsupportedOperator';
 
-  constructor(public operator: string) {
+  constructor(public token: Token) {
     super();
-    this.message = `Unsupported operator: ${this.operator}`;
+    this.message = `Handler for token ${token.type} with value ${token.value} returned undefined`;
   }
 }
