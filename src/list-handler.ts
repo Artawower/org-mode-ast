@@ -8,11 +8,9 @@ export class ListHandler implements OrgHandler {
   constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
   public handle() {
-    // TODO: level and indent offset
     const isNestedList = this.ctx.setupNewParentListByLevel();
     const isSameLevelList = this.ctx.lastList?.level === this.ctx.listLevel;
 
-    // INIT NEW SECTION! ONLY WHEN PREVIOUS SECTION HASN'T CHILD ON THE SAME LIST LEVEL?
     if (isNestedList && !isSameLevelList) {
       this.astBuilder.getLastSessionOrCreate(this.ctx.lastListItem);
     }
@@ -35,8 +33,6 @@ export class ListHandler implements OrgHandler {
       start: this.astBuilder.lastPos,
       end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
-
-    // this.astBuilder.exitSection();
 
     return orgData;
   }
