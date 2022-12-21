@@ -1,6 +1,7 @@
 import { AstBuilder } from 'ast-builder';
 import { AstContext } from 'ast-context';
 import { BracketHandler } from 'bracket-handler';
+import { HandlerNotFoundError } from 'errors';
 import { ListHandler } from 'list-handler';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
@@ -38,8 +39,7 @@ class Parser {
   private handleToken(): void {
     const handler = this.tokensHandlers[this.tokenIterator.type];
     if (!handler) {
-      // TODO: error class
-      throw new Error('No handler for token type: ' + this.tokenIterator.type);
+      throw new HandlerNotFoundError(this.tokenIterator.type);
     }
     const orgData = handler();
     if (!orgData) {
