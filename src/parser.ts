@@ -1,7 +1,7 @@
 import { AstBuilder } from 'ast-builder';
 import { AstContext } from 'ast-context';
 import { BracketHandler } from 'bracket-handler';
-import { HandlerNotFoundError } from 'errors';
+import { HandlerNotFoundError, UnsupportedOperator } from 'errors';
 import { ListHandler } from 'list-handler';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
@@ -104,7 +104,7 @@ class Parser {
   private handleOperator(): OrgData {
     const orgData = this.buildOrgDataForOperator(this.tokenIterator.currentValue);
     if (!orgData) {
-      throw new Error(`Couldn't handle opereator ${this.tokenIterator.currentValue}`);
+      throw new UnsupportedOperator(this.tokenIterator.currentValue);
     }
     this.astBuilder.attachToTree(orgData);
     return orgData;
