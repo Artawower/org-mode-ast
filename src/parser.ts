@@ -87,8 +87,6 @@ class Parser {
   }
 
   private handleText(): OrgData {
-    // TODO: master TOKEN SHOULD BE SELF SUFFICIENT, AND CONTAIN SUCH METHODS
-    // FOR DETERMINE TOKEN STATE (space, new line, additional information about token properties)
     const lastTokenWasNewLine = (this.astBuilder.lastNode as WithValue).value?.endsWith('\n');
 
     const orgData: OrgText = {

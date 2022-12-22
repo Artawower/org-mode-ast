@@ -1,6 +1,5 @@
 import { TokenType, Token, RawToken, ParserConfiguration } from 'types';
 
-// TODO: master DELETE BEGIN/END ??? think about it, its very redundant
 export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly brackets = ['=', '+', '[', ']', '/', '*'];
