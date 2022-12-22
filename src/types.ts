@@ -144,7 +144,7 @@ export type OrgData =
 
 type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange;
 
-export interface UniversalOrgNode extends Partial<OrgNodeProperties> {
+export interface PartialUniversalOrgNode extends Partial<OrgNodeProperties> {
   type: any;
 }
 

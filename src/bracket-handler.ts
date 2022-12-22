@@ -12,7 +12,7 @@ import {
   OrgItalic,
   OrgRoot,
   OrgText,
-  UniversalOrgNode,
+  PartialUniversalOrgNode,
   WithChildren,
   WithValue,
 } from 'types';
@@ -57,11 +57,10 @@ export class BracketHandler implements OrgHandler {
     }
 
     const reversedBracketsStack = this.bracketsStackPositions.slice().reverse();
-
-    // TODO: master expose this logic as composition entity
     const pairToDetect = this.getOpenedBracket(this.tokenIterator.currentValue);
-
-    const foundPairIndex = reversedBracketsStack.findIndex((r) => (r.node as UniversalOrgNode).value === pairToDetect);
+    const foundPairIndex = reversedBracketsStack.findIndex(
+      (r) => (r.node as PartialUniversalOrgNode).value === pairToDetect
+    );
 
     const found = foundPairIndex !== -1;
 
@@ -74,7 +73,7 @@ export class BracketHandler implements OrgHandler {
 
     o.type = NodeType.Operator;
 
-    const realChildren = (pair.node.parent as UniversalOrgNode).children as OrgData[];
+    const realChildren = (pair.node.parent as PartialUniversalOrgNode).children as OrgData[];
     const updatedChildren = realChildren.slice(0, pair.childIndex);
 
     const nestedChildren = this.astBuilder.mergeUnresolvedNodes(
@@ -103,7 +102,7 @@ export class BracketHandler implements OrgHandler {
 
     updatedChildren.push(orgData);
     this.astBuilder.lastNode = orgData;
-    (pair.node.parent as UniversalOrgNode).children = updatedChildren;
+    (pair.node.parent as PartialUniversalOrgNode).children = updatedChildren;
 
     if (isCheckBox && pair.node.parent.type === NodeType.Headline) {
       (pair.node.parent as Headline).checked = checked;
@@ -123,7 +122,7 @@ export class BracketHandler implements OrgHandler {
       return;
     }
 
-    const nestedNode = (orgNode as WithChildren).children[1] as UniversalOrgNode;
+    const nestedNode = (orgNode as WithChildren).children[1] as PartialUniversalOrgNode;
 
     if (nestedNode?.type !== NodeType.InlineCode) {
       return;

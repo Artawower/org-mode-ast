@@ -9,7 +9,7 @@ import {
   Section,
   WithValue,
   WithChildren,
-  UniversalOrgNode,
+  PartialUniversalOrgNode,
   List,
   OrgIndent,
 } from 'types';
@@ -60,7 +60,7 @@ export class AstBuilder {
   }
 
   // TODO: this method really need refactoring
-  private findParentForNodeType(srcNode: UniversalOrgNode, dstNode?: OrgData): OrgData {
+  private findParentForNodeType(srcNode: PartialUniversalOrgNode, dstNode?: OrgData): OrgData {
     if (srcNode.parent) {
       return srcNode.parent;
     }
@@ -140,7 +140,7 @@ export class AstBuilder {
     this.lastNode = orgData;
   }
 
-  public appendLengthToParentNodes(length: number, node?: UniversalOrgNode): void {
+  public appendLengthToParentNodes(length: number, node?: PartialUniversalOrgNode): void {
     if (!node || !length) {
       return;
     }
@@ -158,10 +158,14 @@ export class AstBuilder {
   /*
    * Create new nested section
    */
-  public getLastSessionOrCreate(parentNode?: UniversalOrgNode): void {
+  public getLastSessionOrCreate(parentNode?: PartialUniversalOrgNode): void {
     const nodeWithSection =
       parentNode ||
-      (this.findFirstParentNodeWithType(NodeType.Headline, NodeType.Section, NodeType.ListItem) as UniversalOrgNode);
+      (this.findFirstParentNodeWithType(
+        NodeType.Headline,
+        NodeType.Section,
+        NodeType.ListItem
+      ) as PartialUniversalOrgNode);
     const parentSectionAlreadyExists = nodeWithSection?.section || nodeWithSection?.type === NodeType.Section;
 
     if (parentSectionAlreadyExists || !nodeWithSection) {
@@ -223,7 +227,7 @@ export class AstBuilder {
     );
   }
 
-  public getRawValueFromNode(node: UniversalOrgNode): string {
+  public getRawValueFromNode(node: PartialUniversalOrgNode): string {
     if ((node as WithValue).value) {
       return (node as WithValue).value;
     }
