@@ -163,7 +163,7 @@ export class Tokenizer {
 
   private checkIsLastTextTokenKeyword(): void {
     if (this.todoKeywords.find((t) => t === this.prevToken.value)) {
-      this.prevToken.type = TokenType.Keyword;
+      this.prevToken.setType(TokenType.Keyword);
       return;
     }
   }
@@ -189,13 +189,14 @@ export class Tokenizer {
   private addToken(token: RawToken) {
     this.begin = this.end;
     this.end = this.begin + token.value.length;
-    this.tokens.push({ ...token, start: this.begin, end: this.end });
+    const newToken = new Token(token, this.begin);
+    this.tokens.push(newToken);
   }
 
   private upsertToken(token: RawToken, force = false): void {
     if (this.prevToken?.type === token.type || force) {
       this.appendPrevValue(token.value);
-      this.prevToken.type = token.type;
+      this.prevToken.setType(token.type);
       return;
     }
     this.addToken(token);
@@ -203,8 +204,7 @@ export class Tokenizer {
 
   private appendPrevValue(c: string) {
     this.end += c.length;
-    this.prevToken.value += c;
-    this.prevToken.end = this.end;
+    this.prevToken.appendText(c);
   }
 
   private isPrevToken(...tokens: TokenType[]): boolean {

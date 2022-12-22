@@ -70,8 +70,7 @@ export class AstBuilder {
     }
 
     const exitFromTopList = !!this.ctx.topLevelList;
-    const notIndentAfterNewLine =
-      !this.ctx.nextIndentNode && this.tokenIterator.isTokenNewLine(this.tokenIterator.prevToken);
+    const notIndentAfterNewLine = !this.ctx.nextIndentNode && this.tokenIterator.prevToken?.isNewLine;
 
     if (notIndentAfterNewLine && exitFromTopList && !this.isListOperator(this.tokenIterator.currentValue)) {
       const parent = this.ctx.topLevelList.parent;

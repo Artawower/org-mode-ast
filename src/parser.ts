@@ -51,12 +51,12 @@ class Parser {
     this.astBuilder.preserveLastPositionSnapshot(orgData);
     this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
-    const lineBreak = this.tokenIterator.isNewLine || this.tokenIterator.isLastToken;
+    const lineBreak = this.tokenIterator.token.isNewLine || this.tokenIterator.isLastToken;
     if (lineBreak) {
       this.bracketHandler.clearBracketsPairs();
       this.ctx.insideListItem = false;
     }
-    if (this.tokenIterator.isNewLine && this.ctx.insideHeadline) {
+    if (this.tokenIterator.token.isNewLine && this.ctx.insideHeadline) {
       this.astBuilder.getLastSessionOrCreate();
       this.ctx.insideHeadline = false;
     }

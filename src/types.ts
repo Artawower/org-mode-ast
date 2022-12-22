@@ -32,11 +32,29 @@ export interface RawToken {
   value: string;
 }
 
-// TODO: master add token begin end positions. Use this position for build nodes
-// instead manual range calculation
-export interface Token extends RawToken {
-  start: number;
-  end: number;
+export class Token {
+  public end!: number;
+  public value!: string;
+  public type!: TokenType;
+
+  constructor(token: RawToken, public readonly start: number) {
+    this.end = start + token.value.length;
+    this.type = token.type;
+    this.value = token.value;
+  }
+
+  get isNewLine(): boolean {
+    return this.value.endsWith('\n');
+  }
+
+  public appendText(text: string): void {
+    this.value += text;
+    this.end += text.length;
+  }
+
+  public setType(t: TokenType): void {
+    this.type = t;
+  }
 }
 
 export interface WithRange {

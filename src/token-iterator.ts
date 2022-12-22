@@ -26,20 +26,11 @@ export class TokenIterator {
     return this.tokens[this.tokenPosition + 1];
   }
 
-  // TODO: master make private
-  public tokens: Token[];
+  private tokens: Token[];
   private tokenPosition: number = 0;
 
   get isLastToken(): boolean {
     return this.tokenPosition === this.tokens.length - 1;
-  }
-
-  get isNewLine(): boolean {
-    return this.isTokenNewLine(this.token);
-  }
-
-  public isTokenNewLine(token?: Token): boolean {
-    return token?.value.endsWith('\n');
   }
 
   constructor(private tokenizer: Tokenizer) {}
@@ -51,11 +42,7 @@ export class TokenIterator {
       this.#begin = this.#end;
       this.#end = this.#begin + token.value.length;
 
-      this.#token = {
-        ...token,
-        start: this.#begin,
-        end: this.#end,
-      };
+      this.#token = new Token(token, this.#begin);
 
       this.tokenPosition = i;
       callback(this.token, i);
