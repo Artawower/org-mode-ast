@@ -1,10 +1,8 @@
-import { TokenType, Token, RawToken } from 'types';
+import { TokenType, Token, RawToken, ParserConfiguration } from 'types';
 
 // TODO: master DELETE BEGIN/END ??? think about it, its very redundant
 export class Tokenizer {
   private readonly delimiter = ' ';
-  // TODO: check other todos keywords. Make them customizable
-  private readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED'];
   private readonly brackets = ['=', '+', '[', ']', '/', '*'];
   private begin: number = 0;
   private end: number = 0;
@@ -13,7 +11,7 @@ export class Tokenizer {
   private point: number = 0;
   private tokenAggregators: { [key: string]: (c: string) => void };
 
-  constructor(private text: string) {
+  constructor(private text: string, public readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED']) {
     this.initTokenAggregators();
   }
 
@@ -223,7 +221,7 @@ export class Tokenizer {
   }
 }
 
-export function tokenize(text: string): Token[] {
-  const tokenizer = new Tokenizer(text);
+export function tokenize(text: string, configuration?: ParserConfiguration): Token[] {
+  const tokenizer = new Tokenizer(text, configuration?.todoKeywords);
   return tokenizer.tokenize();
 }

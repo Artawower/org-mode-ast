@@ -13,7 +13,6 @@ export enum NodeType {
   ListItem = 'listItem',
   Italic = 'italic',
   InlineCode = 'inlineCode',
-  // TODO: need to think about this type, could be redindand...
   Indent = 'indent',
 }
 
@@ -169,4 +168,8 @@ export interface PartialUniversalOrgNode extends Partial<OrgNodeProperties> {
 export interface Node {
   type: NodeType;
   children: OrgData[];
+}
+
+export interface ParserConfiguration {
+  todoKeywords?: string[];
 }
