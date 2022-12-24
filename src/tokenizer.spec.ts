@@ -441,4 +441,34 @@ Some text`;
       { type: TokenType.Text, value: 'Text with indent', start: 77, end: 93 },
     ]);
   });
+
+  it('Should parse tokens from numeric list', () => {
+    const orgDoc = `1. List item 1
+2. List item 2`;
+
+    const result = tokenize(orgDoc);
+    expect(result).toEqual([
+      { type: TokenType.Operator, value: '1. ', start: 0, end: 3 },
+      { type: TokenType.Text, value: 'List item 1\n', start: 3, end: 15 },
+      { type: TokenType.Operator, value: '2. ', start: 15, end: 18 },
+      { type: TokenType.Text, value: 'List item 2', start: 18, end: 29 },
+    ]);
+  });
+
+  it('Should parse tokens from numeric list with curvy bracket', () => {
+    const orgDoc = `1) List item 1
+2) List item 2
+3) List item 3`;
+
+    const result = tokenize(orgDoc);
+    console.log(result);
+    expect(result).toEqual([
+      { type: TokenType.Operator, value: '1) ', start: 0, end: 3 },
+      { type: TokenType.Text, value: 'List item 1\n', start: 3, end: 15 },
+      { type: TokenType.Operator, value: '2) ', start: 15, end: 18 },
+      { type: TokenType.Text, value: 'List item 2\n', start: 18, end: 30 },
+      { type: TokenType.Operator, value: '3) ', start: 30, end: 33 },
+      { type: TokenType.Text, value: 'List item 3', start: 33, end: 44 },
+    ]);
+  });
 });

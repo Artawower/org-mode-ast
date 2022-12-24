@@ -3,9 +3,12 @@ import { TokenType, Token, RawToken, ParserConfiguration } from 'types';
 export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly brackets = ['=', '+', '[', ']', '/', '*'];
+  private readonly listItemCloseSymbols = [')', '.'];
+
   private begin: number = 0;
   private end: number = 0;
 
+  // TODO: make it as linked list
   private tokens: Token[] = [];
   private point: number = 0;
   private tokenAggregators: { [key: string]: (c: string) => void };
@@ -22,6 +25,8 @@ export class Tokenizer {
       '-': (c: string) => this.handleDash(c),
       '+': (c: string) => this.handlePlus(c),
       ':': (c: string) => this.handleCommon(c),
+      '.': (c: string) => this.handlePoint(c),
+      ')': (c: string) => this.handleParenthesis(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -61,13 +66,18 @@ export class Tokenizer {
     return this.prevToken.value?.[this.prevToken.value.length - 1] === this.delimiter;
   }
 
-  tokenize(): Token[] {
+  public tokenize(): Token[] {
     for (; this.point < this.text.length; this.point++) {
       const c = this.text[this.point];
       this.buildTokens(c);
     }
 
     return this.tokens;
+  }
+
+  // Get token by number. from the end of list
+  private getTokenByNumFromEnd(pos: number): Token {
+    return this.tokens[this.tokens.length - pos];
   }
 
   private handleAsterisk(c: string): void {
@@ -93,7 +103,8 @@ export class Tokenizer {
     }
     if (
       this.isPrevToken(TokenType.Indent) ||
-      (this.isPrevToken(TokenType.Operator) && this.prevToken.value.endsWith('-'))
+      (this.isPrevToken(TokenType.Operator) && this.prevToken.value.endsWith('-')) ||
+      this.isListOperator(this.prevToken)
     ) {
       this.appendPrevValue(c);
       return;
@@ -107,6 +118,16 @@ export class Tokenizer {
       return;
     }
     this.appendTextNode(c);
+  }
+
+  private isListOperator(token: Token): boolean {
+    const orderNumber = token?.value.slice(0, -1);
+    const listCloseOperator = token?.value.slice(-1);
+    return (
+      token?.type === TokenType.Operator &&
+      this.isValueNumber(orderNumber) &&
+      this.listItemCloseSymbols.includes(listCloseOperator)
+    );
   }
 
   private handleNumberSign(c: string): void {
@@ -135,6 +156,28 @@ export class Tokenizer {
 
   private handleCommon(c: string): void {
     this.addToken({ type: TokenType.Operator, value: c });
+  }
+
+  private handlePoint(c: string): void {
+    const wasNewLineOrStartDocument = !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isNewLine;
+    if (wasNewLineOrStartDocument && this.isValueNumber(this.prevToken.value)) {
+      this.upsertToken({ type: TokenType.Operator, value: c }, true);
+      return;
+    }
+    this.handleText(c);
+  }
+
+  private handleParenthesis(c: string): void {
+    const wasNewLineOrStartDocument = !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isNewLine;
+    if (wasNewLineOrStartDocument && this.isValueNumber(this.prevToken.value)) {
+      this.upsertToken({ type: TokenType.Operator, value: c }, true);
+      return;
+    }
+    this.handleText(c);
+  }
+
+  private isValueNumber(value: string): boolean {
+    return !!value.match(/^[0-9]+$/);
   }
 
   private handleBracket(c: string): void {
