@@ -529,4 +529,86 @@ This text will end list
       text [57-71] ("item 2 level 1")
 `);
   });
+
+  it('Should parse ordered list', () => {
+    const orgText = `1. Item 1
+2. Item 2
+3. Item 3`;
+
+    const result = parse(orgText);
+    removeInformationAboutParents(result);
+    console.log(prettyTreePrint(result));
+    expect(prettyTreePrint(result)).toEqual(`root [0-29]
+  list [0-29]
+      :ordered:
+      :level 0:
+    listItem [0-10]
+      operator [0-3] ("1. ")
+      text [3-10] ("Item 1\\n")
+    listItem [10-20]
+      operator [10-13] ("2. ")
+      text [13-20] ("Item 2\\n")
+    listItem [20-29]
+      operator [20-23] ("3. ")
+      text [23-29] ("Item 3")
+`);
+  });
+
+  it('Should parse ordered list with parenthesis list item', () => {
+    const orgText = `1) Item 1
+2) Item 2
+3) Item 3`;
+
+    const result = parse(orgText);
+    removeInformationAboutParents(result);
+    console.log(prettyTreePrint(result));
+    expect(prettyTreePrint(result)).toEqual(`root [0-29]
+  list [0-29]
+      :ordered:
+      :level 0:
+    listItem [0-10]
+      operator [0-3] ("1) ")
+      text [3-10] ("Item 1\\n")
+    listItem [10-20]
+      operator [10-13] ("2) ")
+      text [13-20] ("Item 2\\n")
+    listItem [20-29]
+      operator [20-23] ("3) ")
+      text [23-29] ("Item 3")
+`);
+  });
+
+  fit('Should parse nested ordered list with parenthesis list items', () => {
+    const orgText = `1) Item 1
+  1) Nested item 1
+  2) Nested item 2
+2) Item 2`;
+
+    const result = parse(orgText);
+    removeInformationAboutParents(result);
+    console.log(prettyTreePrint(result));
+    expect(prettyTreePrint(result)).toEqual(`root [0-57]
+  list [0-57]
+      :ordered:
+      :level 0:
+    listItem [0-10]
+      operator [0-3] ("1) ")
+      text [3-10] ("Item 1\\n")
+      section [10-48]
+        list [10-48]
+            :ordered:
+            :level 1:
+          listItem [10-29]
+            indent [10-12] ("  ")
+            operator [12-15] ("1) ")
+            text [15-29] ("Nested item 1\\n")
+          listItem [29-48]
+            indent [29-31] ("  ")
+            operator [31-34] ("2) ")
+            text [34-48] ("Nested item 2\\n")
+    listItem [48-57]
+      operator [48-51] ("2) ")
+      text [51-57] ("Item 2")
+`);
+  });
 });
