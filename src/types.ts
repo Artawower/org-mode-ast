@@ -46,6 +46,10 @@ export class Token {
     return this.value.endsWith('\n');
   }
 
+  get isBlank(): boolean {
+    return this.value.trim().length === 0;
+  }
+
   public appendText(text: string): void {
     this.value += text;
     this.end += text.length;
@@ -53,6 +57,10 @@ export class Token {
 
   public setType(t: TokenType): void {
     this.type = t;
+  }
+
+  public isType(t: TokenType): boolean {
+    return this.type === t;
   }
 }
 

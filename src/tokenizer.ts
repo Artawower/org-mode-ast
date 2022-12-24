@@ -1,4 +1,4 @@
-import { TokenType, Token, RawToken, ParserConfiguration } from 'types';
+import { TokenType, Token, RawToken, ParserConfiguration, NodeType } from 'types';
 
 export class Tokenizer {
   private readonly delimiter = ' ';
@@ -159,8 +159,13 @@ export class Tokenizer {
   }
 
   private handlePoint(c: string): void {
+    this.handleListOperatorOrText(c);
+  }
+
+  private handleListOperatorOrText(c: string): boolean {
     const wasNewLineOrStartDocument = !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isNewLine;
-    if (wasNewLineOrStartDocument && this.isValueNumber(this.prevToken.value)) {
+    const wasSpace = this.getTokenByNumFromEnd(2)?.isBlank;
+    if ((wasSpace || wasNewLineOrStartDocument) && this.isValueNumber(this.prevToken.value)) {
       this.upsertToken({ type: TokenType.Operator, value: c }, true);
       return;
     }
@@ -168,12 +173,7 @@ export class Tokenizer {
   }
 
   private handleParenthesis(c: string): void {
-    const wasNewLineOrStartDocument = !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isNewLine;
-    if (wasNewLineOrStartDocument && this.isValueNumber(this.prevToken.value)) {
-      this.upsertToken({ type: TokenType.Operator, value: c }, true);
-      return;
-    }
-    this.handleText(c);
+    this.handleListOperatorOrText(c);
   }
 
   private isValueNumber(value: string): boolean {

@@ -471,4 +471,22 @@ Some text`;
       { type: TokenType.Text, value: 'List item 3', start: 33, end: 44 },
     ]);
   });
+
+  fit('Should parse tokens from nested numeric list with curvy bracket', () => {
+    const orgDoc = `1) List item 1
+  1) Nested List item 2
+2) List item 3`;
+
+    const result = tokenize(orgDoc);
+    console.log(result);
+    expect(result).toEqual([
+      { type: TokenType.Operator, value: '1) ', start: 0, end: 3 },
+      { type: TokenType.Text, value: 'List item 1\n', start: 3, end: 15 },
+      { type: TokenType.Indent, value: '  ', start: 15, end: 17 },
+      { type: TokenType.Operator, value: '1) ', start: 17, end: 20 },
+      { type: TokenType.Text, value: 'Nested List item 2\n', start: 20, end: 39 },
+      { type: TokenType.Operator, value: '2) ', start: 39, end: 42 },
+      { type: TokenType.Text, value: 'List item 3', start: 42, end: 53 },
+    ]);
+  });
 });
