@@ -59,16 +59,19 @@ export class AstBuilder {
     }
   }
 
-  // TODO: this method really need refactoring
-  private findParentForNodeType(srcNode: PartialUniversalOrgNode, dstNode?: OrgData): OrgData {
-    if (srcNode.parent) {
-      return srcNode.parent;
-    }
-
+  private isNotListIndentInsideSection(srcNode: OrgData, dstNode: OrgData): OrgData {
     if (srcNode.type === NodeType.Indent && !this.isListOperator(this.tokenIterator.currentValue) && this.lastSection) {
       return this.lastSection;
     }
+  }
 
+  private isParentAlreadyExist(srcNode: OrgData, dstNode: OrgData): OrgData {
+    if (srcNode.parent) {
+      return srcNode.parent;
+    }
+  }
+
+  private isNodeAfterListWithSameLevel(srcNode: OrgData, dstNode: OrgData): OrgData {
     const exitFromTopList = !!this.ctx.topLevelList;
     const notIndentAfterNewLine = !this.ctx.nextIndentNode && this.tokenIterator.prevToken?.isNewLine;
 
@@ -76,9 +79,15 @@ export class AstBuilder {
       const parent = this.ctx.topLevelList.parent;
       return parent;
     }
+  }
 
-    dstNode ||= this.lastNode;
+  private isDestinationRootNode(srcNode: OrgData, dstNode: OrgData): OrgData {
+    if (dstNode.type === NodeType.Root) {
+      return dstNode;
+    }
+  }
 
+  private isInsideList(srcNode: OrgData, dstNode: OrgData): OrgData {
     const isNestedList = (this.lastSection?.parent?.parent as List)?.level < (srcNode as List).level;
 
     if (
@@ -90,29 +99,28 @@ export class AstBuilder {
     ) {
       return this.lastSection as any;
     }
+  }
 
-    if (!dstNode) {
-      throw new Error(`Something went wrong, couldn't find parent`);
-    }
-
-    if (dstNode.type === NodeType.Root) {
-      return dstNode;
-    }
-
+  private isNestedHeadline(srcNode: OrgData, dstNode: OrgData): OrgData {
     const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     const isTargetNodeHeadline = dstNode.type === NodeType.Headline;
 
     if (isSourceNodeHeadline && isTargetNodeHeadline && (<Headline>srcNode).level > (<Headline>dstNode).level) {
       return (dstNode as Headline).section;
     }
+  }
 
-    const isSrcListItem = srcNode.type === NodeType.ListItem;
-    const isTargetList = dstNode.type === NodeType.List;
+  // private isNestedListItem(srcNode: OrgData, dstNode: OrgData): OrgData {
+  //   const isSrcListItem = srcNode.type === NodeType.ListItem;
+  //   const isTargetList = dstNode.type === NodeType.List;
 
-    if (isSrcListItem) {
-      return isTargetList ? dstNode : this.findParentForNodeType(srcNode, dstNode.parent);
-    }
+  //   if (isSrcListItem) {
+  //     return isTargetList ? dstNode : this.findParentForNodeType(srcNode, dstNode.parent);
+  //   }
+  // }
 
+  private isCommonDestinationAndSrcNotHeadline(srcNode: OrgData, dstNode: OrgData): OrgData {
+    const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     if (
       !isSourceNodeHeadline &&
       [
@@ -125,6 +133,33 @@ export class AstBuilder {
       ].includes(dstNode.type)
     ) {
       return dstNode;
+    }
+  }
+
+  private findParentForNodeType(srcNode: PartialUniversalOrgNode, dstNode?: OrgData): OrgData {
+    dstNode = dstNode || this.lastNode;
+
+    if (!dstNode) {
+      throw new Error(`Something went wrong, couldn't find last node`);
+    }
+
+    // TODO: need to combine some functions for less complexity
+    const parentMatchers = [
+      this.isParentAlreadyExist,
+      this.isDestinationRootNode,
+
+      this.isNotListIndentInsideSection,
+      this.isNodeAfterListWithSameLevel,
+      this.isInsideList,
+      this.isNestedHeadline,
+      this.isCommonDestinationAndSrcNotHeadline,
+    ];
+
+    for (const matcher of parentMatchers) {
+      const parent = matcher.bind(this)(srcNode, dstNode);
+      if (parent) {
+        return parent;
+      }
     }
 
     return this.findParentForNodeType(srcNode, dstNode.parent);
