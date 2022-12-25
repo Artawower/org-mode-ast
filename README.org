@@ -14,7 +14,7 @@
 #+html: </a>
 
 * Abstract syntax tree via typescript for org mode.
-
+#+html: <img src="./images/tree.png" align="right" width="18%">
 - No regexp
 - Fast
 - Minimum dependencies as possible
