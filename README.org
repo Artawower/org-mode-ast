@@ -39,10 +39,29 @@ Of this requirements i want the following from this parser:
 6. Each element of the tree has own range with begin and end positions.
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
+* Progress
+- [X] Bold/italic/crossed out text
+- [X] Lists
+- [X] Headlines
+- [X] Inline code
+- [X] Inline quotes
+- [ ] Tables
+- [ ] Links
+- [ ] Src blocs
+- [ ] Latex blocks
+- [ ] Html/quotes blocks
+- [ ] Inline html
+- [ ] Comments
+- [ ] Properties
+- [ ] Date and time
+- [ ] Keywords
+- [X] Tags
+
+  Am i miss something? Please, let me know.
+
 * Also see
   
 - [[https://github.com/rasendubi/uniorg][Uniorg - another one ast for org mode]] 
-
 * Contribute
 
 #+html: <span class="badge-buymeacoffee">
