@@ -40,8 +40,10 @@ Of this requirements i want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
+** Org nodes
 - [X] Bold/italic/crossed out text
 - [X] Lists
+- [ ] List progress
 - [X] Headlines
 - [X] Inline code
 - [X] Inline quotes
@@ -55,9 +57,12 @@ Of this requirements i want the following from this parser:
 - [ ] Properties
 - [ ] Date and time
 - [ ] Keywords
+- [ ] Cross links
 - [X] Tags
 
   Am i miss something? Please, let me know.
+** Common feature
+- [ ] Metadata collecting
 
 * Also see
   
