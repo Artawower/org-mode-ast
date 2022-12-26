@@ -4,6 +4,8 @@ export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly brackets = ['=', '+', '[', ']', '/', '*'];
   private readonly listItemCloseSymbols = [')', '.'];
+  private readonly keywordPrefix = '#+';
+  private readonly blockKeywords = ['begin_src', 'end_src'];
 
   private begin: number = 0;
   private end: number = 0;
@@ -113,7 +115,7 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
-    this.appendTextNode(c);
+    this.appendTextToken(c);
   }
 
   private isListOperator(token: Token): boolean {
@@ -145,6 +147,10 @@ export class Tokenizer {
   private handlePlus(c: string): void {
     if (this.isNextChar(this.delimiter) && (!this.prevToken || this.prevToken.isType(TokenType.NewLine))) {
       this.addToken({ type: TokenType.Operator, value: c });
+      return;
+    }
+    if (this.isPrevToken(TokenType.Comment)) {
+      this.upsertToken({ type: TokenType.Operator, value: c }, true);
       return;
     }
     this.handleBracket(c);
@@ -190,11 +196,11 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
-    this.appendTextNode(c);
+    this.appendTextToken(c);
     this.checkIsLastTextTokenKeyword();
   }
 
-  private appendTextNode(c: string): void {
+  private appendTextToken(c: string): void {
     if (this.prevToken?.isType(TokenType.NewLine)) {
       this.addToken({ type: TokenType.Text, value: c });
       return;
@@ -202,11 +208,35 @@ export class Tokenizer {
     this.upsertToken({ type: TokenType.Text, value: c });
   }
 
+  private isBlockKeyword(value: string): boolean {
+    return this.blockKeywords.includes(value.toLowerCase());
+  }
+
   private checkIsLastTextTokenKeyword(): void {
     if (this.todoKeywords.find((t) => t === this.prevToken.value)) {
       this.prevToken.setType(TokenType.Keyword);
       return;
     }
+    if (this.isBlockKeyword(this.prevToken.value)) {
+      this.forceMergeLastTokens(2, TokenType.Keyword);
+    }
+  }
+
+  /** Force merge last tokens
+   *
+   * @param count - count of tokens to merge
+   * @param type - type of new token
+   */
+  private forceMergeLastTokens(count: number, type: TokenType): void {
+    const tokens = this.tokens.splice(-count);
+    const newToken = new Token(
+      {
+        type,
+        value: tokens.map((t) => t.value).join(''),
+      },
+      tokens[0].start
+    );
+    this.addToken(newToken);
   }
 
   private formattersWithSpaceAtTheEnd = ['-', '+'];

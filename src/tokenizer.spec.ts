@@ -527,20 +527,22 @@ Some text`;
     ]);
   });
 
-  xit('Should parse tokens for src block', () => {
+  fit('Should parse tokens for src block', () => {
     const orgDoc = `#+BEGIN_SRC js
 const a = 1;
 #+END_SRC`;
 
     const result = tokenize(orgDoc);
+    console.log('✎: [line 536][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
-      { type: TokenType.Operator, value: '#+BEGIN_SRC' },
-      { type: TokenType.Text, value: ' ' },
-      { type: TokenType.Text, value: 'js' },
-      { type: TokenType.NewLine, value: '\n' },
-      { type: TokenType.Text, value: 'const a = 1;' },
-      { type: TokenType.NewLine, value: '\n' },
-      { type: TokenType.Operator, value: '#+END_SRC' },
+      { start: 11, end: 22, type: 'keyword', value: '#+BEGIN_SRC' },
+      { start: 22, end: 25, type: 'text', value: ' js' },
+      { start: 25, end: 26, type: 'newLine', value: '\n' },
+      { start: 26, end: 34, type: 'text', value: 'const a ' },
+      { start: 34, end: 35, type: 'bracket', value: '=' },
+      { start: 35, end: 38, type: 'text', value: ' 1;' },
+      { start: 38, end: 39, type: 'newLine', value: '\n' },
+      { start: 48, end: 57, type: 'keyword', value: '#+END_SRC' },
     ]);
   });
 });
