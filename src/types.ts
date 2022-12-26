@@ -14,11 +14,13 @@ export enum NodeType {
   Italic = 'italic',
   InlineCode = 'inlineCode',
   Indent = 'indent',
+  NewLine = 'newLine',
 }
 
 export enum TokenType {
   Headline = 'headline',
   Text = 'text',
+  NewLine = 'newLine',
   Keyword = 'keyword',
   Bracket = 'bracket',
   Comment = 'comment',
@@ -40,10 +42,6 @@ export class Token {
     this.end = start + token.value.length;
     this.type = token.type;
     this.value = token.value;
-  }
-
-  get isNewLine(): boolean {
-    return this.value.endsWith('\n');
   }
 
   get isBlank(): boolean {
@@ -151,6 +149,10 @@ export interface OrgIndent extends WithRange, WithValue, WithParent {
   type: NodeType.Indent;
 }
 
+export interface OrgNewLine extends WithRange, WithParent, WithValue {
+  type: NodeType.NewLine;
+}
+
 export type OrgData =
   | Headline
   | OrgRoot
@@ -165,7 +167,8 @@ export type OrgData =
   | ListItem
   | OrgCheckbox
   | OrgInlineCode
-  | OrgIndent;
+  | OrgIndent
+  | OrgNewLine;
 
 type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange;
 

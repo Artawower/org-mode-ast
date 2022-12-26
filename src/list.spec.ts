@@ -40,8 +40,14 @@ fdescribe('List tests', () => {
                 {
                   type: 'text',
                   start: 2,
+                  end: 8,
+                  value: 'Item 1',
+                },
+                {
+                  type: 'newLine',
+                  start: 8,
                   end: 9,
-                  value: 'Item 1\n',
+                  value: '\n',
                 },
               ],
             },
@@ -59,8 +65,14 @@ fdescribe('List tests', () => {
                 {
                   type: 'text',
                   start: 11,
+                  end: 17,
+                  value: 'Item 2',
+                },
+                {
+                  type: 'newLine',
+                  start: 17,
                   end: 18,
-                  value: 'Item 2\n',
+                  value: '\n',
                 },
               ],
             },
@@ -145,7 +157,7 @@ fdescribe('List tests', () => {
                   ],
                 },
                 {
-                  type: 'text',
+                  type: 'newLine',
                   start: 10,
                   end: 11,
                   value: '\n',
@@ -189,7 +201,7 @@ fdescribe('List tests', () => {
                   ],
                 },
                 {
-                  type: 'text',
+                  type: 'newLine',
                   start: 21,
                   end: 22,
                   value: '\n',
@@ -253,7 +265,8 @@ fdescribe('List tests', () => {
       :level 0:
     listItem [0-9]
       operator [0-2] ("- ")
-      text [2-9] ("Item 1\\n")
+      text [2-8] ("Item 1")
+      newLine [8-9]
       section [9-41]
         indent [9-10] (" ")
         text [10-29] ("I'am subgroup with ")
@@ -261,7 +274,8 @@ fdescribe('List tests', () => {
           operator [29-30] ("*")
           text [30-34] ("bold")
           operator [34-35] ("*")
-        text [35-41] (" text\\n")
+        text [35-40] (" text")
+        newLine [40-41]
     listItem [41-49]
       operator [41-43] ("- ")
       text [43-49] ("Item 2")
@@ -281,7 +295,8 @@ fdescribe('List tests', () => {
       :level 0:
     listItem [0-9]
       operator [0-2] ("- ")
-      text [2-9] ("Item 1\\n")
+      text [2-8] ("Item 1")
+      newLine [8-9]
       section [9-26]
         indent [9-10] (" ")
         text [10-26] ("Some nested text")
@@ -305,16 +320,21 @@ This text will end list
       :level 0:
     listItem [0-9]
       operator [0-2] ("- ")
-      text [2-9] ("Item 1\\n")
+      text [2-8] ("Item 1")
+      newLine [8-9]
       section [9-49]
         indent [9-10] (" ")
-        text [10-27] ("Some nested text\\n")
+        text [10-26] ("Some nested text")
+        newLine [26-27]
         indent [27-28] (" ")
-        text [28-49] ("End another one text\\n")
+        text [28-48] ("End another one text")
+        newLine [48-49]
     listItem [49-58]
       operator [49-51] ("- ")
-      text [51-58] ("Item 2\\n")
-  text [58-82] ("This text will end list\\n")
+      text [51-57] ("Item 2")
+      newLine [57-58]
+  text [58-81] ("This text will end list")
+  newLine [81-82]
   list [82-109]
       :unordered:
       :level 0:
@@ -335,7 +355,8 @@ This text will end list
       :level 0:
     listItem [0-9]
       operator [0-2] ("+ ")
-      text [2-9] ("Item 1\\n")
+      text [2-8] ("Item 1")
+      newLine [8-9]
     listItem [9-17]
       operator [9-11] ("+ ")
       text [11-17] ("Item 2")
@@ -398,7 +419,7 @@ This text will end list
                   ],
                 },
                 {
-                  type: 'text',
+                  type: 'newLine',
                   start: 10,
                   end: 11,
                   value: '\n',
@@ -442,7 +463,7 @@ This text will end list
                   ],
                 },
                 {
-                  type: 'text',
+                  type: 'newLine',
                   start: 21,
                   end: 22,
                   value: '\n',
@@ -511,7 +532,8 @@ This text will end list
       :level 0:
     listItem [0-17]
       operator [0-2] ("- ")
-      text [2-17] ("item 1 level 1\\n")
+      text [2-16] ("item 1 level 1")
+      newLine [16-17]
       section [17-55]
         list [17-55]
             :unordered:
@@ -519,11 +541,13 @@ This text will end list
           listItem [17-36]
             indent [17-19] ("  ")
             operator [19-21] ("- ")
-            text [21-36] ("item 1 level 2\\n")
+            text [21-35] ("item 1 level 2")
+            newLine [35-36]
           listItem [36-55]
             indent [36-38] ("  ")
             operator [38-40] ("- ")
-            text [40-55] ("item 2 level 2\\n")
+            text [40-54] ("item 2 level 2")
+            newLine [54-55]
     listItem [55-71]
       operator [55-57] ("- ")
       text [57-71] ("item 2 level 1")
@@ -544,10 +568,12 @@ This text will end list
       :level 0:
     listItem [0-10]
       operator [0-3] ("1. ")
-      text [3-10] ("Item 1\\n")
+      text [3-9] ("Item 1")
+      newLine [9-10]
     listItem [10-20]
       operator [10-13] ("2. ")
-      text [13-20] ("Item 2\\n")
+      text [13-19] ("Item 2")
+      newLine [19-20]
     listItem [20-29]
       operator [20-23] ("3. ")
       text [23-29] ("Item 3")
@@ -568,17 +594,19 @@ This text will end list
       :level 0:
     listItem [0-10]
       operator [0-3] ("1) ")
-      text [3-10] ("Item 1\\n")
+      text [3-9] ("Item 1")
+      newLine [9-10]
     listItem [10-20]
       operator [10-13] ("2) ")
-      text [13-20] ("Item 2\\n")
+      text [13-19] ("Item 2")
+      newLine [19-20]
     listItem [20-29]
       operator [20-23] ("3) ")
       text [23-29] ("Item 3")
 `);
   });
 
-  fit('Should parse nested ordered list with parenthesis list items', () => {
+  it('Should parse nested ordered list with parenthesis list items', () => {
     const orgText = `1) Item 1
   1) Nested item 1
   2) Nested item 2
@@ -593,7 +621,8 @@ This text will end list
       :level 0:
     listItem [0-10]
       operator [0-3] ("1) ")
-      text [3-10] ("Item 1\\n")
+      text [3-9] ("Item 1")
+      newLine [9-10]
       section [10-48]
         list [10-48]
             :ordered:
@@ -601,11 +630,13 @@ This text will end list
           listItem [10-29]
             indent [10-12] ("  ")
             operator [12-15] ("1) ")
-            text [15-29] ("Nested item 1\\n")
+            text [15-28] ("Nested item 1")
+            newLine [28-29]
           listItem [29-48]
             indent [29-31] ("  ")
             operator [31-34] ("2) ")
-            text [34-48] ("Nested item 2\\n")
+            text [34-47] ("Nested item 2")
+            newLine [47-48]
     listItem [48-57]
       operator [48-51] ("2) ")
       text [51-57] ("Item 2")

@@ -5,7 +5,7 @@ import { HandlerDidNotReturnValue, HandlerNotFoundError, UnsupportedOperator } f
 import { ListHandler } from 'list-handler';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
-import { Headline, NodeType, OrgData, OrgIndent, OrgText, TokenType, WithValue } from './types';
+import { Headline, NodeType, OrgData, OrgIndent, OrgNewLine, OrgText, TokenType, WithValue } from './types';
 
 class Parser {
   constructor(
@@ -34,6 +34,7 @@ class Parser {
     [TokenType.Bracket]: () => this.bracketHandler.handle(),
     [TokenType.Operator]: () => this.handleOperator(),
     [TokenType.Indent]: () => this.handleIndent(),
+    [TokenType.NewLine]: () => this.handleNewLine(),
   };
 
   private handleToken(): void {
@@ -51,12 +52,12 @@ class Parser {
     this.astBuilder.preserveLastPositionSnapshot(orgData);
     this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
-    const lineBreak = this.tokenIterator.token.isNewLine || this.tokenIterator.isLastToken;
+    const lineBreak = this.tokenIterator.token?.isType(TokenType.NewLine) || this.tokenIterator.isLastToken;
     if (lineBreak) {
       this.bracketHandler.clearBracketsPairs();
       this.ctx.insideListItem = false;
     }
-    if (this.tokenIterator.token.isNewLine && this.ctx.insideHeadline) {
+    if (this.tokenIterator.token?.isType(TokenType.NewLine) && this.ctx.insideHeadline) {
       this.astBuilder.getLastSessionOrCreate();
       this.ctx.insideHeadline = false;
     }
@@ -125,6 +126,12 @@ class Parser {
     this.astBuilder.getLastSessionOrCreate();
     this.astBuilder.attachToTree(indentNode);
     return indentNode;
+  }
+
+  private handleNewLine(): OrgNewLine {
+    const newLineNode = this.astBuilder.createNewLineNode();
+    this.astBuilder.attachToTree(newLineNode);
+    return newLineNode;
   }
 
   private buildOrgDataForOperator(operator: string): OrgData {

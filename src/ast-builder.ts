@@ -12,6 +12,8 @@ import {
   PartialUniversalOrgNode,
   List,
   OrgIndent,
+  TokenType,
+  OrgNewLine,
 } from 'types';
 
 export class AstBuilder {
@@ -59,21 +61,21 @@ export class AstBuilder {
     }
   }
 
-  private isNotListIndentInsideSection(srcNode: OrgData, dstNode: OrgData): OrgData {
+  private isNotListIndentInsideSection(srcNode: OrgData, _dstNode: OrgData): OrgData {
     if (srcNode.type === NodeType.Indent && !this.isListOperator(this.tokenIterator.currentValue) && this.lastSection) {
       return this.lastSection;
     }
   }
 
-  private isParentAlreadyExist(srcNode: OrgData, dstNode: OrgData): OrgData {
+  private isParentAlreadyExist(srcNode: OrgData, _dstNode: OrgData): OrgData {
     if (srcNode.parent) {
       return srcNode.parent;
     }
   }
 
-  private isNodeAfterListWithSameLevel(srcNode: OrgData, dstNode: OrgData): OrgData {
+  private isNodeAfterListWithSameLevel(_srcNode: OrgData, _dstNode: OrgData): OrgData {
     const exitFromTopList = !!this.ctx.topLevelList;
-    const notIndentAfterNewLine = !this.ctx.nextIndentNode && this.tokenIterator.prevToken?.isNewLine;
+    const notIndentAfterNewLine = !this.ctx.nextIndentNode && this.tokenIterator.prevToken?.isType(TokenType.NewLine);
 
     if (notIndentAfterNewLine && exitFromTopList && !this.isListOperator(this.tokenIterator.currentValue)) {
       const parent = this.ctx.topLevelList.parent;
@@ -81,13 +83,13 @@ export class AstBuilder {
     }
   }
 
-  private isDestinationRootNode(srcNode: OrgData, dstNode: OrgData): OrgData {
+  private isDestinationRootNode(_srcNode: OrgData, dstNode: OrgData): OrgData {
     if (dstNode.type === NodeType.Root) {
       return dstNode;
     }
   }
 
-  private isInsideList(srcNode: OrgData, dstNode: OrgData): OrgData {
+  private isInsideList(srcNode: OrgData): OrgData {
     const isNestedList = (this.lastSection?.parent?.parent as List)?.level < (srcNode as List).level;
 
     if (
@@ -110,6 +112,7 @@ export class AstBuilder {
     }
   }
 
+  // TODO: remove
   // private isNestedListItem(srcNode: OrgData, dstNode: OrgData): OrgData {
   //   const isSrcListItem = srcNode.type === NodeType.ListItem;
   //   const isTargetList = dstNode.type === NodeType.List;
@@ -297,6 +300,15 @@ export class AstBuilder {
       type: NodeType.Indent,
       start,
       end,
+      value: this.tokenIterator.currentValue,
+    };
+  }
+
+  public createNewLineNode(): OrgNewLine {
+    return {
+      type: NodeType.NewLine,
+      start: this.lastPos,
+      end: this.lastPos + 1,
       value: this.tokenIterator.currentValue,
     };
   }

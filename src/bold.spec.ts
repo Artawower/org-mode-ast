@@ -159,7 +159,8 @@ describe('Bold test', () => {
           end: 14,
           children: [
             { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Hello world\n', start: 2, end: 14 },
+            { type: NodeType.Text, value: 'Hello world', start: 2, end: 13 },
+            { type: NodeType.NewLine, value: '\n', start: 13, end: 14 },
           ],
           section: {
             type: NodeType.Section,

@@ -1,4 +1,4 @@
-import { OrgData, WithChildren, WithSection, WithValue } from 'types';
+import { NodeType, OrgData, WithChildren, WithSection, WithValue } from 'types';
 
 /**
  * Method for pretty debug org tree. Useful for long AST.
@@ -10,7 +10,10 @@ export function prettyTreePrint(data: OrgData, level = 0): string {
   const indent = ' '.repeat(level * 2);
   let result = indent;
 
-  const val = (data as WithValue).value ? ` (${JSON.stringify((data as WithValue).value)})` : '';
+  const val =
+    (data as WithValue).value && data.type !== NodeType.NewLine
+      ? ` (${JSON.stringify((data as WithValue).value)})`
+      : '';
   result += `${data.type} [${data.start}-${data.end}]${val}\n`;
   if ((data as any).ordered != null) {
     result += `${indent}    :${(data as any).ordered ? 'ordered' : 'unordered'}:\n`;

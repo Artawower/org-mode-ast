@@ -82,7 +82,8 @@ some text`;
           end: 8,
           children: [
             { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Title\n', start: 2, end: 8 },
+            { type: NodeType.Text, value: 'Title', start: 2, end: 7 },
+            { type: NodeType.NewLine, value: '\n', start: 7, end: 8 },
           ],
           section: {
             type: NodeType.Section,
@@ -113,7 +114,8 @@ some text`;
           end: 14,
           children: [
             { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Hello world\n', start: 2, end: 14 },
+            { type: NodeType.Text, value: 'Hello world', start: 2, end: 13 },
+            { type: NodeType.NewLine, value: '\n', start: 13, end: 14 },
           ],
           section: {
             type: NodeType.Section,
@@ -127,7 +129,8 @@ some text`;
                 end: 31,
                 children: [
                   { type: NodeType.Operator, value: '** ', start: 14, end: 17 },
-                  { type: NodeType.Text, value: 'Hello world 2\n', start: 17, end: 31 },
+                  { type: NodeType.Text, value: 'Hello world 2', start: 17, end: 30 },
+                  { type: NodeType.NewLine, value: '\n', start: 30, end: 31 },
                 ],
                 section: {
                   type: NodeType.Section,

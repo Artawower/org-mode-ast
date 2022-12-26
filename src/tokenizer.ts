@@ -1,4 +1,4 @@
-import { TokenType, Token, RawToken, ParserConfiguration, NodeType } from 'types';
+import { TokenType, Token, RawToken, ParserConfiguration } from 'types';
 
 export class Tokenizer {
   private readonly delimiter = ' ';
@@ -27,6 +27,7 @@ export class Tokenizer {
       ':': (c: string) => this.handleCommon(c),
       '.': (c: string) => this.handlePoint(c),
       ')': (c: string) => this.handleParenthesis(c),
+      '\n': (c: string) => this.handleNewLine(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -41,14 +42,6 @@ export class Tokenizer {
 
   get prevToken(): Token {
     return this.tokens?.[this.tokens.length - 1];
-  }
-
-  get isPrevTokenIsNewLine(): boolean {
-    if (!this.prevToken) {
-      return true;
-    }
-    const prev = this.prevToken;
-    return prev?.type === TokenType.Text && prev.value?.[prev.value.length - 1] === '\n';
   }
 
   get nextChar(): string {
@@ -81,7 +74,10 @@ export class Tokenizer {
   }
 
   private handleAsterisk(c: string): void {
-    if ((this.isDelimiter(this.nextChar) || this.isNextChar('*')) && (!this.prevToken || this.isPrevTokenIsNewLine)) {
+    if (
+      (this.isDelimiter(this.nextChar) || this.isNextChar('*')) &&
+      (!this.prevToken || this.prevToken.isType(TokenType.NewLine))
+    ) {
       this.addToken({ type: TokenType.Headline, value: c });
       return;
     }
@@ -97,7 +93,7 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
-    if (this.isPrevTokenIsNewLine) {
+    if (!this.prevToken || this.prevToken?.isType(TokenType.NewLine)) {
       this.addToken({ type: TokenType.Indent, value: c });
       return;
     }
@@ -135,11 +131,11 @@ export class Tokenizer {
   }
 
   private handleDash(c: string): void {
-    if (!this.isPrevTokenIsNewLine && this.prevToken && !this.prevToken.value.trim()) {
+    if (this.prevToken && !this.prevToken.isType(TokenType.NewLine) && !this.prevToken.value.trim()) {
       this.upsertToken({ type: TokenType.Operator, value: c });
       return;
     }
-    if (this.isPrevTokenIsNewLine || !this.prevToken) {
+    if (!this.prevToken || this.prevToken.isType(TokenType.NewLine)) {
       this.addToken({ type: TokenType.Operator, value: c });
       return;
     }
@@ -147,7 +143,7 @@ export class Tokenizer {
   }
 
   private handlePlus(c: string): void {
-    if (this.isNextChar(this.delimiter) && (this.isPrevTokenIsNewLine || !this.prevToken)) {
+    if (this.isNextChar(this.delimiter) && (!this.prevToken || this.prevToken.isType(TokenType.NewLine))) {
       this.addToken({ type: TokenType.Operator, value: c });
       return;
     }
@@ -163,7 +159,8 @@ export class Tokenizer {
   }
 
   private handleListOperatorOrText(c: string): boolean {
-    const wasNewLineOrStartDocument = !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isNewLine;
+    const wasNewLineOrStartDocument =
+      !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isType(TokenType.NewLine);
     const wasSpace = this.getTokenByNumFromEnd(2)?.isBlank;
     if ((wasSpace || wasNewLineOrStartDocument) && this.isValueNumber(this.prevToken.value)) {
       this.upsertToken({ type: TokenType.Operator, value: c }, true);
@@ -174,6 +171,10 @@ export class Tokenizer {
 
   private handleParenthesis(c: string): void {
     this.handleListOperatorOrText(c);
+  }
+
+  private handleNewLine(c: string): void {
+    this.addToken({ type: TokenType.NewLine, value: c });
   }
 
   private isValueNumber(value: string): boolean {
@@ -194,7 +195,7 @@ export class Tokenizer {
   }
 
   private appendTextNode(c: string): void {
-    if (this.isPrevTokenIsNewLine) {
+    if (this.prevToken?.isType(TokenType.NewLine)) {
       this.addToken({ type: TokenType.Text, value: c });
       return;
     }
