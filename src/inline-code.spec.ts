@@ -1,13 +1,13 @@
 import { parse } from './parser';
 import { NodeType } from './types';
 
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 
 describe('InlineCode', () => {
   it('Should parse inline code', () => {
     const orgText = '=console.log(123)=';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -45,7 +45,7 @@ describe('InlineCode', () => {
   it('Should not parse incline code that started from equal operator', () => {
     const orgText = '=console.log(123)';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -64,7 +64,7 @@ describe('InlineCode', () => {
   it('Should not parse incline code that contain equal operator at the middle', () => {
     const orgText = 'a = 12';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -83,7 +83,7 @@ describe('InlineCode', () => {
   it('Should not parse incline code that contain equal operator at the end', () => {
     const orgText = 'a =';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -102,7 +102,7 @@ describe('InlineCode', () => {
   it('Should not parse nested formatters inside inline code', () => {
     const orgText = '=*console.log(123)*=';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,
@@ -141,7 +141,7 @@ describe('InlineCode', () => {
   it('Should not interpret equal operator as inline code inside nesting formatters', () => {
     const orgText = '*=not inline code=*';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
@@ -181,7 +181,7 @@ describe('InlineCode', () => {
   it('Should parse inline code inside headline', () => {
     const orgText = '* =console.log(123)=';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,

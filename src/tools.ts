@@ -14,13 +14,21 @@ export function prettyTreePrint(data: OrgData, level = 0): string {
     (data as WithValue).value && data.type !== NodeType.NewLine
       ? ` (${JSON.stringify((data as WithValue).value)})`
       : '';
+
   result += `${data.type} [${data.start}-${data.end}]${val}\n`;
+
   if ((data as any).ordered != null) {
     result += `${indent}    :${(data as any).ordered ? 'ordered' : 'unordered'}:\n`;
   }
 
   if ((data as any).level != null) {
     result += `${indent}    :level ${(data as any).level}:\n`;
+  }
+
+  if ((data as any).properties) {
+    Object.keys((data as any).properties).forEach((k: string) => {
+      result += `${indent}    :${k} ${(data as any).properties[k]}:\n`;
+    });
   }
 
   level++;

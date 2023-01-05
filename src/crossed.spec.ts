@@ -1,13 +1,13 @@
 import { parse } from './parser';
 import { NodeType } from './types';
 
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 
 describe('Crossed tests', () => {
   it('Should parse crossed text with crossed tokens', () => {
     const orgData = `+Crossed text+`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: 'root',
@@ -31,7 +31,7 @@ describe('Crossed tests', () => {
   it('Shpuld not parse text as crossed when it starts from single plus', () => {
     const orgText = '+Not a crossed text';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -50,7 +50,7 @@ describe('Crossed tests', () => {
   it('Should parse crossed text inside headline', () => {
     const orgData = `* Hello +world+`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,

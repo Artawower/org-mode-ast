@@ -348,19 +348,14 @@ Some text`;
 :ID:      123
 :END:`;
     const result = tokenize(orgDoc);
+    console.log('✎: [line 351][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
-      { type: TokenType.Operator, value: ':', start: 0, end: 1 },
-      { type: TokenType.Text, value: 'PROPERTIES', start: 1, end: 11 },
-      { type: TokenType.Operator, value: ':', start: 11, end: 12 },
+      { type: TokenType.Keyword, value: ':PROPERTIES:', start: 0, end: 12 },
       { type: TokenType.NewLine, value: '\n', start: 12, end: 13 },
-      { type: TokenType.Operator, value: ':', start: 13, end: 14 },
-      { type: TokenType.Text, value: 'ID', start: 14, end: 16 },
-      { type: TokenType.Operator, value: ':', start: 16, end: 17 },
+      { type: TokenType.Keyword, value: ':ID:', start: 13, end: 17 },
       { type: TokenType.Text, value: '      123', start: 17, end: 26 },
       { type: TokenType.NewLine, value: '\n', start: 26, end: 27 },
-      { type: TokenType.Operator, value: ':', start: 27, end: 28 },
-      { type: TokenType.Text, value: 'END', start: 28, end: 31 },
-      { type: TokenType.Operator, value: ':', start: 31, end: 32 },
+      { type: TokenType.Keyword, value: ':END:', start: 27, end: 32 },
     ]);
   });
 
@@ -527,7 +522,7 @@ Some text`;
     ]);
   });
 
-  fit('Should parse tokens for src block', () => {
+  it('Should parse tokens for src block', () => {
     const orgDoc = `#+BEGIN_SRC js
 const a = 1;
 #+END_SRC`;
@@ -535,14 +530,42 @@ const a = 1;
     const result = tokenize(orgDoc);
     console.log('✎: [line 536][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
-      { start: 11, end: 22, type: 'keyword', value: '#+BEGIN_SRC' },
-      { start: 22, end: 25, type: 'text', value: ' js' },
-      { start: 25, end: 26, type: 'newLine', value: '\n' },
-      { start: 26, end: 34, type: 'text', value: 'const a ' },
-      { start: 34, end: 35, type: 'bracket', value: '=' },
-      { start: 35, end: 38, type: 'text', value: ' 1;' },
-      { start: 38, end: 39, type: 'newLine', value: '\n' },
-      { start: 48, end: 57, type: 'keyword', value: '#+END_SRC' },
+      { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
+      { start: 11, end: 14, type: 'text', value: ' js' },
+      { start: 14, end: 15, type: 'newLine', value: '\n' },
+      { start: 15, end: 23, type: 'text', value: 'const a ' },
+      { start: 23, end: 24, type: 'bracket', value: '=' },
+      { start: 24, end: 27, type: 'text', value: ' 1;' },
+      { start: 27, end: 28, type: 'newLine', value: '\n' },
+      { start: 28, end: 37, type: 'keyword', value: '#+END_SRC' },
+    ]);
+  });
+
+  it('Should tokenize src block with properties', () => {
+    const orgDoc = `#+BEGIN_SRC js :tangle test.js :exports no :noweb yes
+const a = 1;
+console.log(a);
+#+END_SRC`;
+
+    const result = tokenize(orgDoc);
+    console.log('✎: [line 556][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
+      { start: 11, end: 15, type: 'text', value: ' js ' },
+      { start: 15, end: 22, type: 'keyword', value: ':tangle' },
+      { start: 22, end: 31, type: 'text', value: ' test.js ' },
+      { start: 31, end: 39, type: 'keyword', value: ':exports' },
+      { start: 39, end: 43, type: 'text', value: ' no ' },
+      { start: 43, end: 49, type: 'keyword', value: ':noweb' },
+      { start: 49, end: 53, type: 'text', value: ' yes' },
+      { start: 53, end: 54, type: 'newLine', value: '\n' },
+      { start: 54, end: 62, type: 'text', value: 'const a ' },
+      { start: 62, end: 63, type: 'bracket', value: '=' },
+      { start: 63, end: 66, type: 'text', value: ' 1;' },
+      { start: 66, end: 67, type: 'newLine', value: '\n' },
+      { start: 67, end: 82, type: 'text', value: 'console.log(a);' },
+      { start: 82, end: 83, type: 'newLine', value: '\n' },
+      { start: 83, end: 92, type: 'keyword', value: '#+END_SRC' },
     ]);
   });
 });

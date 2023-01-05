@@ -1,13 +1,13 @@
 import { parse } from './parser';
 import { NodeType, OrgData } from './types';
 
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 
 describe('Bold test', () => {
   it('Should parse nested text formatters', () => {
     const orgData = '* Hello +*world*+';
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,

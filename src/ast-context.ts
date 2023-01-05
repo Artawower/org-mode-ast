@@ -1,4 +1,4 @@
-import { List, ListItem, OrgIndent } from 'types';
+import { List, ListItem, OrgIndent, OrgKeyword } from 'types';
 
 export class AstContext {
   #nextIndentNode: OrgIndent;
@@ -6,6 +6,9 @@ export class AstContext {
 
   public insideHeadline: boolean = null;
   public insideListItem: boolean = false;
+
+  public srcBlockBegin: OrgKeyword = null;
+  public srcBlockChildIndex: number = null;
 
   get lastParentList(): List {
     if (!this.#nestedLists.length) {
@@ -61,6 +64,11 @@ export class AstContext {
 
   public exitList(): void {
     this.#nestedLists = [];
+  }
+
+  public resetSrcBlockInfo(): void {
+    this.srcBlockBegin = null;
+    this.srcBlockChildIndex = null;
   }
 
   constructor() {}

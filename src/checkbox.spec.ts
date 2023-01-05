@@ -1,13 +1,13 @@
 import { parse } from './parser';
 import { NodeType, OrgData } from './types';
 
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 
 describe('Checkbox tests', () => {
-  it('Shuld parse checkboxed headline', () => {
+  it('Should parse checkboxed headline', () => {
     const orgData = `* [ ] Hello world`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -38,7 +38,7 @@ describe('Checkbox tests', () => {
   it('Should parse checked checkboxed headline', () => {
     const orgData = `* [X] Hello world`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -69,7 +69,7 @@ describe('Checkbox tests', () => {
   it('Should parse checked checkboxed headline with nested bold text', () => {
     const orgData = `* [X] Hello *world*`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,

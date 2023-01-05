@@ -15,6 +15,14 @@ export enum NodeType {
   InlineCode = 'inlineCode',
   Indent = 'indent',
   NewLine = 'newLine',
+
+  SrcBlock = 'srcBlock',
+  BlockHeader = 'blockHeader',
+  BlockFooter = 'blockFooter',
+  BlockBody = 'blockBody',
+  QuoteBlock = 'quoteBlock',
+  HtmlBlock = 'htmlBlock',
+  Keyword = 'keyword',
 }
 
 export enum TokenType {
@@ -62,6 +70,8 @@ export class Token {
   }
 }
 
+// TODO: master make nodes as classes
+
 export interface WithRange {
   start: number;
   end: number;
@@ -71,8 +81,13 @@ export interface WithChildren {
   children: OrgData[];
 }
 
-interface WithParent {
+export interface WithParent {
   parent?: OrgData;
+}
+
+export interface WithNeighbors {
+  prev?: OrgData;
+  next?: OrgData;
 }
 
 export interface WithValue {
@@ -91,13 +106,13 @@ export interface Section extends WithRange, WithChildren, WithParent {
   type: NodeType.Section;
 }
 
-export interface Headline extends WithRange, WithChildren, WithParent, WithSection {
+export interface Headline extends WithRange, WithChildren, WithParent, WithSection, WithNeighbors {
   type: NodeType.Headline;
   level: number;
   checked?: boolean;
 }
 
-export interface Operator extends WithRange, WithParent, WithValue {
+export interface Operator extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.Operator;
 }
 
@@ -105,52 +120,80 @@ export interface OrgRoot extends WithRange, WithChildren, WithParent {
   type: NodeType.Root;
 }
 
-export interface OrgText extends WithRange, WithParent, WithValue {
+export interface OrgText extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.Text;
 }
 
-export interface List extends WithRange, WithChildren, WithParent {
+export interface List extends WithRange, WithChildren, WithParent, WithNeighbors {
   type: NodeType.List;
   ordered: boolean;
   level: number;
 }
 
-export interface ListItem extends WithRange, WithChildren, WithParent, WithSection {
+export interface ListItem extends WithRange, WithChildren, WithParent, WithSection, WithNeighbors {
   type: NodeType.ListItem;
 }
 
 // Special type for temporary nodes. Should not be exist after parsing.
 // Probably could be replaced by simple text...
-export interface Unresolved extends WithRange, WithParent, WithValue {
+export interface Unresolved extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.Unresolved;
 }
 
-export interface OrgBold extends WithRange, WithChildren, WithParent {
+export interface OrgBold extends WithRange, WithChildren, WithParent, WithNeighbors {
   type: NodeType.Bold;
 }
 
-export interface OrgCrossed extends WithRange, WithChildren, WithParent {
+export interface OrgCrossed extends WithRange, WithChildren, WithParent, WithNeighbors {
   type: NodeType.Crossed;
 }
 
-export interface OrgCheckbox extends WithRange, WithParent, WithCheckStatus {
+export interface OrgCheckbox extends WithRange, WithParent, WithCheckStatus, WithNeighbors {
   type: NodeType.Checkbox;
 }
 
-export interface OrgItalic extends WithRange, WithChildren, WithParent {
+export interface OrgItalic extends WithRange, WithChildren, WithParent, WithNeighbors {
   type: NodeType.Italic;
 }
 
-export interface OrgInlineCode extends WithRange, WithChildren, WithParent {
+export interface OrgInlineCode extends WithRange, WithChildren, WithParent, WithNeighbors {
   type: NodeType.InlineCode;
 }
 
-export interface OrgIndent extends WithRange, WithValue, WithParent {
+export interface OrgIndent extends WithRange, WithValue, WithParent, WithNeighbors {
   type: NodeType.Indent;
 }
 
-export interface OrgNewLine extends WithRange, WithParent, WithValue {
+export interface OrgNewLine extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.NewLine;
+}
+
+export interface OrgBlockHeader extends WithRange, WithParent, WithNeighbors, WithChildren {
+  type: NodeType.BlockHeader;
+}
+
+export interface OrgBlockBody extends WithRange, WithParent, WithNeighbors, WithChildren {
+  type: NodeType.BlockBody;
+}
+
+export interface OrgBlockFooter extends WithRange, WithParent, WithNeighbors, WithChildren {
+  type: NodeType.BlockFooter;
+}
+
+export interface OrgSrcBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
+  type: NodeType.SrcBlock;
+  language?: string;
+  properties?: { [key: string]: string };
+}
+
+export interface SrcBlockMetaInfo {
+  language?: string;
+  tangle?: string;
+  [key: string]: string | undefined;
+}
+
+export interface OrgKeyword extends WithRange, WithParent, WithValue, WithNeighbors {
+  type: NodeType.Keyword;
 }
 
 export type OrgData =
@@ -168,9 +211,14 @@ export type OrgData =
   | OrgCheckbox
   | OrgInlineCode
   | OrgIndent
-  | OrgNewLine;
+  | OrgNewLine
+  | OrgKeyword
+  | OrgSrcBlock
+  | OrgBlockHeader
+  | OrgBlockBody
+  | OrgBlockFooter;
 
-type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange;
+type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange & WithNeighbors;
 
 export interface PartialUniversalOrgNode extends Partial<OrgNodeProperties> {
   type: any;
@@ -184,3 +232,5 @@ export interface Node {
 export interface ParserConfiguration {
   todoKeywords?: string[];
 }
+
+export type BlockPosition = 'begin' | 'end';

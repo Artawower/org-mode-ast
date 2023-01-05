@@ -1,5 +1,6 @@
 import { AstBuilder } from 'ast-builder';
 import { AstContext } from 'ast-context';
+import { BlockHandler } from 'block-handler';
 import { BracketHandler } from 'bracket-handler';
 import { HandlerDidNotReturnValue, HandlerNotFoundError, UnsupportedOperator } from 'errors';
 import { ListHandler } from 'list-handler';
@@ -13,7 +14,8 @@ class Parser {
     private tokenIterator: TokenIterator,
     private astBuilder: AstBuilder,
     private bracketHandler: BracketHandler,
-    private listHandler: ListHandler
+    private listHandler: ListHandler,
+    private blockHandler: BlockHandler
   ) {}
 
   public parse(): OrgData {
@@ -35,6 +37,7 @@ class Parser {
     [TokenType.Operator]: () => this.handleOperator(),
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
+    [TokenType.Keyword]: () => this.handleKeyword(),
   };
 
   private handleToken(): void {
@@ -134,10 +137,24 @@ class Parser {
     return newLineNode;
   }
 
+  private handleKeyword(): OrgData {
+    if (this.blockHandler.isBlockKeyword(this.tokenIterator.currentValue)) {
+      return this.blockHandler.handle();
+    }
+    const createdKeyword = this.astBuilder.createKeyword();
+    this.astBuilder.attachToTree(createdKeyword);
+    return createdKeyword;
+  }
+
   private buildOrgDataForOperator(operator: string): OrgData {
     if (this.astBuilder.isListOperator(operator)) {
       const orgData = this.listHandler.handle();
       return orgData;
+    }
+
+    // TODO also check is not a tag and opened propery drawer
+    if (this.astBuilder.isPropertyOperator(operator)) {
+      return this.astBuilder.createUnresolvedNode();
     }
   }
 }
@@ -148,7 +165,8 @@ export function parse(text: string): OrgData {
   const tokenIterator = new TokenIterator(tokenizer);
   const astBuilder = new AstBuilder(ctx, tokenIterator);
   const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
+  const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
   const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
-  const parser = new Parser(ctx, tokenIterator, astBuilder, bracketHandler, listHandler);
+  const parser = new Parser(ctx, tokenIterator, astBuilder, bracketHandler, listHandler, blockHandler);
   return parser.parse();
 }

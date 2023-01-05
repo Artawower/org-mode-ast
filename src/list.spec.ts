@@ -1,6 +1,6 @@
 import { parse } from './parser';
 
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 import { prettyTreePrint } from './tools';
 
 fdescribe('List tests', () => {
@@ -12,7 +12,7 @@ fdescribe('List tests', () => {
     const result = parse(orgData);
     // console.log(prettyTreePrint(result));
 
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
 
     expect(result).toEqual({
       type: 'root',
@@ -107,7 +107,7 @@ fdescribe('List tests', () => {
 - /Item 3/`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -258,7 +258,7 @@ fdescribe('List tests', () => {
 - Item 2`;
     const result = parse(orgText);
     // console.log(prettyTreePrint(result));
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(prettyTreePrint(result)).toEqual(`root [0-49]
   list [0-49]
       :unordered:
@@ -287,7 +287,7 @@ fdescribe('List tests', () => {
  Some nested text`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-26]
   list [0-26]
@@ -312,7 +312,7 @@ This text will end list
 - New item 1 of second list`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-109]
   list [0-58]
@@ -348,7 +348,7 @@ This text will end list
     const orgText = `+ Item 1
 + Item 2`;
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(prettyTreePrint(result)).toEqual(`root [0-17]
   list [0-17]
       :unordered:
@@ -369,7 +369,7 @@ This text will end list
 + /Item 3/`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -521,7 +521,7 @@ This text will end list
 - item 2 level 1`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
     // console.log(prettyTreePrint(result));
 
@@ -560,7 +560,7 @@ This text will end list
 3. Item 3`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-29]
   list [0-29]
@@ -586,7 +586,7 @@ This text will end list
 3) Item 3`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-29]
   list [0-29]
@@ -613,7 +613,7 @@ This text will end list
 2) Item 2`;
 
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     console.log(prettyTreePrint(result));
     expect(prettyTreePrint(result)).toEqual(`root [0-57]
   list [0-57]

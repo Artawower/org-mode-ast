@@ -26,7 +26,7 @@ export class Tokenizer {
       '#': (c: string) => this.handleNumberSign(c),
       '-': (c: string) => this.handleDash(c),
       '+': (c: string) => this.handlePlus(c),
-      ':': (c: string) => this.handleCommon(c),
+      ':': (c: string) => this.handleComma(c),
       '.': (c: string) => this.handlePoint(c),
       ')': (c: string) => this.handleParenthesis(c),
       '\n': (c: string) => this.handleNewLine(c),
@@ -156,7 +156,11 @@ export class Tokenizer {
     this.handleBracket(c);
   }
 
-  private handleCommon(c: string): void {
+  private handleComma(c: string): void {
+    if (this.prevToken?.value?.startsWith(':')) {
+      this.upsertToken({ type: TokenType.Keyword, value: c }, true);
+      return;
+    }
     this.addToken({ type: TokenType.Operator, value: c });
   }
 
@@ -205,6 +209,11 @@ export class Tokenizer {
       this.addToken({ type: TokenType.Text, value: c });
       return;
     }
+    if (this.prevToken?.value.startsWith(':') && !this.isDelimiter(c)) {
+      this.upsertToken({ type: TokenType.Keyword, value: c }, true);
+      // this.appendPrevValue(c);
+      return;
+    }
     this.upsertToken({ type: TokenType.Text, value: c });
   }
 
@@ -236,7 +245,7 @@ export class Tokenizer {
       },
       tokens[0].start
     );
-    this.addToken(newToken);
+    this.tokens.push(newToken);
   }
 
   private formattersWithSpaceAtTheEnd = ['-', '+'];

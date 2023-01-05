@@ -1,13 +1,13 @@
 import { parse } from './parser';
 import { NodeType, OrgData } from './types';
 
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 
 describe('Bold test', () => {
   it('Should not parse text as bold with single asterisk', () => {
     const headline = 'Hello *world';
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -19,7 +19,7 @@ describe('Bold test', () => {
   it('Should not parse bold text started from single asterisk', () => {
     const orgText = '*Not a bold text';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
@@ -40,7 +40,7 @@ describe('Bold test', () => {
   it('Should not parse text as bold with asterisk at the end', () => {
     const headline = 'Hello world*';
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -52,7 +52,7 @@ describe('Bold test', () => {
   it('Should not parse text as bold with another bracket symbols', () => {
     const headline = 'Hello *+[world';
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -64,7 +64,7 @@ describe('Bold test', () => {
   it('should parse bold text', () => {
     const orgData = '*Hello world*';
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -87,7 +87,7 @@ describe('Bold test', () => {
   it('Should parse bold text with intersection of other pair tokens', () => {
     const orgData = '*Hello +world*';
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -110,7 +110,7 @@ describe('Bold test', () => {
   it('Should parse bold text from headline', () => {
     const orgData = '* Hello *world*';
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
 
     expect(result).toEqual({
       type: 'root',
@@ -145,7 +145,7 @@ describe('Bold test', () => {
     const orgData = `* Hello world
 ** Hello *world*`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
 
     expect(result).toEqual({
       type: 'root',
@@ -197,7 +197,7 @@ describe('Bold test', () => {
   it('Should parse bold with that started from brackets symbols', () => {
     const orgData = `* Hello +[*world*`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,

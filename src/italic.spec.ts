@@ -1,12 +1,12 @@
 import { parse } from './parser';
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 import { NodeType } from './types';
 
 describe('Italic', () => {
   it('should be italic', () => {
     const orgText = '/This is italic/';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -44,7 +44,7 @@ describe('Italic', () => {
   it('Should not parse italic text with single slash', () => {
     const orgText = 'This is /italic';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
@@ -65,7 +65,7 @@ describe('Italic', () => {
   it('Should not parse italic when sentence start from the single slash', () => {
     const orgText = '/Not a italic text!';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -84,7 +84,7 @@ describe('Italic', () => {
   it('Should not parse italic text with multiple opened brackets', () => {
     const orgText = 'This is +[/*simple not italic text';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -103,7 +103,7 @@ describe('Italic', () => {
   it('Should not parse italic text when sentence ends with slash', () => {
     const orgText = 'This is italic/';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: NodeType.Root,
       start: 0,
@@ -122,7 +122,7 @@ describe('Italic', () => {
   it('Should parse italic text with nested formatting', () => {
     const orgText = 'This is */italic with bold/* text';
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
 
     expect(result).toEqual({
@@ -193,7 +193,7 @@ describe('Italic', () => {
   it('Should parse italic text that wrapped crossed text', () => {
     const orgText = `This is /+italic text that wrapped crossed text+/ and this is not italic text`;
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,
@@ -263,7 +263,7 @@ describe('Italic', () => {
   it('Should parse italic text with nested formatting and different length', () => {
     const orgText = `/italic and *bold* text/`;
     const result = parse(orgText);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     // console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({
       type: NodeType.Root,

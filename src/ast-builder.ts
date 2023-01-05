@@ -4,7 +4,6 @@ import {
   Headline,
   NodeType,
   OrgData,
-  OrgRoot,
   OrgText,
   Section,
   WithValue,
@@ -14,6 +13,13 @@ import {
   OrgIndent,
   TokenType,
   OrgNewLine,
+  OrgKeyword,
+  WithNeighbors,
+  OrgSrcBlock,
+  Unresolved,
+  OrgBlockHeader,
+  OrgBlockBody,
+  OrgBlockFooter,
 } from 'types';
 
 export class AstBuilder {
@@ -21,6 +27,7 @@ export class AstBuilder {
   public lastPos: number = 0;
 
   private lastSection: Section;
+
   #nodeTree: OrgData;
 
   get nodeTree(): OrgData {
@@ -47,7 +54,14 @@ export class AstBuilder {
 
   public attachToTree(orgData: OrgData): void {
     const parentNode = this.findParentForNodeType(orgData);
-    (parentNode as OrgRoot).children.push(orgData);
+    const parentWithChildren = parentNode as WithChildren;
+    const prevNeighbor = parentWithChildren.children[parentWithChildren.children.length - 1] as WithNeighbors & OrgData;
+    (orgData as WithNeighbors).prev = prevNeighbor;
+    if (prevNeighbor) {
+      prevNeighbor.next = orgData;
+    }
+
+    (parentNode as WithChildren).children.push(orgData);
     orgData.parent = parentNode;
   }
 
@@ -139,8 +153,27 @@ export class AstBuilder {
     }
   }
 
+  private isKeyword(srcNode: OrgData, dstNode: OrgData): OrgData {
+    if (
+      srcNode.type === NodeType.Keyword &&
+      [NodeType.SrcBlock, NodeType.BlockFooter, NodeType.BlockHeader, NodeType.BlockBody].includes(dstNode.type)
+    ) {
+      return dstNode;
+    }
+  }
+
+  // private isUnresolvedNode(srcNode: OrgData, dstNode: OrgData): OrgData {
+  //   if (srcNode.type === NodeType.Unresolved) {
+  //     return this.findParentForNodeType(srcNode, dstNode.parent);
+  //   }
+  // }
+
   private findParentForNodeType(srcNode: PartialUniversalOrgNode, dstNode?: OrgData): OrgData {
     dstNode = dstNode || this.lastNode;
+    // if (srcNode.type === NodeType.Unresolved) {
+    //   console.log('✎: [line 166][ast-builder.ts] dstNode: ', srcNode, dstNode, dstNode.parent);
+    // }
+    console.log('✎: [line 166][ast-builder.ts] dstNode: ', srcNode, dstNode, dstNode.parent);
 
     if (!dstNode) {
       throw new Error(`Something went wrong, couldn't find last node`);
@@ -150,8 +183,9 @@ export class AstBuilder {
     const parentMatchers = [
       this.isParentAlreadyExist,
       this.isDestinationRootNode,
-
+      // this.isUnresolvedNode,
       this.isNotListIndentInsideSection,
+      this.isKeyword,
       this.isNodeAfterListWithSameLevel,
       this.isInsideList,
       this.isNestedHeadline,
@@ -165,7 +199,20 @@ export class AstBuilder {
       }
     }
 
+    if (!dstNode.parent) {
+      throw new Error(`Something went wrong, couldn't find last node, ${srcNode.type}, prev node: ${dstNode.type}`);
+    }
+
     return this.findParentForNodeType(srcNode, dstNode.parent);
+  }
+
+  public createKeyword(): OrgKeyword {
+    return {
+      type: NodeType.Keyword,
+      start: this.lastPos,
+      end: this.lastPos + this.tokenIterator.currentValue.length,
+      value: this.tokenIterator.currentValue,
+    };
   }
 
   public preserveLastPositionSnapshot(orgData: OrgData): void {
@@ -178,6 +225,7 @@ export class AstBuilder {
   }
 
   public appendLengthToParentNodes(length: number, node?: PartialUniversalOrgNode): void {
+    // console.log('✎: [line 216][ast-builder.ts] node: ', node);
     if (!node || !length) {
       return;
     }
@@ -225,13 +273,13 @@ export class AstBuilder {
     this.lastSection = null;
   }
 
-  public mergeUnresolvedNodes(nodes: OrgData[]): OrgData[] {
+  public mergeUnresolvedNodes(nodes: OrgData[], newType?: NodeType): OrgData[] {
     const mergedNodes: OrgData[] = [];
     nodes.forEach((n) => {
       const lastNode = mergedNodes[mergedNodes.length - 1];
 
       if (n.type === NodeType.Unresolved) {
-        (n as OrgData).type = NodeType.Text;
+        (n as PartialUniversalOrgNode).type = newType || NodeType.Text;
       }
 
       if (!lastNode) {
@@ -313,10 +361,88 @@ export class AstBuilder {
     };
   }
 
-  public isListOperator(token: string): boolean {
+  public createSrcBlockNode(
+    start: number,
+    end: number,
+    prev: OrgData,
+    language?: string,
+    properties?: { [key: string]: string }
+  ): OrgSrcBlock {
+    return {
+      type: NodeType.SrcBlock,
+      start,
+      end,
+      prev,
+      language,
+      properties,
+      children: [],
+    };
+  }
+
+  public createTextNode(start: number, value: string): OrgText {
+    return {
+      type: NodeType.Text,
+      start,
+      end: start + value.length,
+      value,
+    };
+  }
+
+  public createUnresolvedNode(): Unresolved {
+    return {
+      type: NodeType.Unresolved,
+      start: this.lastPos,
+      end: this.lastPos + this.tokenIterator.currentValue.length,
+      value: this.tokenIterator.currentValue,
+    };
+  }
+
+  public isListOperator(tokenValue: string): boolean {
     // NOTE: + ,- , 1), 1. - strings indicated list operator
     // https://regex101.com/r/4qq9Ob/1
     const listOperatorsRegexp = /^((\-|\+) )|([1-9][0-9]*((\)|\.)) )$/;
-    return !!listOperatorsRegexp.exec(token);
+    return !!listOperatorsRegexp.exec(tokenValue);
+  }
+
+  public createBlockHeaderNode(parent: OrgData, children: PartialUniversalOrgNode[]): OrgBlockHeader {
+    const blockHeader: OrgBlockHeader = {
+      type: NodeType.BlockHeader,
+      start: children[0].start,
+      end: children[children.length - 1].end,
+      children: children as OrgData[],
+      parent,
+    };
+    blockHeader.children.forEach((n) => (n.parent = blockHeader));
+    return blockHeader;
+  }
+
+  public createBlockFooterNode(parent: OrgData, children?: PartialUniversalOrgNode[], start?: number): OrgBlockFooter {
+    const blockFooter: OrgBlockFooter = {
+      type: NodeType.BlockFooter,
+      start: children?.[0]?.start || start,
+      end: children?.[children.length - 1]?.end,
+      children: (children as OrgData[]) || [],
+      parent,
+    };
+
+    blockFooter.children.forEach((c) => (c.parent = blockFooter));
+    return blockFooter;
+  }
+
+  public createBlockBodyNode(parent: OrgData, children: PartialUniversalOrgNode[]): OrgBlockBody {
+    const blockBody: OrgBlockBody = {
+      type: NodeType.BlockBody,
+      start: children[0].start,
+      end: children[children.length - 1].end,
+      children: children as OrgData[],
+      parent,
+    };
+
+    blockBody.children.forEach((n) => (n.parent = blockBody));
+    return blockBody;
+  }
+
+  public isPropertyOperator(tokenValue: string): boolean {
+    return tokenValue === ':';
   }
 }

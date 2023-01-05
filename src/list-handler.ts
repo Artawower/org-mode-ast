@@ -7,7 +7,7 @@ import { List, ListItem, NodeType, OrgData } from 'types';
 export class ListHandler implements OrgHandler {
   constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
-  public handle() {
+  public handle(): OrgData {
     const isNestedList = this.ctx.setupNewParentListByLevel();
     const isSameLevelList = this.ctx.lastList?.level === this.ctx.listLevel;
 

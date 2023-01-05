@@ -1,13 +1,13 @@
 import { parse } from './parser';
 import { NodeType } from './types';
-import { removeInformationAboutParents } from './test.helper';
+import { removeInformationAboutRelatives } from './test.helper';
 
 describe('Headline tests', () => {
   // Headline tests start
   it('should parse first level headline', () => {
     const headline = '* Hello world';
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -30,7 +30,7 @@ describe('Headline tests', () => {
   it('Should parse headline with long start space', () => {
     const headline = '*        Hello world';
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -53,7 +53,7 @@ describe('Headline tests', () => {
   it('Should not parse text with start space and asterisk as headline', () => {
     const headline = ' * Hello world';
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -69,7 +69,7 @@ describe('Headline tests', () => {
     const orgData = `* Title
 some text`;
     const result = parse(orgData);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
@@ -101,7 +101,7 @@ some text`;
 ** Hello world 2
 *** Headline level 3`;
     const result = parse(headline);
-    removeInformationAboutParents(result);
+    removeInformationAboutRelatives(result);
     expect(result).toEqual({
       type: 'root',
       start: 0,
