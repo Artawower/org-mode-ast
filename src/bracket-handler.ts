@@ -1,24 +1,21 @@
 import { AstBuilder } from 'ast-builder';
 import type { OrgHandler } from 'internal.types';
+import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
 import {
   Headline,
   NodeType,
-  OrgBold,
-  OrgCheckbox,
-  OrgCrossed,
-  OrgData,
-  OrgInlineCode,
-  OrgItalic,
+  Checkbox,
+  OrgStruct,
+  InlineCode,
   OrgRoot,
-  OrgText,
+  Text,
   PartialUniversalOrgNode,
-  WithChildren,
   WithValue,
 } from 'types';
 
 export class BracketHandler implements OrgHandler {
-  private bracketsStackPositions: Array<{ childIndex: number; node: OrgData }> = [];
+  private bracketsStackPositions: Array<{ childIndex: number; node: OrgNode<OrgStruct> }> = [];
 
   private readonly textFormattersNodeTypeMap: {
     [key: string]: NodeType.Bold | NodeType.Crossed | NodeType.Italic | NodeType.InlineCode;
@@ -31,36 +28,38 @@ export class BracketHandler implements OrgHandler {
 
   constructor(private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
-  public handle(): OrgData {
-    const orgData: OrgData = {
+  public handle(): OrgNode<OrgStruct> {
+    const unresolved: OrgStruct = {
       type: NodeType.Unresolved,
       value: this.tokenIterator.currentValue,
       start: this.astBuilder.lastPos,
       end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
-    this.astBuilder.attachToTree(orgData);
+    const unresolvedNode = new OrgNode<OrgStruct>(unresolved);
+    this.astBuilder.attachToTree(unresolvedNode);
 
-    const nodeAfterPairBracketClosed = this.tryHandlePairBracket(orgData);
+    const nodeAfterPairBracketClosed = this.tryHandlePairBracket(unresolvedNode);
     if (nodeAfterPairBracketClosed) {
       this.tryRemoveNestedInlineCode(nodeAfterPairBracketClosed);
       return nodeAfterPairBracketClosed;
     }
 
-    this.bracketsStackPositions.push({ childIndex: (orgData.parent as OrgRoot).children.length - 1, node: orgData });
+    this.bracketsStackPositions.push({
+      childIndex: unresolvedNode.parent.children.length - 1,
+      node: unresolvedNode,
+    });
 
-    return orgData;
+    return unresolvedNode;
   }
 
-  private tryHandlePairBracket(o: OrgData): OrgData {
+  private tryHandlePairBracket(o: OrgNode<OrgStruct>): OrgNode<OrgStruct> {
     if (this.bracketsStackPositions.length === 0) {
       return;
     }
 
     const reversedBracketsStack = this.bracketsStackPositions.slice().reverse();
     const pairToDetect = this.getOpenedBracket(this.tokenIterator.currentValue);
-    const foundPairIndex = reversedBracketsStack.findIndex(
-      (r) => (r.node as PartialUniversalOrgNode).value === pairToDetect
-    );
+    const foundPairIndex = reversedBracketsStack.findIndex((r) => r.node.value === pairToDetect);
 
     const found = foundPairIndex !== -1;
 
@@ -73,75 +72,78 @@ export class BracketHandler implements OrgHandler {
 
     o.type = NodeType.Operator;
 
-    const realChildren = (pair.node.parent as PartialUniversalOrgNode).children as OrgData[];
+    const realChildren = pair.node.parent.children;
     const updatedChildren = realChildren.slice(0, pair.childIndex);
 
     const nestedChildren = this.astBuilder.mergeUnresolvedNodes(
       realChildren.slice(pair.childIndex, realChildren.length)
     );
-    const isCheckBox = this.astBuilder.isNodesCheckbox(nestedChildren as Array<OrgData & WithValue>);
-    const checked = (nestedChildren[1] as WithValue)?.value?.toLowerCase() === 'x';
+    const isCheckBox = this.astBuilder.isNodesCheckbox(nestedChildren);
+    const checked = nestedChildren[1]?.value?.toLowerCase() === 'x';
 
-    const orgData: OrgBold | OrgCrossed | OrgCheckbox | OrgItalic | OrgInlineCode = isCheckBox
+    const orgData = isCheckBox
       ? ({
           type: NodeType.Checkbox,
           start: pair.node.start,
           end: o.end,
           checked,
-          value: this.astBuilder.getRawValueFromNodes(nestedChildren as WithValue[]),
+          value: this.astBuilder.getRawValueFromNodes(nestedChildren),
           children: [],
-          parent: o.parent,
-        } as OrgCheckbox)
-      : {
+        } as Checkbox)
+      : ({
           type: this.textFormattersNodeTypeMap[pairToDetect],
           start: pair.node.start,
           end: o.end,
           children: nestedChildren,
-          parent: o.parent,
-        };
+        } as PartialUniversalOrgNode);
 
-    updatedChildren.push(orgData);
-    this.astBuilder.lastNode = orgData;
-    (pair.node.parent as PartialUniversalOrgNode).children = updatedChildren;
+    const orgNode = new OrgNode(orgData);
+
+    updatedChildren.push(orgNode);
+    this.astBuilder.lastNode = orgNode;
+    pair.node.parent.setChildren(updatedChildren);
 
     if (isCheckBox && pair.node.parent.type === NodeType.Headline) {
-      (pair.node.parent as Headline).checked = checked;
+      pair.node.parent.checked = checked;
     }
 
     reversedBracketsStack.splice(foundPairIndex, 1);
     this.bracketsStackPositions = reversedBracketsStack.reverse();
 
     if (orgData.type === NodeType.InlineCode) {
-      this.removeNestedFormattingForInlineCode(orgData);
+      // TODO: master think!
+      this.removeNestedFormattingForInlineCode(orgNode as OrgNode<InlineCode>);
     }
-    return orgData;
+    return orgNode;
   }
 
-  private tryRemoveNestedInlineCode(orgNode: OrgData): void {
+  private tryRemoveNestedInlineCode(orgNode: OrgNode<OrgStruct>): void {
+    // TODO: master move to node impl
     if (![NodeType.Bold, NodeType.Crossed, NodeType.Italic].includes(orgNode.type)) {
       return;
     }
 
-    const nestedNode = (orgNode as WithChildren).children[1] as PartialUniversalOrgNode;
+    const nestedNode = orgNode.children[1];
 
     if (nestedNode?.type !== NodeType.InlineCode) {
       return;
     }
 
     nestedNode.type = NodeType.Text;
-    nestedNode.value = this.astBuilder.getRawValueFromNode(nestedNode);
-    nestedNode.children = undefined;
+    nestedNode.setValue(this.astBuilder.getRawValueFromNode(nestedNode));
+    nestedNode.setChildren(undefined);
   }
 
-  private removeNestedFormattingForInlineCode(inlineCodeNode: OrgInlineCode): OrgInlineCode {
+  private removeNestedFormattingForInlineCode(inlineCodeNode: OrgNode<InlineCode>): OrgNode<InlineCode> {
     const value = this.astBuilder.getRawValueFromNode(inlineCodeNode.children[1]);
 
-    inlineCodeNode.children[1] = {
+    // TODO: master move to ast builder
+    inlineCodeNode.children[1] = new OrgNode<Text>({
       value,
       start: inlineCodeNode.children[1].start,
       end: inlineCodeNode.children[1].start + value.length,
       type: NodeType.Text,
-    } as OrgText;
+    });
 
     return inlineCodeNode;
   }
@@ -168,7 +170,7 @@ export class BracketHandler implements OrgHandler {
       if (leftChild?.type === NodeType.Text) {
         neighbors.splice(childIndex - 1, 1);
         bracket.node.start = leftChild.start;
-        (bracket.node as OrgText).value = (leftChild as OrgText).value + (bracket.node as OrgText).value;
+        bracket.node.setValue(leftChild.value + bracket.node.value);
         childIndexOffset--;
         childIndex--;
       }
@@ -176,7 +178,7 @@ export class BracketHandler implements OrgHandler {
       if (rightChild?.type === NodeType.Text) {
         neighbors.splice(childIndex + 1, 1);
         bracket.node.end = rightChild.end;
-        (bracket.node as OrgText).value += (rightChild as OrgText).value;
+        bracket.node.setValue(rightChild.value);
         childIndexOffset--;
       }
     });

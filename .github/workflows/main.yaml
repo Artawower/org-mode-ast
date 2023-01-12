@@ -15,7 +15,21 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v2
       - name: install dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile
       - name: run tests
         run: |
           yarn test
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Prepare files for lint
+      uses: actions/checkout@master
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+    - name: Lint
+      if: steps.tschangeset.outputs.any_changed == 'true'
+      run: yarn lint
+

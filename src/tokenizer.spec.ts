@@ -6,6 +6,7 @@ fdescribe('Tokenizer', () => {
   it('Should create tokens for simple headline', () => {
     const headline = '* Hello world';
     const result = tokenize(headline);
+
     expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },

@@ -1,6 +1,7 @@
 import { AstBuilder } from './ast-builder';
 import { AstContext } from './ast-context';
-import { NodeType, OrgData } from './types';
+import { NodeType } from './types';
+import { OrgNode } from './org-node';
 
 describe('AST builder tests', () => {
   let builder: AstBuilder;
@@ -11,7 +12,7 @@ describe('AST builder tests', () => {
   });
 
   it('Should correct collect nested value from ast tree', () => {
-    const nestedOrgData: OrgData = {
+    const nestedOrgData = new OrgNode({
       type: NodeType.Root,
       start: 0,
       end: 20,
@@ -61,7 +62,7 @@ describe('AST builder tests', () => {
           ],
         },
       ],
-    };
+    });
 
     const rawValue = builder.getRawValueFromNode(nestedOrgData);
     expect(rawValue).toBe('=*console.log(123)*=');

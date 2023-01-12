@@ -1,4 +1,5 @@
-import { NodeType, OrgData, WithChildren, WithSection, WithValue } from 'types';
+import { OrgNode } from 'org-node';
+import { NodeType, OrgStruct, WithValue } from 'types';
 
 /**
  * Method for pretty debug org tree. Useful for long AST.
@@ -6,26 +7,24 @@ import { NodeType, OrgData, WithChildren, WithSection, WithValue } from 'types';
  * @param data - OrgData
  * @param level - number of indention
  */
-export function prettyTreePrint(data: OrgData, level = 0): string {
+export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
+  data.safeCheckMode = false;
   const indent = ' '.repeat(level * 2);
   let result = indent;
 
-  const val =
-    (data as WithValue).value && data.type !== NodeType.NewLine
-      ? ` (${JSON.stringify((data as WithValue).value)})`
-      : '';
+  const val = data.value && data.type !== NodeType.NewLine ? ` (${JSON.stringify(data.value)})` : '';
 
   result += `${data.type} [${data.start}-${data.end}]${val}\n`;
 
-  if ((data as any).ordered != null) {
+  if (data.ordered != null) {
     result += `${indent}    :${(data as any).ordered ? 'ordered' : 'unordered'}:\n`;
   }
 
-  if ((data as any).level != null) {
-    result += `${indent}    :level ${(data as any).level}:\n`;
+  if (data.level != null) {
+    result += `${indent}    :level ${data.level}:\n`;
   }
 
-  if ((data as any).properties) {
+  if (data.properties) {
     Object.keys((data as any).properties).forEach((k: string) => {
       result += `${indent}    :${k} ${(data as any).properties[k]}:\n`;
     });
@@ -33,13 +32,13 @@ export function prettyTreePrint(data: OrgData, level = 0): string {
 
   level++;
 
-  (data as WithChildren).children?.forEach((child) => {
+  data.children?.forEach((child) => {
     result += prettyTreePrint(child, level);
   });
 
-  if ((data as WithSection).section) {
+  if (data.section) {
     // result += indent + `┏${'-'.repeat(50)}┓\n`;
-    result += prettyTreePrint((data as WithSection).section, level);
+    result += prettyTreePrint(data.section, level);
   }
 
   return result;

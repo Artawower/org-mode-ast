@@ -1,111 +1,56 @@
 import { parse } from './parser';
-import { NodeType, OrgData } from './types';
 
-import { removeInformationAboutRelatives } from './test.helper';
+import { prettyTreePrint } from './tools';
 
 describe('Checkbox tests', () => {
   it('Should parse checkboxed headline', () => {
     const orgData = `* [ ] Hello world`;
     const result = parse(orgData);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 17,
-      children: [
-        {
-          type: NodeType.Headline,
-          level: 1,
-          start: 0,
-          end: 17,
-          checked: false,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            {
-              type: NodeType.Checkbox,
-              value: '[ ]',
-              start: 2,
-              end: 17,
-              checked: false,
-              children: [{ type: NodeType.Text, value: ' Hello world', start: 5, end: 17 }],
-            },
-          ],
-        },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-17]
+        headline [0-17]
+            :level 1:
+          operator [0-2] ("* ")
+          checkbox [2-17] ("[ ]")
+            text [5-17] (" Hello world")
+      "
+    `);
   });
 
   it('Should parse checked checkboxed headline', () => {
     const orgData = `* [X] Hello world`;
     const result = parse(orgData);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 17,
-      children: [
-        {
-          type: NodeType.Headline,
-          level: 1,
-          start: 0,
-          end: 17,
-          checked: true,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            {
-              type: NodeType.Checkbox,
-              value: '[X]',
-              start: 2,
-              end: 17,
-              checked: true,
-              children: [{ type: NodeType.Text, value: ' Hello world', start: 5, end: 17 }],
-            },
-          ],
-        },
-      ],
-    });
+    console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-17]
+        headline [0-17]
+            :level 1:
+          operator [0-2] ("* ")
+          checkbox [2-17] ("[X]")
+            text [5-17] (" Hello world")
+      "
+    `);
   });
 
   it('Should parse checked checkboxed headline with nested bold text', () => {
     const orgData = `* [X] Hello *world*`;
     const result = parse(orgData);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 19,
-      children: [
-        {
-          type: NodeType.Headline,
-          level: 1,
-          start: 0,
-          end: 19,
-          checked: true,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            {
-              type: NodeType.Checkbox,
-              value: '[X]',
-              start: 2,
-              end: 19,
-              checked: true,
-              children: [
-                { type: NodeType.Text, value: ' Hello ', start: 5, end: 12 },
-                {
-                  type: NodeType.Bold,
-                  start: 12,
-                  end: 19,
-                  children: [
-                    { type: NodeType.Operator, value: '*', start: 12, end: 13 },
-                    { type: NodeType.Text, value: 'world', start: 13, end: 18 },
-                    { type: NodeType.Operator, value: '*', start: 18, end: 19 },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
+    // console.log('✎: [line 72][checkbox.spec.ts] result: ', prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-19]
+        headline [0-19]
+            :level 1:
+          operator [0-2] ("* ")
+          checkbox [2-19] ("[X]")
+            text [5-12] (" Hello ")
+            bold [12-19]
+              operator [12-13] ("*")
+              text [13-18] ("world")
+              operator [18-19] ("*")
+      "
+    `);
   });
 });

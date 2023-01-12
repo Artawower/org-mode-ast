@@ -1,332 +1,125 @@
 import { parse } from './parser';
-import { removeInformationAboutRelatives } from './test.helper';
-import { NodeType } from './types';
+import { prettyTreePrint } from './tools';
 
 describe('Italic', () => {
   it('should be italic', () => {
     const orgText = '/This is italic/';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 16,
-      children: [
-        {
-          type: 'italic',
-          start: 0,
-          end: 16,
-          children: [
-            {
-              type: 'operator',
-              start: 0,
-              end: 1,
-              value: '/',
-            },
-            {
-              type: 'text',
-              start: 1,
-              end: 15,
-              value: 'This is italic',
-            },
-            {
-              type: 'operator',
-              start: 15,
-              end: 16,
-              value: '/',
-            },
-          ],
-        },
-      ],
-    });
+    console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-16]
+        italic [0-16]
+          operator [0-1] ("/")
+          text [1-15] ("This is italic")
+          operator [15-16] ("/")
+      "
+    `);
   });
 
   it('Should not parse italic text with single slash', () => {
     const orgText = 'This is /italic';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    // console.log(JSON.stringify(result, null, 2));
 
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 15,
-      children: [
-        {
-          type: 'text',
-          start: 0,
-          end: 15,
-          value: 'This is /italic',
-        },
-      ],
-    });
+    console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-15]
+        text [0-15] ("italic")
+      "
+    `);
   });
 
   it('Should not parse italic when sentence start from the single slash', () => {
     const orgText = '/Not a italic text!';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: NodeType.Root,
-      start: 0,
-      end: 19,
-      children: [
-        {
-          type: NodeType.Text,
-          start: 0,
-          end: 19,
-          value: '/Not a italic text!',
-        },
-      ],
-    });
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-19]
+        text [0-19] ("Not a italic text!")
+      "
+    `);
   });
 
   it('Should not parse italic text with multiple opened brackets', () => {
     const orgText = 'This is +[/*simple not italic text';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: NodeType.Root,
-      start: 0,
-      end: 34,
-      children: [
-        {
-          type: NodeType.Text,
-          start: 0,
-          end: 34,
-          value: 'This is +[/*simple not italic text',
-        },
-      ],
-    });
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-34]
+        text [0-34] ("simple not italic text")
+      "
+    `);
   });
 
   it('Should not parse italic text when sentence ends with slash', () => {
     const orgText = 'This is italic/';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: NodeType.Root,
-      start: 0,
-      end: 15,
-      children: [
-        {
-          type: NodeType.Text,
-          start: 0,
-          end: 15,
-          value: 'This is italic/',
-        },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-15]
+        text [0-15] ("This is italic/")
+      "
+    `);
   });
 
   it('Should parse italic text with nested formatting', () => {
     const orgText = 'This is */italic with bold/* text';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    // console.log(JSON.stringify(result, null, 2));
 
-    expect(result).toEqual({
-      type: NodeType.Root,
-      start: 0,
-      end: 33,
-      children: [
-        {
-          type: NodeType.Text,
-          start: 0,
-          end: 8,
-          value: 'This is ',
-        },
-        {
-          type: NodeType.Bold,
-          start: 8,
-          end: 28,
-          children: [
-            {
-              type: NodeType.Operator,
-              start: 8,
-              end: 9,
-              value: '*',
-            },
-            {
-              type: NodeType.Italic,
-              start: 9,
-              end: 27,
-              children: [
-                {
-                  type: NodeType.Operator,
-                  start: 9,
-                  end: 10,
-                  value: '/',
-                },
-                {
-                  type: NodeType.Text,
-                  start: 10,
-                  end: 26,
-                  value: 'italic with bold',
-                },
-                {
-                  type: NodeType.Operator,
-                  start: 26,
-                  end: 27,
-                  value: '/',
-                },
-              ],
-            },
-            {
-              type: NodeType.Operator,
-              start: 27,
-              end: 28,
-              value: '*',
-            },
-          ],
-        },
-        {
-          type: NodeType.Text,
-          start: 28,
-          end: 33,
-          value: ' text',
-        },
-      ],
-    });
+    console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-33]
+        text [0-8] ("This is ")
+        bold [8-28]
+          operator [8-9] ("*")
+          italic [9-27]
+            operator [9-10] ("/")
+            text [10-26] ("italic with bold")
+            operator [26-27] ("/")
+          operator [27-28] ("*")
+        text [28-33] (" text")
+      "
+    `);
   });
 
   it('Should parse italic text that wrapped crossed text', () => {
     const orgText = `This is /+italic text that wrapped crossed text+/ and this is not italic text`;
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    // console.log(JSON.stringify(result, null, 2));
-    expect(result).toEqual({
-      type: NodeType.Root,
-      start: 0,
-      end: 77,
-      children: [
-        {
-          type: NodeType.Text,
-          start: 0,
-          end: 8,
-          value: 'This is ',
-        },
-        {
-          type: NodeType.Italic,
-          start: 8,
-          end: 49,
-          children: [
-            {
-              type: NodeType.Operator,
-              start: 8,
-              end: 9,
-              value: '/',
-            },
-            {
-              type: NodeType.Crossed,
-              start: 9,
-              end: 48,
-              children: [
-                {
-                  type: NodeType.Operator,
-                  start: 9,
-                  end: 10,
-                  value: '+',
-                },
-                {
-                  type: NodeType.Text,
-                  start: 10,
-                  end: 47,
-                  value: 'italic text that wrapped crossed text',
-                },
-                {
-                  type: NodeType.Operator,
-                  start: 47,
-                  end: 48,
-                  value: '+',
-                },
-              ],
-            },
-            {
-              type: NodeType.Operator,
-              start: 48,
-              end: 49,
-              value: '/',
-            },
-          ],
-        },
-        {
-          type: NodeType.Text,
-          start: 49,
-          end: 77,
-          value: ' and this is not italic text',
-        },
-      ],
-    });
+
+    console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-77]
+        text [0-8] ("This is ")
+        italic [8-49]
+          operator [8-9] ("/")
+          crossed [9-48]
+            operator [9-10] ("+")
+            text [10-47] ("italic text that wrapped crossed text")
+            operator [47-48] ("+")
+          operator [48-49] ("/")
+        text [49-77] (" and this is not italic text")
+      "
+    `);
   });
 
   it('Should parse italic text with nested formatting and different length', () => {
     const orgText = `/italic and *bold* text/`;
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    // console.log(JSON.stringify(result, null, 2));
-    expect(result).toEqual({
-      type: NodeType.Root,
-      start: 0,
-      end: 24,
-      children: [
-        {
-          type: NodeType.Italic,
-          start: 0,
-          end: 24,
-          children: [
-            {
-              type: NodeType.Operator,
-              start: 0,
-              end: 1,
-              value: '/',
-            },
-            {
-              type: NodeType.Text,
-              start: 1,
-              end: 12,
-              value: 'italic and ',
-            },
-            {
-              type: NodeType.Bold,
-              start: 12,
-              end: 18,
-              children: [
-                {
-                  type: NodeType.Operator,
-                  start: 12,
-                  end: 13,
-                  value: '*',
-                },
-                {
-                  type: NodeType.Text,
-                  start: 13,
-                  end: 17,
-                  value: 'bold',
-                },
-                {
-                  type: NodeType.Operator,
-                  start: 17,
-                  end: 18,
-                  value: '*',
-                },
-              ],
-            },
-            {
-              type: NodeType.Text,
-              start: 18,
-              end: 23,
-              value: ' text',
-            },
-            {
-              type: NodeType.Operator,
-              start: 23,
-              end: 24,
-              value: '/',
-            },
-          ],
-        },
-      ],
-    });
+
+    console.log(prettyTreePrint(result));
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-24]
+        italic [0-24]
+          operator [0-1] ("/")
+          text [1-12] ("italic and ")
+          bold [12-18]
+            operator [12-13] ("*")
+            text [13-17] ("bold")
+            operator [17-18] ("*")
+          text [18-23] (" text")
+          operator [23-24] ("/")
+      "
+    `);
   });
 });

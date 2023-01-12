@@ -4,9 +4,10 @@ import { BlockHandler } from 'block-handler';
 import { BracketHandler } from 'bracket-handler';
 import { HandlerDidNotReturnValue, HandlerNotFoundError, UnsupportedOperator } from 'errors';
 import { ListHandler } from 'list-handler';
+import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
-import { Headline, NodeType, OrgData, OrgIndent, OrgNewLine, OrgText, TokenType, WithValue } from './types';
+import { NodeType, OrgStruct, Indent, NewLine, TokenType } from './types';
 
 class Parser {
   constructor(
@@ -18,9 +19,8 @@ class Parser {
     private blockHandler: BlockHandler
   ) {}
 
-  public parse(): OrgData {
+  public parse(): OrgNode {
     this.buildTree();
-
     return this.astBuilder.nodeTree;
   }
 
@@ -30,7 +30,7 @@ class Parser {
     });
   }
 
-  private tokensHandlers: { [key: string]: () => OrgData | void } = {
+  private tokensHandlers: { [key: string]: () => OrgNode | void } = {
     [TokenType.Headline]: () => this.handleHeadline(),
     [TokenType.Text]: () => this.handleText(),
     [TokenType.Bracket]: () => this.bracketHandler.handle(),
@@ -61,7 +61,7 @@ class Parser {
       this.ctx.insideListItem = false;
     }
     if (this.tokenIterator.token?.isType(TokenType.NewLine) && this.ctx.insideHeadline) {
-      this.astBuilder.getLastSessionOrCreate();
+      this.astBuilder.getLastSectionOrCreate();
       this.ctx.insideHeadline = false;
     }
   }
@@ -74,42 +74,30 @@ class Parser {
     throw new HandlerDidNotReturnValue(this.tokenIterator.token);
   }
 
-  private handleHeadline(): OrgData {
+  private handleHeadline(): OrgNode {
     this.ctx.insideHeadline = true;
-    const end = this.astBuilder.lastPos + this.tokenIterator.currentValue.length;
-    const orgData: Headline = {
-      type: NodeType.Headline,
-      level: this.tokenIterator.currentValue.trim().length,
-      start: this.astBuilder.lastPos,
-      end,
-      children: [
-        { type: NodeType.Operator, value: this.tokenIterator.currentValue, start: this.astBuilder.lastPos, end },
-      ],
-    };
-    this.astBuilder.attachToTree(orgData);
-    return orgData;
+    const headlineNode = this.astBuilder.createHeadline();
+    this.astBuilder.attachToTree(headlineNode);
+    return headlineNode;
   }
 
-  private handleText(): OrgData {
-    const lastTokenWasNewLine = (this.astBuilder.lastNode as WithValue).value?.endsWith('\n');
+  private handleText(): OrgNode {
+    const lastTokenWasNewLine = this.astBuilder.lastNode.value?.endsWith('\n');
 
-    const orgData: OrgText = {
-      type: NodeType.Text,
-      value: this.tokenIterator.currentValue,
-      start: this.astBuilder.lastPos,
-      end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
-    };
+    const textNode = this.astBuilder.createText();
 
-    this.astBuilder.attachToTree(orgData);
+    this.astBuilder.attachToTree(textNode);
 
+    console.log('✎: [line 91][parser.ts] lastTokenWasNewLine: ', lastTokenWasNewLine);
+    console.log('✎: [line 92][parser.ts] this.astBuilder.lastNode.type: ', this.astBuilder.lastNode.type);
     if (lastTokenWasNewLine && this.astBuilder.lastNode.type !== NodeType.Indent) {
       this.ctx.exitList();
     }
 
-    return orgData;
+    return textNode;
   }
 
-  private handleOperator(): OrgData {
+  private handleOperator(): OrgNode {
     const orgData = this.buildOrgDataForOperator(this.tokenIterator.currentValue);
     if (!orgData) {
       throw new UnsupportedOperator(this.tokenIterator.currentValue);
@@ -118,7 +106,7 @@ class Parser {
     return orgData;
   }
 
-  private handleIndent(): OrgIndent {
+  private handleIndent(): OrgNode<Indent> {
     const indentNode = this.astBuilder.createIndentNode();
 
     if (this.astBuilder.isListOperator(this.tokenIterator.nextToken.value)) {
@@ -126,18 +114,18 @@ class Parser {
       this.astBuilder.increaseLastPosition(this.tokenIterator.currentValue);
       return;
     }
-    this.astBuilder.getLastSessionOrCreate();
+    this.astBuilder.getLastSectionOrCreate();
     this.astBuilder.attachToTree(indentNode);
     return indentNode;
   }
 
-  private handleNewLine(): OrgNewLine {
+  private handleNewLine(): OrgNode<NewLine> {
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
     return newLineNode;
   }
 
-  private handleKeyword(): OrgData {
+  private handleKeyword(): OrgNode<OrgStruct> {
     if (this.blockHandler.isBlockKeyword(this.tokenIterator.currentValue)) {
       return this.blockHandler.handle();
     }
@@ -146,10 +134,10 @@ class Parser {
     return createdKeyword;
   }
 
-  private buildOrgDataForOperator(operator: string): OrgData {
+  private buildOrgDataForOperator(operator: string): OrgNode {
     if (this.astBuilder.isListOperator(operator)) {
-      const orgData = this.listHandler.handle();
-      return orgData;
+      const orgNode = this.listHandler.handle();
+      return orgNode;
     }
 
     // TODO also check is not a tag and opened propery drawer
@@ -159,7 +147,7 @@ class Parser {
   }
 }
 
-export function parse(text: string): OrgData {
+export function parse(text: string): OrgNode {
   const ctx = new AstContext();
   const tokenizer = new Tokenizer(text);
   const tokenIterator = new TokenIterator(tokenizer);

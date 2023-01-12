@@ -1,82 +1,50 @@
 import { parse } from './parser';
-import { NodeType } from './types';
-
-import { removeInformationAboutRelatives } from './test.helper';
+import { prettyTreePrint } from './tools';
 
 describe('Crossed tests', () => {
   it('Should parse crossed text with crossed tokens', () => {
     const orgData = `+Crossed text+`;
     const result = parse(orgData);
-    removeInformationAboutRelatives(result);
-    // console.log(JSON.stringify(result, null, 2));
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 14,
-      children: [
-        {
-          type: NodeType.Crossed,
-          start: 0,
-          end: 14,
-          children: [
-            { type: NodeType.Operator, value: '+', start: 0, end: 1 },
-            { type: NodeType.Text, value: 'Crossed text', start: 1, end: 13 },
-            { type: NodeType.Operator, value: '+', start: 13, end: 14 },
-          ],
-        },
-      ],
-    });
+    // console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-14]
+        crossed [0-14]
+          operator [0-1] ("+")
+          text [1-13] ("Crossed text")
+          operator [13-14] ("+")
+      "
+    `);
   });
 
   it('Shpuld not parse text as crossed when it starts from single plus', () => {
     const orgText = '+Not a crossed text';
     const result = parse(orgText);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 19,
-      children: [
-        {
-          type: NodeType.Text,
-          start: 0,
-          end: 19,
-          value: '+Not a crossed text',
-        },
-      ],
-    });
+    // console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-19]
+        text [0-19] ("Not a crossed text")
+      "
+    `);
   });
 
   it('Should parse crossed text inside headline', () => {
     const orgData = `* Hello +world+`;
     const result = parse(orgData);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 15,
-      children: [
-        {
-          type: NodeType.Headline,
-          level: 1,
-          start: 0,
-          end: 15,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Hello ', start: 2, end: 8 },
-            {
-              type: NodeType.Crossed,
-              start: 8,
-              end: 15,
-              children: [
-                { type: NodeType.Operator, value: '+', start: 8, end: 9 },
-                { type: NodeType.Text, value: 'world', start: 9, end: 14 },
-                { type: NodeType.Operator, value: '+', start: 14, end: 15 },
-              ],
-            },
-          ],
-        },
-      ],
-    });
+    // console.log(prettyTreePrint(result));
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-15]
+        headline [0-15]
+            :level 1:
+          operator [0-2] ("* ")
+          text [2-8] ("Hello ")
+          crossed [8-15]
+            operator [8-9] ("+")
+            text [9-14] ("world")
+            operator [14-15] ("+")
+      "
+    `);
   });
 });

@@ -1,28 +1,19 @@
 import { AstBuilder } from 'ast-builder';
 import { AstContext } from 'ast-context';
 import { OrgHandler } from 'internal.types';
+import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
-import {
-  BlockPosition,
-  NodeType,
-  OrgData,
-  OrgNewLine,
-  SrcBlockMetaInfo,
-  WithChildren,
-  WithNeighbors,
-  WithParent,
-  WithValue,
-} from 'types';
+import { BlockPosition, NodeType, OrgStruct, SrcBlockMetaInfo } from 'types';
 
 // TODO: master this class should be refactored!
 export class BlockHandler implements OrgHandler {
   constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
-  private blockHanderls: { [key: string]: (pos: BlockPosition) => OrgData } = {
+  private blockHanderls: { [key: string]: (pos: BlockPosition) => OrgNode<OrgStruct> } = {
     src: (pos) => this.handleSrcBlock(pos),
   };
 
-  public handle(): OrgData {
+  public handle(): OrgNode<OrgStruct> {
     const [blockPosition, blockType] = this.determineBlockType();
     const blockHandler = this.blockHanderls[blockType.toLowerCase()];
 
@@ -37,14 +28,14 @@ export class BlockHandler implements OrgHandler {
     return ['#+BEGIN_', '#+END_'].some((prefix) => keyword.startsWith(prefix));
   }
 
-  private handleSrcBlock(position: BlockPosition): OrgData {
-    const keyword = this.astBuilder.createKeyword();
+  private handleSrcBlock(position: BlockPosition): OrgNode<OrgStruct> {
+    const keywordNode = this.astBuilder.createKeyword();
 
     if (position.toLowerCase() === 'begin') {
-      this.ctx.srcBlockBegin = keyword;
-      this.astBuilder.attachToTree(keyword);
-      this.ctx.srcBlockChildIndex = (keyword.parent as WithChildren).children.length - 1;
-      return keyword;
+      this.ctx.srcBlockBegin = keywordNode;
+      this.astBuilder.attachToTree(keywordNode);
+      this.ctx.srcBlockChildIndex = keywordNode.parent.children.length - 1;
+      return keywordNode;
     }
 
     if (position.toLowerCase() === 'end' && this.ctx.srcBlockBegin) {
@@ -52,8 +43,8 @@ export class BlockHandler implements OrgHandler {
       this.ctx.resetSrcBlockInfo();
     }
 
-    this.astBuilder.attachToTree(keyword);
-    return keyword;
+    this.astBuilder.attachToTree(keywordNode);
+    return keywordNode;
   }
 
   private mergeNodesAfterSrcBlock(): void {
@@ -62,9 +53,11 @@ export class BlockHandler implements OrgHandler {
     let value = '';
     const parentNode = this.ctx.srcBlockBegin.parent;
 
-    let lastNewLine: OrgNewLine;
+    let lastNewLine: OrgNode;
 
-    let { headerChildren, nextNode, metaInfo } = this.collectHeadline(this.ctx.srcBlockBegin);
+    const headlineData = this.collectHeadline(this.ctx.srcBlockBegin);
+    const { headerChildren, metaInfo } = headlineData;
+    let { nextNode } = headlineData;
 
     if (nextNode) {
       start = nextNode.start;
@@ -73,13 +66,13 @@ export class BlockHandler implements OrgHandler {
     while (nextNode) {
       end = nextNode.end;
 
-      if (!(nextNode as WithNeighbors).next) {
-        lastNewLine = nextNode as OrgNewLine;
+      if (!nextNode.next) {
+        lastNewLine = nextNode;
         break;
       }
 
       value += this.astBuilder.getRawValueFromNode(nextNode);
-      nextNode = (nextNode as WithNeighbors).next;
+      nextNode = nextNode.next;
     }
 
     const srcBlock = this.astBuilder.createSrcBlockNode(
@@ -92,31 +85,25 @@ export class BlockHandler implements OrgHandler {
 
     const headerNewLineNode = headerChildren.pop();
     const blockHeader = this.astBuilder.createBlockHeaderNode(srcBlock, headerChildren);
-    srcBlock.children = [blockHeader, headerNewLineNode];
+    srcBlock.setChildren([blockHeader, headerNewLineNode]);
 
     if (value) {
       const orgText = this.astBuilder.createTextNode(start, value);
       const blockBody = this.astBuilder.createBlockBodyNode(srcBlock, [orgText]);
-      srcBlock.children.push(blockBody);
-
-      (lastNewLine as WithParent).parent = srcBlock as unknown as OrgData;
-      (lastNewLine as WithNeighbors).prev = blockBody;
-
-      srcBlock.children.push(lastNewLine);
+      srcBlock.addChild(blockBody);
+      lastNewLine.setPrev(blockBody);
+      srcBlock.addChild(lastNewLine);
     }
 
-    const blockFooter = this.astBuilder.createBlockFooterNode(
-      srcBlock,
-      [],
-      srcBlock.children[srcBlock.children.length - 1].end
-    );
-    srcBlock.children.push(blockFooter);
+    const blockFooterNode = this.astBuilder.createBlockFooterNode(srcBlock, [], srcBlock.lastChild?.end);
+
+    srcBlock.addChild(blockFooterNode);
 
     srcBlock.parent = parentNode;
-    srcBlock.prev = this.ctx.srcBlockBegin.prev;
-    (parentNode as unknown as WithChildren).children.splice(this.ctx.srcBlockChildIndex);
-    (parentNode as unknown as WithChildren).children.push(srcBlock as unknown as OrgData);
-    this.astBuilder.lastNode = blockFooter;
+    srcBlock.setPrev(this.ctx.srcBlockBegin.prev);
+    parentNode.children.splice(this.ctx.srcBlockChildIndex);
+    parentNode.addChild(srcBlock);
+    this.astBuilder.lastNode = blockFooterNode;
   }
 
   /** Collection information about block headline
@@ -124,16 +111,16 @@ export class BlockHandler implements OrgHandler {
    * @params node - node to collect information about
    * return list of headline nodes and next node to end of headline
    */
-  private collectHeadline(node: OrgData): {
-    headerChildren: OrgData[];
-    nextNode: OrgData;
+  private collectHeadline(node: OrgNode<OrgStruct>): {
+    headerChildren: OrgNode<OrgStruct>[];
+    nextNode: OrgNode<OrgStruct>;
     metaInfo: SrcBlockMetaInfo;
   } {
-    const headerChildren: OrgData[] = [];
+    const headerChildren: OrgNode<OrgStruct>[] = [];
     const metaInfo: { [key: string]: string } = {};
 
     while (node) {
-      const value = (node as WithValue)?.value;
+      const value = node?.value;
 
       if (headerChildren.length === 1 && !value?.trim().startsWith(':') && value.trim()) {
         metaInfo.language = value?.trim();
@@ -141,8 +128,8 @@ export class BlockHandler implements OrgHandler {
 
       const lastPotentialKeyword = headerChildren[headerChildren.length - 1];
 
-      if ((lastPotentialKeyword as WithValue)?.value.startsWith(':') && value) {
-        metaInfo[(lastPotentialKeyword as WithValue).value.slice(1)] = value.trim();
+      if (lastPotentialKeyword?.value.startsWith(':') && value) {
+        metaInfo[lastPotentialKeyword.value.slice(1)] = value.trim();
       }
 
       headerChildren.push(node);
@@ -150,11 +137,11 @@ export class BlockHandler implements OrgHandler {
       if (node.type === NodeType.NewLine) {
         return {
           headerChildren,
-          nextNode: (node as WithNeighbors).next,
+          nextNode: node.next,
           metaInfo,
         };
       }
-      node = (node as WithNeighbors).next;
+      node = node.next;
     }
   }
 

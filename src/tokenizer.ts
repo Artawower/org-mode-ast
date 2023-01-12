@@ -7,12 +7,12 @@ export class Tokenizer {
   private readonly keywordPrefix = '#+';
   private readonly blockKeywords = ['begin_src', 'end_src'];
 
-  private begin: number = 0;
-  private end: number = 0;
+  private begin = 0;
+  private end = 0;
 
   // TODO: make it as linked list
   private tokens: Token[] = [];
-  private point: number = 0;
+  private point = 0;
   private tokenAggregators: { [key: string]: (c: string) => void };
 
   constructor(private text: string, public readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED']) {

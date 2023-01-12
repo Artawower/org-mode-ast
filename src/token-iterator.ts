@@ -3,8 +3,8 @@ import { Token, TokenType } from 'types';
 
 export class TokenIterator {
   #token: Token;
-  #begin: number = 0;
-  #end: number = 0;
+  #begin = 0;
+  #end = 0;
 
   get token(): Token {
     return this.#token;
@@ -27,7 +27,7 @@ export class TokenIterator {
   }
 
   private tokens: Token[];
-  private tokenPosition: number = 0;
+  private tokenPosition = 0;
 
   get isLastToken(): boolean {
     return this.tokenPosition === this.tokens.length - 1;

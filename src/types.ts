@@ -78,16 +78,16 @@ export interface WithRange {
 }
 
 export interface WithChildren {
-  children: OrgData[];
+  children: OrgStruct[];
 }
 
 export interface WithParent {
-  parent?: OrgData;
+  parent?: OrgStruct;
 }
 
 export interface WithNeighbors {
-  prev?: OrgData;
-  next?: OrgData;
+  prev?: OrgStruct;
+  next?: OrgStruct;
 }
 
 export interface WithValue {
@@ -120,7 +120,7 @@ export interface OrgRoot extends WithRange, WithChildren, WithParent {
   type: NodeType.Root;
 }
 
-export interface OrgText extends WithRange, WithParent, WithValue, WithNeighbors {
+export interface Text extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.Text;
 }
 
@@ -148,7 +148,7 @@ export interface OrgCrossed extends WithRange, WithChildren, WithParent, WithNei
   type: NodeType.Crossed;
 }
 
-export interface OrgCheckbox extends WithRange, WithParent, WithCheckStatus, WithNeighbors {
+export interface Checkbox extends WithRange, WithParent, WithCheckStatus, WithNeighbors {
   type: NodeType.Checkbox;
 }
 
@@ -156,34 +156,36 @@ export interface OrgItalic extends WithRange, WithChildren, WithParent, WithNeig
   type: NodeType.Italic;
 }
 
-export interface OrgInlineCode extends WithRange, WithChildren, WithParent, WithNeighbors {
+export interface InlineCode extends WithRange, WithChildren, WithParent, WithNeighbors {
   type: NodeType.InlineCode;
 }
 
-export interface OrgIndent extends WithRange, WithValue, WithParent, WithNeighbors {
+export interface Indent extends WithRange, WithValue, WithParent, WithNeighbors {
   type: NodeType.Indent;
 }
 
-export interface OrgNewLine extends WithRange, WithParent, WithValue, WithNeighbors {
+export interface NewLine extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.NewLine;
 }
 
-export interface OrgBlockHeader extends WithRange, WithParent, WithNeighbors, WithChildren {
+export interface BlockHeader extends WithRange, WithParent, WithNeighbors {
   type: NodeType.BlockHeader;
 }
 
-export interface OrgBlockBody extends WithRange, WithParent, WithNeighbors, WithChildren {
+export interface BlockBody extends WithRange, WithParent, WithNeighbors, WithChildren {
   type: NodeType.BlockBody;
 }
 
-export interface OrgBlockFooter extends WithRange, WithParent, WithNeighbors, WithChildren {
+export interface BlockFooter extends WithRange, WithParent, WithNeighbors, WithChildren {
   type: NodeType.BlockFooter;
 }
 
-export interface OrgSrcBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
+export type BlockProperties = { [key: string]: string };
+
+export interface SrcBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
   type: NodeType.SrcBlock;
   language?: string;
-  properties?: { [key: string]: string };
+  properties?: BlockProperties;
 }
 
 export interface SrcBlockMetaInfo {
@@ -192,15 +194,15 @@ export interface SrcBlockMetaInfo {
   [key: string]: string | undefined;
 }
 
-export interface OrgKeyword extends WithRange, WithParent, WithValue, WithNeighbors {
+export interface Keyword extends WithRange, WithParent, WithValue, WithNeighbors {
   type: NodeType.Keyword;
 }
 
-export type OrgData =
+export type OrgStruct =
   | Headline
   | OrgRoot
   | Operator
-  | OrgText
+  | Text
   | Unresolved
   | OrgBold
   | OrgCrossed
@@ -208,25 +210,29 @@ export type OrgData =
   | Section
   | List
   | ListItem
-  | OrgCheckbox
-  | OrgInlineCode
-  | OrgIndent
-  | OrgNewLine
-  | OrgKeyword
-  | OrgSrcBlock
-  | OrgBlockHeader
-  | OrgBlockBody
-  | OrgBlockFooter;
+  | Checkbox
+  | InlineCode
+  | Indent
+  | NewLine
+  | Keyword
+  | SrcBlock
+  | BlockHeader
+  | BlockBody
+  | BlockFooter;
 
-type OrgNodeProperties = WithChildren & WithSection & WithValue & WithParent & WithRange & WithNeighbors;
+type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
 
-export interface PartialUniversalOrgNode extends Partial<OrgNodeProperties> {
-  type: any;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
+
+type NodeProperties = UnionToIntersection<DistributiveOmit<OrgStruct, 'type'>>;
+
+export interface PartialUniversalOrgNode extends Partial<NodeProperties> {
+  type: NodeType;
 }
 
 export interface Node {
   type: NodeType;
-  children: OrgData[];
+  children: OrgStruct[];
 }
 
 export interface ParserConfiguration {

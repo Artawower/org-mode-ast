@@ -1,99 +1,64 @@
 import { parse } from './parser';
-import { NodeType } from './types';
-import { removeInformationAboutRelatives } from './test.helper';
+import { prettyTreePrint } from './tools';
 
 describe('Headline tests', () => {
   // Headline tests start
   it('should parse first level headline', () => {
     const headline = '* Hello world';
     const result = parse(headline);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 13,
-      children: [
-        {
-          type: 'headline',
-          level: 1,
-          start: 0,
-          end: 13,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Hello world', start: 2, end: 13 },
-          ],
-        },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-13]
+        headline [0-13]
+            :level 1:
+          operator [0-2] ("* ")
+          text [2-13] ("Hello world")
+      "
+    `);
   });
 
   it('Should parse headline with long start space', () => {
     const headline = '*        Hello world';
     const result = parse(headline);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 20,
-      children: [
-        {
-          type: 'headline',
-          level: 1,
-          start: 0,
-          end: 20,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: '       Hello world', start: 2, end: 20 },
-          ],
-        },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-20]
+        headline [0-20]
+            :level 1:
+          operator [0-2] ("* ")
+          text [2-20] ("       Hello world")
+      "
+    `);
   });
 
   it('Should not parse text with start space and asterisk as headline', () => {
     const headline = ' * Hello world';
     const result = parse(headline);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 14,
-      children: [
-        { type: NodeType.Indent, value: ' ', start: 0, end: 1 },
-        { type: NodeType.Text, value: '* Hello world', start: 1, end: 14 },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-14]
+        indent [0-1] (" ")
+        text [1-14] ("* Hello world")
+      "
+    `);
   });
 
   it('Should parse nested section for headline', () => {
     const orgData = `* Title
 some text`;
     const result = parse(orgData);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 17,
-      children: [
-        {
-          type: NodeType.Headline,
-          level: 1,
-          start: 0,
-          end: 8,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Title', start: 2, end: 7 },
-            { type: NodeType.NewLine, value: '\n', start: 7, end: 8 },
-          ],
-          section: {
-            type: NodeType.Section,
-            start: 8,
-            end: 17,
-            children: [{ type: NodeType.Text, value: 'some text', start: 8, end: 17 }],
-          },
-        },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-17]
+        headline [0-8]
+            :level 1:
+          operator [0-2] ("* ")
+          text [2-7] ("Title")
+          newLine [7-8]
+          section [8-17]
+            text [8-17] ("some text")
+      "
+    `);
   });
 
   it('Should parse nested headlines', () => {
@@ -101,59 +66,26 @@ some text`;
 ** Hello world 2
 *** Headline level 3`;
     const result = parse(headline);
-    removeInformationAboutRelatives(result);
-    expect(result).toEqual({
-      type: 'root',
-      start: 0,
-      end: 51,
-      children: [
-        {
-          type: NodeType.Headline,
-          level: 1,
-          start: 0,
-          end: 14,
-          children: [
-            { type: NodeType.Operator, value: '* ', start: 0, end: 2 },
-            { type: NodeType.Text, value: 'Hello world', start: 2, end: 13 },
-            { type: NodeType.NewLine, value: '\n', start: 13, end: 14 },
-          ],
-          section: {
-            type: NodeType.Section,
-            start: 14,
-            end: 51,
-            children: [
-              {
-                type: NodeType.Headline,
-                level: 2,
-                start: 14,
-                end: 31,
-                children: [
-                  { type: NodeType.Operator, value: '** ', start: 14, end: 17 },
-                  { type: NodeType.Text, value: 'Hello world 2', start: 17, end: 30 },
-                  { type: NodeType.NewLine, value: '\n', start: 30, end: 31 },
-                ],
-                section: {
-                  type: NodeType.Section,
-                  start: 31,
-                  end: 51,
-                  children: [
-                    {
-                      type: NodeType.Headline,
-                      level: 3,
-                      start: 31,
-                      end: 51,
-                      children: [
-                        { type: NodeType.Operator, value: '*** ', start: 31, end: 35 },
-                        { type: NodeType.Text, value: 'Headline level 3', start: 35, end: 51 },
-                      ],
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    });
+
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-51]
+        headline [0-14]
+            :level 1:
+          operator [0-2] ("* ")
+          text [2-13] ("Hello world")
+          newLine [13-14]
+          section [14-51]
+            headline [14-31]
+                :level 2:
+              operator [14-17] ("** ")
+              text [17-30] ("Hello world 2")
+              newLine [30-31]
+              section [31-51]
+                headline [31-51]
+                    :level 3:
+                  operator [31-35] ("*** ")
+                  text [35-51] ("Headline level 3")
+      "
+    `);
   });
 });
