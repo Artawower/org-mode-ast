@@ -16,8 +16,6 @@ export class ListHandler implements OrgHandler {
       this.astBuilder.getLastSectionOrCreate(this.ctx.lastListItem);
     }
 
-    console.log('✎: [line 19][list-handler.ts] isNestedList: ', isNestedList);
-    console.log('✎: [line 20][list-handler.ts] !isSameLevelList: ', !isSameLevelList);
     if (!this.ctx.nestedLists.length || (isNestedList && !isSameLevelList)) {
       const isOrdered = this.tokenIterator.currentValue?.[0] === '1';
       this.createEmptyList(isOrdered, this.ctx.listLevel);

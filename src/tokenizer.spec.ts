@@ -140,13 +140,13 @@ fdescribe('Tokenizer', () => {
     expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
-      { type: TokenType.Comment, value: '#A', start: 3, end: 5 },
+      { type: TokenType.Text, value: '#A', start: 3, end: 5 },
       { type: TokenType.Bracket, value: ']', start: 5, end: 6 },
       { type: TokenType.Text, value: ' Most important headline', start: 6, end: 30 },
       { type: TokenType.NewLine, value: '\n', start: 30, end: 31 },
       { type: TokenType.Headline, value: '*** ', start: 31, end: 35 },
       { type: TokenType.Bracket, value: '[', start: 35, end: 36 },
-      { type: TokenType.Comment, value: '#B', start: 36, end: 38 },
+      { type: TokenType.Text, value: '#B', start: 36, end: 38 },
       { type: TokenType.Bracket, value: ']', start: 38, end: 39 },
       { type: TokenType.Text, value: ' Third most important headline', start: 39, end: 69 },
       { type: TokenType.NewLine, value: '\n', start: 69, end: 70 },
@@ -166,7 +166,7 @@ fdescribe('Tokenizer', () => {
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
       { type: TokenType.Text, value: ' ', start: 6, end: 7 },
       { type: TokenType.Bracket, value: '[', start: 7, end: 8 },
-      { type: TokenType.Comment, value: '#A', start: 8, end: 10 },
+      { type: TokenType.Text, value: '#A', start: 8, end: 10 },
       { type: TokenType.Bracket, value: ']', start: 10, end: 11 },
       { type: TokenType.Text, value: ' Most important headline', start: 11, end: 35 },
       { type: TokenType.NewLine, value: '\n', start: 35, end: 36 },
@@ -174,7 +174,7 @@ fdescribe('Tokenizer', () => {
       { type: TokenType.Keyword, value: 'DONE', start: 40, end: 44 },
       { type: TokenType.Text, value: ' ', start: 44, end: 45 },
       { type: TokenType.Bracket, value: '[', start: 45, end: 46 },
-      { type: TokenType.Comment, value: '#B', start: 46, end: 48 },
+      { type: TokenType.Text, value: '#B', start: 46, end: 48 },
       { type: TokenType.Bracket, value: ']', start: 48, end: 49 },
       { type: TokenType.Text, value: ' Third most important headline', start: 49, end: 79 },
       { type: TokenType.NewLine, value: '\n', start: 79, end: 80 },
@@ -182,7 +182,7 @@ fdescribe('Tokenizer', () => {
       { type: TokenType.Keyword, value: 'HOLD', start: 82, end: 86 },
       { type: TokenType.Text, value: ' ', start: 86, end: 87 },
       { type: TokenType.Bracket, value: '[', start: 87, end: 88 },
-      { type: TokenType.Comment, value: '#c', start: 88, end: 90 },
+      { type: TokenType.Text, value: '#c', start: 88, end: 90 },
       { type: TokenType.Bracket, value: ']', start: 90, end: 91 },
       { type: TokenType.Text, value: ' Headline 3', start: 91, end: 102 },
     ]);
@@ -191,6 +191,7 @@ fdescribe('Tokenizer', () => {
   it('Should create tokens for statistics cookies', () => {
     const headline = `* TODO [50%] [#A] Most important headline`;
     const result = tokenize(headline);
+    console.log('✎: [line 194][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
@@ -200,7 +201,7 @@ fdescribe('Tokenizer', () => {
       { type: TokenType.Bracket, value: ']', start: 11, end: 12 },
       { type: TokenType.Text, value: ' ', start: 12, end: 13 },
       { type: TokenType.Bracket, value: '[', start: 13, end: 14 },
-      { type: TokenType.Comment, value: '#A', start: 14, end: 16 },
+      { type: TokenType.Text, value: '#A', start: 14, end: 16 },
       { type: TokenType.Bracket, value: ']', start: 16, end: 17 },
       { type: TokenType.Text, value: ' Most important headline', start: 17, end: 41 },
     ]);
@@ -568,5 +569,28 @@ console.log(a);
       { start: 82, end: 83, type: 'newLine', value: '\n' },
       { start: 83, end: 92, type: 'keyword', value: '#+END_SRC' },
     ]);
+  });
+
+  it('Should tokenize comment block', () => {
+    const orgDoc = `# comment`;
+    const result = tokenize(orgDoc);
+
+    expect(result).toEqual([
+      { start: 0, end: 1, type: 'comment', value: '#' },
+      { start: 1, end: 9, type: 'text', value: ' comment' },
+    ]);
+  });
+
+  it('Should not parse comment without space', () => {
+    const orgDoc = `#Comment without first space`;
+    const result = tokenize(orgDoc);
+    expect(result).toEqual([{ start: 0, end: 28, type: 'text', value: '#Comment without first space' }]);
+  });
+
+  it('Should not tokenize comment token from middle of text', () => {
+    const orgDoc = `This is not a # comment`;
+    const result = tokenize(orgDoc);
+    console.log('✎: [line 593][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([{ start: 0, end: 23, type: 'text', value: 'This is not a # comment' }]);
   });
 });

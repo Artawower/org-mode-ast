@@ -64,7 +64,6 @@ export class AstContext {
   }
 
   public exitList(): void {
-    console.log('✎: [line 68][ast-context.ts] EXIT: ', 'EXIT');
     this.#nestedLists = [];
   }
 

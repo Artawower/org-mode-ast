@@ -142,6 +142,7 @@ export class OrgNode<T = OrgStruct> {
     this.#next = next;
   }
 
+  // TODO: master need to add range recheck after child added
   public addChild<T = OrgStruct>(child: OrgNode<T>): OrgNode<T> {
     child.setParent(this as OrgNode);
     if (!this.#children) {

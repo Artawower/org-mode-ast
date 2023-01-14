@@ -8,7 +8,6 @@ import {
   Text,
   Section,
   WithValue,
-  WithChildren,
   PartialUniversalOrgNode,
   List,
   Indent,
@@ -21,6 +20,7 @@ import {
   BlockBody,
   BlockFooter,
   Operator,
+  Comment,
 } from 'types';
 
 export class AstBuilder {
@@ -166,6 +166,12 @@ export class AstBuilder {
     }
   }
 
+  private isCommentParent(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
+    if ([NodeType.Text].includes(srcNode.type) && dstNode.type === NodeType.Comment) {
+      return dstNode;
+    }
+  }
+
   // private isUnresolvedNode(srcNode: OrgData, dstNode: OrgData): OrgData {
   //   if (srcNode.type === NodeType.Unresolved) {
   //     return this.findParentForNodeType(srcNode, dstNode.parent);
@@ -183,6 +189,7 @@ export class AstBuilder {
     const parentMatchers = [
       this.isParentAlreadyExist,
       this.isDestinationRootNode,
+      this.isCommentParent,
       // this.isUnresolvedNode,
       this.isNotListIndentInsideSection,
       this.isKeyword,
@@ -376,6 +383,27 @@ export class AstBuilder {
     };
 
     return new OrgNode<Indent>(indent);
+  }
+
+  public createComment(): OrgNode<Comment> {
+    const end = this.lastPos + this.tokenIterator.currentValue.length;
+    const comment: Comment = {
+      type: NodeType.Comment,
+      start: this.lastPos,
+      end,
+    };
+    const commentNode = new OrgNode<Comment>(comment);
+
+    const operatorNode = new OrgNode<Operator>({
+      type: NodeType.Operator,
+      value: this.tokenIterator.currentValue,
+      start: this.lastPos,
+      end,
+    });
+
+    commentNode.addChild(operatorNode);
+
+    return commentNode;
   }
 
   public createNewLineNode(): OrgNode<NewLine> {

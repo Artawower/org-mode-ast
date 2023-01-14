@@ -1,4 +1,4 @@
-import { TokenType, Token, RawToken, ParserConfiguration } from 'types';
+import { ParserConfiguration, RawToken, Token, TokenType } from 'types';
 
 export class Tokenizer {
   private readonly delimiter = ' ';
@@ -129,7 +129,14 @@ export class Tokenizer {
   }
 
   private handleNumberSign(c: string): void {
-    this.upsertToken({ type: TokenType.Comment, value: c });
+    if (
+      [' ', '+'].includes(this.nextChar) &&
+      (!this.prevToken || this.isPrevToken(TokenType.NewLine, TokenType.Indent))
+    ) {
+      this.upsertToken({ type: TokenType.Comment, value: c });
+      return;
+    }
+    this.appendTextToken(c);
   }
 
   private handleDash(c: string): void {
@@ -273,6 +280,10 @@ export class Tokenizer {
     this.tokens.push(newToken);
   }
 
+  /**
+   * Append value to previous token when types are equal
+   * Or create new token with current type
+   */
   private upsertToken(token: RawToken, force = false): void {
     if (this.prevToken?.type === token.type || force) {
       this.appendPrevValue(token.value);

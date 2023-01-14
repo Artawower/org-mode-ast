@@ -49,11 +49,12 @@ Of this requirements i want the following from this parser:
 - [X] Inline quotes
 - [ ] Tables
 - [ ] Links
-- [ ] Src blocs
+- [X] Src blocs
 - [ ] Latex blocks
 - [ ] Html/quotes blocks
 - [ ] Inline html
-- [ ] Comments
+- [ ] Html attributes
+- [X] Comments
 - [ ] Properties
 - [ ] Date and time
 - [ ] Keywords

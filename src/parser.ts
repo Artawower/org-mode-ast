@@ -2,6 +2,7 @@ import { AstBuilder } from 'ast-builder';
 import { AstContext } from 'ast-context';
 import { BlockHandler } from 'block-handler';
 import { BracketHandler } from 'bracket-handler';
+import { CommentHandler } from 'comment-handler';
 import { HandlerDidNotReturnValue, HandlerNotFoundError, UnsupportedOperator } from 'errors';
 import { ListHandler } from 'list-handler';
 import { OrgNode } from 'org-node';
@@ -16,7 +17,8 @@ class Parser {
     private astBuilder: AstBuilder,
     private bracketHandler: BracketHandler,
     private listHandler: ListHandler,
-    private blockHandler: BlockHandler
+    private blockHandler: BlockHandler,
+    private commentHandler: CommentHandler
   ) {}
 
   public parse(): OrgNode {
@@ -30,7 +32,7 @@ class Parser {
     });
   }
 
-  private tokensHandlers: { [key: string]: () => OrgNode | void } = {
+  private tokensHandlers = {
     [TokenType.Headline]: () => this.handleHeadline(),
     [TokenType.Text]: () => this.handleText(),
     [TokenType.Bracket]: () => this.bracketHandler.handle(),
@@ -38,7 +40,9 @@ class Parser {
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
     [TokenType.Keyword]: () => this.handleKeyword(),
-  };
+    // TODO: master make same for other keys
+    [CommentHandler.tokenType]: () => this.commentHandler.handle(),
+  } satisfies Record<string, () => OrgNode<OrgStruct> | void>;
 
   private handleToken(): void {
     const handler = this.tokensHandlers[this.tokenIterator.type];
@@ -52,6 +56,7 @@ class Parser {
       return;
     }
 
+    // TODO: master move to OrgNode class
     this.astBuilder.preserveLastPositionSnapshot(orgData);
     this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
@@ -88,8 +93,6 @@ class Parser {
 
     this.astBuilder.attachToTree(textNode);
 
-    console.log('✎: [line 91][parser.ts] lastTokenWasNewLine: ', lastTokenWasNewLine);
-    console.log('✎: [line 92][parser.ts] this.astBuilder.lastNode.type: ', this.astBuilder.lastNode.type);
     if (lastTokenWasNewLine && this.astBuilder.lastNode.type !== NodeType.Indent) {
       this.ctx.exitList();
     }
@@ -152,9 +155,10 @@ export function parse(text: string): OrgNode {
   const tokenizer = new Tokenizer(text);
   const tokenIterator = new TokenIterator(tokenizer);
   const astBuilder = new AstBuilder(ctx, tokenIterator);
+  const commentHandler = new CommentHandler(astBuilder, tokenIterator);
   const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
   const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
   const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
-  const parser = new Parser(ctx, tokenIterator, astBuilder, bracketHandler, listHandler, blockHandler);
+  const parser = new Parser(ctx, tokenIterator, astBuilder, bracketHandler, listHandler, blockHandler, commentHandler);
   return parser.parse();
 }

@@ -15,6 +15,7 @@ export enum NodeType {
   InlineCode = 'inlineCode',
   Indent = 'indent',
   NewLine = 'newLine',
+  Comment = 'comment',
 
   SrcBlock = 'srcBlock',
   BlockHeader = 'blockHeader',
@@ -188,6 +189,10 @@ export interface SrcBlock extends WithRange, WithParent, WithNeighbors, WithChil
   properties?: BlockProperties;
 }
 
+export interface Comment extends WithRange, WithParent {
+  type: NodeType.Comment;
+}
+
 export interface SrcBlockMetaInfo {
   language?: string;
   tangle?: string;
@@ -218,7 +223,8 @@ export type OrgStruct =
   | SrcBlock
   | BlockHeader
   | BlockBody
-  | BlockFooter;
+  | BlockFooter
+  | Comment;
 
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
 
