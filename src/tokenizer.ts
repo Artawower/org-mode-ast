@@ -31,6 +31,8 @@ export class Tokenizer {
       ':': (c: string) => this.handleComma(c),
       '.': (c: string) => this.handlePoint(c),
       ')': (c: string) => this.handleParenthesis(c),
+      '<': (c: string) => this.handleAngleBracket(c),
+      '>': (c: string) => this.handleAngleBracket(c),
       '\n': (c: string) => this.handleNewLine(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
@@ -182,6 +184,18 @@ export class Tokenizer {
     this.handleListOperatorOrText(c);
   }
 
+  private handleAngleBracket(c: string): void {
+    if (c === '<') {
+      this.createToken({ type: TokenType.Operator, value: c });
+      return;
+    }
+    this.createToken({ type: TokenType.Keyword, value: c });
+    if (this.isDate(this.lastToken.prev?.value)) {
+      this.forceMergeLastTokens(3, TokenType.ActiveDate);
+      return;
+    }
+  }
+
   private handleNewLine(c: string): void {
     this.createToken({ type: TokenType.NewLine, value: c });
   }
@@ -191,12 +205,16 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
-    if (c === ']' && this.lastToken?.value?.match(this.dateRegex) && this.lastToken.prev?.value === '[') {
+    if (c === ']' && this.isDate(this.lastToken?.value) && this.lastToken.prev?.value === '[') {
       this.createToken({ type: TokenType.Operator, value: c });
       this.forceMergeLastTokens(3, TokenType.Date);
       return;
     }
     this.createToken({ type: TokenType.Bracket, value: c });
+  }
+
+  private isDate(text: string): boolean {
+    return !!text?.match(this.dateRegex);
   }
 
   private handleText(c: string): void {

@@ -609,10 +609,32 @@ console.log(a);
     expect(tokenListToArray(result)).toEqual([{ start: 0, end: 23, type: 'text', value: 'This is not a # comment' }]);
   });
 
-  xit('Should tokenize timestamp', () => {
-    const orgDoc = `<2020-12-12 Tue>`;
-    const result = tokenize(orgDoc);
-    expect(result).toEqual([{ start: 0, end: 15, type: 'timestamp', value: '<2020-12-12 Tue>' }]);
+  it('Should tokenize active date', () => {
+    const orgDatas = [
+      '<2023-01-09 Mon>',
+      '<2023-01-10 Tue>',
+      '<2023-01-11 Wed>',
+      '<2023-01-12 Thu>',
+      '<2023-01-13 Fri>',
+      '<2023-01-14 Sat>',
+      '<2023-01-15 Sun>',
+    ];
+    orgDatas.forEach((orgData) => {
+      const result = tokenListToArray(tokenize(orgData));
+      console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
+      expect(result).toEqual([{ start: 0, end: 16, type: 'activeDate', value: orgData }]);
+    });
+  });
+
+  it('Should tokenize cative timestamp at the middle of text', () => {
+    const orgDoc = `This is <2023-01-09 Mon> active date!`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    console.log('✎: [line 613][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 8, type: 'text', value: 'This is ' },
+      { start: 8, end: 24, type: 'activeDate', value: '<2023-01-09 Mon>' },
+      { start: 24, end: 37, type: 'text', value: ' active date!' },
+    ]);
   });
 
   it('Should tokenize inactive timestamp', () => {
@@ -642,6 +664,17 @@ console.log(a);
       { start: 2, end: 38, type: 'text', value: 'Need to buy new mechanical keyboard ' },
       { start: 38, end: 54, type: 'date', value: '[2023-01-09 Mon]' },
       { start: 54, end: 55, type: 'text', value: '!' },
+    ]);
+  });
+
+  it('Should tokenize active date range', () => {
+    const orgDoc = `<2023-01-09 Mon>--<2023-01-10 Tue>`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    console.log('✎: [line 624][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 16, type: 'activeDate', value: '<2023-01-09 Mon>' },
+      { start: 16, end: 18, type: 'text', value: '--' },
+      { start: 18, end: 34, type: 'activeDate', value: '<2023-01-10 Tue>' },
     ]);
   });
 });

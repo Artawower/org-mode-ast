@@ -29,6 +29,7 @@ export enum NodeType {
 export enum TokenType {
   Headline = 'headline',
   Date = 'date',
+  ActiveDate = 'activeDate',
   Text = 'text',
   NewLine = 'newLine',
   Keyword = 'keyword',
