@@ -608,4 +608,40 @@ console.log(a);
     console.log('✎: [line 593][tokenizer.spec.ts] result: ', result);
     expect(tokenListToArray(result)).toEqual([{ start: 0, end: 23, type: 'text', value: 'This is not a # comment' }]);
   });
+
+  xit('Should tokenize timestamp', () => {
+    const orgDoc = `<2020-12-12 Tue>`;
+    const result = tokenize(orgDoc);
+    expect(result).toEqual([{ start: 0, end: 15, type: 'timestamp', value: '<2020-12-12 Tue>' }]);
+  });
+
+  it('Should tokenize inactive timestamp', () => {
+    const orgDatas = [
+      '[2023-01-09 Mon]',
+      '[2023-01-10 Tue]',
+      '[2023-01-11 Wed]',
+      '[2023-01-12 Thu]',
+      '[2023-01-13 Fri]',
+      '[2023-01-14 Sat]',
+      '[2023-01-15 Sun]',
+    ];
+    orgDatas.forEach((orgData) => {
+      const result = tokenListToArray(tokenize(orgData));
+      console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
+      expect(result).toEqual([{ start: 0, end: 16, type: 'date', value: orgData }]);
+    });
+  });
+
+  it('Should tokenize incative timestamp at the middle of text', () => {
+    const orgDoc = `* Need to buy new mechanical keyboard [2023-01-09 Mon]!`;
+
+    const result = tokenListToArray(tokenize(orgDoc));
+    console.log('✎: [line 614][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'headline', value: '* ' },
+      { start: 2, end: 38, type: 'text', value: 'Need to buy new mechanical keyboard ' },
+      { start: 38, end: 54, type: 'date', value: '[2023-01-09 Mon]' },
+      { start: 54, end: 55, type: 'text', value: '!' },
+    ]);
+  });
 });

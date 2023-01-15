@@ -6,6 +6,7 @@ export class Tokenizer {
   private readonly listItemCloseSymbols = [')', '.'];
   private readonly keywordPrefix = '#+';
   private readonly blockKeywords = ['begin_src', 'end_src'];
+  private readonly dateRegex = /^\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/;
 
   private begin = 0;
   private end = 0;
@@ -190,6 +191,11 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
+    if (c === ']' && this.lastToken?.value?.match(this.dateRegex) && this.lastToken.prev?.value === '[') {
+      this.createToken({ type: TokenType.Operator, value: c });
+      this.forceMergeLastTokens(3, TokenType.Date);
+      return;
+    }
     this.createToken({ type: TokenType.Bracket, value: c });
   }
 
@@ -254,15 +260,15 @@ export class Tokenizer {
       start
     );
 
+    console.log('✎: [line 263][tokenizer.ts] prevToken: ', prevToken);
     if (prevToken) {
       prevToken.setNextToken(newToken);
       newToken.setPrevToken(prevToken);
+      this.addToken(newToken);
     } else {
       this.lastToken = newToken;
       this.firstToken = newToken;
     }
-
-    this.addToken(newToken);
   }
 
   private formattersWithSpaceAtTheEnd = ['-', '+'];
