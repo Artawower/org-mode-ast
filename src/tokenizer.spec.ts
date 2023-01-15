@@ -1,5 +1,17 @@
-import { TokenType } from './types';
+import { Token, TokenType } from './types';
 import { tokenize } from './tokenizer';
+
+function tokenListToArray(token: Token): Token[] {
+  const tokens: Token[] = [];
+  let currToken = token;
+  while (currToken) {
+    tokens.push(currToken);
+    currToken = currToken.next;
+    delete tokens[tokens.length - 1].next;
+    delete tokens[tokens.length - 1].prev;
+  }
+  return tokens;
+}
 
 fdescribe('Tokenizer', () => {
   // Headings
@@ -7,7 +19,7 @@ fdescribe('Tokenizer', () => {
     const headline = '* Hello world';
     const result = tokenize(headline);
 
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
     ]);
@@ -16,7 +28,7 @@ fdescribe('Tokenizer', () => {
   it('Should create tokens for simple headline with space at the end', () => {
     const headline = '* Hello world ';
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world ', start: 2, end: 14 },
     ]);
@@ -25,7 +37,7 @@ fdescribe('Tokenizer', () => {
   it('Should create tokens for headline with large start space', () => {
     const headline = '*    Hello world';
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: '   Hello world', start: 2, end: 16 },
     ]);
@@ -39,7 +51,7 @@ fdescribe('Tokenizer', () => {
 ***** And 5 headline level
 * And again 1 level headline`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
       { type: TokenType.NewLine, value: '\n', start: 13, end: 14 },
@@ -65,7 +77,7 @@ fdescribe('Tokenizer', () => {
 * Headline 2
 * Headline 3`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
       { type: TokenType.NewLine, value: '\n', start: 13, end: 14 },
@@ -80,7 +92,7 @@ fdescribe('Tokenizer', () => {
   it('Should correct parse tokens for string with first space and asterisk', () => {
     const headline = ` * Hello world`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Indent, value: ' ', start: 0, end: 1 },
       { type: TokenType.Text, value: '* Hello world', start: 1, end: 14 },
     ]);
@@ -89,7 +101,7 @@ fdescribe('Tokenizer', () => {
   it('Should correct parse tokens for string with first space and aasterisk before word', () => {
     const headline = ` *Hello world`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Indent, value: ' ', start: 0, end: 1 },
       { type: TokenType.Bracket, value: '*', start: 1, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
@@ -101,7 +113,7 @@ fdescribe('Tokenizer', () => {
 *** DONE Headline 2
 * Headline 3`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
       { type: TokenType.Text, value: ' Hello world', start: 6, end: 18 },
@@ -120,7 +132,7 @@ fdescribe('Tokenizer', () => {
 * And this is not a DONE
 * Headline 3`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'This is not a TODO', start: 2, end: 20 },
       { type: TokenType.NewLine, value: '\n', start: 20, end: 21 },
@@ -137,7 +149,7 @@ fdescribe('Tokenizer', () => {
 *** [#B] Third most important headline
 * Headline 3`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
       { type: TokenType.Text, value: '#A', start: 3, end: 5 },
@@ -161,7 +173,7 @@ fdescribe('Tokenizer', () => {
 * HOLD [#c] Headline 3`;
     const result = tokenize(headline);
     console.log('✎: [line 162][tokenizer.spec.ts] result: ', result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
       { type: TokenType.Text, value: ' ', start: 6, end: 7 },
@@ -192,7 +204,7 @@ fdescribe('Tokenizer', () => {
     const headline = `* TODO [50%] [#A] Most important headline`;
     const result = tokenize(headline);
     console.log('✎: [line 194][tokenizer.spec.ts] result: ', result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
       { type: TokenType.Text, value: ' ', start: 6, end: 7 },
@@ -210,7 +222,7 @@ fdescribe('Tokenizer', () => {
   it('Should create statistic with delimiter', () => {
     const headline = `* [1/2] Headline 123`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
       { type: TokenType.Text, value: '1', start: 3, end: 4 },
@@ -224,7 +236,7 @@ fdescribe('Tokenizer', () => {
   it('Should tokenize statistic without trailing space', () => {
     const headline = `* [1/2]Headline 123`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
       { type: TokenType.Text, value: '1', start: 3, end: 4 },
@@ -238,7 +250,7 @@ fdescribe('Tokenizer', () => {
   it('Should tokenize statistic with large trailing space', () => {
     const headline = `* [1/2]      Headline 123`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
       { type: TokenType.Text, value: '1', start: 3, end: 4 },
@@ -253,7 +265,7 @@ fdescribe('Tokenizer', () => {
     const headline = `Some text
 * Headline 123`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Text, value: 'Some text', start: 0, end: 9 },
       { type: TokenType.NewLine, value: '\n', start: 9, end: 10 },
       { type: TokenType.Headline, value: '* ', start: 10, end: 12 },
@@ -265,7 +277,7 @@ fdescribe('Tokenizer', () => {
     const headline = `* Headline 123
 Some text`;
     const result = tokenize(headline);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Headline 123', start: 2, end: 14 },
       { type: TokenType.NewLine, value: '\n', start: 14, end: 15 },
@@ -277,13 +289,13 @@ Some text`;
   it('Should tokenize simple text', () => {
     const headline = `Some text`;
     const result = tokenize(headline);
-    expect(result).toEqual([{ type: TokenType.Text, value: 'Some text', start: 0, end: 9 }]);
+    expect(tokenListToArray(result)).toEqual([{ type: TokenType.Text, value: 'Some text', start: 0, end: 9 }]);
   });
 
   it('Should not create token from empty imput string', () => {
     const headline = ``;
     const result = tokenize(headline);
-    expect(result).toEqual([]);
+    expect(tokenListToArray(result)).toEqual([]);
   });
 
   // Lists
@@ -292,7 +304,7 @@ Some text`;
 - [ ] List item 2
 - [ ] List item 3`;
     const result = tokenize(orgData);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
       { type: TokenType.Text, value: ' ', start: 3, end: 4 },
@@ -316,7 +328,9 @@ Some text`;
   it('Should tokenize the dash as text when the dash is not at the start position', () => {
     const orgData = `Some text - with dash`;
     const result = tokenize(orgData);
-    expect(result).toEqual([{ type: TokenType.Text, value: 'Some text - with dash', start: 0, end: 21 }]);
+    expect(tokenListToArray(result)).toEqual([
+      { type: TokenType.Text, value: 'Some text - with dash', start: 0, end: 21 },
+    ]);
   });
 
   it('Should tokenize list values with plus', () => {
@@ -324,7 +338,7 @@ Some text`;
 + [ ] List item 2
 + [ ] List item 3`;
     const result = tokenize(orgDoc);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '+ ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
       { type: TokenType.Text, value: ' ', start: 3, end: 4 },
@@ -351,7 +365,7 @@ Some text`;
 :END:`;
     const result = tokenize(orgDoc);
     console.log('✎: [line 351][tokenizer.spec.ts] result: ', result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Keyword, value: ':PROPERTIES:', start: 0, end: 12 },
       { type: TokenType.NewLine, value: '\n', start: 12, end: 13 },
       { type: TokenType.Keyword, value: ':ID:', start: 13, end: 17 },
@@ -365,7 +379,7 @@ Some text`;
     const orgDoc = `*bold text*`;
     const result = tokenize(orgDoc);
 
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Bracket, value: '*', start: 0, end: 1 },
       { type: TokenType.Text, value: 'bold text', start: 1, end: 10 },
       { type: TokenType.Bracket, value: '*', start: 10, end: 11 },
@@ -376,7 +390,7 @@ Some text`;
     const orgDoc = `+bold text+`;
     const result = tokenize(orgDoc);
 
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Bracket, value: '+', start: 0, end: 1 },
       { type: TokenType.Text, value: 'bold text', start: 1, end: 10 },
       { type: TokenType.Bracket, value: '+', start: 10, end: 11 },
@@ -387,7 +401,7 @@ Some text`;
     const orgDoc = `This is */italic with bold/* text`;
     const result = tokenize(orgDoc);
 
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Text, value: 'This is ', start: 0, end: 8 },
       { type: TokenType.Bracket, value: '*', start: 8, end: 9 },
       { type: TokenType.Bracket, value: '/', start: 9, end: 10 },
@@ -405,7 +419,7 @@ Some text`;
 
     const result = tokenize(orgDoc);
 
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'List element', start: 2, end: 14 },
       { type: TokenType.NewLine, value: '\n', start: 14, end: 15 },
@@ -424,7 +438,7 @@ Some text`;
 - List item 1 2`;
 
     const result = tokenize(orgDoc);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'List item 1 1', start: 2, end: 15 },
       { type: TokenType.NewLine, value: '\n', start: 15, end: 16 },
@@ -450,7 +464,7 @@ Some text`;
   Text with indent`;
 
     const result = tokenize(orgDoc);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'List item 1', start: 2, end: 13 },
       { type: TokenType.NewLine, value: '\n', start: 13, end: 14 },
@@ -476,7 +490,7 @@ Some text`;
 2. List item 2`;
 
     const result = tokenize(orgDoc);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '1. ', start: 0, end: 3 },
       { type: TokenType.Text, value: 'List item 1', start: 3, end: 14 },
       { type: TokenType.NewLine, value: '\n', start: 14, end: 15 },
@@ -492,7 +506,7 @@ Some text`;
 
     const result = tokenize(orgDoc);
     console.log(result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '1) ', start: 0, end: 3 },
       { type: TokenType.Text, value: 'List item 1', start: 3, end: 14 },
       { type: TokenType.NewLine, value: '\n', start: 14, end: 15 },
@@ -510,8 +524,7 @@ Some text`;
 2) List item 3`;
 
     const result = tokenize(orgDoc);
-    console.log(result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '1) ', start: 0, end: 3 },
       { type: TokenType.Text, value: 'List item 1', start: 3, end: 14 },
       { type: TokenType.NewLine, value: '\n', start: 14, end: 15 },
@@ -531,7 +544,7 @@ const a = 1;
 
     const result = tokenize(orgDoc);
     console.log('✎: [line 536][tokenizer.spec.ts] result: ', result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
       { start: 11, end: 14, type: 'text', value: ' js' },
       { start: 14, end: 15, type: 'newLine', value: '\n' },
@@ -551,7 +564,7 @@ console.log(a);
 
     const result = tokenize(orgDoc);
     console.log('✎: [line 556][tokenizer.spec.ts] result: ', result);
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
       { start: 11, end: 15, type: 'text', value: ' js ' },
       { start: 15, end: 22, type: 'keyword', value: ':tangle' },
@@ -575,7 +588,7 @@ console.log(a);
     const orgDoc = `# comment`;
     const result = tokenize(orgDoc);
 
-    expect(result).toEqual([
+    expect(tokenListToArray(result)).toEqual([
       { start: 0, end: 1, type: 'comment', value: '#' },
       { start: 1, end: 9, type: 'text', value: ' comment' },
     ]);
@@ -584,13 +597,15 @@ console.log(a);
   it('Should not parse comment without space', () => {
     const orgDoc = `#Comment without first space`;
     const result = tokenize(orgDoc);
-    expect(result).toEqual([{ start: 0, end: 28, type: 'text', value: '#Comment without first space' }]);
+    expect(tokenListToArray(result)).toEqual([
+      { start: 0, end: 28, type: 'text', value: '#Comment without first space' },
+    ]);
   });
 
   it('Should not tokenize comment token from middle of text', () => {
     const orgDoc = `This is not a # comment`;
     const result = tokenize(orgDoc);
     console.log('✎: [line 593][tokenizer.spec.ts] result: ', result);
-    expect(result).toEqual([{ start: 0, end: 23, type: 'text', value: 'This is not a # comment' }]);
+    expect(tokenListToArray(result)).toEqual([{ start: 0, end: 23, type: 'text', value: 'This is not a # comment' }]);
   });
 });

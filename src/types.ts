@@ -46,6 +46,8 @@ export class Token {
   public end!: number;
   public value!: string;
   public type!: TokenType;
+  public next?: Token;
+  public prev?: Token;
 
   constructor(token: RawToken, public readonly start: number) {
     this.end = start + token.value.length;
@@ -68,6 +70,15 @@ export class Token {
 
   public isType(t: TokenType): boolean {
     return this.type === t;
+  }
+
+  public setNextToken(token: Token): void {
+    this.next = token;
+    token.setPrevToken(this);
+  }
+
+  public setPrevToken(token: Token): void {
+    this.prev = token;
   }
 }
 

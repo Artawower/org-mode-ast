@@ -3,8 +3,6 @@ import { Token, TokenType } from 'types';
 
 export class TokenIterator {
   #token: Token;
-  #begin = 0;
-  #end = 0;
 
   get token(): Token {
     return this.#token;
@@ -19,33 +17,28 @@ export class TokenIterator {
   }
 
   get prevToken(): Token {
-    return this.tokens[this.tokenPosition - 1];
+    return this.#token.prev;
   }
 
   get nextToken(): Token {
-    return this.tokens[this.tokenPosition + 1];
+    return this.#token.next;
   }
 
-  private tokens: Token[];
   private tokenPosition = 0;
 
   get isLastToken(): boolean {
-    return this.tokenPosition === this.tokens.length - 1;
+    return !this.#token.next;
   }
 
   constructor(private tokenizer: Tokenizer) {}
 
   public forEach(callback: (token: Token, i: number) => void): void {
-    this.tokens = this.tokenizer.tokenize();
+    this.#token = this.tokenizer.tokenize();
 
-    this.tokens.forEach((token, i) => {
-      this.#begin = this.#end;
-      this.#end = this.#begin + token.value.length;
-
-      this.#token = new Token(token, this.#begin);
-
-      this.tokenPosition = i;
-      callback(this.token, i);
-    });
+    while (this.#token) {
+      this.tokenPosition++;
+      callback(this.token, this.tokenPosition);
+      this.#token = this.#token.next;
+    }
   }
 }

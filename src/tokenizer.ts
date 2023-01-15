@@ -11,9 +11,10 @@ export class Tokenizer {
   private end = 0;
 
   // TODO: make it as linked list
-  private tokens: Token[] = [];
   private point = 0;
   private tokenAggregators: { [key: string]: (c: string) => void };
+  private firstToken: Token;
+  private lastToken: Token;
 
   constructor(private text: string, public readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED']) {
     this.initTokenAggregators();
@@ -42,10 +43,6 @@ export class Tokenizer {
     };
   }
 
-  get prevToken(): Token {
-    return this.tokens?.[this.tokens.length - 1];
-  }
-
   get nextChar(): string {
     return this.text[this.point + 1];
   }
@@ -55,32 +52,27 @@ export class Tokenizer {
   }
 
   get isPrevTokenEndsWithSpace(): boolean {
-    if (!this.prevToken) {
+    if (!this.lastToken) {
       return false;
     }
-    return this.prevToken.value?.[this.prevToken.value.length - 1] === this.delimiter;
+    return this.lastToken.value?.[this.lastToken.value.length - 1] === this.delimiter;
   }
 
-  public tokenize(): Token[] {
+  public tokenize(): Token {
     for (; this.point < this.text.length; this.point++) {
       const c = this.text[this.point];
       this.buildTokens(c);
     }
 
-    return this.tokens;
-  }
-
-  // Get token by number. from the end of list
-  private getTokenByNumFromEnd(pos: number): Token {
-    return this.tokens[this.tokens.length - pos];
+    return this.firstToken;
   }
 
   private handleAsterisk(c: string): void {
     if (
       (this.isDelimiter(this.nextChar) || this.isNextChar('*')) &&
-      (!this.prevToken || this.prevToken.isType(TokenType.NewLine))
+      (!this.lastToken || this.lastToken.isType(TokenType.NewLine))
     ) {
-      this.addToken({ type: TokenType.Headline, value: c });
+      this.createToken({ type: TokenType.Headline, value: c });
       return;
     }
     if (this.isPrevToken(TokenType.Headline)) {
@@ -95,14 +87,14 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
-    if (!this.prevToken || this.prevToken?.isType(TokenType.NewLine)) {
-      this.addToken({ type: TokenType.Indent, value: c });
+    if (!this.lastToken || this.lastToken?.isType(TokenType.NewLine)) {
+      this.createToken({ type: TokenType.Indent, value: c });
       return;
     }
     if (
       this.isPrevToken(TokenType.Indent) ||
-      (this.isPrevToken(TokenType.Operator) && this.prevToken.value.endsWith('-')) ||
-      this.isListOperator(this.prevToken)
+      (this.isPrevToken(TokenType.Operator) && this.lastToken.value.endsWith('-')) ||
+      this.isListOperator(this.lastToken)
     ) {
       this.appendPrevValue(c);
       return;
@@ -131,7 +123,7 @@ export class Tokenizer {
   private handleNumberSign(c: string): void {
     if (
       [' ', '+'].includes(this.nextChar) &&
-      (!this.prevToken || this.isPrevToken(TokenType.NewLine, TokenType.Indent))
+      (!this.lastToken || this.isPrevToken(TokenType.NewLine, TokenType.Indent))
     ) {
       this.upsertToken({ type: TokenType.Comment, value: c });
       return;
@@ -140,20 +132,20 @@ export class Tokenizer {
   }
 
   private handleDash(c: string): void {
-    if (this.prevToken && !this.prevToken.isType(TokenType.NewLine) && !this.prevToken.value.trim()) {
+    if (this.lastToken && !this.lastToken.isType(TokenType.NewLine) && !this.lastToken.value.trim()) {
       this.upsertToken({ type: TokenType.Operator, value: c });
       return;
     }
-    if (!this.prevToken || this.prevToken.isType(TokenType.NewLine)) {
-      this.addToken({ type: TokenType.Operator, value: c });
+    if (!this.lastToken || this.lastToken.isType(TokenType.NewLine)) {
+      this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
     this.upsertToken({ type: TokenType.Text, value: c });
   }
 
   private handlePlus(c: string): void {
-    if (this.isNextChar(this.delimiter) && (!this.prevToken || this.prevToken.isType(TokenType.NewLine))) {
-      this.addToken({ type: TokenType.Operator, value: c });
+    if (this.isNextChar(this.delimiter) && (!this.lastToken || this.lastToken.isType(TokenType.NewLine))) {
+      this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
     if (this.isPrevToken(TokenType.Comment)) {
@@ -164,11 +156,11 @@ export class Tokenizer {
   }
 
   private handleComma(c: string): void {
-    if (this.prevToken?.value?.startsWith(':')) {
+    if (this.lastToken?.value?.startsWith(':')) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       return;
     }
-    this.addToken({ type: TokenType.Operator, value: c });
+    this.createToken({ type: TokenType.Operator, value: c });
   }
 
   private handlePoint(c: string): void {
@@ -176,10 +168,9 @@ export class Tokenizer {
   }
 
   private handleListOperatorOrText(c: string): boolean {
-    const wasNewLineOrStartDocument =
-      !this.getTokenByNumFromEnd(3) || this.getTokenByNumFromEnd(2)?.isType(TokenType.NewLine);
-    const wasSpace = this.getTokenByNumFromEnd(2)?.isBlank;
-    if ((wasSpace || wasNewLineOrStartDocument) && this.isValueNumber(this.prevToken.value)) {
+    const wasNewLineOrStartDocument = !this.lastToken?.prev?.prev || this.lastToken?.prev?.isType(TokenType.NewLine);
+    const wasSpace = this.lastToken?.prev?.prev?.isBlank;
+    if ((wasSpace || wasNewLineOrStartDocument) && this.isValueNumber(this.lastToken.value)) {
       this.upsertToken({ type: TokenType.Operator, value: c }, true);
       return;
     }
@@ -191,7 +182,7 @@ export class Tokenizer {
   }
 
   private handleNewLine(c: string): void {
-    this.addToken({ type: TokenType.NewLine, value: c });
+    this.createToken({ type: TokenType.NewLine, value: c });
   }
 
   private isValueNumber(value: string): boolean {
@@ -199,7 +190,7 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
-    this.addToken({ type: TokenType.Bracket, value: c });
+    this.createToken({ type: TokenType.Bracket, value: c });
   }
 
   private handleText(c: string): void {
@@ -212,11 +203,11 @@ export class Tokenizer {
   }
 
   private appendTextToken(c: string): void {
-    if (this.prevToken?.isType(TokenType.NewLine)) {
-      this.addToken({ type: TokenType.Text, value: c });
+    if (this.lastToken?.isType(TokenType.NewLine)) {
+      this.createToken({ type: TokenType.Text, value: c });
       return;
     }
-    if (this.prevToken?.value.startsWith(':') && !this.isDelimiter(c)) {
+    if (this.lastToken?.value.startsWith(':') && !this.isDelimiter(c)) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       // this.appendPrevValue(c);
       return;
@@ -229,11 +220,11 @@ export class Tokenizer {
   }
 
   private checkIsLastTextTokenKeyword(): void {
-    if (this.todoKeywords.find((t) => t === this.prevToken.value)) {
-      this.prevToken.setType(TokenType.Keyword);
+    if (this.todoKeywords.find((t) => t === this.lastToken.value)) {
+      this.lastToken.setType(TokenType.Keyword);
       return;
     }
-    if (this.isBlockKeyword(this.prevToken.value)) {
+    if (this.isBlockKeyword(this.lastToken.value)) {
       this.forceMergeLastTokens(2, TokenType.Keyword);
     }
   }
@@ -244,24 +235,43 @@ export class Tokenizer {
    * @param type - type of new token
    */
   private forceMergeLastTokens(count: number, type: TokenType): void {
-    const tokens = this.tokens.splice(-count);
+    let value = '';
+    let start: number;
+    let prevToken = this.lastToken;
+
+    while (count > 0) {
+      --count;
+      value = prevToken.value + value;
+      start = prevToken.start;
+      prevToken = prevToken?.prev;
+    }
+
     const newToken = new Token(
       {
         type,
-        value: tokens.map((t) => t.value).join(''),
+        value,
       },
-      tokens[0].start
+      start
     );
-    this.tokens.push(newToken);
+
+    if (prevToken) {
+      prevToken.setNextToken(newToken);
+      newToken.setPrevToken(prevToken);
+    } else {
+      this.lastToken = newToken;
+      this.firstToken = newToken;
+    }
+
+    this.addToken(newToken);
   }
 
   private formattersWithSpaceAtTheEnd = ['-', '+'];
 
   private shouldFormatterHasSpaceAtTheEnd(): boolean {
-    if (!this.prevToken || this.prevToken.type !== TokenType.Operator) {
+    if (!this.lastToken || this.lastToken.type !== TokenType.Operator) {
       return false;
     }
-    return this.formattersWithSpaceAtTheEnd.includes(this.prevToken.value);
+    return this.formattersWithSpaceAtTheEnd.includes(this.lastToken.value);
   }
 
   private buildTokens(c: string) {
@@ -273,11 +283,17 @@ export class Tokenizer {
     this.handleText(c);
   }
 
-  private addToken(token: RawToken) {
+  private createToken(token: RawToken) {
     this.begin = this.end;
     this.end = this.begin + token.value.length;
     const newToken = new Token(token, this.begin);
-    this.tokens.push(newToken);
+    this.addToken(newToken);
+  }
+
+  private addToken(token: Token) {
+    this.firstToken ??= token;
+    this.lastToken?.setNextToken(token);
+    this.lastToken = token;
   }
 
   /**
@@ -285,24 +301,24 @@ export class Tokenizer {
    * Or create new token with current type
    */
   private upsertToken(token: RawToken, force = false): void {
-    if (this.prevToken?.type === token.type || force) {
+    if (this.lastToken?.type === token.type || force) {
       this.appendPrevValue(token.value);
-      this.prevToken.setType(token.type);
+      this.lastToken.setType(token.type);
       return;
     }
-    this.addToken(token);
+    this.createToken(token);
   }
 
   private appendPrevValue(c: string) {
     this.end += c.length;
-    this.prevToken.appendText(c);
+    this.lastToken.appendText(c);
   }
 
   private isPrevToken(...tokens: TokenType[]): boolean {
-    if (!this.prevToken) {
+    if (!this.lastToken) {
       return false;
     }
-    return tokens.some((t) => t === this.prevToken.type);
+    return tokens.some((t) => t === this.lastToken.type);
   }
 
   private isNextChar(c: string): boolean {
@@ -314,7 +330,7 @@ export class Tokenizer {
   }
 }
 
-export function tokenize(text: string, configuration?: ParserConfiguration): Token[] {
+export function tokenize(text: string, configuration?: ParserConfiguration): Token {
   const tokenizer = new Tokenizer(text, configuration?.todoKeywords);
   return tokenizer.tokenize();
 }
