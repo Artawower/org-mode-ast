@@ -2,7 +2,7 @@ import { ParserConfiguration, RawToken, Token, TokenType } from 'types';
 
 export class Tokenizer {
   private readonly delimiter = ' ';
-  private readonly brackets = ['=', '+', '[', ']', '/', '*'];
+  private readonly brackets = ['=', '+', '[', ']', '/', '*', '<', '>'];
   private readonly listItemCloseSymbols = [')', '.'];
   private readonly keywordPrefix = '#+';
   private readonly blockKeywords = ['begin_src', 'end_src'];
@@ -31,8 +31,6 @@ export class Tokenizer {
       ':': (c: string) => this.handleComma(c),
       '.': (c: string) => this.handlePoint(c),
       ')': (c: string) => this.handleParenthesis(c),
-      '<': (c: string) => this.handleAngleBracket(c),
-      '>': (c: string) => this.handleAngleBracket(c),
       '\n': (c: string) => this.handleNewLine(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
@@ -184,18 +182,6 @@ export class Tokenizer {
     this.handleListOperatorOrText(c);
   }
 
-  private handleAngleBracket(c: string): void {
-    if (c === '<') {
-      this.createToken({ type: TokenType.Operator, value: c });
-      return;
-    }
-    this.createToken({ type: TokenType.Keyword, value: c });
-    if (this.isDate(this.lastToken.prev?.value)) {
-      this.forceMergeLastTokens(3, TokenType.ActiveDate);
-      return;
-    }
-  }
-
   private handleNewLine(c: string): void {
     this.createToken({ type: TokenType.NewLine, value: c });
   }
@@ -205,11 +191,6 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
-    if (c === ']' && this.isDate(this.lastToken?.value) && this.lastToken.prev?.value === '[') {
-      this.createToken({ type: TokenType.Operator, value: c });
-      this.forceMergeLastTokens(3, TokenType.Date);
-      return;
-    }
     this.createToken({ type: TokenType.Bracket, value: c });
   }
 

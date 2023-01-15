@@ -622,7 +622,11 @@ console.log(a);
     orgDatas.forEach((orgData) => {
       const result = tokenListToArray(tokenize(orgData));
       console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
-      expect(result).toEqual([{ start: 0, end: 16, type: 'activeDate', value: orgData }]);
+      expect(result).toEqual([
+        { start: 0, end: 1, type: 'bracket', value: '<' },
+        { start: 1, end: 15, type: 'text', value: orgData.slice(1, orgData.length - 1) },
+        { start: 15, end: 16, type: 'bracket', value: '>' },
+      ]);
     });
   });
 
@@ -632,7 +636,9 @@ console.log(a);
     console.log('✎: [line 613][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 8, type: 'text', value: 'This is ' },
-      { start: 8, end: 24, type: 'activeDate', value: '<2023-01-09 Mon>' },
+      { start: 8, end: 9, type: 'bracket', value: '<' },
+      { start: 9, end: 23, type: 'text', value: '2023-01-09 Mon' },
+      { start: 23, end: 24, type: 'bracket', value: '>' },
       { start: 24, end: 37, type: 'text', value: ' active date!' },
     ]);
   });
@@ -650,7 +656,11 @@ console.log(a);
     orgDatas.forEach((orgData) => {
       const result = tokenListToArray(tokenize(orgData));
       console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
-      expect(result).toEqual([{ start: 0, end: 16, type: 'date', value: orgData }]);
+      expect(result).toEqual([
+        { start: 0, end: 1, type: 'bracket', value: '[' },
+        { start: 1, end: 15, type: 'text', value: orgData.slice(1, orgData.length - 1) },
+        { start: 15, end: 16, type: 'bracket', value: ']' },
+      ]);
     });
   });
 
@@ -662,7 +672,9 @@ console.log(a);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'headline', value: '* ' },
       { start: 2, end: 38, type: 'text', value: 'Need to buy new mechanical keyboard ' },
-      { start: 38, end: 54, type: 'date', value: '[2023-01-09 Mon]' },
+      { start: 38, end: 39, type: 'bracket', value: '[' },
+      { start: 39, end: 53, type: 'text', value: '2023-01-09 Mon' },
+      { start: 53, end: 54, type: 'bracket', value: ']' },
       { start: 54, end: 55, type: 'text', value: '!' },
     ]);
   });
@@ -672,9 +684,13 @@ console.log(a);
     const result = tokenListToArray(tokenize(orgDoc));
     console.log('✎: [line 624][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
-      { start: 0, end: 16, type: 'activeDate', value: '<2023-01-09 Mon>' },
+      { start: 0, end: 1, type: 'bracket', value: '<' },
+      { start: 1, end: 15, type: 'text', value: '2023-01-09 Mon' },
+      { start: 15, end: 16, type: 'bracket', value: '>' },
       { start: 16, end: 18, type: 'text', value: '--' },
-      { start: 18, end: 34, type: 'activeDate', value: '<2023-01-10 Tue>' },
+      { start: 18, end: 19, type: 'bracket', value: '<' },
+      { start: 19, end: 33, type: 'text', value: '2023-01-10 Tue' },
+      { start: 33, end: 34, type: 'bracket', value: '>' },
     ]);
   });
 });
