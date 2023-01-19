@@ -8,7 +8,7 @@ import {
   Text,
   Section,
   WithValue,
-  PartialUniversalOrgNode,
+  PartialUniversalOrgStruct,
   List,
   Indent,
   TokenType,
@@ -21,6 +21,8 @@ import {
   BlockFooter,
   Operator,
   Comment,
+  Date,
+  Checkbox,
 } from 'types';
 
 export class AstBuilder {
@@ -78,18 +80,21 @@ export class AstBuilder {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private isNotListIndentInsideSection(srcNode: OrgStruct, _dstNode: OrgStruct): OrgNode<Section> {
     if (srcNode.type === NodeType.Indent && !this.isListOperator(this.tokenIterator.currentValue) && this.lastSection) {
       return this.lastSection;
     }
   }
 
-  private isParentAlreadyExist(srcNode: OrgStruct, _dstNode: OrgStruct): OrgStruct {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private isParentAlreadyExist(srcNode: OrgNode<OrgStruct>, _dstNode: OrgNode<OrgStruct>): OrgNode<OrgStruct> {
     if (srcNode.parent) {
       return srcNode.parent;
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private isNodeAfterListWithSameLevel(_srcNode: OrgStruct, _dstNode: OrgStruct): OrgNode<OrgStruct> {
     const exitFromTopList = !!this.ctx.topLevelList;
     const notIndentAfterNewLine = !this.ctx.nextIndentNode && this.tokenIterator.prevToken?.isType(TokenType.NewLine);
@@ -144,14 +149,7 @@ export class AstBuilder {
     const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     if (
       !isSourceNodeHeadline &&
-      [
-        NodeType.Root,
-        NodeType.Headline,
-        NodeType.Section,
-        NodeType.Checkbox,
-        NodeType.List,
-        NodeType.ListItem,
-      ].includes(dstNode.type)
+      [NodeType.Root, NodeType.Headline, NodeType.Section, NodeType.List, NodeType.ListItem].includes(dstNode.type)
     ) {
       return dstNode;
     }
@@ -171,12 +169,6 @@ export class AstBuilder {
       return dstNode;
     }
   }
-
-  // private isUnresolvedNode(srcNode: OrgData, dstNode: OrgData): OrgData {
-  //   if (srcNode.type === NodeType.Unresolved) {
-  //     return this.findParentForNodeType(srcNode, dstNode.parent);
-  //   }
-  // }
 
   private findParentForNodeType(srcNode: OrgNode, dstNode?: OrgNode): OrgNode {
     dstNode = dstNode || this.lastNode;
@@ -263,6 +255,7 @@ export class AstBuilder {
   }
 
   public appendLengthToParentNodes(length: number, node?: OrgNode): void {
+    // console.log('✎: [line 274][ast-builder.ts] node: ', node);
     if (!node || !length) {
       return;
     }
@@ -327,6 +320,17 @@ export class AstBuilder {
     return mergedNodes;
   }
 
+  public createCheckboxNode(start: number, end: number, value: string, checked: boolean): OrgNode<Checkbox> {
+    const checkBoxData: Checkbox = {
+      type: NodeType.Checkbox,
+      start,
+      end,
+      checked,
+      value,
+    };
+    return new OrgNode<Checkbox>(checkBoxData);
+  }
+
   // Section of helpers function. Consider moving them to separate class
 
   public isNodesCheckbox(nodes: OrgNode[]): boolean {
@@ -352,7 +356,7 @@ export class AstBuilder {
     }
   }
 
-  public parentNodeExist(node: OrgStruct, types: NodeType | NodeType[]): boolean {
+  public parentNodeExist(node: OrgNode, types: NodeType | NodeType[]): boolean {
     if (!Array.isArray(types)) {
       types = [types];
     }
@@ -459,6 +463,25 @@ export class AstBuilder {
     return new OrgNode<Unresolved>(unresolved);
   }
 
+  public createDateNode([openBracket, dateText, closeBracket]: [
+    OrgNode<Operator>,
+    OrgNode<Text>,
+    OrgNode<Operator>
+  ]): OrgNode<Date> {
+    const date: Date = {
+      type: NodeType.Date,
+      start: openBracket.start,
+      end: closeBracket.end,
+    };
+
+    const dateNode = new OrgNode<Date>(date);
+    dateNode.addChild(openBracket);
+    dateNode.addChild(dateText);
+    dateNode.addChild(closeBracket);
+
+    return dateNode;
+  }
+
   public isListOperator(tokenValue: string): boolean {
     // NOTE: + ,- , 1), 1. - strings indicated list operator
     // https://regex101.com/r/4qq9Ob/1
@@ -484,7 +507,7 @@ export class AstBuilder {
     children: OrgNode[],
     start?: number
   ): OrgNode<T> {
-    const block: PartialUniversalOrgNode = {
+    const block: PartialUniversalOrgStruct = {
       type,
       start: children[0]?.start ?? start,
       end: children[children.length - 1]?.end ?? start,

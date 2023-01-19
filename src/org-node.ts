@@ -1,4 +1,4 @@
-import { BlockProperties, NodeType, OrgStruct, PartialUniversalOrgNode, Section } from 'types';
+import { BlockProperties, NodeType, OrgStruct, PartialUniversalOrgStruct, Section } from 'types';
 
 export class OrgNode<T = OrgStruct> {
   public type!: NodeType;
@@ -81,7 +81,7 @@ export class OrgNode<T = OrgStruct> {
     this.#checked = checked;
   }
 
-  constructor(nodeData: PartialUniversalOrgNode) {
+  constructor(nodeData: PartialUniversalOrgStruct) {
     this.type = nodeData.type;
     if (nodeData.section) {
       this.#section = new OrgNode(nodeData.section);
@@ -162,7 +162,7 @@ export class OrgNode<T = OrgStruct> {
     this.#section = section;
   }
 
-  public addRawChildren(children: PartialUniversalOrgNode[]) {
+  public addRawChildren(children: PartialUniversalOrgStruct[]) {
     children?.forEach((child) => this.addChild(new OrgNode(child)));
   }
 

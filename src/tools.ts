@@ -1,5 +1,5 @@
 import { OrgNode } from 'org-node';
-import { NodeType, OrgStruct, WithValue } from 'types';
+import { NodeType, OrgStruct } from 'types';
 
 /**
  * Method for pretty debug org tree. Useful for long AST.
@@ -8,6 +8,9 @@ import { NodeType, OrgStruct, WithValue } from 'types';
  * @param level - number of indention
  */
 export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
+  if (!data) {
+    return '[EMPTY]';
+  }
   data.safeCheckMode = false;
   const indent = ' '.repeat(level * 2);
   let result = indent;
@@ -18,6 +21,10 @@ export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
 
   if (data.ordered != null) {
     result += `${indent}    :${(data as any).ordered ? 'ordered' : 'unordered'}:\n`;
+  }
+
+  if (data.checked != null) {
+    result += `${indent}    :${(data as any).checked ? 'checked' : 'unchecked'}:\n`;
   }
 
   if (data.level != null) {

@@ -1,1 +1,1 @@
-console.log("amma start works!");
+console.log('amma start works!');

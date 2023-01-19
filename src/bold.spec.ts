@@ -116,9 +116,9 @@ describe('Bold test', () => {
 
   it('Should parse bold with that started from brackets symbols', () => {
     const orgData = `* Hello +[*world*`;
-    const result = parse(orgData);
+    const result = prettyTreePrint(parse(orgData));
 
-    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+    expect(result).toMatchInlineSnapshot(`
       "root [0-17]
         headline [0-17]
             :level 1:

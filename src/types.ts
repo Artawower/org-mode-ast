@@ -16,7 +16,8 @@ export enum NodeType {
   Indent = 'indent',
   NewLine = 'newLine',
   Comment = 'comment',
-
+  Date = 'date',
+  DateRange = 'dateRange',
   SrcBlock = 'srcBlock',
   BlockHeader = 'blockHeader',
   BlockFooter = 'blockFooter',
@@ -160,7 +161,7 @@ export interface OrgCrossed extends WithRange, WithChildren, WithParent, WithNei
   type: NodeType.Crossed;
 }
 
-export interface Checkbox extends WithRange, WithParent, WithCheckStatus, WithNeighbors {
+export interface Checkbox extends WithRange, WithCheckStatus, WithNeighbors, WithValue {
   type: NodeType.Checkbox;
 }
 
@@ -204,6 +205,14 @@ export interface Comment extends WithRange, WithParent {
   type: NodeType.Comment;
 }
 
+export interface Date extends WithRange, WithParent, WithNeighbors {
+  type: NodeType.Date;
+}
+
+export interface DateRange extends WithRange, WithParent, WithNeighbors {
+  type: NodeType.DateRange;
+}
+
 export interface SrcBlockMetaInfo {
   language?: string;
   tangle?: string;
@@ -235,7 +244,9 @@ export type OrgStruct =
   | BlockHeader
   | BlockBody
   | BlockFooter
-  | Comment;
+  | Comment
+  | Date
+  | DateRange;
 
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
 
@@ -243,7 +254,7 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
 
 type NodeProperties = UnionToIntersection<DistributiveOmit<OrgStruct, 'type'>>;
 
-export interface PartialUniversalOrgNode extends Partial<NodeProperties> {
+export interface PartialUniversalOrgStruct extends Partial<NodeProperties> {
   type: NodeType;
 }
 
