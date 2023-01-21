@@ -2,7 +2,7 @@ import { AstBuilder } from 'ast-builder';
 import type { OrgHandler } from 'internal.types';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
-import { NodeType, OrgStruct, InlineCode, OrgRoot, Text, PartialUniversalOrgStruct, Operator, Checkbox } from 'types';
+import { NodeType, OrgStruct, InlineCode, OrgRoot, Text, PartialUniversalOrgStruct, Date, Checkbox } from 'types';
 
 export class BracketHandler implements OrgHandler {
   private bracketsStackPositions: Array<{ childIndex: number; node: OrgNode<OrgStruct> }> = [];
@@ -20,6 +20,9 @@ export class BracketHandler implements OrgHandler {
     '+': NodeType.Crossed,
     '=': NodeType.InlineCode,
   };
+
+  // NOTE: https://regex101.com/r/IPfgId/1
+  private readonly dateRegex = /\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?$/;
 
   constructor(private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
@@ -149,7 +152,19 @@ export class BracketHandler implements OrgHandler {
     closedBracket: OrgNode<OrgStruct>,
     bracketedNodes: OrgNode<OrgStruct>[]
   ): OrgNode<Date> {
-    return null;
+    const dateParent = openedBracket.parent;
+    if (bracketedNodes.length !== 3 || !this.isDate(bracketedNodes[1].value)) {
+      return;
+    }
+
+    const dateNode = this.astBuilder.createDateNode(openedBracket, bracketedNodes[1], closedBracket);
+    dateNode.setParent(dateParent);
+
+    return dateNode;
+  }
+
+  private isDate(text: string): boolean {
+    return !!text?.match(this.dateRegex);
   }
 
   private isOpenedBracket(bracketNode: OrgNode<OrgStruct>): boolean {

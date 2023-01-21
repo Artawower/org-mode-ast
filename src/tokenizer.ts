@@ -6,7 +6,6 @@ export class Tokenizer {
   private readonly listItemCloseSymbols = [')', '.'];
   private readonly keywordPrefix = '#+';
   private readonly blockKeywords = ['begin_src', 'end_src'];
-  private readonly dateRegex = /^\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)$/;
 
   private begin = 0;
   private end = 0;
@@ -161,6 +160,10 @@ export class Tokenizer {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       return;
     }
+    if (this.lastToken && this.isValueNumber(this.lastToken?.value?.slice(-1))) {
+      this.upsertToken({ type: TokenType.Text, value: c }, true);
+      return;
+    }
     this.createToken({ type: TokenType.Operator, value: c });
   }
 
@@ -192,10 +195,6 @@ export class Tokenizer {
 
   private handleBracket(c: string): void {
     this.createToken({ type: TokenType.Bracket, value: c });
-  }
-
-  private isDate(text: string): boolean {
-    return !!text?.match(this.dateRegex);
   }
 
   private handleText(c: string): void {

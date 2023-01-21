@@ -682,7 +682,7 @@ console.log(a);
   it('Should tokenize active date range', () => {
     const orgDoc = `<2023-01-09 Mon>--<2023-01-10 Tue>`;
     const result = tokenListToArray(tokenize(orgDoc));
-    console.log('✎: [line 624][tokenizer.spec.ts] result: ', result);
+    // console.log('✎: [line 624][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '<' },
       { start: 1, end: 15, type: 'text', value: '2023-01-09 Mon' },
@@ -691,6 +691,17 @@ console.log(a);
       { start: 18, end: 19, type: 'bracket', value: '<' },
       { start: 19, end: 33, type: 'text', value: '2023-01-10 Tue' },
       { start: 33, end: 34, type: 'bracket', value: '>' },
+    ]);
+  });
+
+  it('Should tokenize inactive date with time', () => {
+    const orgDoc = `[2023-01-09 Mon 10:00]`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    // console.log('✎: [line 634][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 1, type: 'bracket', value: '[' },
+      { start: 1, end: 21, type: 'text', value: '2023-01-09 Mon 10:00' },
+      { start: 21, end: 22, type: 'bracket', value: ']' },
     ]);
   });
 });

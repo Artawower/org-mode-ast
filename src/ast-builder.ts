@@ -463,11 +463,7 @@ export class AstBuilder {
     return new OrgNode<Unresolved>(unresolved);
   }
 
-  public createDateNode([openBracket, dateText, closeBracket]: [
-    OrgNode<Operator>,
-    OrgNode<Text>,
-    OrgNode<Operator>
-  ]): OrgNode<Date> {
+  public createDateNode(openBracket: OrgNode, dateTextNode: OrgNode, closeBracket: OrgNode): OrgNode<Date> {
     const date: Date = {
       type: NodeType.Date,
       start: openBracket.start,
@@ -476,7 +472,7 @@ export class AstBuilder {
 
     const dateNode = new OrgNode<Date>(date);
     dateNode.addChild(openBracket);
-    dateNode.addChild(dateText);
+    dateNode.addChild(dateTextNode);
     dateNode.addChild(closeBracket);
 
     return dateNode;
