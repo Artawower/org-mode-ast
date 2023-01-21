@@ -56,7 +56,7 @@ Of this requirements i want the following from this parser:
 - [ ] Html attributes
 - [X] Comments
 - [ ] Properties
-- [ ] Date and time
+- [X] Date and time
 - [ ] Keywords
 - [ ] Cross links
 - [X] Tags

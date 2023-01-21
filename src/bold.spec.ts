@@ -8,7 +8,7 @@ describe('Bold test', () => {
     const result = parse(headline);
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-12]
-        text [0-12] ("world")
+        text [0-12] ("Hello *world")
       "
     `);
   });
@@ -18,7 +18,7 @@ describe('Bold test', () => {
     const result = parse(orgText);
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-16]
-        text [0-16] ("Not a bold text")
+        text [0-16] ("*Not a bold text")
       "
     `);
   });
@@ -40,7 +40,7 @@ describe('Bold test', () => {
 
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-14]
-        text [0-14] ("world")
+        text [0-14] ("Hello *+[world")
       "
     `);
   });

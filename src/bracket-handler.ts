@@ -2,6 +2,7 @@ import { AstBuilder } from 'ast-builder';
 import type { OrgHandler } from 'internal.types';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
+import { prettyTreePrint } from 'tools';
 import { NodeType, OrgStruct, InlineCode, OrgRoot, Text, PartialUniversalOrgStruct, Date, Checkbox } from 'types';
 
 export class BracketHandler implements OrgHandler {
@@ -210,7 +211,7 @@ export class BracketHandler implements OrgHandler {
     let childIndexOffset = 0;
 
     this.bracketsStackPositions.forEach((bracket) => {
-      const neighbors = (bracket.node.parent as OrgRoot).children;
+      const neighbors = bracket.node.parent.children;
       let childIndex = bracket.childIndex + childIndexOffset;
       const leftChild = neighbors[childIndex - 1];
       const rightChild = neighbors[childIndex + 1];
@@ -221,7 +222,7 @@ export class BracketHandler implements OrgHandler {
       if (leftChild?.type === NodeType.Text) {
         neighbors.splice(childIndex - 1, 1);
         bracket.node.start = leftChild.start;
-        bracket.node.setValue(leftChild.value + bracket.node.value);
+        bracket.node.prependValue(leftChild.value);
         childIndexOffset--;
         childIndex--;
       }
@@ -229,7 +230,7 @@ export class BracketHandler implements OrgHandler {
       if (rightChild?.type === NodeType.Text) {
         neighbors.splice(childIndex + 1, 1);
         bracket.node.end = rightChild.end;
-        bracket.node.setValue(rightChild.value);
+        bracket.node.appendValue(rightChild.value);
         childIndexOffset--;
       }
     });

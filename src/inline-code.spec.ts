@@ -22,7 +22,7 @@ describe('InlineCode', () => {
 
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-17]
-        text [0-17] ("console.log(123)")
+        text [0-17] ("=console.log(123)")
       "
     `);
   });
@@ -33,7 +33,7 @@ describe('InlineCode', () => {
 
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-6]
-        text [0-6] (" 12")
+        text [0-6] ("a = 12")
       "
     `);
   });

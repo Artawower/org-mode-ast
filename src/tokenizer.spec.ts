@@ -704,4 +704,15 @@ console.log(a);
       { start: 21, end: 22, type: 'bracket', value: ']' },
     ]);
   });
+
+  it('Should parse text with opened bracket', () => {
+    const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 34, type: 'text', value: 'This is a reminder for meeting on ' },
+      { start: 34, end: 35, type: 'bracket', value: '<' },
+      { start: 35, end: 80, type: 'text', value: `2023-01-09 Mon 14:00. Don't forget to attend.` },
+    ]);
+  });
 });

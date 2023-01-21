@@ -25,7 +25,7 @@ describe('Italic', () => {
 
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-15]
-        text [0-15] ("italic")
+        text [0-15] ("This is /italic")
       "
     `);
   });
@@ -35,7 +35,7 @@ describe('Italic', () => {
     const result = parse(orgText);
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-19]
-        text [0-19] ("Not a italic text!")
+        text [0-19] ("/Not a italic text!")
       "
     `);
   });
@@ -45,7 +45,7 @@ describe('Italic', () => {
     const result = parse(orgText);
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-34]
-        text [0-34] ("simple not italic text")
+        text [0-34] ("This is +[/*simple not italic text")
       "
     `);
   });

@@ -17,14 +17,14 @@ describe('Crossed tests', () => {
     `);
   });
 
-  it('Shpuld not parse text as crossed when it starts from single plus', () => {
+  it('Should not parse text as crossed when it starts from single plus', () => {
     const orgText = '+Not a crossed text';
     const result = parse(orgText);
     // console.log(prettyTreePrint(result));
 
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-19]
-        text [0-19] ("Not a crossed text")
+        text [0-19] ("+Not a crossed text")
       "
     `);
   });

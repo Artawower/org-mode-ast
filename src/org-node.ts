@@ -179,6 +179,10 @@ export class OrgNode<T = OrgStruct> {
     this.#value += value;
   }
 
+  public prependValue(value: string): void {
+    this.#value = value + this.#value;
+  }
+
   public is(nodeType: NodeType): boolean {
     return this.type === nodeType;
   }

@@ -77,4 +77,80 @@ describe('Date', () => {
       "
     `);
   });
+
+  it('Should parse active date', () => {
+    const orgDoc = `<2023-01-09 Mon>`;
+    const result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-16]
+        date [0-16]
+          operator [0-1] ("<")
+          text [1-15] ("2023-01-09 Mon")
+          operator [15-16] (">")
+      "
+    `);
+  });
+
+  it('Should parse active date with time', () => {
+    const orgDoc = `<2023-01-09 Mon 14:00>`;
+    const result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-22]
+        date [0-22]
+          operator [0-1] ("<")
+          text [1-21] ("2023-01-09 Mon 14:00")
+          operator [21-22] (">")
+      "
+    `);
+  });
+
+  it('Should parse date and time in center of text', () => {
+    const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00>. Don't forget to attend.`;
+    const result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-81]
+        text [0-34] ("This is a reminder for meeting on ")
+        date [34-56]
+          operator [34-35] ("<")
+          text [35-55] ("2023-01-09 Mon 14:00")
+          operator [55-56] (">")
+        text [56-81] (". Don't forget to attend.")
+      "
+    `);
+  });
+
+  it('Should parse inactive date inside bold and crossed text', () => {
+    const orgDoc = `*This is a reminder for meeting on +[2023-01-09 Mon 14:00]+. Don't forget to attend.*`;
+    const result = prettyTreePrint(parse(orgDoc));
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-85]
+        bold [0-85]
+          operator [0-1] ("*")
+          text [1-35] ("This is a reminder for meeting on ")
+          crossed [35-59]
+            operator [35-36] ("+")
+            date [36-58]
+              operator [36-37] ("[")
+              text [37-57] ("2023-01-09 Mon 14:00")
+              operator [57-58] ("]")
+            operator [58-59] ("+")
+          text [59-84] (". Don't forget to attend.")
+          operator [84-85] ("*")
+      "
+    `);
+  });
+
+  it('Should not parse date time without brackets', () => {
+    const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.`;
+    const result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 150][date.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-80]
+        text [0-80] ("This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.")
+      "
+    `);
+  });
 });
