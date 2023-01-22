@@ -705,7 +705,7 @@ console.log(a);
     ]);
   });
 
-  it('Should parse text with opened bracket', () => {
+  it('Should tokenize text with opened bracket', () => {
     const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.`;
     const result = tokenListToArray(tokenize(orgDoc));
     // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
@@ -713,6 +713,22 @@ console.log(a);
       { start: 0, end: 34, type: 'text', value: 'This is a reminder for meeting on ' },
       { start: 34, end: 35, type: 'bracket', value: '<' },
       { start: 35, end: 80, type: 'text', value: `2023-01-09 Mon 14:00. Don't forget to attend.` },
+    ]);
+  });
+
+  it('Should tokenize simple org link', () => {
+    const orgDoc = `[[http://google.com][LINK NAME!]]`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    console.log('✎: [line 654][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 1, type: 'bracket', value: '[' },
+      { start: 1, end: 2, type: 'bracket', value: '[' },
+      { start: 2, end: 19, type: 'text', value: 'http://google.com' },
+      { start: 19, end: 20, type: 'bracket', value: ']' },
+      { start: 20, end: 21, type: 'bracket', value: '[' },
+      { start: 21, end: 31, type: 'text', value: 'LINK NAME!' },
+      { start: 31, end: 32, type: 'bracket', value: ']' },
+      { start: 32, end: 33, type: 'bracket', value: ']' },
     ]);
   });
 });

@@ -2,7 +2,9 @@ import { ParserConfiguration, RawToken, Token, TokenType } from 'types';
 
 export class Tokenizer {
   private readonly delimiter = ' ';
-  private readonly brackets = ['=', '+', '[', ']', '/', '*', '<', '>'];
+  private readonly pariBrackets = ['[', ']', '<', '>'];
+  private readonly formatterBrackets = ['=', '+', '/', '*'];
+  private readonly brackets: string[] = [...this.formatterBrackets, ...this.pariBrackets];
   private readonly listItemCloseSymbols = [')', '.'];
   private readonly keywordPrefix = '#+';
   private readonly blockKeywords = ['begin_src', 'end_src'];
@@ -160,11 +162,11 @@ export class Tokenizer {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       return;
     }
-    if (this.lastToken && this.isValueNumber(this.lastToken?.value?.slice(-1))) {
-      this.upsertToken({ type: TokenType.Text, value: c }, true);
+    if (this.isTokenSeparator(this.lastToken)) {
+      this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
-    this.createToken({ type: TokenType.Operator, value: c });
+    this.upsertToken({ type: TokenType.Text, value: c }, true);
   }
 
   private handlePoint(c: string): void {
@@ -194,6 +196,11 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
+    if (this.lastToken && this.isFormatterBracket(this.lastToken.value) && c === this.lastToken.value) {
+      this.upsertToken({ type: TokenType.Text, value: c }, true);
+      this.checkLastTokensNeedMerge();
+      return;
+    }
     this.createToken({ type: TokenType.Bracket, value: c });
   }
 
@@ -238,10 +245,11 @@ export class Tokenizer {
    * @param count - count of tokens to merge
    * @param type - type of new token
    */
-  private forceMergeLastTokens(count: number, type: TokenType): void {
+  private forceMergeLastTokens(count: number, type?: TokenType): void {
     let value = '';
     let start: number;
     let prevToken = this.lastToken;
+    type = type || this.lastToken.type;
 
     while (count > 0) {
       --count;
@@ -318,6 +326,13 @@ export class Tokenizer {
     this.lastToken.appendText(c);
   }
 
+  private checkLastTokensNeedMerge(): void {
+    if (this.lastToken?.type !== this.lastToken?.prev?.type) {
+      return;
+    }
+    this.forceMergeLastTokens(2);
+  }
+
   private isPrevToken(...tokens: TokenType[]): boolean {
     if (!this.lastToken) {
       return false;
@@ -331,6 +346,17 @@ export class Tokenizer {
 
   private isDelimiter(char: string): boolean {
     return char === this.delimiter;
+  }
+
+  /*
+   * Return true when value ends with space, or no value, or value is new line
+   */
+  private isTokenSeparator(token?: Token): boolean {
+    return !token || token.isType(TokenType.NewLine) || this.isDelimiter(token.value.slice(-1));
+  }
+
+  private isFormatterBracket(c?: string): boolean {
+    return this.formatterBrackets.includes(c);
   }
 }
 
