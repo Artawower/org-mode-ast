@@ -3,7 +3,7 @@ import type { OrgHandler } from 'internal.types';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
 import { prettyTreePrint } from 'tools';
-import { NodeType, OrgStruct, InlineCode, OrgRoot, Text, PartialUniversalOrgStruct, Date, Checkbox } from 'types';
+import { NodeType, OrgStruct, InlineCode, Text, PartialUniversalOrgStruct, Date, Checkbox, Link } from 'types';
 
 export class BracketHandler implements OrgHandler {
   private bracketsStackPositions: Array<{ childIndex: number; node: OrgNode<OrgStruct> }> = [];
@@ -103,7 +103,7 @@ export class BracketHandler implements OrgHandler {
       closedBracket: OrgNode<OrgStruct>,
       bracketedNodes: OrgNode<OrgStruct>[]
     ) => OrgNode<OrgStruct>
-  > = [this.handleChecboxBrackets.bind(this), this.handleDateBrackets.bind(this)];
+  > = [this.handleChecboxBrackets.bind(this), this.handleDateBrackets.bind(this), this.handleLinkBrackets.bind(this)];
 
   private handleBracketSequence(bracketedNodes: OrgNode<OrgStruct>[], type?: NodeType): OrgNode {
     const openedBracket = bracketedNodes[0];
@@ -120,7 +120,6 @@ export class BracketHandler implements OrgHandler {
       type,
       start: openedBracket.start,
       end: closedBracket.end,
-      // children: nodesBetweenBrackets,
     };
     const orgNode = new OrgNode(formattedNode);
     orgNode.addChildren(bracketedNodes);
@@ -146,6 +145,51 @@ export class BracketHandler implements OrgHandler {
       checkboxParent.checked = checked;
     }
     return checkBoxNode;
+  }
+
+  private handleLinkBrackets(
+    openedBracket: OrgNode<OrgStruct>,
+    closedBracket: OrgNode<OrgStruct>,
+    bracketedNodes: OrgNode<OrgStruct>[]
+  ): OrgNode<Link> {
+    const isLinkBracketNode =
+      this.isLinkBracketNodes(bracketedNodes) && this.isLinkBracketNodes(bracketedNodes[1]?.children);
+    console.log('✎: [line 156][bracket-handler.ts] bracketedNodes: ', bracketedNodes);
+    // console.log(
+    //   '✎: [line 155][bracket-handler.ts] isLinkBracketNode: ',
+    //   isLinkBracketNode,
+    //   openedBracket.start,
+    //   closedBracket.end
+    // );
+
+    if (!isLinkBracketNode) {
+      return;
+    }
+
+    bracketedNodes[1].type = NodeType.LinkUrl;
+    const nameExist = !!bracketedNodes[3];
+    if (nameExist) {
+      bracketedNodes[2].type = NodeType.LinkName;
+    }
+
+    const orgLinkNode = this.astBuilder.createLinkNode(openedBracket.start, closedBracket.end, bracketedNodes);
+    return orgLinkNode;
+  }
+
+  private isLinkBracketNodes(nodes: OrgNode[]): boolean {
+    if (!nodes) {
+      return false;
+    }
+    const leftBracket = nodes[0];
+    const rightBracket = nodes.slice(-1)?.[0];
+
+    return (
+      (nodes?.length === 4 || nodes?.length === 3) &&
+      leftBracket.type === NodeType.Operator &&
+      leftBracket.value === '[' &&
+      rightBracket.type === NodeType.Operator &&
+      rightBracket.value === ']'
+    );
   }
 
   private handleDateBrackets(

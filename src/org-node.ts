@@ -4,20 +4,22 @@ export class OrgNode<T = OrgStruct> {
   public type!: NodeType;
   public safeCheckMode = false;
 
-  #value: string;
+  value: string;
 
-  get value() {
-    this.safetyCheck(
-      'value',
-      NodeType.Text,
-      NodeType.Unresolved,
-      NodeType.Operator,
-      NodeType.Indent,
-      NodeType.NewLine,
-      NodeType.Keyword
-    );
-    return this.#value;
-  }
+  // public value: string;
+
+  // get value() {
+  //   this.safetyCheck(
+  //     'value',
+  //     NodeType.Text,
+  //     NodeType.Unresolved,
+  //     NodeType.Operator,
+  //     NodeType.Indent,
+  //     NodeType.NewLine,
+  //     NodeType.Keyword
+  //   );
+  //   return this.value;
+  // }
 
   public parent?: OrgNode;
   public start!: number;
@@ -86,7 +88,7 @@ export class OrgNode<T = OrgStruct> {
     if (nodeData.section) {
       this.#section = new OrgNode(nodeData.section);
     }
-    this.#value = nodeData.value;
+    this.value = nodeData.value;
     this.#level = nodeData.level;
     this.#ordered = nodeData.ordered;
     this.#properties = nodeData.properties;
@@ -107,7 +109,7 @@ export class OrgNode<T = OrgStruct> {
   //   const value = nodeData[propertyName as string];
   //   // if (value != null) {
   //   this[`#${propertyName as string}`] = value;
-  //   // console.log('VAAAAL: ', this.#value);
+  //   // console.log('VAAAAL: ', this.value);
   //   // } else {
   //   //   delete this[propertyName];
   //   // }
@@ -172,15 +174,15 @@ export class OrgNode<T = OrgStruct> {
 
   public setValue(value: string): void {
     this.safetyCheck('value', NodeType.Text);
-    this.#value = value;
+    this.value = value;
   }
 
   public appendValue(value: string): void {
-    this.#value += value;
+    this.value += value;
   }
 
   public prependValue(value: string): void {
-    this.#value = value + this.#value;
+    this.value = value + this.value;
   }
 
   public is(nodeType: NodeType): boolean {

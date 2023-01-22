@@ -50,3 +50,12 @@ export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
 
   return result;
 }
+
+export function printNodes(nodes: OrgNode<OrgStruct>[]) {
+  nodes.forEach((node) => {
+    console.log({
+      ...node,
+      value: node.value,
+    });
+  });
+}

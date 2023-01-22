@@ -25,6 +25,9 @@ export enum NodeType {
   QuoteBlock = 'quoteBlock',
   HtmlBlock = 'htmlBlock',
   Keyword = 'keyword',
+  Link = 'link',
+  LinkUrl = 'linkUrl',
+  LinkName = 'linkName',
 }
 
 export enum TokenType {
@@ -115,6 +118,7 @@ export interface WithSection {
   section?: Section;
 }
 
+// TODO: master this structures are redundant
 export interface Section extends WithRange, WithChildren, WithParent {
   type: NodeType.Section;
 }
@@ -211,6 +215,10 @@ export interface Date extends WithRange, WithParent, WithNeighbors {
 
 export interface DateRange extends WithRange, WithParent, WithNeighbors {
   type: NodeType.DateRange;
+}
+
+export interface Link extends WithRange {
+  type: NodeType.Link;
 }
 
 export interface SrcBlockMetaInfo {

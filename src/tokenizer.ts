@@ -266,7 +266,6 @@ export class Tokenizer {
       start
     );
 
-    console.log('✎: [line 263][tokenizer.ts] prevToken: ', prevToken);
     if (prevToken) {
       prevToken.setNextToken(newToken);
       newToken.setPrevToken(prevToken);

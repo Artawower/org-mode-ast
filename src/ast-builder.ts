@@ -23,6 +23,7 @@ import {
   Comment,
   Date,
   Checkbox,
+  Link,
 } from 'types';
 
 export class AstBuilder {
@@ -342,7 +343,7 @@ export class AstBuilder {
 
     return (
       openBracket?.value === '[' &&
-      potentialCheckboxValues.includes(checkbox?.value.toLocaleLowerCase()) &&
+      potentialCheckboxValues.includes(checkbox?.value?.toLocaleLowerCase()) &&
       closeBracket?.value === ']'
     );
   }
@@ -461,6 +462,17 @@ export class AstBuilder {
     };
 
     return new OrgNode<Unresolved>(unresolved);
+  }
+
+  public createLinkNode(start: number, end: number, bracketedNodes: OrgNode<OrgStruct>[]): OrgNode<Link> {
+    const link: Link = {
+      type: NodeType.Link,
+      start,
+      end,
+    };
+    const linkNode = new OrgNode<Link>(link);
+    linkNode.setChildren(bracketedNodes);
+    return linkNode;
   }
 
   public createDateNode(openBracket: OrgNode, dateTextNode: OrgNode, closeBracket: OrgNode): OrgNode<Date> {
