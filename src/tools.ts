@@ -7,7 +7,7 @@ import { NodeType, OrgStruct } from 'types';
  * @param data - OrgData
  * @param level - number of indention
  */
-export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
+export function prettyTreePrint(data: OrgNode<any>, level = 0): string {
   if (!data) {
     return '[EMPTY]';
   }
@@ -20,11 +20,11 @@ export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
   result += `${data.type} [${data.start}-${data.end}]${val}\n`;
 
   if (data.ordered != null) {
-    result += `${indent}    :${(data as any).ordered ? 'ordered' : 'unordered'}:\n`;
+    result += `${indent}    :${data.ordered ? 'ordered' : 'unordered'}:\n`;
   }
 
   if (data.checked != null) {
-    result += `${indent}    :${(data as any).checked ? 'checked' : 'unchecked'}:\n`;
+    result += `${indent}    :${data.checked ? 'checked' : 'unchecked'}:\n`;
   }
 
   if (data.level != null) {
@@ -33,7 +33,7 @@ export function prettyTreePrint(data: OrgNode<OrgStruct>, level = 0): string {
 
   if (data.properties) {
     Object.keys((data as any).properties).forEach((k: string) => {
-      result += `${indent}    :${k} ${(data as any).properties[k]}:\n`;
+      result += `${indent}    :${k} ${data.properties[k]}:\n`;
     });
   }
 

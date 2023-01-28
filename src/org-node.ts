@@ -1,3 +1,4 @@
+import { prettyTreePrint } from 'tools';
 import { BlockProperties, NodeType, OrgStruct, PartialUniversalOrgStruct, Section } from 'types';
 
 export class OrgNode<T = OrgStruct> {
@@ -6,28 +7,10 @@ export class OrgNode<T = OrgStruct> {
 
   value: string;
 
-  // public value: string;
-
-  // get value() {
-  //   this.safetyCheck(
-  //     'value',
-  //     NodeType.Text,
-  //     NodeType.Unresolved,
-  //     NodeType.Operator,
-  //     NodeType.Indent,
-  //     NodeType.NewLine,
-  //     NodeType.Keyword
-  //   );
-  //   return this.value;
-  // }
-
   public parent?: OrgNode;
   public start!: number;
   public end!: number;
 
-  get unsafe(): OrgNode {
-    return { ...this, safeCheckMode: false } as OrgNode;
-  }
   #children?: OrgNode[];
   // TODO: master create iterable object
   // https://javascript.info/iterable#:~:text=To%20make%20the%20range%20object,object%20with%20the%20method%20next%20.
@@ -196,5 +179,9 @@ export class OrgNode<T = OrgStruct> {
 
   public is(nodeType: NodeType): boolean {
     return this.type === nodeType;
+  }
+
+  public toString(): string {
+    return prettyTreePrint(this);
   }
 }
