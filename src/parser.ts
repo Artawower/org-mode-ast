@@ -123,6 +123,7 @@ class Parser {
   }
 
   private handleNewLine(): OrgNode<NewLine> {
+    this.bracketHandler.handleNewLine();
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
     return newLineNode;

@@ -153,4 +153,70 @@ describe('Date', () => {
       "
     `);
   });
+
+  xit('Should not parse tags as active date', () => {
+    const orgDoc = `<div>
+  <p>Some text</p>
+</div>`;
+    const result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 150][date.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-31]
+        text [0-5] ("<div>")
+        newLine [5-6]
+        indent [6-8] ("  ")
+        text [8-11] ("<p>")
+        text [11-20] ("Some text")
+        text [20-24] ("</p>")
+        newLine [24-25]
+        text [25-31] ("</div>")
+      "
+    `);
+  });
+
+  xit('Should parse brackets between triangle brackets', () => {
+    const orgDoc = `<I'am not a date, but i have nested formatting =lululu= =)>`,
+      result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 150][date.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-59]
+        text [0-47] ("<I'am not a date, but i have nested formatting ")
+        inlineCode [47-55]
+          operator [47-48] ("=")
+          text [48-54] ("lululu")
+          operator [54-55] ("=")
+        text [55-59] (" =)=)>")
+      "
+    `);
+  });
+
+  // FIXME
+  // TODO: master move to inline code
+  xit('Should parse smile as text', () => {
+    const orgDoc = `<=)>`,
+      result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 150][date.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-4]
+        undefined [0-4]
+          operator [0-1] ("<")
+          text [1-3] ("=))")
+          operator [3-4] (">")
+      "
+    `);
+  });
+
+  xit('Should parse as simple text', () => {
+    const orgDoc = `= hello world [ pep ( + =`,
+      result = prettyTreePrint(parse(orgDoc));
+    // console.log('✎: [line 150][date.spec.ts] result: ', result);
+    expect(result).toMatchInlineSnapshot(`
+      "root [0-25]
+        inlineCode [0-25]
+          operator [0-1] ("=")
+          text [1-24] (" hello world [ pep ( + ")
+          operator [24-25] ("=")
+      "
+    `);
+  });
 });

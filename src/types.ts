@@ -199,8 +199,15 @@ export interface BlockFooter extends WithRange, WithParent, WithNeighbors, WithC
 
 export type BlockProperties = { [key: string]: string };
 
+// TODO: master create universal block node?
 export interface SrcBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
   type: NodeType.SrcBlock;
+  language?: string;
+  properties?: BlockProperties;
+}
+
+export interface HtmlBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
+  type: NodeType.HtmlBlock;
   language?: string;
   properties?: BlockProperties;
 }
@@ -276,3 +283,5 @@ export interface ParserConfiguration {
 }
 
 export type BlockPosition = 'begin' | 'end';
+
+export type BlockType = 'src' | 'html' | 'quote' | string;

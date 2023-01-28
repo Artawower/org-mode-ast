@@ -66,7 +66,7 @@ describe('Bold test', () => {
       "root [0-14]
         bold [0-14]
           operator [0-1] ("*")
-          text [1-13] ("Hello ")
+          text [1-13] ("Hello +world")
           operator [13-14] ("*")
       "
     `);

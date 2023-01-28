@@ -731,4 +731,38 @@ console.log(a);
       { start: 32, end: 33, type: 'bracket', value: ']' },
     ]);
   });
+
+  it('Should tokenize html block', () => {
+    const orgDoc = `#+BEGIN_HTML
+<div>
+  <p>Some text</p>
+</div>
+#+END_HTML`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    console.log('✎: [line 670][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 12, type: 'keyword', value: '#+BEGIN_HTML' },
+      { start: 12, end: 13, type: 'newLine', value: '\n' },
+      { start: 13, end: 14, type: 'bracket', value: '<' },
+      { start: 14, end: 17, type: 'text', value: 'div' },
+      { start: 17, end: 18, type: 'bracket', value: '>' },
+      { start: 18, end: 19, type: 'newLine', value: '\n' },
+      { start: 19, end: 21, type: 'indent', value: '  ' },
+      { start: 21, end: 22, type: 'bracket', value: '<' },
+      { start: 22, end: 23, type: 'text', value: 'p' },
+      { start: 23, end: 24, type: 'bracket', value: '>' },
+      { start: 24, end: 33, type: 'text', value: 'Some text' },
+      { start: 33, end: 34, type: 'bracket', value: '<' },
+      { start: 34, end: 35, type: 'bracket', value: '/' },
+      { start: 35, end: 36, type: 'text', value: 'p' },
+      { start: 36, end: 37, type: 'bracket', value: '>' },
+      { start: 37, end: 38, type: 'newLine', value: '\n' },
+      { start: 38, end: 39, type: 'bracket', value: '<' },
+      { start: 39, end: 40, type: 'bracket', value: '/' },
+      { start: 40, end: 43, type: 'text', value: 'div' },
+      { start: 43, end: 44, type: 'bracket', value: '>' },
+      { start: 44, end: 45, type: 'newLine', value: '\n' },
+      { start: 45, end: 55, type: 'keyword', value: '#+END_HTML' },
+    ]);
+  });
 });

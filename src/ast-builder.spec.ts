@@ -2,6 +2,7 @@ import { AstBuilder } from './ast-builder';
 import { AstContext } from './ast-context';
 import { NodeType } from './types';
 import { OrgNode } from './org-node';
+import { prettyTreePrint } from './tools';
 
 describe('AST builder tests', () => {
   let builder: AstBuilder;
@@ -231,5 +232,37 @@ describe('AST builder tests', () => {
         },
       ] as any)
     ).toBe(false);
+  });
+
+  fit('Should merge neighbors nodes with same types', () => {
+    const firstNode = new OrgNode({
+      type: NodeType.Text,
+      value: 'Hello',
+      start: 0,
+      end: 5,
+    });
+    const secondNode = new OrgNode({
+      type: NodeType.Unresolved,
+      value: ' World',
+      start: 5,
+      end: 11,
+    });
+    firstNode.setNext(secondNode);
+    secondNode.setPrev(firstNode);
+
+    const thirdNode = new OrgNode({
+      type: NodeType.Text,
+      value: '!',
+      start: 11,
+      end: 12,
+    });
+    secondNode.setNext(thirdNode);
+    thirdNode.setPrev(secondNode);
+
+    builder.mergeNeighborsNodesWithSameType(firstNode);
+    expect(prettyTreePrint(firstNode)).toMatchInlineSnapshot(`
+      "text [0-12] ("Hello World!")
+      "
+    `);
   });
 });

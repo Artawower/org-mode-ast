@@ -21,4 +21,14 @@ describe('Bold test', () => {
       "
     `);
   });
+
+  it('Should parse multiple opened brackets with text as simple text', () => {
+    const orgData = 'Hello [<+*-_world';
+    const result = parse(orgData);
+    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+      "root [0-17]
+        text [0-17] ("Hello [<+*-_world")
+      "
+    `);
+  });
 });

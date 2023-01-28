@@ -220,14 +220,25 @@ export class Tokenizer {
     }
     if (this.lastToken?.value.startsWith(':') && !this.isDelimiter(c)) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
-      // this.appendPrevValue(c);
+      return;
+    }
+    if (
+      this.isPrevToken(TokenType.Keyword) &&
+      this.isBlockKeyword(this.lastToken?.value.slice(2)) &&
+      !this.isDelimiter(c)
+    ) {
+      this.appendPrevValue(c);
       return;
     }
     this.upsertToken({ type: TokenType.Text, value: c });
   }
 
   private isBlockKeyword(value: string): boolean {
-    return this.blockKeywords.includes(value.toLowerCase());
+    if (!value || value.endsWith(this.delimiter)) {
+      return false;
+    }
+    const lowerCasedValue = value.toLowerCase();
+    return lowerCasedValue.startsWith('begin_') || lowerCasedValue.startsWith('end_');
   }
 
   private checkIsLastTextTokenKeyword(): void {

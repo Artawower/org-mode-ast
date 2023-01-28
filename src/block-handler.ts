@@ -3,14 +3,15 @@ import { AstContext } from 'ast-context';
 import { OrgHandler } from 'internal.types';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
-import { BlockPosition, NodeType, OrgStruct, SrcBlockMetaInfo } from 'types';
+import { BlockPosition, BlockType, NodeType, OrgStruct, SrcBlockMetaInfo } from 'types';
 
 // TODO: master this class should be refactored!
 export class BlockHandler implements OrgHandler {
   constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
 
-  private blockHanderls: { [key: string]: (pos: BlockPosition) => OrgNode<OrgStruct> } = {
-    src: (pos) => this.handleSrcBlock(pos),
+  private blockHanderls: { [key: string]: (pos: BlockPosition, type: string) => OrgNode<OrgStruct> } = {
+    src: (pos, type) => this.handleRawBlock(pos, type),
+    html: (pos, type) => this.handleRawBlock(pos, type),
   };
 
   public handle(): OrgNode<OrgStruct> {
@@ -21,25 +22,30 @@ export class BlockHandler implements OrgHandler {
       throw new Error(`Block type ${blockType} is not supported`);
     }
 
-    return blockHandler(blockPosition);
+    // console.log('✎: [line 25][block-handler.ts] blockPosition: ', blockPosition);
+    return blockHandler(blockPosition, blockType);
   }
 
   public isBlockKeyword(keyword: string): boolean {
-    return ['#+BEGIN_', '#+END_'].some((prefix) => keyword.startsWith(prefix));
+    return ['#+begin_', '#+end_'].some((prefix) => keyword.toLowerCase().startsWith(prefix));
   }
 
-  private handleSrcBlock(position: BlockPosition): OrgNode<OrgStruct> {
+  /**
+   * Handling blocks that don't need nested formatting
+   */
+  private handleRawBlock(position: BlockPosition, type: BlockType): OrgNode<OrgStruct> {
     const keywordNode = this.astBuilder.createKeyword();
 
     if (position.toLowerCase() === 'begin') {
       this.ctx.srcBlockBegin = keywordNode;
       this.astBuilder.attachToTree(keywordNode);
       this.ctx.srcBlockChildIndex = keywordNode.parent.children.length - 1;
+      // console.log('✎: [line 40][block-handler.ts] this.ctx.srcBlockChildIndex: ', this.ctx.srcBlockChildIndex);
       return keywordNode;
     }
 
     if (position.toLowerCase() === 'end' && this.ctx.srcBlockBegin) {
-      this.mergeNodesAfterSrcBlock();
+      this.mergeNodesBetweenRawBlockKeywords(type);
       this.ctx.resetSrcBlockInfo();
     }
 
@@ -47,7 +53,7 @@ export class BlockHandler implements OrgHandler {
     return keywordNode;
   }
 
-  private mergeNodesAfterSrcBlock(): void {
+  private mergeNodesBetweenRawBlockKeywords(type: BlockType): void {
     let start: number;
     let end = this.ctx.srcBlockBegin.end;
     let value = '';
@@ -75,7 +81,8 @@ export class BlockHandler implements OrgHandler {
       nextNode = nextNode.next;
     }
 
-    const srcBlock = this.astBuilder.createSrcBlockNode(
+    const rawBlock = this.astBuilder.createBlockNode(
+      type.toLowerCase() === 'src' ? NodeType.SrcBlock : NodeType.HtmlBlock,
       this.ctx.srcBlockBegin.start,
       end,
       this.ctx.srcBlockBegin.prev,
@@ -84,26 +91,27 @@ export class BlockHandler implements OrgHandler {
     );
 
     const headerNewLineNode = headerChildren.pop();
-    const blockHeader = this.astBuilder.createBlockHeaderNode(srcBlock, headerChildren);
-    srcBlock.setChildren([blockHeader, headerNewLineNode]);
+    const blockHeader = this.astBuilder.createBlockHeaderNode(rawBlock, headerChildren);
+    rawBlock.setChildren([blockHeader, headerNewLineNode]);
 
     if (value) {
       const orgText = this.astBuilder.createTextNode(start, value);
-      const blockBody = this.astBuilder.createBlockBodyNode(srcBlock, [orgText]);
-      srcBlock.addChild(blockBody);
+      const blockBody = this.astBuilder.createBlockBodyNode(rawBlock, [orgText]);
+      rawBlock.addChild(blockBody);
       lastNewLine.setPrev(blockBody);
-      srcBlock.addChild(lastNewLine);
+      rawBlock.addChild(lastNewLine);
     }
 
-    const blockFooterNode = this.astBuilder.createBlockFooterNode(srcBlock, [], srcBlock.lastChild?.end);
+    const blockFooterNode = this.astBuilder.createBlockFooterNode(rawBlock, [], rawBlock.lastChild?.end);
 
-    srcBlock.addChild(blockFooterNode);
+    rawBlock.addChild(blockFooterNode);
 
-    srcBlock.parent = parentNode;
-    srcBlock.setPrev(this.ctx.srcBlockBegin.prev);
+    rawBlock.parent = parentNode;
+    rawBlock.setPrev(this.ctx.srcBlockBegin.prev);
     parentNode.children.splice(this.ctx.srcBlockChildIndex);
-    parentNode.addChild(srcBlock);
+    parentNode.addChild(rawBlock);
     this.astBuilder.lastNode = blockFooterNode;
+    // console.log('✎: [line 55][block-handler.ts] value: ', value);
   }
 
   /** Collection information about block headline
@@ -145,7 +153,7 @@ export class BlockHandler implements OrgHandler {
     }
   }
 
-  private determineBlockType(): [BlockPosition, string] {
+  private determineBlockType(): [BlockPosition, BlockType] {
     const [pos, type] = this.tokenIterator.currentValue.split('_');
     return [pos.slice(2, pos.length) as BlockPosition, type];
   }

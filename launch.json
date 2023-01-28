@@ -4,18 +4,19 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "DEBUG Jest: current file",
+      "name": "DEBUG Jest: date spec",
       //"env": { "NODE_ENV": "test" },
       "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": [
-        "${fileBasenameNoExtension}",
+        // "${fileBasenameNoExtension}",
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/list.spec.ts"
+        "${workspaceFolder}/src/date.spec.ts"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
+      "sourceMaps": true,
       "disableOptimisticBPs": true,
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"

@@ -29,6 +29,8 @@ export class OrgNode<T = OrgStruct> {
     return { ...this, safeCheckMode: false } as OrgNode;
   }
   #children?: OrgNode[];
+  // TODO: master create iterable object
+  // https://javascript.info/iterable#:~:text=To%20make%20the%20range%20object,object%20with%20the%20method%20next%20.
   get children(): OrgNode[] {
     return this.#children || [];
   }
@@ -159,6 +161,10 @@ export class OrgNode<T = OrgStruct> {
     this.#children = children;
   }
 
+  public removeChildren(): void {
+    this.#children = undefined;
+  }
+
   public setSection(section: OrgNode<Section>) {
     section.setParent(this as OrgNode);
     this.#section = section;
@@ -177,12 +183,15 @@ export class OrgNode<T = OrgStruct> {
     this.value = value;
   }
 
+  // TODO: update start/end positions for this operations
   public appendValue(value: string): void {
     this.value += value;
+    // this.end += value.length;
   }
 
   public prependValue(value: string): void {
     this.value = value + this.value;
+    // this.start -= value.length;
   }
 
   public is(nodeType: NodeType): boolean {

@@ -24,6 +24,7 @@ import {
   Date,
   Checkbox,
   Link,
+  HtmlBlock,
 } from 'types';
 
 export class AstBuilder {
@@ -299,7 +300,11 @@ export class AstBuilder {
   }
 
   public mergeUnresolvedNodes(nodes: OrgNode<OrgStruct>[], newType?: NodeType): OrgNode<OrgStruct>[] {
+    console.log('✎: [line 302][ast-builder.ts] nodes: ', nodes);
+    // WE LOST </P> HERE
     const mergedNodes: OrgNode<OrgStruct>[] = [];
+    const prev = nodes[0].prev;
+
     nodes.forEach((n) => {
       const lastNode = mergedNodes[mergedNodes.length - 1];
 
@@ -313,11 +318,13 @@ export class AstBuilder {
       }
       if (lastNode.type === NodeType.Text && n.type === NodeType.Text) {
         lastNode.end = n.end;
-        this.lastNode.appendValue(n.value);
+        lastNode.appendValue(n.value);
         return;
       }
       mergedNodes.push(n);
     });
+    mergedNodes[0].setPrev(prev);
+    console.log('✎: [line 325][ast-builder.ts] mergedNodes: ', mergedNodes);
     return mergedNodes;
   }
 
@@ -371,7 +378,10 @@ export class AstBuilder {
     return this.parentNodeExist(node.parent, types);
   }
 
+  // DEBUG: problem with existed undetexted node inside nodes list.
+  // need to return multiple text nodes...
   public getRawValueFromNodes(nodes: WithValue[]): string {
+    console.log('✎: [line 382][ast-builder.ts] nodes: ', nodes);
     return nodes.map((n) => n?.value || this.getRawValueFromNodes([n])).join('');
   }
 
@@ -421,15 +431,16 @@ export class AstBuilder {
     return new OrgNode<NewLine>(newLine);
   }
 
-  public createSrcBlockNode(
+  public createBlockNode(
+    type: NodeType.HtmlBlock | NodeType.SrcBlock,
     start: number,
     end: number,
-    prev: OrgNode<OrgStruct>,
+    prev: OrgNode,
     language?: string,
     properties?: { [key: string]: string }
-  ): OrgNode<SrcBlock> {
-    const srcBlock: SrcBlock = {
-      type: NodeType.SrcBlock,
+  ): OrgNode {
+    const srcBlock: SrcBlock | HtmlBlock = {
+      type,
       start,
       end,
       language,
@@ -437,7 +448,7 @@ export class AstBuilder {
       children: [],
     };
 
-    const srcBlockNode = new OrgNode<SrcBlock>(srcBlock);
+    const srcBlockNode = new OrgNode(srcBlock);
     srcBlockNode.setPrev(prev);
     return srcBlockNode;
   }
@@ -498,18 +509,18 @@ export class AstBuilder {
   }
 
   public createBlockHeaderNode(parent: OrgNode, children: OrgNode[]): OrgNode<BlockHeader> {
-    return this.createBlockNode<BlockHeader>(NodeType.BlockHeader, parent, children);
+    return this.createBlockSubNode<BlockHeader>(NodeType.BlockHeader, parent, children);
   }
 
   public createBlockFooterNode(parent: OrgNode<OrgStruct>, children?: OrgNode[], start?: number): OrgNode<BlockFooter> {
-    return this.createBlockNode<BlockFooter>(NodeType.BlockFooter, parent, children, start);
+    return this.createBlockSubNode<BlockFooter>(NodeType.BlockFooter, parent, children, start);
   }
 
   public createBlockBodyNode(parent: OrgNode, children: OrgNode[]): OrgNode<BlockBody> {
-    return this.createBlockNode<BlockBody>(NodeType.BlockBody, parent, children);
+    return this.createBlockSubNode<BlockBody>(NodeType.BlockBody, parent, children);
   }
 
-  private createBlockNode<T = OrgStruct>(
+  private createBlockSubNode<T = OrgStruct>(
     type: NodeType,
     parent: OrgNode<OrgStruct>,
     children: OrgNode[],
@@ -541,5 +552,38 @@ export class AstBuilder {
 
   public isPropertyOperator(tokenValue: string): boolean {
     return tokenValue === ':';
+  }
+
+  /**
+   * Merge neighbors when they have same type, or one of them Unresolved
+   */
+  public mergeNeighborsNodesWithSameType(node?: OrgNode): void {
+    if (!node) {
+      return;
+    }
+    const mergeTypes = [NodeType.Text, NodeType.Unresolved];
+    let currentNode = node;
+
+    if (mergeTypes.includes(currentNode.type) && mergeTypes.includes(currentNode.prev?.type)) {
+      const prev = currentNode.prev;
+      currentNode.prependValue(prev.value);
+      currentNode.start = prev.start;
+      currentNode.setPrev(prev.prev);
+      currentNode.type = NodeType.Text;
+      prev.prev?.setNext(currentNode);
+    }
+
+    while (currentNode) {
+      console.log('✎: [line 574][ast-builder.ts] currentNode: ', currentNode);
+      if (mergeTypes.includes(currentNode.type) && mergeTypes.includes(currentNode.next?.type)) {
+        const next = currentNode.next;
+        currentNode.appendValue(next.value);
+        currentNode.end = next.end;
+        currentNode.setNext(next.next);
+        currentNode.type = NodeType.Text;
+        continue;
+      }
+      currentNode = currentNode.next;
+    }
   }
 }
