@@ -2,15 +2,15 @@ import { parse } from './parser';
 import { prettyTreePrint } from './tools';
 
 describe('Html block', () => {
-  xit('Should parse simple html block', () => {
+  it('Should parse simple html block', () => {
     const orgDoc = `#+BEGIN_HTML
 <div>
   <p>Some text</p>
 </div>
 #+END_HTML`;
 
-    const result = prettyTreePrint(parse(orgDoc));
-    expect(result).toMatchInlineSnapshot(`
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-55]
         htmlBlock [0-55]
           blockHeader [0-12]
@@ -25,8 +25,7 @@ describe('Html block', () => {
     `);
   });
 
-  // FIXME: bug with bracket collapsing
-  xit('Should parse complex html block node', () => {
+  it('Should parse complex html block node', () => {
     const orgDoc = `#+BEGIN_HTML
 <!doctype html>
 <html lang="en">
@@ -48,15 +47,15 @@ describe('Html block', () => {
 </html>
 #+END_HTML`;
 
-    const result = prettyTreePrint(parse(orgDoc));
-    expect(result).toMatchInlineSnapshot(`
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-381]
         htmlBlock [0-381]
           blockHeader [0-12]
             keyword [0-12] ("#+BEGIN_HTML")
           newLine [12-13]
-          blockBody [13-395]
-            text [13-395] ("<!doctype html>\\n<html lang=\\"en\\">\\n    <head>\\n        <meta charset=\\"UTF-8\\"/>\\n        <title>Document</titletitle>\\n        <style>\\n        body {\\n          background-color: #fff;\\n        }\\n        </stylestyle>\\n    </headhead>\\n    <body>\\n        <h1>Some text</h1h1>\\n        <input type=\\"text\\" value=\\"Some text\\" />\\n        <br />\\n        <p>Some text</pp>\\n    </bodybody>\\n</htmlhtml>")
+          blockBody [13-370]
+            text [13-370] ("<!doctype html>\\n<html lang=\\"en\\">\\n    <head>\\n        <meta charset=\\"UTF-8\\"/>\\n        <title>Document</title>\\n        <style>\\n        body {\\n          background-color: #fff;\\n        }\\n        </style>\\n    </head>\\n    <body>\\n        <h1>Some text</h1>\\n        <input type=\\"text\\" value=\\"Some text\\" />\\n        <br />\\n        <p>Some text</p>\\n    </body>\\n</html>")
           newLine [370-371]
           blockFooter [371-381]
             keyword [371-381] ("#+END_HTML")

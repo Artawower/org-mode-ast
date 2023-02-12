@@ -8,8 +8,8 @@ print('Hello world')
 #+END_SRC`;
     const result = parse(orgData);
 
-    console.log(prettyTreePrint(result));
-    expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
+    console.log(result.toString());
+    expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-42]
         srcBlock [0-42]
           blockHeader [0-11]
@@ -29,7 +29,7 @@ print('Hello world')
 #+END_SRC`;
     const result = parse(orgData);
 
-    console.log(prettyTreePrint(result));
+    console.log(result.toString());
     expect(prettyTreePrint(result)).toMatchInlineSnapshot(`
       "root [0-21]
         srcBlock [0-21]
@@ -55,9 +55,12 @@ print('Hello world')
             :tangle test.py:
           blockHeader [0-34]
             keyword [0-11] ("#+BEGIN_SRC")
-            text [11-19] (" python ")
-            keyword [19-26] (":tangle")
-            text [26-34] (" test.py")
+            blockLanguage [11-19] (" python ")
+                :language python:
+            blockProperty [19-34]
+                :tangle test.py:
+              keyword [19-26] (":tangle")
+              text [26-34] (" test.py")
           newLine [34-35]
           blockFooter [35-44]
             keyword [35-44] ("#+END_SRC")

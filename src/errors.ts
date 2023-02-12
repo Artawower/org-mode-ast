@@ -1,3 +1,4 @@
+import { OrgNode } from 'org-node';
 import { Token } from 'types';
 
 export class HandlerNotFoundError extends Error {
@@ -30,5 +31,23 @@ export class HandlerDidNotReturnValue extends Error {
   constructor(public token: Token) {
     super();
     this.message = `Handler for token ${token.type} with value ${token.value} returned undefined`;
+  }
+}
+
+export class NodeAlreadyHaveParent extends Error {
+  public readonly type = 'NodeAlreadyHaveParent';
+
+  constructor(public node: OrgNode) {
+    super();
+    this.message = `Child ${node.toString()} already has parent:\n ${node.parent.toString()}`;
+  }
+}
+
+export class NodeCouldNotHaveChildren extends Error {
+  public readonly type = 'NodeCouldNodeHaveChildren';
+
+  constructor(public node: OrgNode) {
+    super();
+    this.message = `Node ${node.type} could not have children`;
   }
 }

@@ -63,7 +63,7 @@ describe('InlineCode', () => {
     `);
   });
 
-  it('Should not interpret equal operator as inline code inside nesting formatters', () => {
+  it('Should interpret equal operator as inline code inside nesting formatters', () => {
     const orgText = '*=not inline code=*';
     const result = parse(orgText);
 
@@ -71,7 +71,10 @@ describe('InlineCode', () => {
       "root [0-19]
         bold [0-19]
           operator [0-1] ("*")
-          text [1-18] ("=not inline code=")
+          inlineCode [1-18]
+            operator [1-2] ("=")
+            text [2-17] ("not inline code")
+            operator [17-18] ("=")
           operator [18-19] ("*")
       "
     `);
@@ -85,11 +88,12 @@ describe('InlineCode', () => {
       "root [0-20]
         headline [0-20]
             :level 1:
-          operator [0-2] ("* ")
-          inlineCode [2-20]
-            operator [2-3] ("=")
-            text [3-19] ("console.log(123)")
-            operator [19-20] ("=")
+          title [0-20]
+            operator [0-2] ("* ")
+            inlineCode [2-20]
+              operator [2-3] ("=")
+              text [3-19] ("console.log(123)")
+              operator [19-20] ("=")
       "
     `);
   });

@@ -4,10 +4,11 @@ export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly pariBrackets = ['[', ']', '<', '>'];
   private readonly formatterBrackets = ['=', '+', '/', '*'];
-  private readonly brackets: string[] = [...this.formatterBrackets, ...this.pariBrackets];
+  private readonly brackets: string[] = [
+    ...this.formatterBrackets,
+    ...this.pariBrackets,
+  ];
   private readonly listItemCloseSymbols = [')', '.'];
-  private readonly keywordPrefix = '#+';
-  private readonly blockKeywords = ['begin_src', 'end_src'];
 
   private begin = 0;
   private end = 0;
@@ -18,7 +19,10 @@ export class Tokenizer {
   private firstToken: Token;
   private lastToken: Token;
 
-  constructor(private text: string, public readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED']) {
+  constructor(
+    private text: string,
+    public readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED']
+  ) {
     this.initTokenAggregators();
   }
 
@@ -57,7 +61,9 @@ export class Tokenizer {
     if (!this.lastToken) {
       return false;
     }
-    return this.lastToken.value?.[this.lastToken.value.length - 1] === this.delimiter;
+    return (
+      this.lastToken.value?.[this.lastToken.value.length - 1] === this.delimiter
+    );
   }
 
   public tokenize(): Token {
@@ -95,13 +101,17 @@ export class Tokenizer {
     }
     if (
       this.isPrevToken(TokenType.Indent) ||
-      (this.isPrevToken(TokenType.Operator) && this.lastToken.value.endsWith('-')) ||
+      (this.isPrevToken(TokenType.Operator) &&
+        this.lastToken.value.endsWith('-')) ||
       this.isListOperator(this.lastToken)
     ) {
       this.appendPrevValue(c);
       return;
     }
-    if (this.isPrevToken(TokenType.Headline) && !this.isPrevTokenEndsWithSpace) {
+    if (
+      this.isPrevToken(TokenType.Headline) &&
+      !this.isPrevTokenEndsWithSpace
+    ) {
       this.appendPrevValue(c);
       return;
     }
@@ -134,7 +144,11 @@ export class Tokenizer {
   }
 
   private handleDash(c: string): void {
-    if (this.lastToken && !this.lastToken.isType(TokenType.NewLine) && !this.lastToken.value.trim()) {
+    if (
+      this.lastToken &&
+      !this.lastToken.isType(TokenType.NewLine) &&
+      !this.lastToken.value.trim()
+    ) {
       this.upsertToken({ type: TokenType.Operator, value: c });
       return;
     }
@@ -146,7 +160,10 @@ export class Tokenizer {
   }
 
   private handlePlus(c: string): void {
-    if (this.isNextChar(this.delimiter) && (!this.lastToken || this.lastToken.isType(TokenType.NewLine))) {
+    if (
+      this.isNextChar(this.delimiter) &&
+      (!this.lastToken || this.lastToken.isType(TokenType.NewLine))
+    ) {
       this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
@@ -174,9 +191,14 @@ export class Tokenizer {
   }
 
   private handleListOperatorOrText(c: string): boolean {
-    const wasNewLineOrStartDocument = !this.lastToken?.prev?.prev || this.lastToken?.prev?.isType(TokenType.NewLine);
+    const wasNewLineOrStartDocument =
+      !this.lastToken?.prev?.prev ||
+      this.lastToken?.prev?.isType(TokenType.NewLine);
     const wasSpace = this.lastToken?.prev?.prev?.isBlank;
-    if ((wasSpace || wasNewLineOrStartDocument) && this.isValueNumber(this.lastToken.value)) {
+    if (
+      (wasSpace || wasNewLineOrStartDocument) &&
+      this.isValueNumber(this.lastToken.value)
+    ) {
       this.upsertToken({ type: TokenType.Operator, value: c }, true);
       return;
     }
@@ -196,7 +218,11 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
-    if (this.lastToken && this.isFormatterBracket(this.lastToken.value) && c === this.lastToken.value) {
+    if (
+      this.lastToken &&
+      this.isFormatterBracket(this.lastToken.value) &&
+      c === this.lastToken.value
+    ) {
       this.upsertToken({ type: TokenType.Text, value: c }, true);
       this.checkLastTokensNeedMerge();
       return;
@@ -238,7 +264,9 @@ export class Tokenizer {
       return false;
     }
     const lowerCasedValue = value.toLowerCase();
-    return lowerCasedValue.startsWith('begin_') || lowerCasedValue.startsWith('end_');
+    return (
+      lowerCasedValue.startsWith('begin_') || lowerCasedValue.startsWith('end_')
+    );
   }
 
   private checkIsLastTextTokenKeyword(): void {
@@ -362,7 +390,11 @@ export class Tokenizer {
    * Return true when value ends with space, or no value, or value is new line
    */
   private isTokenSeparator(token?: Token): boolean {
-    return !token || token.isType(TokenType.NewLine) || this.isDelimiter(token.value.slice(-1));
+    return (
+      !token ||
+      token.isType(TokenType.NewLine) ||
+      this.isDelimiter(token.value.slice(-1))
+    );
   }
 
   private isFormatterBracket(c?: string): boolean {
@@ -370,7 +402,10 @@ export class Tokenizer {
   }
 }
 
-export function tokenize(text: string, configuration?: ParserConfiguration): Token {
+export function tokenize(
+  text: string,
+  configuration?: ParserConfiguration
+): Token {
   const tokenizer = new Tokenizer(text, configuration?.todoKeywords);
   return tokenizer.tokenize();
 }

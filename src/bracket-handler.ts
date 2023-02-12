@@ -1,11 +1,12 @@
 import { AstBuilder } from 'ast-builder';
 import type { OrgHandler } from 'internal.types';
+import { OrgChildrenList } from 'org-children-list';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
-import { NodeType, OrgStruct, InlineCode, Text, PartialUniversalOrgStruct, Checkbox, Link } from 'types';
+import { NodeType } from 'types';
 
 export class BracketHandler implements OrgHandler {
-  private bracketsStackPositions: Array<{ childIndex: number; node: OrgNode<OrgStruct> }> = [];
+  private bracketsStack: OrgChildrenList = new OrgChildrenList();
 
   private readonly closedOpenedBrackets = {
     ']': '[',
@@ -13,7 +14,11 @@ export class BracketHandler implements OrgHandler {
   };
 
   private readonly textFormattersNodeTypeMap: {
-    [key: string]: NodeType.Bold | NodeType.Crossed | NodeType.Italic | NodeType.InlineCode;
+    [key: string]:
+      | NodeType.Bold
+      | NodeType.Crossed
+      | NodeType.Italic
+      | NodeType.InlineCode;
   } = {
     '*': NodeType.Bold,
     '/': NodeType.Italic,
@@ -22,155 +27,111 @@ export class BracketHandler implements OrgHandler {
   };
 
   // NOTE: https://regex101.com/r/IPfgId/1
-  private readonly dateRegex = /\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?$/;
+  private readonly dateRegex =
+    /\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?$/;
 
-  constructor(private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
+  constructor(
+    private astBuilder: AstBuilder,
+    private tokenIterator: TokenIterator
+  ) {}
 
-  public handle(): OrgNode<OrgStruct> {
-    const unresolved: OrgStruct = {
-      type: NodeType.Unresolved,
-      value: this.tokenIterator.currentValue,
-      start: this.astBuilder.lastPos,
-      end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
-    };
-    const unresolvedNode = new OrgNode<OrgStruct>(unresolved);
+  public handle(): OrgNode {
+    const unresolvedNode = this.astBuilder.createUnresolvedNode();
     this.astBuilder.attachToTree(unresolvedNode);
 
-    const nodeAfterPairBracketClosed = this.tryHandlePairBracket(unresolvedNode);
-    // console.log('✎: [line 40][bracket-handler.ts] nodeAfterPairBracketClosed: ', nodeAfterPairBracketClosed);
-    if (nodeAfterPairBracketClosed) {
-      this.tryRemoveNestedInlineCode(nodeAfterPairBracketClosed);
-      return nodeAfterPairBracketClosed;
+    const closedBracketNode = this.tryHandlePairBracket(unresolvedNode);
+    console.log(
+      '✎: [line 43][bracket-handler.ts] closedBracketNode: ',
+      closedBracketNode
+    );
+
+    if (closedBracketNode) {
+      this.removeFormattingInsideInlineCode(closedBracketNode);
+      return closedBracketNode;
     }
 
-    // if (!this.isOpenedBracket(unresolvedNode)) {
-    //   return unresolvedNode;
-    // }
-
-    this.bracketsStackPositions.push({
-      childIndex: unresolvedNode.parent.children.length - 1,
-      node: unresolvedNode,
-    });
+    this.bracketsStack.push(unresolvedNode);
 
     return unresolvedNode;
   }
 
-  public handleNewLine(): void {
-    // if (!this.bracketsStackPositions.length) {
-    //   return;
-    // }
-    // const parent = this.bracketsStackPositions[0].node.parent;
-    // parent.type = NodeType.Text;
-    // parent.value = this.astBuilder.getRawValueFromNodes(this.bracketsStackPositions.map((sp) => sp.node));
-    // parent.removeChildren();
-  }
+  public handleNewLine(): void {}
 
   // TODO: refactor this method, so complex!
-  private tryHandlePairBracket(o: OrgNode<OrgStruct>): OrgNode<OrgStruct> {
-    // TODO: master don't check for opened bracket
-    if (this.bracketsStackPositions.length === 0 || this.isOpenedBracket(o)) {
+  private tryHandlePairBracket(closedBracket: OrgNode): OrgNode {
+    if (this.bracketsStack.isEmpty || this.isOpenedBracket(closedBracket)) {
       return;
     }
 
-    const reversedBracketsStack = this.bracketsStackPositions.slice().reverse();
-    const pairToDetect = this.getOpenedBracket(this.tokenIterator.currentValue);
-    const foundPairIndex = reversedBracketsStack.findIndex((r) => r.node.value === pairToDetect);
-
-    const found = foundPairIndex !== -1;
-
-    if (!found) {
-      return;
-    }
-
-    const openedBracket = reversedBracketsStack[foundPairIndex];
-    openedBracket.node.type = NodeType.Operator;
-
-    o.type = NodeType.Operator;
-
-    const realParent = openedBracket.node.parent;
-    const prevSibling = openedBracket.node.prev;
-    const realChildren = realParent.children;
-    const updatedChildren = realChildren.slice(0, openedBracket.childIndex);
-    const realBracketedNodeParent = openedBracket.node.parent;
-
-    const nestedChildren = this.astBuilder.mergeUnresolvedNodes(
-      realChildren.slice(openedBracket.childIndex, realChildren.length)
+    const closedBracketSymbol = this.getOpenedBracket(
+      this.tokenIterator.currentValue
+    );
+    const openedBracket = this.bracketsStack.findLast(
+      (bracketNode) => bracketNode.value === closedBracketSymbol
     );
 
-    const orgNode = this.handleBracketSequence(nestedChildren, this.textFormattersNodeTypeMap[pairToDetect]);
-
-    // if (!orgNode) {
-    //   return;
-    // }
-    orgNode.setParent(realParent);
-    orgNode.setPrev(prevSibling);
-    prevSibling?.setNext(orgNode);
-
-    updatedChildren.push(orgNode);
-    this.astBuilder.lastNode = orgNode;
-    realBracketedNodeParent.setChildren(updatedChildren);
-
-    reversedBracketsStack.splice(foundPairIndex, 1);
-
-    this.bracketsStackPositions = reversedBracketsStack.reverse();
-
-    if (orgNode.type === NodeType.InlineCode) {
-      // TODO: master think!
-      this.removeNestedFormattingForInlineCode(orgNode as OrgNode<InlineCode>);
+    if (!openedBracket) {
+      return;
     }
+
+    openedBracket.type = NodeType.Operator;
+    closedBracket.type = NodeType.Operator;
+
+    const realParent = openedBracket.parent;
+
+    const potentialBraketNodes = realParent.children.getNodesBetweenPairs(
+      openedBracket,
+      closedBracket,
+      true
+    );
+
+    const orgNode = this.handleBracketSequence(potentialBraketNodes);
+
+    if (orgNode) {
+      this.bracketsStack.removeNodes(potentialBraketNodes);
+      realParent.removeChildren(potentialBraketNodes);
+      orgNode.addChildren(potentialBraketNodes);
+      realParent.addChild(orgNode);
+      this.astBuilder.mergeNeighborsNodesWithSameType(
+        potentialBraketNodes.first
+      );
+    }
+
     return orgNode;
   }
 
   private readonly bracketedNodesHandler: Array<
-    (
-      openedBracket: OrgNode<OrgStruct>,
-      closedBracket: OrgNode<OrgStruct>,
-      bracketedNodes: OrgNode<OrgStruct>[]
-    ) => OrgNode<OrgStruct>
-  > = [this.handleChecboxBrackets.bind(this), this.handleDateBrackets.bind(this), this.handleLinkBrackets.bind(this)];
+    (bracketedNodes: OrgChildrenList) => OrgNode
+  > = [
+    this.handleChecboxBrackets.bind(this),
+    this.handleDateBrackets.bind(this),
+    this.handleLinkBrackets.bind(this),
+    this.handleFormatBrackets.bind(this),
+  ];
 
-  private handleBracketSequence(bracketedNodes: OrgNode<OrgStruct>[], type?: NodeType): OrgNode {
-    const openedBracket = bracketedNodes[0];
-    const closedBracket = bracketedNodes[bracketedNodes.length - 1];
-
+  private handleBracketSequence(bracketedNodes: OrgChildrenList): OrgNode {
+    if (bracketedNodes.isEmpty) {
+      return;
+    }
     for (const bracketsHandler of this.bracketedNodesHandler) {
-      const result = bracketsHandler(openedBracket, closedBracket, bracketedNodes);
+      const result = bracketsHandler(bracketedNodes);
       if (result) {
         return result;
       }
     }
-
-    // NOTE: not a formatted text
-    // console.log('✎: [line 141][bracket-handler.ts] type: ', type);
-    // if (!type) {
-    //   return;
-    // }
-
-    const formattedNode: PartialUniversalOrgStruct = {
-      type,
-      start: openedBracket.start,
-      end: closedBracket.end,
-    };
-    // console.log('✎: [line 140][bracket-handler.ts] formattedNode: ', formattedNode);
-    const orgNode = new OrgNode(formattedNode);
-    orgNode.addChildren(bracketedNodes);
-    return orgNode;
   }
 
-  private handleChecboxBrackets(
-    openedBracket: OrgNode<OrgStruct>,
-    closedBracket: OrgNode<OrgStruct>,
-    bracketedNodes: OrgNode<OrgStruct>[]
-  ): OrgNode<Checkbox> {
-    const checkboxParent = openedBracket.parent;
+  private handleChecboxBrackets(bracketedNodes: OrgChildrenList): OrgNode {
+    const checkboxParent = bracketedNodes.first.parent;
     const isCheckBox = this.astBuilder.isNodesCheckbox(bracketedNodes);
     if (!isCheckBox) {
       return;
     }
-    const checked = bracketedNodes[1]?.value?.toLowerCase() === 'x';
+    const checked = bracketedNodes.get(1)?.value?.toLowerCase() === 'x';
     const rawValue = this.astBuilder.getRawValueFromNodes(bracketedNodes);
-    const checkBoxNode = this.astBuilder.createCheckboxNode(openedBracket.start, closedBracket.end, rawValue, checked);
-    checkBoxNode.addChildren(bracketedNodes);
+    const checkBoxNode = this.astBuilder.createCheckboxNode(rawValue, checked);
+
+    // checkBoxNode.addChildren(bracketedNodes);
 
     if (checkboxParent.type === NodeType.Headline) {
       checkboxParent.checked = checked;
@@ -178,34 +139,50 @@ export class BracketHandler implements OrgHandler {
     return checkBoxNode;
   }
 
-  private handleLinkBrackets(
-    openedBracket: OrgNode<OrgStruct>,
-    closedBracket: OrgNode<OrgStruct>,
-    bracketedNodes: OrgNode<OrgStruct>[]
-  ): OrgNode<Link> {
-    const isLinkBracketNode =
-      this.isLinkBracketNodes(bracketedNodes) && this.isLinkBracketNodes(bracketedNodes[1]?.children);
+  private handleLinkBrackets(bracketedNodes: OrgChildrenList): OrgNode {
+    const isOutsideLink = this.isLinkBracketNodes(bracketedNodes);
+    const isInsideLink = this.isLinkBracketNodes(
+      bracketedNodes.get(1)?.children
+    );
+
+    if (isOutsideLink && !isInsideLink) {
+      return new OrgNode({ type: NodeType.Unresolved });
+    }
+
+    const isLinkBracketNode = isOutsideLink && isInsideLink;
 
     if (!isLinkBracketNode) {
       return;
     }
 
-    bracketedNodes[1].type = NodeType.LinkUrl;
-    const nameExist = !!bracketedNodes[3];
+    bracketedNodes.get(1).type = NodeType.LinkUrl;
+    const nameExist = !!bracketedNodes.get(3);
     if (nameExist) {
-      bracketedNodes[2].type = NodeType.LinkName;
+      bracketedNodes.get(2).type = NodeType.LinkName;
     }
 
-    const orgLinkNode = this.astBuilder.createLinkNode(openedBracket.start, closedBracket.end, bracketedNodes);
+    const orgLinkNode = this.astBuilder.createLinkNode();
     return orgLinkNode;
   }
 
-  private isLinkBracketNodes(nodes: OrgNode[]): boolean {
+  private handleFormatBrackets(bracketedNodes: OrgChildrenList): OrgNode {
+    const type = this.textFormattersNodeTypeMap[bracketedNodes.last.value];
+
+    if (!type) {
+      return;
+    }
+
+    const orgNode = new OrgNode({ type });
+    // orgNode.addChildren(bracketedNodes);
+    return orgNode;
+  }
+
+  private isLinkBracketNodes(nodes: OrgChildrenList): boolean {
     if (!nodes) {
       return false;
     }
-    const leftBracket = nodes[0];
-    const rightBracket = nodes.slice(-1)?.[0];
+    const leftBracket = nodes.first;
+    const rightBracket = nodes.last;
 
     return (
       (nodes?.length === 4 || nodes?.length === 3) &&
@@ -216,71 +193,64 @@ export class BracketHandler implements OrgHandler {
     );
   }
 
-  private handleDateBrackets(
-    openedBracket: OrgNode<OrgStruct>,
-    closedBracket: OrgNode<OrgStruct>,
-    bracketedNodes: OrgNode<OrgStruct>[]
-  ): OrgNode {
-    if (bracketedNodes.length !== 3 || !this.isDate(bracketedNodes[1].value)) {
+  private handleDateBrackets(bracketedNodes: OrgChildrenList): OrgNode {
+    if (
+      bracketedNodes.length !== 3 ||
+      !this.isDate(bracketedNodes.get(1).value)
+    ) {
       return;
-      // this.tryMergeNotDate(bracketedNodes);
     }
 
-    const dateNode = this.astBuilder.createDateNode(openedBracket, bracketedNodes[1], closedBracket);
+    const dateNode = this.astBuilder.createDateNode();
 
     return dateNode;
-  }
-
-  private tryMergeNotDate(bracketedNodes: OrgNode<OrgStruct>[]): OrgNode {
-    if (bracketedNodes[0].value !== '<' || bracketedNodes[bracketedNodes.length - 1].value !== '>') {
-      return;
-    }
-    const parent = bracketedNodes[0].parent;
-    // DEBUG: here is incorrect call, need to merge nodes
-    const value = this.astBuilder.getRawValueFromNodes(bracketedNodes);
-
-    const textNode = this.astBuilder.createTextNode(bracketedNodes[0].start, value);
-    textNode.parent = parent;
-    return textNode;
   }
 
   private isDate(text: string): boolean {
     return !!text?.match(this.dateRegex);
   }
 
-  private isOpenedBracket(bracketNode: OrgNode<OrgStruct>): boolean {
-    return !!Object.values(this.closedOpenedBrackets).find((b) => b === bracketNode.value);
+  private isOpenedBracket(bracketNode: OrgNode): boolean {
+    return !!Object.values(this.closedOpenedBrackets).find(
+      (b) => b === bracketNode.value
+    );
   }
 
-  private tryRemoveNestedInlineCode(orgNode: OrgNode<OrgStruct>): void {
-    // TODO: master move to node impl
-    if (![NodeType.Bold, NodeType.Crossed, NodeType.Italic].includes(orgNode.type)) {
+  private removeFormattingInsideInlineCode(orgNode: OrgNode): void {
+    const isInlineCode = orgNode.is(NodeType.InlineCode);
+    const hasExtraChild =
+      orgNode.children.length !== 1 ||
+      !orgNode.children?.get(1)?.is(NodeType.Text);
+
+    if (!isInlineCode || !hasExtraChild) {
       return;
     }
 
-    const nestedNode = orgNode.children[1];
+    const firstChildNode = orgNode.children.first;
+    const lastChildNode = orgNode.children.last;
 
-    if (nestedNode?.type !== NodeType.InlineCode) {
-      return;
-    }
+    const unmergedChildren = orgNode.children.getNodesBetweenPairs(
+      firstChildNode,
+      lastChildNode
+    );
+    const rawValue = this.astBuilder.getRawValueFromNodes(unmergedChildren);
 
-    nestedNode.type = NodeType.Text;
-    nestedNode.setValue(this.astBuilder.getRawValueFromNode(nestedNode));
-    nestedNode.setChildren(undefined);
-  }
+    // orgNode.removeChildren(unmergedChildren);
+    const newTextNode = this.astBuilder.createTextNode(rawValue);
+    // orgNode.removeChildren(orgNode.children);
 
-  private removeNestedFormattingForInlineCode(inlineCodeNode: OrgNode<InlineCode>): OrgNode<InlineCode> {
-    const value = this.astBuilder.getRawValueFromNode(inlineCodeNode.children[1]);
+    // orgNode.children.first.addNextNode(newTextNode);
+    orgNode.setChildren([firstChildNode, newTextNode, lastChildNode]);
 
-    // TODO: master move to ast builder
-    inlineCodeNode.children[1] = new OrgNode<Text>({
-      value,
-      start: inlineCodeNode.children[1].start,
-      end: inlineCodeNode.children[1].start + value.length,
-      type: NodeType.Text,
-    });
+    // const nestedNode = orgNode.children.get(1);
 
-    return inlineCodeNode;
+    // if (nestedNode?.type !== NodeType.InlineCode) {
+    //   return;
+    // }
+
+    // nestedNode.type = NodeType.Text;
+    // nestedNode.setValue(this.astBuilder.getRawValueFromNode(nestedNode));
+    // nestedNode.setChildren(undefined);
   }
 
   private getOpenedBracket(openedBracket: string): string {
@@ -289,35 +259,7 @@ export class BracketHandler implements OrgHandler {
 
   // TODO: master handle new line
   public clearBracketsPairs(): void {
-    let childIndexOffset = 0;
-
-    this.bracketsStackPositions.forEach((bracket) => {
-      const currentNode = bracket.node;
-      currentNode.type = NodeType.Text;
-      const children = currentNode.parent.children;
-      let childIndex = bracket.childIndex + childIndexOffset;
-
-      if (currentNode.prev?.type === NodeType.Text) {
-        currentNode.prependValue(currentNode.prev.value);
-        currentNode.start = currentNode.prev.start;
-        currentNode.setPrev(currentNode.prev.prev);
-        currentNode.prev?.setNext(currentNode);
-        children.splice(childIndex - 1, 1);
-        --childIndexOffset;
-        --childIndex;
-      }
-
-      if (currentNode.next?.type === NodeType.Text) {
-        currentNode.appendValue(currentNode.next.value);
-        currentNode.end = currentNode.next.end;
-        currentNode.setNext(currentNode.next.next);
-        currentNode.next?.setPrev(currentNode);
-        children.splice(childIndex + 1, 1);
-        --childIndexOffset;
-      }
-    });
-    // this.astBuilder.mergeNeighborsNodesWithSameType(this.bracketsStackPositions[0]?.node);
-
-    this.bracketsStackPositions = [];
+    this.astBuilder.mergeNeighborsNodesWithSameType(this.bracketsStack.first);
+    this.bracketsStack.clear();
   }
 }

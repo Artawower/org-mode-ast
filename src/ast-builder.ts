@@ -1,37 +1,14 @@
 import { AstContext } from 'ast-context';
+import { OrgChildrenList } from 'org-children-list';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
-import {
-  Headline,
-  NodeType,
-  OrgStruct,
-  Text,
-  Section,
-  WithValue,
-  PartialUniversalOrgStruct,
-  List,
-  Indent,
-  TokenType,
-  NewLine,
-  Keyword,
-  SrcBlock,
-  Unresolved,
-  BlockHeader,
-  BlockBody,
-  BlockFooter,
-  Operator,
-  Comment,
-  Date,
-  Checkbox,
-  Link,
-  HtmlBlock,
-} from 'types';
+import { NodeType, OrgStruct, TokenType } from 'types';
 
 export class AstBuilder {
   public lastNode: OrgNode;
   public lastPos = 0;
 
-  private lastSection: OrgNode<Section>;
+  private lastSection: OrgNode;
 
   #nodeTree: OrgNode;
 
@@ -50,8 +27,6 @@ export class AstBuilder {
   private initRootNode(): void {
     this.#nodeTree = new OrgNode({
       type: NodeType.Root,
-      start: 0,
-      end: 0,
       children: [],
     });
 
@@ -60,16 +35,9 @@ export class AstBuilder {
 
   public attachToTree(orgData: OrgNode): void {
     const parentNode = this.findParentForNodeType(orgData);
-    const parentWithChildren = parentNode;
-    const prevNeighbor = parentWithChildren.lastChild;
-
-    orgData.setPrev(prevNeighbor);
-
-    if (prevNeighbor) {
-      prevNeighbor.setNext(orgData);
-    }
-
     parentNode.addChild(orgData);
+    // console.log(this.#nodeTree.toString());
+    // console.log('----------------');
   }
 
   private findFirstParentNodeWithType(...type: NodeType[]): OrgNode {
@@ -83,31 +51,51 @@ export class AstBuilder {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private isNotListIndentInsideSection(srcNode: OrgStruct, _dstNode: OrgStruct): OrgNode<Section> {
-    if (srcNode.type === NodeType.Indent && !this.isListOperator(this.tokenIterator.currentValue) && this.lastSection) {
+  private isNotListIndentInsideSection(
+    srcNode: OrgStruct,
+    _dstNode: OrgStruct
+  ): OrgNode {
+    if (
+      srcNode.type === NodeType.Indent &&
+      !this.isListOperator(this.tokenIterator.currentValue) &&
+      this.lastSection
+    ) {
       return this.lastSection;
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private isParentAlreadyExist(srcNode: OrgNode<OrgStruct>, _dstNode: OrgNode<OrgStruct>): OrgNode<OrgStruct> {
+  private isParentAlreadyExist(srcNode: OrgNode, _dstNode: OrgNode): OrgNode {
     if (srcNode.parent) {
       return srcNode.parent;
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private isNodeAfterListWithSameLevel(_srcNode: OrgStruct, _dstNode: OrgStruct): OrgNode<OrgStruct> {
+  private isNodeAfterListWithSameLevel(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _srcNode: OrgStruct,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _dstNode: OrgStruct
+  ): OrgNode {
     const exitFromTopList = !!this.ctx.topLevelList;
-    const notIndentAfterNewLine = !this.ctx.nextIndentNode && this.tokenIterator.prevToken?.isType(TokenType.NewLine);
+    const notIndentAfterNewLine =
+      !this.ctx.nextIndentNode &&
+      this.tokenIterator.prevToken?.isType(TokenType.NewLine);
 
-    if (notIndentAfterNewLine && exitFromTopList && !this.isListOperator(this.tokenIterator.currentValue)) {
+    if (
+      notIndentAfterNewLine &&
+      exitFromTopList &&
+      !this.isListOperator(this.tokenIterator.currentValue)
+    ) {
       const parent = this.ctx.topLevelList.parent;
       return parent;
     }
   }
 
-  private isDestinationRootNode(_srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
+  private isDestinationRootNode(
+    _srcNode: OrgStruct,
+    dstNode: OrgStruct
+  ): OrgStruct {
     if (dstNode.type === NodeType.Root) {
       return dstNode;
     }
@@ -115,7 +103,8 @@ export class AstBuilder {
 
   private isInsideList(srcNode: OrgNode): OrgNode {
     const isNestedList =
-      this.lastSection?.parent?.parent.is(NodeType.List) && this.lastSection?.parent?.parent?.level < srcNode.level;
+      this.lastSection?.parent?.parent.is(NodeType.List) &&
+      this.lastSection?.parent?.parent?.level < srcNode.level;
 
     if (
       !this.ctx.insideHeadline &&
@@ -132,8 +121,12 @@ export class AstBuilder {
     const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     const isTargetNodeHeadline = dstNode.type === NodeType.Headline;
 
-    if (isSourceNodeHeadline && isTargetNodeHeadline && (<Headline>srcNode).level > (<Headline>dstNode).level) {
-      return (dstNode as Headline).section;
+    if (
+      isSourceNodeHeadline &&
+      isTargetNodeHeadline &&
+      srcNode.level > dstNode.level
+    ) {
+      return dstNode.section;
     }
   }
 
@@ -147,11 +140,20 @@ export class AstBuilder {
   //   }
   // }
 
-  private isCommonDestinationAndSrcNotHeadline(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
+  private isCommonDestinationAndSrcNotHeadline(
+    srcNode: OrgStruct,
+    dstNode: OrgStruct
+  ): OrgStruct {
     const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     if (
       !isSourceNodeHeadline &&
-      [NodeType.Root, NodeType.Headline, NodeType.Section, NodeType.List, NodeType.ListItem].includes(dstNode.type)
+      [
+        NodeType.Root,
+        NodeType.Headline,
+        NodeType.Section,
+        NodeType.List,
+        NodeType.ListItem,
+      ].includes(dstNode.type)
     ) {
       return dstNode;
     }
@@ -160,14 +162,22 @@ export class AstBuilder {
   private isKeyword(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
     if (
       srcNode.type === NodeType.Keyword &&
-      [NodeType.SrcBlock, NodeType.BlockFooter, NodeType.BlockHeader, NodeType.BlockBody].includes(dstNode.type)
+      [
+        NodeType.SrcBlock,
+        NodeType.BlockFooter,
+        NodeType.BlockHeader,
+        NodeType.BlockBody,
+      ].includes(dstNode.type)
     ) {
       return dstNode;
     }
   }
 
   private isCommentParent(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
-    if ([NodeType.Text].includes(srcNode.type) && dstNode.type === NodeType.Comment) {
+    if (
+      [NodeType.Text].includes(srcNode.type) &&
+      dstNode.type === NodeType.Comment
+    ) {
       return dstNode;
     }
   }
@@ -201,50 +211,46 @@ export class AstBuilder {
     }
 
     if (!dstNode.parent) {
-      throw new Error(`Something went wrong, couldn't find last node, ${srcNode.type}, prev node: ${dstNode.type}`);
+      throw new Error(
+        `Something went wrong, couldn't find last node, ${srcNode.type}, prev node: ${dstNode.type}`
+      );
     }
 
     return this.findParentForNodeType(srcNode, dstNode.parent);
   }
 
-  public createHeadline(): OrgNode<Headline> {
-    const end = this.lastPos + this.tokenIterator.currentValue.length;
+  public createTitleNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.Title,
+    });
+  }
 
-    const headline = new OrgNode<Headline>({
+  public createHeadline(): OrgNode {
+    const headline = new OrgNode({
       type: NodeType.Headline,
       level: this.tokenIterator.currentValue.trim().length,
-      start: this.lastPos,
-      end,
     });
-    const operatorNode = new OrgNode<Operator>({
+    headline.setTitle(this.createTitleNode());
+    const operatorNode = new OrgNode({
       type: NodeType.Operator,
       value: this.tokenIterator.currentValue,
-      start: this.lastPos,
-      end,
     });
-    headline.addChild(operatorNode);
+    headline.title.addChild(operatorNode);
     return headline;
   }
 
-  public createKeyword(): OrgNode<Keyword> {
-    const keyword: Keyword = {
+  public createKeyword(): OrgNode {
+    return new OrgNode({
       type: NodeType.Keyword,
-      start: this.lastPos,
-      end: this.lastPos + this.tokenIterator.currentValue.length,
       value: this.tokenIterator.currentValue,
-    };
-
-    return new OrgNode(keyword);
+    });
   }
 
   public createText(): OrgNode {
-    const orgText: Text = {
+    return new OrgNode({
       type: NodeType.Text,
       value: this.tokenIterator.currentValue,
-      start: this.lastPos,
-      end: this.lastPos + this.tokenIterator.currentValue.length,
-    };
-    return new OrgNode(orgText);
+    });
   }
 
   public preserveLastPositionSnapshot(orgData: OrgNode): void {
@@ -256,41 +262,27 @@ export class AstBuilder {
     this.lastNode = orgData;
   }
 
-  public appendLengthToParentNodes(length: number, node?: OrgNode): void {
-    // console.log('✎: [line 274][ast-builder.ts] node: ', node);
-    if (!node || !length) {
-      return;
-    }
-
-    if (!node.section) {
-      node.end = length;
-    }
-    if (!node.parent) {
-      return;
-    }
-    this.appendLengthToParentNodes(length, node.parent);
-  }
-
   /*
    * Create new nested section
    */
   public getLastSectionOrCreate(parentNode?: OrgNode): void {
     const nodeWithSection =
-      parentNode || this.findFirstParentNodeWithType(NodeType.Headline, NodeType.Section, NodeType.ListItem);
-    const parentSectionAlreadyExists = nodeWithSection?.section || nodeWithSection?.type === NodeType.Section;
+      parentNode ||
+      this.findFirstParentNodeWithType(
+        NodeType.Headline,
+        NodeType.Section,
+        NodeType.ListItem
+      );
+    const parentSectionAlreadyExists =
+      nodeWithSection?.section || nodeWithSection?.type === NodeType.Section;
 
     if (parentSectionAlreadyExists || !nodeWithSection) {
       return;
     }
 
-    const section: Section = {
+    const sectionNode = new OrgNode({
       type: NodeType.Section,
-      start: nodeWithSection.end,
-      end: nodeWithSection.end,
-      children: [],
-    };
-
-    const sectionNode = new OrgNode<Section>(section);
+    });
     nodeWithSection.setSection(sectionNode);
     this.lastSection = sectionNode;
   }
@@ -299,10 +291,8 @@ export class AstBuilder {
     this.lastSection = null;
   }
 
-  public mergeUnresolvedNodes(nodes: OrgNode<OrgStruct>[], newType?: NodeType): OrgNode<OrgStruct>[] {
-    console.log('✎: [line 302][ast-builder.ts] nodes: ', nodes);
-    // WE LOST </P> HERE
-    const mergedNodes: OrgNode<OrgStruct>[] = [];
+  public mergeUnresolvedNodes(nodes: OrgNode[], newType?: NodeType): OrgNode[] {
+    const mergedNodes: OrgNode[] = [];
     const prev = nodes[0].prev;
 
     nodes.forEach((n) => {
@@ -317,45 +307,41 @@ export class AstBuilder {
         return;
       }
       if (lastNode.type === NodeType.Text && n.type === NodeType.Text) {
-        lastNode.end = n.end;
         lastNode.appendValue(n.value);
         return;
       }
       mergedNodes.push(n);
     });
     mergedNodes[0].setPrev(prev);
-    console.log('✎: [line 325][ast-builder.ts] mergedNodes: ', mergedNodes);
     return mergedNodes;
   }
 
-  public createCheckboxNode(start: number, end: number, value: string, checked: boolean): OrgNode<Checkbox> {
-    const checkBoxData: Checkbox = {
+  public createCheckboxNode(value: string, checked: boolean): OrgNode {
+    return new OrgNode({
       type: NodeType.Checkbox,
-      start,
-      end,
       checked,
       value,
-    };
-    return new OrgNode<Checkbox>(checkBoxData);
+    });
   }
 
   // Section of helpers function. Consider moving them to separate class
 
-  public isNodesCheckbox(nodes: OrgNode[]): boolean {
+  public isNodesCheckbox(nodes: OrgChildrenList): boolean {
     if (nodes.length !== 3) {
       return false;
     }
-    const [openBracket, checkbox, closeBracket] = nodes;
     const potentialCheckboxValues = [' ', 'x', '-'];
 
     return (
-      openBracket?.value === '[' &&
-      potentialCheckboxValues.includes(checkbox?.value?.toLocaleLowerCase()) &&
-      closeBracket?.value === ']'
+      nodes.first?.value === '[' &&
+      potentialCheckboxValues.includes(
+        nodes.get(1)?.value?.toLocaleLowerCase()
+      ) &&
+      nodes.last?.value === ']'
     );
   }
 
-  public getRawValueFromNode(node: OrgNode<OrgStruct>): string {
+  public getRawValueFromNode(node: OrgNode): string {
     if (node.value) {
       return node.value;
     }
@@ -378,42 +364,30 @@ export class AstBuilder {
     return this.parentNodeExist(node.parent, types);
   }
 
-  // DEBUG: problem with existed undetexted node inside nodes list.
-  // need to return multiple text nodes...
-  public getRawValueFromNodes(nodes: WithValue[]): string {
-    console.log('✎: [line 382][ast-builder.ts] nodes: ', nodes);
-    return nodes.map((n) => n?.value || this.getRawValueFromNodes([n])).join('');
+  public getRawValueFromNodes(nodes: OrgChildrenList | OrgNode): string {
+    if (nodes instanceof OrgChildrenList) {
+      return nodes
+        .map((n) => n?.value || this.getRawValueFromNodes(n))
+        .join('');
+    }
+    return nodes?.value || this.getRawValueFromNodes(nodes.children);
   }
 
-  public createIndentNode(start?: number, val?: string): OrgNode<Indent> {
-    start = start || this.lastPos;
-    val = val || this.tokenIterator.currentValue;
-    const end = start + val.length;
-
-    const indent: Indent = {
+  public createIndentNode(val?: string): OrgNode {
+    return new OrgNode({
       type: NodeType.Indent,
-      start,
-      end,
-      value: this.tokenIterator.currentValue,
-    };
-
-    return new OrgNode<Indent>(indent);
+      value: val || this.tokenIterator.currentValue,
+    });
   }
 
-  public createComment(): OrgNode<Comment> {
-    const end = this.lastPos + this.tokenIterator.currentValue.length;
-    const comment: Comment = {
+  public createComment(): OrgNode {
+    const commentNode = new OrgNode({
       type: NodeType.Comment,
-      start: this.lastPos,
-      end,
-    };
-    const commentNode = new OrgNode<Comment>(comment);
+    });
 
-    const operatorNode = new OrgNode<Operator>({
+    const operatorNode = new OrgNode({
       type: NodeType.Operator,
       value: this.tokenIterator.currentValue,
-      start: this.lastPos,
-      end,
     });
 
     commentNode.addChild(operatorNode);
@@ -421,82 +395,72 @@ export class AstBuilder {
     return commentNode;
   }
 
-  public createNewLineNode(): OrgNode<NewLine> {
-    const newLine: NewLine = {
+  public createNewLineNode(): OrgNode {
+    return new OrgNode({
       type: NodeType.NewLine,
-      start: this.lastPos,
-      end: this.lastPos + 1,
       value: this.tokenIterator.currentValue,
-    };
-    return new OrgNode<NewLine>(newLine);
+    });
   }
 
   public createBlockNode(
     type: NodeType.HtmlBlock | NodeType.SrcBlock,
-    start: number,
-    end: number,
-    prev: OrgNode,
-    language?: string,
     properties?: { [key: string]: string }
   ): OrgNode {
-    const srcBlock: SrcBlock | HtmlBlock = {
+    const srcBlockNode = new OrgNode({
       type,
-      start,
-      end,
-      language,
       properties,
-      children: [],
-    };
-
-    const srcBlockNode = new OrgNode(srcBlock);
-    srcBlockNode.setPrev(prev);
+    });
     return srcBlockNode;
   }
 
-  public createTextNode(start: number, value: string): OrgNode<Text> {
-    const text: Text = {
+  public createTextNode(value: string): OrgNode {
+    return new OrgNode({
       type: NodeType.Text,
-      start,
-      end: start + value.length,
       value,
-    };
-
-    return new OrgNode<Text>(text);
+    });
   }
 
-  public createUnresolvedNode(): OrgNode<Unresolved> {
-    const unresolved: Unresolved = {
+  public createUnresolvedNode(value?: string): OrgNode {
+    return new OrgNode({
       type: NodeType.Unresolved,
-      start: this.lastPos,
-      end: this.lastPos + this.tokenIterator.currentValue.length,
-      value: this.tokenIterator.currentValue,
-    };
-
-    return new OrgNode<Unresolved>(unresolved);
+      value: value ?? this.tokenIterator.currentValue,
+    });
   }
 
-  public createLinkNode(start: number, end: number, bracketedNodes: OrgNode<OrgStruct>[]): OrgNode<Link> {
-    const link: Link = {
+  public createBlockPropertyNode(child?: OrgNode): OrgNode {
+    const blockProperty = new OrgNode({
+      type: NodeType.BlockProperty,
+    });
+    blockProperty.addChild(child);
+    return blockProperty;
+  }
+
+  public createBlockLanguageNode(value: string): OrgNode {
+    return new OrgNode({
+      type: NodeType.BlockLanguage,
+      properties: { language: value.slice(1).trim() },
+      value,
+    });
+  }
+
+  public createLinkNode(): OrgNode {
+    const linkNode = new OrgNode({
       type: NodeType.Link,
-      start,
-      end,
-    };
-    const linkNode = new OrgNode<Link>(link);
-    linkNode.setChildren(bracketedNodes);
+    });
+    // linkNode.setChildren(bracketedNodes);
     return linkNode;
   }
 
-  public createDateNode(openBracket: OrgNode, dateTextNode: OrgNode, closeBracket: OrgNode): OrgNode<Date> {
-    const date: Date = {
+  public createDateNode(): // openBracket: OrgNode,
+  // dateTextNode: OrgNode,
+  // closeBracket: OrgNode
+  OrgNode {
+    const dateNode = new OrgNode({
       type: NodeType.Date,
-      start: openBracket.start,
-      end: closeBracket.end,
-    };
-
-    const dateNode = new OrgNode<Date>(date);
-    dateNode.addChild(openBracket);
-    dateNode.addChild(dateTextNode);
-    dateNode.addChild(closeBracket);
+    });
+    // dateNode.addChild(openBracket);
+    // dateNode.addChild(dateTextNode);
+    // dateNode.addChild(closeBracket);
 
     return dateNode;
   }
@@ -508,46 +472,36 @@ export class AstBuilder {
     return !!listOperatorsRegexp.exec(tokenValue);
   }
 
-  public createBlockHeaderNode(parent: OrgNode, children: OrgNode[]): OrgNode<BlockHeader> {
-    return this.createBlockSubNode<BlockHeader>(NodeType.BlockHeader, parent, children);
+  public createBlockHeaderNode(children: OrgChildrenList | OrgNode[]): OrgNode {
+    return this.createBlockSubNode(NodeType.BlockHeader, children);
   }
 
-  public createBlockFooterNode(parent: OrgNode<OrgStruct>, children?: OrgNode[], start?: number): OrgNode<BlockFooter> {
-    return this.createBlockSubNode<BlockFooter>(NodeType.BlockFooter, parent, children, start);
+  public createBlockFooterNode(
+    children?: OrgChildrenList | OrgNode[]
+  ): OrgNode {
+    return this.createBlockSubNode(NodeType.BlockFooter, children);
   }
 
-  public createBlockBodyNode(parent: OrgNode, children: OrgNode[]): OrgNode<BlockBody> {
-    return this.createBlockSubNode<BlockBody>(NodeType.BlockBody, parent, children);
+  public createBlockBodyNode(children: OrgChildrenList | OrgNode[]): OrgNode {
+    return this.createBlockSubNode(NodeType.BlockBody, children);
   }
 
-  private createBlockSubNode<T = OrgStruct>(
+  private createBlockSubNode(
     type: NodeType,
-    parent: OrgNode<OrgStruct>,
-    children: OrgNode[],
-    start?: number
-  ): OrgNode<T> {
-    const block: PartialUniversalOrgStruct = {
-      type,
-      start: children[0]?.start ?? start,
-      end: children[children.length - 1]?.end ?? start,
-    };
-    const blockHeaderNode = new OrgNode<T>(block);
+    children: OrgChildrenList | OrgNode[]
+  ): OrgNode {
+    const blockHeaderNode = new OrgNode({ type });
     blockHeaderNode.addChildren(children);
-    // parent.addChild(blockHeaderNode);
     return blockHeaderNode;
   }
 
-  public createList(ordered: boolean, level = 0): OrgNode<List> {
-    const list: List = {
+  public createList(ordered: boolean, level = 0): OrgNode {
+    return new OrgNode({
       type: NodeType.List,
-      start: this.lastNode.end,
-      end: this.lastNode.end,
       level,
       ordered,
       children: [],
-    };
-
-    return new OrgNode<List>(list);
+    });
   }
 
   public isPropertyOperator(tokenValue: string): boolean {
@@ -561,29 +515,31 @@ export class AstBuilder {
     if (!node) {
       return;
     }
-    const mergeTypes = [NodeType.Text, NodeType.Unresolved];
     let currentNode = node;
 
-    if (mergeTypes.includes(currentNode.type) && mergeTypes.includes(currentNode.prev?.type)) {
-      const prev = currentNode.prev;
-      currentNode.prependValue(prev.value);
-      currentNode.start = prev.start;
-      currentNode.setPrev(prev.prev);
-      currentNode.type = NodeType.Text;
-      prev.prev?.setNext(currentNode);
-    }
-
     while (currentNode) {
-      console.log('✎: [line 574][ast-builder.ts] currentNode: ', currentNode);
-      if (mergeTypes.includes(currentNode.type) && mergeTypes.includes(currentNode.next?.type)) {
-        const next = currentNode.next;
-        currentNode.appendValue(next.value);
-        currentNode.end = next.end;
-        currentNode.setNext(next.next);
+      if (this.couldBeMergedIntoText(currentNode)) {
         currentNode.type = NodeType.Text;
-        continue;
+      }
+      if (
+        this.couldBeMergedIntoText(currentNode) &&
+        this.couldBeMergedIntoText(currentNode.prev)
+      ) {
+        const prev = currentNode.prev;
+        prev.appendValue(currentNode.value);
+        prev.parent?.removeNode(currentNode);
       }
       currentNode = currentNode.next;
     }
+  }
+
+  private couldBeMergedIntoText(node?: OrgNode): boolean {
+    return (
+      node?.type === NodeType.Text ||
+      node?.type === NodeType.Unresolved ||
+      (node?.type === NodeType.Operator &&
+        ['<', '>'].includes(node.value) &&
+        !node.parent.is(NodeType.Date))
+    );
   }
 }

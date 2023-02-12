@@ -3,10 +3,14 @@ import { AstContext } from 'ast-context';
 import { OrgHandler } from 'internal.types';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
-import { List, ListItem, NodeType, OrgStruct } from 'types';
+import { NodeType, OrgStruct } from 'types';
 
 export class ListHandler implements OrgHandler {
-  constructor(private ctx: AstContext, private astBuilder: AstBuilder, private tokenIterator: TokenIterator) {}
+  constructor(
+    private ctx: AstContext,
+    private astBuilder: AstBuilder,
+    private tokenIterator: TokenIterator
+  ) {}
 
   public handle(): OrgNode {
     const isNestedList = this.ctx.setupNewParentListByLevel();
@@ -31,14 +35,12 @@ export class ListHandler implements OrgHandler {
     const orgData: OrgStruct = {
       type: NodeType.Operator,
       value: this.tokenIterator.currentValue,
-      start: this.astBuilder.lastPos,
-      end: this.astBuilder.lastPos + this.tokenIterator.currentValue.length,
     };
 
     return new OrgNode(orgData);
   }
 
-  private createEmptyList(ordered: boolean, level = 0): OrgNode<List> {
+  private createEmptyList(ordered: boolean, level = 0): OrgNode {
     console.log('✎: [line 44][list-handler.ts] level: ', level);
     const listNode = this.astBuilder.createList(ordered, level);
     this.astBuilder.attachToTree(listNode);
@@ -48,19 +50,20 @@ export class ListHandler implements OrgHandler {
   }
 
   private createNewListItem(): void {
-    const start = this.ctx.nextIndentNode ? this.ctx.nextIndentNode.start : this.astBuilder.lastPos;
-    const listItem: ListItem = {
-      type: NodeType.ListItem,
-      start,
-      end: 0,
-      children: [],
-    };
-    const listItemNode = new OrgNode<ListItem>(listItem);
-    listItemNode.parent = this.ctx.lastList;
+    const listTitleNode = new OrgNode({
+      type: NodeType.Title,
+    });
 
-    this.astBuilder.attachToTree(listItemNode);
-    this.astBuilder.saveLastNode(listItemNode);
-    // this.ctx.lastParentList.addChild(listItemNode);
+    const listItemNode = new OrgNode({
+      type: NodeType.ListItem,
+    });
+
+    listItemNode.setTitle(listTitleNode);
+
+    this.ctx.lastList.addChild(listItemNode);
+
+    // this.astBuilder.attachToTree(listItemNode);
+    this.astBuilder.saveLastNode(listTitleNode);
     this.ctx.insideListItem = true;
   }
 }

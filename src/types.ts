@@ -1,3 +1,6 @@
+import { OrgChildrenList } from 'org-children-list';
+import { OrgNode } from 'org-node';
+
 export enum NodeType {
   Root = 'root',
   Headline = 'headline',
@@ -19,15 +22,22 @@ export enum NodeType {
   Date = 'date',
   DateRange = 'dateRange',
   SrcBlock = 'srcBlock',
+
   BlockHeader = 'blockHeader',
+  BlockProperty = 'blockProperty',
+  BlockLanguage = 'blockLanguage',
   BlockFooter = 'blockFooter',
   BlockBody = 'blockBody',
   QuoteBlock = 'quoteBlock',
   HtmlBlock = 'htmlBlock',
+
   Keyword = 'keyword',
   Link = 'link',
   LinkUrl = 'linkUrl',
   LinkName = 'linkName',
+
+  // Workaround for structures that have section + title
+  Title = 'title',
 }
 
 export enum TokenType {
@@ -86,196 +96,30 @@ export class Token {
   }
 }
 
-// TODO: master make nodes as classes
-
-export interface WithRange {
-  start: number;
-  end: number;
-}
-
-export interface WithChildren {
-  children: OrgStruct[];
-}
-
-export interface WithParent {
-  parent?: OrgStruct;
-}
-
-export interface WithNeighbors {
-  prev?: OrgStruct;
-  next?: OrgStruct;
-}
-
-export interface WithValue {
-  value: string;
-}
-
-export interface WithCheckStatus {
-  checked: boolean;
-}
-
-export interface WithSection {
-  section?: Section;
-}
-
-// TODO: master this structures are redundant
-export interface Section extends WithRange, WithChildren, WithParent {
-  type: NodeType.Section;
-}
-
-export interface Headline extends WithRange, WithChildren, WithParent, WithSection, WithNeighbors {
-  type: NodeType.Headline;
-  level: number;
-  checked?: boolean;
-}
-
-export interface Operator extends WithRange, WithParent, WithValue, WithNeighbors {
-  type: NodeType.Operator;
-}
-
-export interface OrgRoot extends WithRange, WithChildren, WithParent {
-  type: NodeType.Root;
-}
-
-export interface Text extends WithRange, WithParent, WithValue, WithNeighbors {
-  type: NodeType.Text;
-}
-
-export interface List extends WithRange, WithChildren, WithParent, WithNeighbors {
-  type: NodeType.List;
-  ordered: boolean;
-  level: number;
-}
-
-export interface ListItem extends WithRange, WithChildren, WithParent, WithSection, WithNeighbors {
-  type: NodeType.ListItem;
-}
-
+export type BlockProperties = { [key: string]: string };
 // Special type for temporary nodes. Should not be exist after parsing.
 // Probably could be replaced by simple text...
-export interface Unresolved extends WithRange, WithParent, WithValue, WithNeighbors {
-  type: NodeType.Unresolved;
-}
 
-export interface OrgBold extends WithRange, WithChildren, WithParent, WithNeighbors {
-  type: NodeType.Bold;
-}
-
-export interface OrgCrossed extends WithRange, WithChildren, WithParent, WithNeighbors {
-  type: NodeType.Crossed;
-}
-
-export interface Checkbox extends WithRange, WithCheckStatus, WithNeighbors, WithValue {
-  type: NodeType.Checkbox;
-}
-
-export interface OrgItalic extends WithRange, WithChildren, WithParent, WithNeighbors {
-  type: NodeType.Italic;
-}
-
-export interface InlineCode extends WithRange, WithChildren, WithParent, WithNeighbors {
-  type: NodeType.InlineCode;
-}
-
-export interface Indent extends WithRange, WithValue, WithParent, WithNeighbors {
-  type: NodeType.Indent;
-}
-
-export interface NewLine extends WithRange, WithParent, WithValue, WithNeighbors {
-  type: NodeType.NewLine;
-}
-
-export interface BlockHeader extends WithRange, WithParent, WithNeighbors {
-  type: NodeType.BlockHeader;
-}
-
-export interface BlockBody extends WithRange, WithParent, WithNeighbors, WithChildren {
-  type: NodeType.BlockBody;
-}
-
-export interface BlockFooter extends WithRange, WithParent, WithNeighbors, WithChildren {
-  type: NodeType.BlockFooter;
-}
-
-export type BlockProperties = { [key: string]: string };
-
-// TODO: master create universal block node?
-export interface SrcBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
-  type: NodeType.SrcBlock;
-  language?: string;
+export interface OrgStruct {
+  type: NodeType;
+  start?: number;
+  end?: number;
+  value?: string;
+  children?: OrgStruct[];
   properties?: BlockProperties;
-}
-
-export interface HtmlBlock extends WithRange, WithParent, WithNeighbors, WithChildren {
-  type: NodeType.HtmlBlock;
+  checked?: boolean;
+  priority?: string;
+  section?: OrgStruct;
+  level?: number;
+  ordered?: boolean;
   language?: string;
-  properties?: BlockProperties;
-}
-
-export interface Comment extends WithRange, WithParent {
-  type: NodeType.Comment;
-}
-
-export interface Date extends WithRange, WithParent, WithNeighbors {
-  type: NodeType.Date;
-}
-
-export interface DateRange extends WithRange, WithParent, WithNeighbors {
-  type: NodeType.DateRange;
-}
-
-export interface Link extends WithRange {
-  type: NodeType.Link;
+  title?: OrgNode;
 }
 
 export interface SrcBlockMetaInfo {
   language?: string;
   tangle?: string;
   [key: string]: string | undefined;
-}
-
-export interface Keyword extends WithRange, WithParent, WithValue, WithNeighbors {
-  type: NodeType.Keyword;
-}
-
-export type OrgStruct =
-  | Headline
-  | OrgRoot
-  | Operator
-  | Text
-  | Unresolved
-  | OrgBold
-  | OrgCrossed
-  | OrgItalic
-  | Section
-  | List
-  | ListItem
-  | Checkbox
-  | InlineCode
-  | Indent
-  | NewLine
-  | Keyword
-  | SrcBlock
-  | BlockHeader
-  | BlockBody
-  | BlockFooter
-  | Comment
-  | Date
-  | DateRange;
-
-type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
-
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-
-type NodeProperties = UnionToIntersection<DistributiveOmit<OrgStruct, 'type'>>;
-
-export interface PartialUniversalOrgStruct extends Partial<NodeProperties> {
-  type: NodeType;
-}
-
-export interface Node {
-  type: NodeType;
-  children: OrgStruct[];
 }
 
 export interface ParserConfiguration {

@@ -4,6 +4,28 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "DEBUG Jest: link spec",
+      //"env": { "NODE_ENV": "test" },
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        // "${fileBasenameNoExtension}",
+        "--config",
+        "jest.config.cjs",
+        "-i",
+        "${workspaceFolder}/src/link.spec.ts",
+        "--no-watch"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "DEBUG Jest: date spec",
       //"env": { "NODE_ENV": "test" },
       "program": "${workspaceFolder}/node_modules/.bin/jest",
@@ -12,7 +34,30 @@
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/date.spec.ts"
+        "${workspaceFolder}/src/date.spec.ts",
+        "--no-watch"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "DEBUG Jest: date spec",
+      //"env": { "NODE_ENV": "test" },
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        // "${fileBasenameNoExtension}",
+        "--config",
+        "jest.config.cjs",
+        "-i",
+        "${workspaceFolder}/src/link.spec.ts",
+        "--no-watch"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",

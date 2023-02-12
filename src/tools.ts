@@ -1,5 +1,5 @@
 import { OrgNode } from 'org-node';
-import { NodeType, OrgStruct } from 'types';
+import { NodeType } from 'types';
 
 /**
  * Method for pretty debug org tree. Useful for long AST.
@@ -7,15 +7,17 @@ import { NodeType, OrgStruct } from 'types';
  * @param data - OrgData
  * @param level - number of indention
  */
-export function prettyTreePrint(data: OrgNode<any>, level = 0): string {
+export function prettyTreePrint(data: OrgNode, level = 0): string {
   if (!data) {
     return '[EMPTY]';
   }
-  data.safeCheckMode = false;
   const indent = ' '.repeat(level * 2);
   let result = indent;
 
-  const val = data.value && data.type !== NodeType.NewLine ? ` (${JSON.stringify(data.value)})` : '';
+  const val =
+    data.value && data.type !== NodeType.NewLine
+      ? ` (${JSON.stringify(data.value)})`
+      : '';
 
   result += `${data.type} [${data.start}-${data.end}]${val}\n`;
 
@@ -32,7 +34,7 @@ export function prettyTreePrint(data: OrgNode<any>, level = 0): string {
   }
 
   if (data.properties) {
-    Object.keys((data as any).properties).forEach((k: string) => {
+    Object.keys(data.properties).forEach((k: string) => {
       result += `${indent}    :${k} ${data.properties[k]}:\n`;
     });
   }
@@ -43,6 +45,10 @@ export function prettyTreePrint(data: OrgNode<any>, level = 0): string {
     result += prettyTreePrint(child, level);
   });
 
+  if (data.title) {
+    result += prettyTreePrint(data.title, level);
+  }
+
   if (data.section) {
     // result += indent + `┏${'-'.repeat(50)}┓\n`;
     result += prettyTreePrint(data.section, level);
@@ -51,7 +57,7 @@ export function prettyTreePrint(data: OrgNode<any>, level = 0): string {
   return result;
 }
 
-export function printNodes(nodes: OrgNode<OrgStruct>[]) {
+export function printNodes(nodes: OrgNode[]) {
   nodes.forEach((node) => {
     console.log({
       ...node,

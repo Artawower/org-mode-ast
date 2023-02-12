@@ -3,12 +3,16 @@ import { AstContext } from 'ast-context';
 import { BlockHandler } from 'block-handler';
 import { BracketHandler } from 'bracket-handler';
 import { CommentHandler } from 'comment-handler';
-import { HandlerDidNotReturnValue, HandlerNotFoundError, UnsupportedOperator } from 'errors';
+import {
+  HandlerDidNotReturnValue,
+  HandlerNotFoundError,
+  UnsupportedOperator,
+} from 'errors';
 import { ListHandler } from 'list-handler';
 import { OrgNode } from 'org-node';
 import { TokenIterator } from 'token-iterator';
 import { Tokenizer } from 'tokenizer';
-import { NodeType, OrgStruct, Indent, NewLine, TokenType } from './types';
+import { NodeType, TokenType } from './types';
 
 class Parser {
   constructor(
@@ -42,7 +46,7 @@ class Parser {
     [TokenType.Keyword]: () => this.handleKeyword(),
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
-  } satisfies Record<string, () => OrgNode<OrgStruct> | void>;
+  } satisfies Record<string, () => OrgNode | void>;
 
   private handleToken(): void {
     const handler = this.tokensHandlers[this.tokenIterator.type];
@@ -58,14 +62,19 @@ class Parser {
 
     // TODO: master move to OrgNode class
     this.astBuilder.preserveLastPositionSnapshot(orgData);
-    this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
+    // this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
-    const lineBreak = this.tokenIterator.token?.isType(TokenType.NewLine) || this.tokenIterator.isLastToken;
+    const lineBreak =
+      this.tokenIterator.token?.isType(TokenType.NewLine) ||
+      this.tokenIterator.isLastToken;
     if (lineBreak) {
       this.bracketHandler.clearBracketsPairs();
       this.ctx.insideListItem = false;
     }
-    if (this.tokenIterator.token?.isType(TokenType.NewLine) && this.ctx.insideHeadline) {
+    if (
+      this.tokenIterator.token?.isType(TokenType.NewLine) &&
+      this.ctx.insideHeadline
+    ) {
       this.astBuilder.getLastSectionOrCreate();
       this.ctx.insideHeadline = false;
     }
@@ -93,7 +102,10 @@ class Parser {
 
     this.astBuilder.attachToTree(textNode);
 
-    if (lastTokenWasNewLine && this.astBuilder.lastNode.type !== NodeType.Indent) {
+    if (
+      lastTokenWasNewLine &&
+      this.astBuilder.lastNode.type !== NodeType.Indent
+    ) {
       this.ctx.exitList();
     }
 
@@ -101,7 +113,9 @@ class Parser {
   }
 
   private handleOperator(): OrgNode {
-    const orgData = this.buildOrgDataForOperator(this.tokenIterator.currentValue);
+    const orgData = this.buildOrgDataForOperator(
+      this.tokenIterator.currentValue
+    );
     if (!orgData) {
       throw new UnsupportedOperator(this.tokenIterator.currentValue);
     }
@@ -109,7 +123,7 @@ class Parser {
     return orgData;
   }
 
-  private handleIndent(): OrgNode<Indent> {
+  private handleIndent(): OrgNode {
     const indentNode = this.astBuilder.createIndentNode();
 
     if (this.astBuilder.isListOperator(this.tokenIterator.nextToken.value)) {
@@ -122,14 +136,14 @@ class Parser {
     return indentNode;
   }
 
-  private handleNewLine(): OrgNode<NewLine> {
+  private handleNewLine(): OrgNode {
     this.bracketHandler.handleNewLine();
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
     return newLineNode;
   }
 
-  private handleKeyword(): OrgNode<OrgStruct> {
+  private handleKeyword(): OrgNode {
     if (this.blockHandler.isBlockKeyword(this.tokenIterator.currentValue)) {
       return this.blockHandler.handle();
     }
@@ -160,6 +174,14 @@ export function parse(text: string): OrgNode {
   const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
   const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
   const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
-  const parser = new Parser(ctx, tokenIterator, astBuilder, bracketHandler, listHandler, blockHandler, commentHandler);
+  const parser = new Parser(
+    ctx,
+    tokenIterator,
+    astBuilder,
+    bracketHandler,
+    listHandler,
+    blockHandler,
+    commentHandler
+  );
   return parser.parse();
 }

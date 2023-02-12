@@ -1,28 +1,27 @@
 import { OrgNode } from 'org-node';
-import { List, ListItem, Indent, Keyword } from 'types';
 
 export class AstContext {
-  #nextIndentNode: OrgNode<Indent>;
-  #nestedLists: OrgNode<List>[] = [];
+  #nextIndentNode: OrgNode;
+  #nestedLists: OrgNode[] = [];
 
   public insideHeadline: boolean = null;
   public insideListItem = false;
 
-  public srcBlockBegin: OrgNode<Keyword> = null;
-  public srcBlockChildIndex: number = null;
+  // TODO: master move to block handler
+  public srcBlockBegin: OrgNode = null;
 
-  get lastParentList(): OrgNode<List> {
+  get lastParentList(): OrgNode {
     if (!this.#nestedLists.length) {
       return null;
     }
     return this.#nestedLists[this.#nestedLists.length - 1];
   }
 
-  get lastListItem(): OrgNode<ListItem> {
-    return this.#nestedLists[this.#nestedLists.length - 1]?.children?.[0] as OrgNode<ListItem>;
+  get lastListItem(): OrgNode {
+    return this.#nestedLists[this.#nestedLists.length - 1]?.children?.[0];
   }
 
-  get lastList(): OrgNode<List> {
+  get lastList(): OrgNode {
     return this.#nestedLists[this.#nestedLists.length - 1];
   }
 
@@ -30,24 +29,26 @@ export class AstContext {
     return (this.#nextIndentNode?.value.length || 0) / 2;
   }
 
-  get nextIndentNode(): OrgNode<Indent> {
+  get nextIndentNode(): OrgNode {
     return this.#nextIndentNode;
   }
 
-  set nextIndentNode(node: OrgNode<Indent>) {
+  set nextIndentNode(node: OrgNode) {
     this.#nextIndentNode = node;
   }
 
-  get nestedLists(): OrgNode<List>[] {
+  get nestedLists(): OrgNode[] {
     return this.#nestedLists;
   }
 
-  get topLevelList(): OrgNode<List> {
+  get topLevelList(): OrgNode {
     return this.#nestedLists[0];
   }
 
-  public setupNewParentListByLevel(): OrgNode<List> {
-    this.#nestedLists = this.#nestedLists.filter((l) => l.level <= this.listLevel);
+  public setupNewParentListByLevel(): OrgNode {
+    this.#nestedLists = this.#nestedLists.filter(
+      (l) => l.level <= this.listLevel
+    );
     return this.lastList;
   }
 
@@ -55,7 +56,7 @@ export class AstContext {
     this.#nextIndentNode = null;
   }
 
-  public addNestedList(listNode: OrgNode<List>): void {
+  public addNestedList(listNode: OrgNode): void {
     this.#nestedLists.push(listNode);
   }
 
@@ -69,6 +70,5 @@ export class AstContext {
 
   public resetSrcBlockInfo(): void {
     this.srcBlockBegin = null;
-    this.srcBlockChildIndex = null;
   }
 }

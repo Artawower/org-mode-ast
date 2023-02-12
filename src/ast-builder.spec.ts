@@ -2,7 +2,7 @@ import { AstBuilder } from './ast-builder';
 import { AstContext } from './ast-context';
 import { NodeType } from './types';
 import { OrgNode } from './org-node';
-import { prettyTreePrint } from './tools';
+import { OrgChildrenList } from './org-children-list';
 
 describe('AST builder tests', () => {
   let builder: AstBuilder;
@@ -88,72 +88,76 @@ describe('AST builder tests', () => {
   });
 
   it('Should correct determine empty checkbox operator', () => {
-    expect(
-      builder.isNodesCheckbox([
-        {
-          type: NodeType.Text,
-          value: '[',
-        },
-        {
-          type: NodeType.Text,
-          value: ' ',
-        },
-        {
-          type: NodeType.Text,
-          value: ']',
-        },
-      ] as any)
-    ).toBe(true);
-    expect(
-      builder.isNodesCheckbox([
-        {
-          type: NodeType.Text,
-          value: '[',
-        },
-        {
-          type: NodeType.Text,
-          value: 'x',
-        },
-        {
-          type: NodeType.Text,
-          value: ']',
-        },
-      ] as any)
-    ).toBe(true);
+    const checkboxList = new OrgChildrenList();
+    checkboxList.append(
+      new OrgNode({
+        type: NodeType.Text,
+        value: '[',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: ' ',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: ']',
+      })
+    );
+    expect(builder.isNodesCheckbox(checkboxList)).toBe(true);
 
-    expect(
-      builder.isNodesCheckbox([
-        {
-          type: NodeType.Text,
-          value: '[',
-        },
-        {
-          type: NodeType.Text,
-          value: 'X',
-        },
-        {
-          type: NodeType.Text,
-          value: ']',
-        },
-      ] as any)
-    ).toBe(true);
+    checkboxList.clear();
 
-    expect(
-      builder.isNodesCheckbox([
-        {
-          type: NodeType.Text,
-          value: '[',
-        },
-        {
-          type: NodeType.Text,
-          value: '-',
-        },
-        {
-          type: NodeType.Text,
-          value: ']',
-        },
-      ] as any)
-    ).toBe(true);
+    checkboxList.append(
+      new OrgNode({
+        type: NodeType.Text,
+        value: '[',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: 'x',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: ']',
+      })
+    );
+
+    expect(builder.isNodesCheckbox(checkboxList)).toBe(true);
+
+    checkboxList.clear();
+    checkboxList.append(
+      new OrgNode({
+        type: NodeType.Text,
+        value: '[',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: 'X',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: ']',
+      })
+    );
+    expect(builder.isNodesCheckbox(checkboxList)).toBe(true);
+
+    checkboxList.clear();
+    checkboxList.append(
+      new OrgNode({
+        type: NodeType.Text,
+        value: '[',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: '-',
+      }),
+      new OrgNode({
+        type: NodeType.Text,
+        value: ']',
+      })
+    );
+
+    expect(builder.isNodesCheckbox(checkboxList)).toBe(true);
   });
 
   it('Should not determine empty checkbox operator', () => {
@@ -234,33 +238,30 @@ describe('AST builder tests', () => {
     ).toBe(false);
   });
 
-  fit('Should merge neighbors nodes with same types', () => {
+  it('Should merge neighbors nodes with same types', () => {
     const firstNode = new OrgNode({
       type: NodeType.Text,
       value: 'Hello',
-      start: 0,
-      end: 5,
     });
     const secondNode = new OrgNode({
       type: NodeType.Unresolved,
       value: ' World',
-      start: 5,
-      end: 11,
     });
-    firstNode.setNext(secondNode);
-    secondNode.setPrev(firstNode);
 
     const thirdNode = new OrgNode({
       type: NodeType.Text,
       value: '!',
-      start: 11,
-      end: 12,
     });
-    secondNode.setNext(thirdNode);
-    thirdNode.setPrev(secondNode);
+
+    const orgNodeRoot = new OrgNode({
+      type: NodeType.Root,
+    });
+
+    orgNodeRoot.addChildren([firstNode, secondNode, thirdNode]);
 
     builder.mergeNeighborsNodesWithSameType(firstNode);
-    expect(prettyTreePrint(firstNode)).toMatchInlineSnapshot(`
+
+    expect(orgNodeRoot.children.first.toString()).toMatchInlineSnapshot(`
       "text [0-12] ("Hello World!")
       "
     `);

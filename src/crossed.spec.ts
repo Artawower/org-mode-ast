@@ -38,12 +38,13 @@ describe('Crossed tests', () => {
       "root [0-15]
         headline [0-15]
             :level 1:
-          operator [0-2] ("* ")
-          text [2-8] ("Hello ")
-          crossed [8-15]
-            operator [8-9] ("+")
-            text [9-14] ("world")
-            operator [14-15] ("+")
+          title [0-15]
+            operator [0-2] ("* ")
+            text [2-8] ("Hello ")
+            crossed [8-15]
+              operator [8-9] ("+")
+              text [9-14] ("world")
+              operator [14-15] ("+")
       "
     `);
   });
