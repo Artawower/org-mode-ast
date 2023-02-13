@@ -1,9 +1,12 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Bold test', () => {
   it('Should parse nested text formatters', () => {
-    const orgData = '* Hello +*world*+';
-    const result = parse(orgData);
+    const orgDoc = '* Hello +*world*+';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]
         headline [0-17]
@@ -23,8 +26,10 @@ describe('Bold test', () => {
   });
 
   it('Should parse multiple opened brackets with text as simple text', () => {
-    const orgData = 'Hello [<+*-_world';
-    const result = parse(orgData);
+    const orgDoc = 'Hello [<+*-_world';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]
         text [0-17] ("Hello [<+*-_world")
@@ -33,9 +38,10 @@ describe('Bold test', () => {
   });
 
   it('Should parse nested formatted text', () => {
-    const orgData = '*Hello +big /world/+*';
-    const result = parse(orgData);
+    const orgDoc = '*Hello +big /world/+*';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-21]
         bold [0-21]

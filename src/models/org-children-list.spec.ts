@@ -27,8 +27,8 @@ describe('Org children', () => {
     children.push(firstOrgNode);
     children.push(secondOrgNode);
     expect(children.length).toBe(2);
-    expect(children.get(0).toString()).toBe(firstOrgNode.toString());
-    expect(children.get(1).toString()).toBe(secondOrgNode.toString());
+    expect(children.get(0)?.toString()).toBe(firstOrgNode.toString());
+    expect(children.get(1)?.toString()).toBe(secondOrgNode.toString());
   });
 
   it('Should correct implement spread operator', () => {

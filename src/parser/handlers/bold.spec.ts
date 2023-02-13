@@ -1,10 +1,13 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Bold test', () => {
   it('Should not parse text as bold with single asterisk', () => {
-    const headline = 'Hello *world';
-    const result = parse(headline);
-    // console.log('✎: [line 9][bold.spec.ts] result: ', result);
+    const orgDoc = 'Hello *world';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-12]
         text [0-12] ("Hello *world")
@@ -13,8 +16,11 @@ describe('Bold test', () => {
   });
 
   it('Should not parse bold text started from single asterisk', () => {
-    const orgText = '*Not a bold text';
-    const result = parse(orgText);
+    const orgDoc = '*Not a bold text';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-16]
         text [0-16] ("*Not a bold text")
@@ -23,8 +29,10 @@ describe('Bold test', () => {
   });
 
   it('Should not parse text as bold with asterisk at the end', () => {
-    const headline = 'Hello world*';
-    const result = parse(headline);
+    const orgDoc = 'Hello world*';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-12]
@@ -34,8 +42,10 @@ describe('Bold test', () => {
   });
 
   it('Should not parse text as bold with another bracket symbols', () => {
-    const headline = 'Hello *+[world';
-    const result = parse(headline);
+    const orgDoc = 'Hello *+[world';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-14]
@@ -45,12 +55,11 @@ describe('Bold test', () => {
   });
 
   it('should parse bold text', () => {
-    const orgData = '*Hello world*';
-    const result = parse(orgData);
-    console.log(
-      '✎: [line 60][bold.spec.ts] result.toString(): ',
-      result.toString()
-    );
+    const orgDoc = '*Hello world*';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-13]
         bold [0-13]
@@ -62,13 +71,11 @@ describe('Bold test', () => {
   });
 
   it('Should parse bold text with intersection of other pair tokens', () => {
-    const orgData = '*Hello +world*';
-    const result = parse(orgData);
+    const orgDoc = '*Hello +world*';
+    const result = parse(orgDoc);
 
-    console.log(
-      '✎: [line 75][bold.spec.ts] result.toString(): ',
-      result.toString()
-    );
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-14]
         bold [0-14]
@@ -80,9 +87,10 @@ describe('Bold test', () => {
   });
 
   it('Should parse bold text from headline', () => {
-    const orgData = '* Hello *world*';
-    const result = parse(orgData);
-    // console.log('✎: [line 79][bold.spec.ts] result: ', result.toString());
+    const orgDoc = '* Hello *world*';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-15]
@@ -100,13 +108,10 @@ describe('Bold test', () => {
   });
 
   it('Should parse bold text inside nested headline', () => {
-    const orgData = `* Hello world
+    const orgDoc = `* Hello world
 ** Hello *world*`;
-    const result = parse(orgData);
-    console.log(
-      '✎: [line 118][bold.spec.ts] result.toString(): ',
-      result.toString()
-    );
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-30]
         headline [0-30]
@@ -130,9 +135,10 @@ describe('Bold test', () => {
   });
 
   it('Should parse bold with that started from brackets symbols', () => {
-    const orgData = `* Hello +[*world*`;
-    const result = parse(orgData);
-    // console.log('✎: [line 120][bold.spec.ts] result: ', result);
+    const orgDoc = `* Hello +[*world*`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]

@@ -1,13 +1,15 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Org src block test', () => {
   it('Should parse simple src block', () => {
-    const orgData = `#+BEGIN_SRC
+    const orgDoc = `#+BEGIN_SRC
 print('Hello world')
 #+END_SRC`;
-    const result = parse(orgData);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-42]
         srcBlock [0-42]
@@ -24,11 +26,11 @@ print('Hello world')
   });
 
   it('Should parse simple src block with empty body', () => {
-    const orgData = `#+BEGIN_SRC
+    const orgDoc = `#+BEGIN_SRC
 #+END_SRC`;
-    const result = parse(orgData);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-21]
         srcBlock [0-21]
@@ -42,11 +44,11 @@ print('Hello world')
   });
 
   it('Should parse simple src block with language and additional properties', () => {
-    const orgData = `#+BEGIN_SRC python :tangle test.py
+    const orgDoc = `#+BEGIN_SRC python :tangle test.py
 #+END_SRC`;
-    const result = parse(orgData);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-44]
         srcBlock [0-44]
@@ -68,11 +70,12 @@ print('Hello world')
   });
 
   it('Should not parse html block', () => {
-    const orgData = `#+BEGIN_SRC
+    const orgDoc = `#+BEGIN_SRC
 Some text without end src`;
-    const result = parse(orgData);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-37]
         keyword [0-11] ("#+BEGIN_SRC")

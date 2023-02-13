@@ -1,9 +1,12 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Comment', () => {
   it('Should parse simple comment', () => {
-    const orgComment = `# I'am comment!`;
-    const result = parse(orgComment);
+    const orgDoc = `# I'am comment!`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-15]
@@ -15,8 +18,10 @@ describe('Comment', () => {
   });
 
   it('Should parse comment started with spaces', () => {
-    const orgComment = `    # I'am comment!`;
-    const result = parse(orgComment);
+    const orgDoc = `    # I'am comment!`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-19]
@@ -29,8 +34,10 @@ describe('Comment', () => {
   });
 
   it('Should not parse comment without any spaces', () => {
-    const orgComment = `#I am not a comment!`;
-    const result = parse(orgComment);
+    const orgDoc = `#I am not a comment!`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-20]
         text [0-20] ("#I am not a comment!")
@@ -39,8 +46,9 @@ describe('Comment', () => {
   });
 
   it('Should not parse comment with single # symbol', () => {
-    const orgComment = `#`;
-    const result = parse(orgComment);
+    const orgDoc = `#`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-1]
         text [0-1] ("#")
@@ -49,8 +57,9 @@ describe('Comment', () => {
   });
 
   it('Should not parse comment at the center of the line', () => {
-    const orgComment = `I am not a # comment!`;
-    const result = parse(orgComment);
+    const orgDoc = `I am not a # comment!`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-21]
         text [0-21] ("I am not a # comment!")
@@ -59,8 +68,9 @@ describe('Comment', () => {
   });
 
   it('Should not parse comment when # placed at the end', () => {
-    const orgComment = `I am not a comment!#`;
-    const result = parse(orgComment);
+    const orgDoc = `I am not a comment!#`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-20]
         text [0-20] ("I am not a comment!#")

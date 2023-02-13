@@ -1,13 +1,15 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('List tests', () => {
   it('Should parse simple list', () => {
-    const orgData = `- Item 1
+    const orgDoc = `- Item 1
 - Item 2
 - Item 3`;
 
-    const result = parse(orgData);
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-26]
         list [0-26]
@@ -32,12 +34,13 @@ describe('List tests', () => {
   });
 
   it('Should parse list with nested nodes', () => {
-    const orgText = `- *Item 1*
+    const orgDoc = `- *Item 1*
 - +Item 2+
 - /Item 3/`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-32]
         list [0-32]
@@ -71,12 +74,12 @@ describe('List tests', () => {
   });
 
   it('Should parse list with section', () => {
-    const orgText = `- Item 1
+    const orgDoc = `- Item 1
  I'am subgroup with *bold* text
 - Item 2`;
-    const result = parse(orgText);
-    console.log(result.toString());
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-49]
         list [0-49]
@@ -105,12 +108,12 @@ describe('List tests', () => {
   });
 
   it('Should parse list with single section item', () => {
-    const orgText = `- Item 1
+    const orgDoc = `- Item 1
  Some nested text`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
-    // console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-26]
         list [0-26]
@@ -129,16 +132,18 @@ describe('List tests', () => {
   });
 
   it('Should parse list with section and nested multiple nodes', () => {
-    const orgText = `- Item 1
+    const orgDoc = `- Item 1
  Some nested text
  End another one text
 - Item 2
 This text will end list
 - New item 1 of second list`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
     console.log(result.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-109]
         list [0-58]
@@ -175,10 +180,11 @@ This text will end list
   });
 
   it('Should parse list with plus items', () => {
-    const orgText = `+ Item 1
+    const orgDoc = `+ Item 1
 + Item 2`;
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]
         list [0-17]
@@ -198,13 +204,13 @@ This text will end list
   });
 
   it('Should parse list with nested nodes', () => {
-    const orgText = `+ *Item 1*
+    const orgDoc = `+ *Item 1*
 + +Item 2+
 + /Item 3/`;
 
-    const result = parse(orgText);
-    console.log('✎: [line 187][list.spec.ts] result: ', result.toString());
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-32]
         list [0-32]
@@ -238,17 +244,13 @@ This text will end list
   });
 
   it('Should parse nested lists', () => {
-    const orgText = `- item 1 level 1
+    const orgDoc = `- item 1 level 1
   - item 1 level 2
   - item 2 level 2
 - item 2 level 1`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
-    // console.log(JSON.stringify(result, null, 2));
-    // console.log(result.toString());
-
-    // Experemental test flow for nice pretty print ;)
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-71]
         list [0-71]
@@ -284,13 +286,13 @@ This text will end list
   });
 
   it('Should parse ordered list', () => {
-    const orgText = `1. Item 1
+    const orgDoc = `1. Item 1
 2. Item 2
 3. Item 3`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-29]
         list [0-29]
@@ -315,13 +317,13 @@ This text will end list
   });
 
   it('Should parse ordered list with parenthesis list item', () => {
-    const orgText = `1) Item 1
+    const orgDoc = `1) Item 1
 2) Item 2
 3) Item 3`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-29]
         list [0-29]
@@ -346,14 +348,14 @@ This text will end list
   });
 
   it('Should parse nested ordered list with parenthesis list items', () => {
-    const orgText = `1) Item 1
+    const orgDoc = `1) Item 1
   1) Nested item 1
   2) Nested item 2
 2) Item 2`;
 
-    const result = parse(orgText);
+    const result = parse(orgDoc);
 
-    console.log(result.toString());
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-57]
         list [0-57]

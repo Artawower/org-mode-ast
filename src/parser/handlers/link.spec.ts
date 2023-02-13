@@ -1,10 +1,12 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Link test', () => {
   it('Should parse simple link', () => {
-    const orgData = `[[https://google.com][Google]]`;
-    const result = parse(orgData);
+    const orgDoc = `[[https://google.com][Google]]`;
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-30]
         link [0-30]
@@ -23,9 +25,10 @@ describe('Link test', () => {
   });
 
   it('Should parse link without name', () => {
-    const orgData = `[[https://google.com]]`;
-    const result = parse(orgData);
+    const orgDoc = `[[https://google.com]]`;
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-22]
         link [0-22]
@@ -40,9 +43,10 @@ describe('Link test', () => {
   });
 
   it('Should parse few links', () => {
-    const orgData = `[[https://google.com][Google]] [[https://google.com][Google]]`;
-    const result = parse(orgData);
+    const orgDoc = `[[https://google.com][Google]] [[https://google.com][Google]]`;
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-61]
         link [0-30]
@@ -73,9 +77,10 @@ describe('Link test', () => {
   });
 
   it('Should parse link inside nested structure in center of text', () => {
-    const orgData = `Some +*text* [[https://google.com][Google]]+ some text`;
-    const result = parse(orgData);
+    const orgDoc = `Some +*text* [[https://google.com][Google]]+ some text`;
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-54]
         text [0-5] ("Some ")
@@ -104,12 +109,10 @@ describe('Link test', () => {
   });
 
   it('Should parse link between other structures', () => {
-    const orgData = `Some *bold text* and +crossed text+ [[https://google.com][Google]] ~some code~`;
-    const result = parse(orgData);
+    const orgDoc = `Some *bold text* and +crossed text+ [[https://google.com][Google]] ~some code~`;
+    const result = parse(orgDoc);
 
-    console.log('✎: [line 108][link.spec.ts] result: ', result.toString());
-    console.log('---'.repeat(10));
-
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-78]
         text [0-5] ("Some ")

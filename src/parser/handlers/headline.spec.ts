@@ -45,9 +45,9 @@ describe('Headline tests', () => {
   });
 
   it('Should parse nested section for headline', () => {
-    const orgData = `* Title
+    const orgDoc = `* Title
 some text`;
-    const result = parse(orgData);
+    const result = parse(orgDoc);
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]

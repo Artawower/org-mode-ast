@@ -1,10 +1,12 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Crossed tests', () => {
   it('Should parse crossed text with crossed tokens', () => {
-    const orgData = `+Crossed text+`;
-    const result = parse(orgData);
+    const orgDoc = `+Crossed text+`;
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-14]
         crossed [0-14]
@@ -16,9 +18,10 @@ describe('Crossed tests', () => {
   });
 
   it('Should not parse text as crossed when it starts from single plus', () => {
-    const orgText = '+Not a crossed text';
-    const result = parse(orgText);
+    const orgDoc = '+Not a crossed text';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-19]
         text [0-19] ("+Not a crossed text")
@@ -27,8 +30,10 @@ describe('Crossed tests', () => {
   });
 
   it('Should parse crossed text inside headline', () => {
-    const orgData = `* Hello +world+`;
-    const result = parse(orgData);
+    const orgDoc = `* Hello +world+`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-15]

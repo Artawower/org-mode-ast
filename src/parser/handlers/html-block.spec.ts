@@ -50,7 +50,7 @@ describe('Html block', () => {
 #+END_HTML`;
 
     const result = parse(orgDoc);
-    result.children.first.children.first.children.first.children.first.end = 10;
+
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-381]

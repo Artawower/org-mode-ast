@@ -1,9 +1,12 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Date', () => {
   it('Should parse inactive date', () => {
     const orgDoc = `Need to buy new mechanical keyboard [2023-01-15 Sun]`;
     const result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-52]
@@ -20,6 +23,7 @@ describe('Date', () => {
     const orgDoc = `Meeting at 2pm on 2022-12-25 [2022-12-25 Sun 14:00]`;
     const result = parse(orgDoc.toString());
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-51]
         text [0-29] ("Meeting at 2pm on 2022-12-25 ")
@@ -34,6 +38,8 @@ describe('Date', () => {
   it('Should not parse date without brackets', () => {
     const orgDoc = `Meeting at 2pm on 2022-12-25 2022-12-25 Sun 14:00`;
     const result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-49]
         text [0-49] ("Meeting at 2pm on 2022-12-25 2022-12-25 Sun 14:00")
@@ -45,6 +51,7 @@ describe('Date', () => {
     const orgDoc = `*Meeting at 2pm on 2022-12-25 [2022-12-25 Sun 14:00]*`;
     const result = parse(orgDoc.toString());
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-53]
         bold [0-53]
@@ -63,6 +70,7 @@ describe('Date', () => {
     const orgDoc = `*[2022-12-25 Sun 14:00] Meeting at 2pm on 2022-12-25*`;
     const result = parse(orgDoc.toString());
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-53]
         bold [0-53]
@@ -80,7 +88,8 @@ describe('Date', () => {
   it('Should parse active date', () => {
     const orgDoc = `<2023-01-09 Mon>`;
     const result = parse(orgDoc.toString());
-    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-16]
         date [0-16]
@@ -94,7 +103,8 @@ describe('Date', () => {
   it('Should parse active date with time', () => {
     const orgDoc = `<2023-01-09 Mon 14:00>`;
     const result = parse(orgDoc.toString());
-    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-22]
         date [0-22]
@@ -108,7 +118,8 @@ describe('Date', () => {
   it('Should parse date and time in center of text', () => {
     const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00>. Don't forget to attend.`;
     const result = parse(orgDoc.toString());
-    console.log('✎: [line 644][tokenizer.spec.ts] result: ', result.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-81]
         text [0-34] ("This is a reminder for meeting on ")
@@ -124,6 +135,8 @@ describe('Date', () => {
   it('Should parse inactive date inside bold and crossed text', () => {
     const orgDoc = `*This is a reminder for meeting on +[2023-01-09 Mon 14:00]+. Don't forget to attend.*`;
     const result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-85]
         bold [0-85]
@@ -145,6 +158,8 @@ describe('Date', () => {
   it('Should not parse date time without brackets', () => {
     const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.`;
     const result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-80]
         text [0-80] ("This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.")
@@ -157,6 +172,8 @@ describe('Date', () => {
   <p>Some text</p>
 </div>`;
     const result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-31]
         text [0-5] ("<div>")
@@ -172,6 +189,8 @@ describe('Date', () => {
   it('Should parse brackets between triangle brackets', () => {
     const orgDoc = `<I'am not a date, but i have nested formatting =lululu= =)>`,
       result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-59]
         text [0-47] ("<I'am not a date, but i have nested formatting ")
@@ -187,6 +206,8 @@ describe('Date', () => {
   it('Should parse smile as text', () => {
     const orgDoc = `<=)>`,
       result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-4]
         text [0-4] ("<=)>")

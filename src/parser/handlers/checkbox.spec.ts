@@ -1,9 +1,12 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
 describe('Checkbox tests', () => {
   it('Should parse checkboxed headline', () => {
-    const orgData = `* [ ] Hello world`;
-    const result = parse(orgData);
+    const orgDoc = `* [ ] Hello world`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]
@@ -22,8 +25,10 @@ describe('Checkbox tests', () => {
   });
 
   it('Should parse checked checkboxed headline', () => {
-    const orgData = `* [X] Hello world`;
-    const result = parse(orgData);
+    const orgDoc = `* [X] Hello world`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]
@@ -42,8 +47,10 @@ describe('Checkbox tests', () => {
   });
 
   it('Should parse checked checkboxed headline with nested bold text', () => {
-    const orgData = `* [X] Hello *world*`;
-    const result = parse(orgData);
+    const orgDoc = `* [X] Hello *world*`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-19]

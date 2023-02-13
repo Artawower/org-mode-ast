@@ -1,10 +1,13 @@
 import { parse } from '../parser';
+import { hasNodeIncorrectRanges } from '../../test-helper';
 
+// TODO: rename to verbatim
 describe('InlineCode', () => {
   it('Should parse inline code', () => {
-    const orgText = '=console.log(123)=';
-    const result = parse(orgText);
+    const orgDoc = '=console.log(123)=';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-18]
         inlineCode [0-18]
@@ -16,9 +19,10 @@ describe('InlineCode', () => {
   });
 
   it('Should not parse incline code that started from equal operator', () => {
-    const orgText = '=console.log(123)';
-    const result = parse(orgText);
+    const orgDoc = '=console.log(123)';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-17]
         text [0-17] ("=console.log(123)")
@@ -27,9 +31,10 @@ describe('InlineCode', () => {
   });
 
   it('Should not parse incline code that contain equal operator at the middle', () => {
-    const orgText = 'a = 12';
-    const result = parse(orgText);
+    const orgDoc = 'a = 12';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-6]
         text [0-6] ("a = 12")
@@ -38,9 +43,10 @@ describe('InlineCode', () => {
   });
 
   it('Should not parse incline code that contain equal operator at the end', () => {
-    const orgText = 'a =';
-    const result = parse(orgText);
+    const orgDoc = 'a =';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-3]
         text [0-3] ("a =")
@@ -49,9 +55,10 @@ describe('InlineCode', () => {
   });
 
   it('Should not parse nested formatters inside inline code', () => {
-    const orgText = '=*console.log(123)*=';
-    const result = parse(orgText);
+    const orgDoc = '=*console.log(123)*=';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-20]
         inlineCode [0-20]
@@ -63,9 +70,10 @@ describe('InlineCode', () => {
   });
 
   it('Should interpret equal operator as inline code inside nesting formatters', () => {
-    const orgText = '*=not inline code=*';
-    const result = parse(orgText);
+    const orgDoc = '*=not inline code=*';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-19]
         bold [0-19]
@@ -80,9 +88,10 @@ describe('InlineCode', () => {
   });
 
   it('Should parse inline code inside headline', () => {
-    const orgText = '* =console.log(123)=';
-    const result = parse(orgText);
+    const orgDoc = '* =console.log(123)=';
+    const result = parse(orgDoc);
 
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-20]
         headline [0-20]

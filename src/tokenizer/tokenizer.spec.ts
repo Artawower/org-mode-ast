@@ -352,10 +352,10 @@ Some text`;
 
   // Lists
   it('Should tokenize list values with dash', () => {
-    const orgData = `- [ ] List item
+    const orgDoc = `- [ ] List item
 - [ ] List item 2
 - [ ] List item 3`;
-    const result = tokenize(orgData);
+    const result = tokenize(orgDoc);
     expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '- ', start: 0, end: 2 },
       { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
@@ -378,8 +378,8 @@ Some text`;
   });
 
   it('Should tokenize the dash as text when the dash is not at the start position', () => {
-    const orgData = `Some text - with dash`;
-    const result = tokenize(orgData);
+    const orgDoc = `Some text - with dash`;
+    const result = tokenize(orgDoc);
     expect(tokenListToArray(result)).toEqual([
       {
         type: TokenType.Text,
@@ -684,7 +684,7 @@ console.log(a);
   });
 
   it('Should tokenize active date', () => {
-    const orgDatas = [
+    const orgDocs = [
       '<2023-01-09 Mon>',
       '<2023-01-10 Tue>',
       '<2023-01-11 Wed>',
@@ -693,8 +693,8 @@ console.log(a);
       '<2023-01-14 Sat>',
       '<2023-01-15 Sun>',
     ];
-    orgDatas.forEach((orgData) => {
-      const result = tokenListToArray(tokenize(orgData));
+    orgDocs.forEach((orgDoc) => {
+      const result = tokenListToArray(tokenize(orgDoc));
       console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
       expect(result).toEqual([
         { start: 0, end: 1, type: 'bracket', value: '<' },
@@ -702,7 +702,7 @@ console.log(a);
           start: 1,
           end: 15,
           type: 'text',
-          value: orgData.slice(1, orgData.length - 1),
+          value: orgDoc.slice(1, orgDoc.length - 1),
         },
         { start: 15, end: 16, type: 'bracket', value: '>' },
       ]);
@@ -723,7 +723,7 @@ console.log(a);
   });
 
   it('Should tokenize inactive timestamp', () => {
-    const orgDatas = [
+    const orgDocs = [
       '[2023-01-09 Mon]',
       '[2023-01-10 Tue]',
       '[2023-01-11 Wed]',
@@ -732,8 +732,8 @@ console.log(a);
       '[2023-01-14 Sat]',
       '[2023-01-15 Sun]',
     ];
-    orgDatas.forEach((orgData) => {
-      const result = tokenListToArray(tokenize(orgData));
+    orgDocs.forEach((orgDoc) => {
+      const result = tokenListToArray(tokenize(orgDoc));
       console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
       expect(result).toEqual([
         { start: 0, end: 1, type: 'bracket', value: '[' },
@@ -741,7 +741,7 @@ console.log(a);
           start: 1,
           end: 15,
           type: 'text',
-          value: orgData.slice(1, orgData.length - 1),
+          value: orgDoc.slice(1, orgDoc.length - 1),
         },
         { start: 15, end: 16, type: 'bracket', value: ']' },
       ]);
