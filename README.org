@@ -24,23 +24,23 @@
 
 * Why is there another org-mode parser?
 
-Firstly, when i started building the org roam web implementation i faced with one big problem, there are no parsers which could satisfy all requirements that i need
+Firstly, when I started building the org roam web implementation I faced one big problem, there are no parsers that could satisfy all requirements that I need
 
-Also, i figured out implementation a bit, and found that these very complex solutions, most of the time based on regexp, which are not good for parsing and readability, and also have poor performance.
+Also, I figured out the implementation a bit and found that these very complex solutions, most of the time based on regexp, are not good for parsing and readability, and also have poor performance.
 
-This project completely ignore implementation from emacs data tree, cause i have been developing this code for my own purposes. I wanted to control every node and property which i have in my tree. Moreover, i wanted to have idempotency with converting from AST to text and vise versa. Right now, many parsers losing some characters, like newlines or extra spaces.
+This project completely ignores implementation from the emacs data tree, cause I have been developing this code for my purposes. I wanted to control every node and property which I have in my tree. Moreover, I wanted to have idempotency with converting from AST to text and vice versa. Right now, many parsers losing some characters, like newlines or extra spaces.
 
-Of this requirements i want the following from this parser:
-1. Full testing all possible nodes.
+Of these requirements I want the following from this parser:
+1. Full testing of all possible nodes.
 2. Development according to the TDD principles.
 3. Easy to read.
-4. There are small handlers for each node types
-5. The structure of tree is very similar to visible result (including nested folding)
-6. Each element of the tree has own range with begin and end positions.
+4. There are small handlers for each node type
+5. The structure of the tree is very similar to the visible result (including nested folding)
+6. Each element of the tree has its own range with beginning and end positions.
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [11/19]
+** Org nodes [11/20]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [ ] List Progress
@@ -52,6 +52,7 @@ Of this requirements i want the following from this parser:
 - [X] Src blocs
 - [ ] Latex blocks
 - [X] Html/quotes blocks
+- [ ] Verbatim 
 - [ ] Inline HTML
 - [ ] Html attributes
 - [X] Comments
