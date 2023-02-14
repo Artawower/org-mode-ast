@@ -216,12 +216,15 @@ export class BracketHandler implements OrgHandler {
   }
 
   private removeFormattingInsideInlineCode(orgNode: OrgNode): void {
-    const isInlineCode = orgNode.is(NodeType.InlineCode);
+    const isBlockHasRawText = orgNode.is(
+      NodeType.InlineCode,
+      NodeType.Verbatim
+    );
     const hasExtraChild =
       orgNode.children.length !== 1 ||
       !orgNode.children?.get(1)?.is(NodeType.Text);
 
-    if (!isInlineCode || !hasExtraChild) {
+    if (!isBlockHasRawText || !hasExtraChild) {
       return;
     }
 
