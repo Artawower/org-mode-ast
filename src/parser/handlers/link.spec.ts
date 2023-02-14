@@ -137,7 +137,11 @@ describe('Link test', () => {
             text [58-64] ("Google")
             operator [64-65] ("]")
           operator [65-66] ("]")
-        text [66-78] (" ~some code~")
+        text [66-67] (" ")
+        inlineCode [67-78]
+          operator [67-68] ("~")
+          text [68-77] ("some code")
+          operator [77-78] ("~")
       "
     `);
   });

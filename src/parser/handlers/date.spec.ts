@@ -194,7 +194,7 @@ describe('Date', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-59]
         text [0-47] ("<I'am not a date, but i have nested formatting ")
-        inlineCode [47-55]
+        verbatim [47-55]
           operator [47-48] ("=")
           text [48-54] ("lululu")
           operator [54-55] ("=")
