@@ -15,12 +15,14 @@ export class BracketHandler implements OrgHandler {
       | NodeType.Bold
       | NodeType.Crossed
       | NodeType.Italic
-      | NodeType.InlineCode;
+      | NodeType.InlineCode
+      | NodeType.Verbatim;
   } = {
     '*': NodeType.Bold,
     '/': NodeType.Italic,
     '+': NodeType.Crossed,
-    '=': NodeType.InlineCode,
+    '=': NodeType.Verbatim,
+    '~': NodeType.InlineCode,
   };
 
   // NOTE: https://regex101.com/r/IPfgId/1

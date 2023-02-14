@@ -864,4 +864,16 @@ console.log(a);
       { start: 45, end: 55, type: 'keyword', value: '#+END_HTML' },
     ]);
   });
+
+  it('Should tokenize inline code', () => {
+    const orgDoc = `This is a code block: ~code~`;
+    const result = tokenListToArray(tokenize(orgDoc));
+    console.log('✎: [line 689][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 22, type: 'text', value: 'This is a code block: ' },
+      { start: 22, end: 23, type: 'bracket', value: '~' },
+      { start: 23, end: 27, type: 'text', value: 'code' },
+      { start: 27, end: 28, type: 'bracket', value: '~' },
+    ]);
+  });
 });

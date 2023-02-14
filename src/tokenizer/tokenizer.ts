@@ -3,7 +3,7 @@ import { ParserConfiguration, RawToken, Token, TokenType } from 'models';
 export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly pariBrackets = ['[', ']', '<', '>'];
-  private readonly formatterBrackets = ['=', '+', '/', '*'];
+  private readonly formatterBrackets = ['=', '+', '/', '*', '~'];
   private readonly brackets: string[] = [
     ...this.formatterBrackets,
     ...this.pariBrackets,

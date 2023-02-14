@@ -15,6 +15,7 @@ export enum NodeType {
   ListItem = 'listItem',
   Italic = 'italic',
   InlineCode = 'inlineCode',
+  Verbatim = 'verbatim',
   Indent = 'indent',
   NewLine = 'newLine',
   Comment = 'comment',
