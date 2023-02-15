@@ -40,35 +40,42 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [11/20]
+** Org nodes [13/22]
 - [X] Bold/italic/crossed out text
 - [X] Lists
-- [ ] List Progress
+- [X] List Progress
 - [X] Headlines
 - [X] Inline code
 - [X] Inline quotes
-- [ ] Tables
 - [X] Links
 - [X] Src blocs
 - [ ] Latex blocks
+- [ ] Keywords
 - [X] Html/quotes blocks
-- [ ] Verbatim 
+- [X] Verbatim
 - [ ] Inline HTML
 - [ ] Html attributes
 - [X] Comments
 - [ ] Properties
 - [X] Date and time
-- [ ] Keywords
-- [ ] Cross-links
 - [X] Tags
+- [ ] Tables
 
   Am I missing something? Please, let me know.
-** Common feature
+** Low priority features
+- [ ] Noweb support
+- [ ] Results block
+- [ ] Cross-links
+** Autoformates [0/3]
+- [ ] Auto-align tables
+- [ ] Calculate the progress of the list
+- [ ] Insert headline by level
+** Common feature [0/0]
 - [ ] Metadata collecting
 
 * Also see
   
-- [[https://github.com/rasendubi/uniorg][Uniorg - another one ast for org mode]] 
+- [[https://github.com/rasendubi/uniorg][Uniorg - another one AST for org mode]] 
 * Contribute
 
 #+html: <span class="badge-buymeacoffee">
@@ -79,4 +86,4 @@ Of these requirements I want the following from this parser:
 #+html: </span>
 
 
-Every help is greatly appreciated. 
+Any help is greatly appreciated. 
