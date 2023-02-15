@@ -1,9 +1,13 @@
 import { NodeType, OrgChildrenList, OrgHandler, OrgNode } from 'models';
 import { AstBuilder } from 'parser/ast-builder';
 import { TokenIterator } from 'tokenizer';
+import { isNumber } from 'tools';
 
 export class BracketHandler implements OrgHandler {
   private bracketsStack: OrgChildrenList = new OrgChildrenList();
+
+  // TODO: master add configuration object for parser
+  private readonly listProgressSeparator = '/';
 
   private readonly closedOpenedBrackets = {
     ']': '[',
@@ -105,6 +109,7 @@ export class BracketHandler implements OrgHandler {
     this.handleChecboxBrackets.bind(this),
     this.handleDateBrackets.bind(this),
     this.handleLinkBrackets.bind(this),
+    this.handleListProgressBrackets.bind(this),
     this.handleFormatBrackets.bind(this),
   ];
 
@@ -162,6 +167,29 @@ export class BracketHandler implements OrgHandler {
 
     const orgLinkNode = this.astBuilder.createLinkNode();
     return orgLinkNode;
+  }
+
+  private handleListProgressBrackets(bracketedNodes: OrgChildrenList): OrgNode {
+    if (bracketedNodes.length !== 5) {
+      return;
+    }
+    const isOpenedProgressBracket = bracketedNodes.first.value === '[';
+    const isClosedProgressBracket = bracketedNodes.last.value === ']';
+    const hasDoneProgress = isNumber(bracketedNodes.get(1).value);
+    const hasSeporator =
+      bracketedNodes.get(2).value === this.listProgressSeparator;
+    const hasDealProgress = isNumber(bracketedNodes.get(3).value);
+
+    const isProgressBrackets =
+      isOpenedProgressBracket &&
+      isClosedProgressBracket &&
+      hasDoneProgress &&
+      hasSeporator &&
+      hasDealProgress;
+
+    if (isProgressBrackets) {
+      return this.astBuilder.createProgressNode();
+    }
   }
 
   private handleFormatBrackets(bracketedNodes: OrgChildrenList): OrgNode {

@@ -22,6 +22,7 @@ export enum NodeType {
   Date = 'date',
   DateRange = 'dateRange',
   SrcBlock = 'srcBlock',
+  Progress = 'progress',
 
   BlockHeader = 'blockHeader',
   BlockProperty = 'blockProperty',

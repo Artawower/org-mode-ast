@@ -480,6 +480,12 @@ export class AstBuilder {
     return this.createBlockSubNode(NodeType.BlockHeader, children);
   }
 
+  public createProgressNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.Progress,
+    });
+  }
+
   public createBlockFooterNode(
     children?: OrgChildrenList | OrgNode[]
   ): OrgNode {
