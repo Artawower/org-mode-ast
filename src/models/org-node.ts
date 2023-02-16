@@ -110,8 +110,14 @@ export class OrgNode {
     this.#next = next;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setProperties(properties: { [key: string]: any }) {
     this.#properties = properties;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public mergeProperties(properties: { [key: string]: any }) {
+    this.#properties = { ...(this.#properties ?? {}), ...properties };
   }
 
   private validateAddedChild(child: OrgNode): void {
@@ -144,6 +150,7 @@ export class OrgNode {
     if (subtreeLength) {
       child.recalculateForEachNestedNodes(subtreeLength);
     }
+    child.calculateNodeProperties();
     return child;
   }
 
@@ -220,6 +227,36 @@ export class OrgNode {
       currentNode.children?.first?.recalculateForEachNestedNodes(diff);
       currentNode = currentNode.next;
     }
+  }
+
+  /**
+   * Go through all children and update meta information about current nodes.
+   * Including properties, list counter, etc
+   */
+  public calculateNodeProperties(): void {
+    const collectedProperties = {};
+    if (this.is(NodeType.PropertyDrawer)) {
+      this.children?.forEach((child: OrgNode) => {
+        if (child.is(NodeType.Property) && child.children?.length > 1) {
+          const key = child.children.first.value.replaceAll(':', '');
+          const value = child.children?.last.value;
+          collectedProperties[key.toLowerCase()] = value;
+        }
+      });
+
+      const nodeWithProperties = this.findParent(
+        NodeType.Headline,
+        NodeType.Root
+      );
+      nodeWithProperties.mergeProperties(collectedProperties);
+    }
+  }
+
+  public findParent(...parentType: NodeType[]): OrgNode {
+    if (this.is(...parentType)) {
+      return this;
+    }
+    return this.parent.findParent(...parentType);
   }
 
   private recalculatePositionsForNeighbors(diff: number): void {

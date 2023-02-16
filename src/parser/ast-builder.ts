@@ -56,8 +56,8 @@ export class AstBuilder {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private isNotListIndentInsideSection(
-    srcNode: OrgStruct,
-    _dstNode: OrgStruct
+    srcNode: OrgNode,
+    _dstNode: OrgNode
   ): OrgNode {
     if (
       srcNode.type === NodeType.Indent &&
@@ -77,9 +77,9 @@ export class AstBuilder {
 
   private isNodeAfterListWithSameLevel(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _srcNode: OrgStruct,
+    _srcNode: OrgNode,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _dstNode: OrgStruct
+    _dstNode: OrgNode
   ): OrgNode {
     const exitFromTopList = !!this.ctx.topLevelList;
     const notIndentAfterNewLine =
@@ -96,11 +96,19 @@ export class AstBuilder {
     }
   }
 
-  private isDestinationRootNode(
-    _srcNode: OrgStruct,
-    dstNode: OrgStruct
-  ): OrgStruct {
+  private isDestinationRootNode(_srcNode: OrgNode, dstNode: OrgNode): OrgNode {
     if (dstNode.type === NodeType.Root) {
+      return dstNode;
+    }
+  }
+
+  private isPropertyKeyVal(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    const maxPropertyChildren = 2;
+    if (
+      srcNode.is(NodeType.Text) &&
+      dstNode.is(NodeType.Property) &&
+      dstNode.children.length < maxPropertyChildren
+    ) {
       return dstNode;
     }
   }
@@ -121,7 +129,7 @@ export class AstBuilder {
     }
   }
 
-  private isNestedHeadline(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
+  private isNestedHeadline(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
     const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     const isTargetNodeHeadline = dstNode.type === NodeType.Headline;
 
@@ -145,9 +153,9 @@ export class AstBuilder {
   // }
 
   private isCommonDestinationAndSrcNotHeadline(
-    srcNode: OrgStruct,
-    dstNode: OrgStruct
-  ): OrgStruct {
+    srcNode: OrgNode,
+    dstNode: OrgNode
+  ): OrgNode {
     const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
     if (
       !isSourceNodeHeadline &&
@@ -163,7 +171,7 @@ export class AstBuilder {
     }
   }
 
-  private isKeyword(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
+  private isKeyword(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
     if (
       srcNode.type === NodeType.Keyword &&
       [
@@ -177,7 +185,7 @@ export class AstBuilder {
     }
   }
 
-  private isCommentParent(srcNode: OrgStruct, dstNode: OrgStruct): OrgStruct {
+  private isCommentParent(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
     if (
       [NodeType.Text].includes(srcNode.type) &&
       dstNode.type === NodeType.Comment
@@ -185,6 +193,30 @@ export class AstBuilder {
       return dstNode;
     }
   }
+
+  private isPropertyDrawer(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      srcNode.is(NodeType.PropertyDrawer) &&
+      dstNode.is(NodeType.Root, NodeType.Headline)
+    ) {
+      return dstNode;
+    }
+  }
+
+  private readonly parentMatchers = [
+    this.isParentAlreadyExist,
+    this.isPropertyDrawer,
+    this.isDestinationRootNode,
+    this.isPropertyKeyVal,
+    this.isCommentParent,
+    // this.isUnresolvedNode,
+    this.isNotListIndentInsideSection,
+    this.isKeyword,
+    this.isNodeAfterListWithSameLevel,
+    this.isInsideList,
+    this.isNestedHeadline,
+    this.isCommonDestinationAndSrcNotHeadline,
+  ];
 
   private findParentForNodeType(srcNode: OrgNode, dstNode?: OrgNode): OrgNode {
     dstNode = dstNode || this.lastNode;
@@ -194,20 +226,8 @@ export class AstBuilder {
     }
 
     // TODO: need to combine some functions for less complexity
-    const parentMatchers = [
-      this.isParentAlreadyExist,
-      this.isDestinationRootNode,
-      this.isCommentParent,
-      // this.isUnresolvedNode,
-      this.isNotListIndentInsideSection,
-      this.isKeyword,
-      this.isNodeAfterListWithSameLevel,
-      this.isInsideList,
-      this.isNestedHeadline,
-      this.isCommonDestinationAndSrcNotHeadline,
-    ];
 
-    for (const matcher of parentMatchers) {
+    for (const matcher of this.parentMatchers) {
       const parent = matcher.bind(this)(srcNode, dstNode);
       if (parent) {
         return parent;
@@ -437,6 +457,31 @@ export class AstBuilder {
     });
     blockProperty.addChild(child);
     return blockProperty;
+  }
+
+  public createPropertyDrawerNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.PropertyDrawer,
+    });
+  }
+
+  public createPropertyNode(
+    val?: string,
+    children?: OrgNode[] | OrgChildrenList
+  ): OrgNode {
+    const propertyNode = new OrgNode({
+      type: NodeType.Property,
+    });
+    if (children) {
+      propertyNode.addChildren(children);
+      return propertyNode;
+    }
+    const textNode = new OrgNode({
+      type: NodeType.Text,
+      value: val || this.tokenIterator.currentValue,
+    });
+    propertyNode.addChild(textNode);
+    return propertyNode;
   }
 
   public createBlockLanguageNode(value: string): OrgNode {

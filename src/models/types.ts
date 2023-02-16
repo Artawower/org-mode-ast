@@ -25,6 +25,8 @@ export enum NodeType {
   Progress = 'progress',
 
   BlockHeader = 'blockHeader',
+  PropertyDrawer = 'propertyDrawer',
+  Property = 'property',
   BlockProperty = 'blockProperty',
   BlockLanguage = 'blockLanguage',
   BlockFooter = 'blockFooter',

@@ -23,7 +23,7 @@ This is a quote
     `);
   });
 
-  fit('Should parse quote block with nested text formatting', () => {
+  it('Should parse quote block with nested text formatting', () => {
     const orgNode = `#+BEGIN_QUOTE
 *This is a bold quote* with some /italic/ text.
 also this block has a *second* line.

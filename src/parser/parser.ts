@@ -14,17 +14,19 @@ import {
   BracketHandler,
   CommentHandler,
   ListHandler,
+  PropertiesHandler,
 } from './handlers';
 
 class Parser {
   constructor(
-    private ctx: AstContext,
-    private tokenIterator: TokenIterator,
-    private astBuilder: AstBuilder,
-    private bracketHandler: BracketHandler,
-    private listHandler: ListHandler,
-    private blockHandler: BlockHandler,
-    private commentHandler: CommentHandler
+    private readonly ctx: AstContext,
+    private readonly tokenIterator: TokenIterator,
+    private readonly astBuilder: AstBuilder,
+    private readonly bracketHandler: BracketHandler,
+    private readonly listHandler: ListHandler,
+    private readonly blockHandler: BlockHandler,
+    private readonly commentHandler: CommentHandler,
+    private readonly propertiesHandler: PropertiesHandler
   ) {}
 
   public parse(): OrgNode {
@@ -149,6 +151,9 @@ class Parser {
     if (this.blockHandler.isBlockKeyword(this.tokenIterator.currentValue)) {
       return this.blockHandler.handle();
     }
+    if (this.propertiesHandler.isPropertyKeyword()) {
+      return this.propertiesHandler.handle();
+    }
     const createdKeyword = this.astBuilder.createKeyword();
     this.astBuilder.attachToTree(createdKeyword);
     return createdKeyword;
@@ -176,6 +181,11 @@ export function parse(text: string): OrgNode {
   const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
   const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
   const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
+  const propertiesHandler = new PropertiesHandler(
+    ctx,
+    astBuilder,
+    tokenIterator
+  );
   const parser = new Parser(
     ctx,
     tokenIterator,
@@ -183,7 +193,8 @@ export function parse(text: string): OrgNode {
     bracketHandler,
     listHandler,
     blockHandler,
-    commentHandler
+    commentHandler,
+    propertiesHandler
   );
   return parser.parse();
 }
