@@ -350,7 +350,7 @@ export class OrgNode {
     return nodeType.some((t) => t === this.type);
   }
 
-  public toString(): string {
+  public toString(offset?: number): string {
     return prettyTreePrint(this);
   }
 

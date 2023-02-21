@@ -12,13 +12,15 @@ This is a quote
       "root [0-41]
         quoteBlock [0-41]
           blockHeader [0-13]
-            keyword [0-13] ("#+BEGIN_QUOTE")
+            keyword [0-13]
+              text [0-13] ("#+BEGIN_QUOTE")
           newLine [13-14]
           blockBody [14-29]
             text [14-29] ("This is a quote")
           newLine [29-30]
           blockFooter [30-41]
-            keyword [30-41] ("#+END_QUOTE")
+            keyword [30-41]
+              text [30-41] ("#+END_QUOTE")
       "
     `);
   });
@@ -37,7 +39,8 @@ And small list!
       "root [0-145]
         quoteBlock [0-144]
           blockHeader [0-13]
-            keyword [0-13] ("#+BEGIN_QUOTE")
+            keyword [0-13]
+              text [0-13] ("#+BEGIN_QUOTE")
           newLine [13-14]
           blockBody [14-133]
             bold [14-36]
@@ -74,7 +77,8 @@ And small list!
                   text [241-247] ("item 2")
                   newLine [247-248]
           blockFooter [133-144]
-            keyword [133-144] ("#+END_QUOTE")
+            keyword [133-144]
+              text [133-144] ("#+END_QUOTE")
         newLine [144-145]
       "
     `);

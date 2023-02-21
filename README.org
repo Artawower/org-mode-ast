@@ -40,7 +40,7 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [13/22]
+** Org nodes [13/19]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [X] List Progress
@@ -62,16 +62,16 @@ Of these requirements I want the following from this parser:
 - [ ] Tables
 
   Am I missing something? Please, let me know.
-** Low priority features
+** Common features [0/0]
+- [ ] Metadata collecting
+** Low-priority features
 - [ ] Noweb support
 - [ ] Results block
 - [ ] Cross-links
-** Autoformates [0/3]
+** Autoformatting [0/3]
 - [ ] Auto-align tables
 - [ ] Calculate the progress of the list
 - [ ] Insert headline by level
-** Common feature [0/0]
-- [ ] Metadata collecting
 
 * Also see
   
@@ -87,3 +87,9 @@ Of these requirements I want the following from this parser:
 
 
 Any help is greatly appreciated. 
+
+
+** Fastnote?
+
+
+- Bulk tag editing

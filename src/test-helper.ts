@@ -21,15 +21,15 @@ export function hasNodeIncorrectRanges(
 
   let currentNode = node;
   while (currentNode) {
-    for (const c in currentNode.children) {
-      const hasChildNodeIncorrectRanges = hasNodeIncorrectRanges(
-        currentNode.children[c],
-        text
-      );
-      if (hasChildNodeIncorrectRanges) {
-        return hasChildNodeIncorrectRanges;
+    if (currentNode.children) {
+      for (const n of currentNode.children) {
+        const hasChildNodeIncorrectRanges = hasNodeIncorrectRanges(n, text);
+        if (hasChildNodeIncorrectRanges) {
+          return hasChildNodeIncorrectRanges;
+        }
       }
     }
+
     currentNode = currentNode.next;
   }
   return false;

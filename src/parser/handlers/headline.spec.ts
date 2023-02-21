@@ -113,7 +113,7 @@ some text`;
             :level 1:
           title [0-25]
             operator [0-2] ("* ")
-            keyword [2-6] ("TODO")
+            todoKeyword [2-6] ("TODO")
             text [6-19] (" Hello world ")
             progress [19-24]
               operator [19-20] ("[")

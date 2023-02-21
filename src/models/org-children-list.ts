@@ -72,7 +72,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     return current?.value;
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): IterableIterator<OrgNode> {
     let current = this.#first;
     while (current) {
       const res = current;

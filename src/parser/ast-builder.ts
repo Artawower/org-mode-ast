@@ -38,7 +38,9 @@ export class AstBuilder {
   }
 
   public attachToTree(orgData: OrgNode): void {
+    // console.log('✎: [line 41][ast-builder.ts] orgData: ', orgData);
     const parentNode = this.findParentForNodeType(orgData);
+    // console.log('✎: [line 42][ast-builder.ts] parentNode: ', parentNode);
     parentNode.addChild(orgData);
     // console.log(this.#nodeTree.toString());
     // console.log('----------------');
@@ -203,9 +205,31 @@ export class AstBuilder {
     }
   }
 
+  private isPartOfKeyword(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      srcNode.is(NodeType.Text) &&
+      dstNode.is(NodeType.Keyword) &&
+      dstNode.children.length < 2
+    ) {
+      return dstNode;
+    }
+  }
+
+  private isPartOfBlockProperty(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      srcNode.is(NodeType.Text) &&
+      dstNode.is(NodeType.BlockProperty) &&
+      dstNode.children.length < 2
+    ) {
+      return dstNode;
+    }
+  }
+
   private readonly parentMatchers = [
     this.isParentAlreadyExist,
     this.isPropertyDrawer,
+    this.isPartOfKeyword,
+    this.isPartOfBlockProperty,
     this.isDestinationRootNode,
     this.isPropertyKeyVal,
     this.isCommentParent,
@@ -243,9 +267,17 @@ export class AstBuilder {
     return this.findParentForNodeType(srcNode, dstNode.parent);
   }
 
+  // TODO: master move all creators to separated abstraction
   public createTitleNode(): OrgNode {
     return new OrgNode({
       type: NodeType.Title,
+    });
+  }
+
+  public createTodoKeywordNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.TodoKeyword,
+      value: this.tokenIterator.currentValue,
     });
   }
 
@@ -263,11 +295,12 @@ export class AstBuilder {
     return headline;
   }
 
-  public createKeyword(): OrgNode {
-    return new OrgNode({
+  public createKeyword(...children: OrgNode[]): OrgNode {
+    const keywordNode = new OrgNode({
       type: NodeType.Keyword,
-      value: this.tokenIterator.currentValue,
     });
+    keywordNode.addChildren(children);
+    return keywordNode;
   }
 
   public createText(): OrgNode {

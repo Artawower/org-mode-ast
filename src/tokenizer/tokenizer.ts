@@ -4,6 +4,7 @@ export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly pariBrackets = ['[', ']', '<', '>'];
   private readonly formatterBrackets = ['=', '+', '/', '*', '~'];
+  private readonly keywordStartOperator = '#+';
   private readonly brackets: string[] = [
     ...this.formatterBrackets,
     ...this.pariBrackets,
@@ -18,11 +19,10 @@ export class Tokenizer {
   private tokenAggregators: { [key: string]: (c: string) => void };
   private firstToken: Token;
   private lastToken: Token;
+  private todoKeywords: string[] = [];
 
-  constructor(
-    private text: string,
-    public readonly todoKeywords = ['TODO', 'DONE', 'HOLD', 'CANCELED']
-  ) {
+  constructor(private text: string, configuration: ParserConfiguration) {
+    this.todoKeywords = configuration.todoKeywords ?? [];
     this.initTokenAggregators();
   }
 
@@ -119,6 +119,12 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
+
+    if (this.isPrevToken(TokenType.Keyword)) {
+      this.createToken({ type: TokenType.Text, value: c });
+      // this.upsertToken({ type: TokenType.Text, value: c });
+      return;
+    }
     this.appendTextToken(c);
   }
 
@@ -175,7 +181,10 @@ export class Tokenizer {
   }
 
   private handleComma(c: string): void {
-    if (this.lastToken?.value?.startsWith(':')) {
+    if (
+      this.lastToken?.value?.startsWith(':') ||
+      this.lastToken?.isType(TokenType.Keyword)
+    ) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       return;
     }
@@ -232,6 +241,18 @@ export class Tokenizer {
 
   private handleText(c: string): void {
     if (this.isPrevToken(TokenType.Comment)) {
+      this.appendPrevValue(c);
+      return;
+    }
+    if (
+      this.isPrevToken(TokenType.Operator) &&
+      this.lastToken.value === this.keywordStartOperator
+    ) {
+      this.upsertToken({ type: TokenType.Keyword, value: c }, true);
+      return;
+    }
+
+    if (this.isPrevToken(TokenType.Keyword)) {
       this.appendPrevValue(c);
       return;
     }
@@ -406,6 +427,6 @@ export function tokenize(
   text: string,
   configuration?: ParserConfiguration
 ): Token {
-  const tokenizer = new Tokenizer(text, configuration?.todoKeywords);
+  const tokenizer = new Tokenizer(text, configuration);
   return tokenizer.tokenize();
 }

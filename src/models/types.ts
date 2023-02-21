@@ -2,28 +2,35 @@ import { OrgNode } from './org-node';
 
 export enum NodeType {
   Root = 'root',
+
   Headline = 'headline',
   Text = 'text',
-  TodoKeyword = 'todoKeyword',
+
   Unresolved = 'unresolved',
+
   Operator = 'operator',
-  Bold = 'bold',
-  Section = 'section',
-  Crossed = 'crossed',
   Checkbox = 'checkbox',
-  List = 'list',
-  ListItem = 'listItem',
-  Italic = 'italic',
-  InlineCode = 'inlineCode',
-  Verbatim = 'verbatim',
+
   Indent = 'indent',
   NewLine = 'newLine',
-  Comment = 'comment',
+
   Date = 'date',
   DateRange = 'dateRange',
-  SrcBlock = 'srcBlock',
+
+  Comment = 'comment',
+  TodoKeyword = 'todoKeyword',
+
+  List = 'list',
+  ListItem = 'listItem',
   Progress = 'progress',
 
+  Bold = 'bold',
+  Crossed = 'crossed',
+  InlineCode = 'inlineCode',
+  Verbatim = 'verbatim',
+  Italic = 'italic',
+
+  SrcBlock = 'srcBlock',
   BlockHeader = 'blockHeader',
   PropertyDrawer = 'propertyDrawer',
   Property = 'property',
@@ -33,11 +40,14 @@ export enum NodeType {
   BlockBody = 'blockBody',
   QuoteBlock = 'quoteBlock',
   HtmlBlock = 'htmlBlock',
+  HeaderArg = 'headerArg',
 
   Keyword = 'keyword',
   Link = 'link',
   LinkUrl = 'linkUrl',
   LinkName = 'linkName',
+
+  Section = 'section',
 
   // Workaround for structures that have section + title
   Title = 'title',

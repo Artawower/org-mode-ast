@@ -125,7 +125,19 @@ describe('Properties', () => {
     `);
   });
 
-  xit('Should parse single line property', () => {
+  it('Should parse single line property', () => {
     const orgDoc = `#+PROPERTY: header-args :tangle no`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-34]
+        keyword [0-24]
+          text [0-11] ("#+PROPERTY:")
+          text [11-24] (" header-args ")
+        blockProperty [24-34]
+          text [24-31] (":tangle")
+          text [31-34] (" no")
+      "
+    `);
   });
 });

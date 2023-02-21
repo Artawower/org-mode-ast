@@ -20,6 +20,11 @@ export class PropertiesHandler implements OrgHandler {
     return keyword.startsWith(':') && keyword.endsWith(':');
   }
 
+  public isBlockPropertyKeyword(): boolean {
+    const keyword = this.tokenIterator.currentValue;
+    return keyword.startsWith(':') && !keyword.endsWith(':');
+  }
+
   public handle(): OrgNode {
     const keywordNode = this.astBuilder.createPropertyNode();
     this.astBuilder.attachToTree(keywordNode);

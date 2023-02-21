@@ -86,6 +86,28 @@
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "DEBUG Jest: tokenizer spec",
+      //"env": { "NODE_ENV": "test" },
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        // "${fileBasenameNoExtension}",
+        "--config",
+        "${workspaceFolder}/jest.config.cjs",
+        "-i",
+        "${workspaceFolder}/src/tokenizer/tokenizer.spec.ts",
+        "--no-watch"
+      ],
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      },
+      "runtimeExecutable": "/opt/homebrew/opt/node@16/bin/node"
     }
   ]
 }

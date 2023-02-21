@@ -56,7 +56,8 @@ export class BlockHandler implements OrgHandler {
    * Handling blocks that don't need nested formatting
    */
   private handleRawBlock(position: BlockPosition, type: BlockType): OrgNode {
-    const keywordNode = this.astBuilder.createKeyword();
+    const keywordTextNode = this.astBuilder.createText();
+    const keywordNode = this.astBuilder.createKeyword(keywordTextNode);
 
     if (position === 'begin') {
       this.ctx.srcBlockBegin = keywordNode;
@@ -161,6 +162,7 @@ export class BlockHandler implements OrgHandler {
   }
 
   private buildHeaderNode(nodes: OrgChildrenList): OrgNode {
+    console.log('✎: [line 165][block-handler.ts] nodes: ', nodes.get(3));
     const headerNodes = new OrgChildrenList();
 
     nodes.forEach((node) => {
@@ -179,8 +181,8 @@ export class BlockHandler implements OrgHandler {
         return;
       }
 
-      if (isKeyword) {
-        headerNodes.push(this.astBuilder.createBlockPropertyNode(node));
+      if (node.is(NodeType.BlockProperty)) {
+        headerNodes.push(node);
         return;
       }
 
@@ -207,7 +209,8 @@ export class BlockHandler implements OrgHandler {
   }
 
   private handleQuoteBlock(position: BlockPosition, type: BlockType): OrgNode {
-    const keywordNode = this.astBuilder.createKeyword();
+    const keywordTextNode = this.astBuilder.createText();
+    const keywordNode = this.astBuilder.createKeyword(keywordTextNode);
 
     if (position === 'begin') {
       this.ctx.quoteBlockBegin = keywordNode;
@@ -231,5 +234,14 @@ export class BlockHandler implements OrgHandler {
   private determineBlockType(): [BlockPosition, BlockType] {
     const [pos, type] = this.tokenIterator.currentValue.split('_');
     return [pos.slice(2, pos.length).toLowerCase() as BlockPosition, type];
+  }
+
+  public handleBlockProperty(): OrgNode {
+    const textNode = this.astBuilder.createTextNode(
+      this.tokenIterator.currentValue
+    );
+    const blockPropertyNode = this.astBuilder.createBlockPropertyNode(textNode);
+    this.astBuilder.attachToTree(blockPropertyNode);
+    return blockPropertyNode;
   }
 }

@@ -3,6 +3,7 @@ import {
   HandlerNotFoundError,
   NodeType,
   OrgNode,
+  ParserConfiguration,
   TokenType,
   UnsupportedOperator,
 } from 'models';
@@ -16,9 +17,11 @@ import {
   ListHandler,
   PropertiesHandler,
 } from './handlers';
+import { parserConfiguration } from './parser.configuration';
 
 class Parser {
   constructor(
+    private configuration: ParserConfiguration,
     private readonly ctx: AstContext,
     private readonly tokenIterator: TokenIterator,
     private readonly astBuilder: AstBuilder,
@@ -147,6 +150,7 @@ class Parser {
     return newLineNode;
   }
 
+  // TODO: master separated handler
   private handleKeyword(): OrgNode {
     if (this.blockHandler.isBlockKeyword(this.tokenIterator.currentValue)) {
       return this.blockHandler.handle();
@@ -154,9 +158,26 @@ class Parser {
     if (this.propertiesHandler.isPropertyKeyword()) {
       return this.propertiesHandler.handle();
     }
-    const createdKeyword = this.astBuilder.createKeyword();
+    if (this.isTodoKeyword(this.tokenIterator.currentValue)) {
+      return this.handleTodoKeyword();
+    }
+    if (this.propertiesHandler.isBlockPropertyKeyword()) {
+      return this.blockHandler.handleBlockProperty();
+    }
+    const textNode = this.astBuilder.createText();
+    const createdKeyword = this.astBuilder.createKeyword(textNode);
     this.astBuilder.attachToTree(createdKeyword);
     return createdKeyword;
+  }
+
+  private isTodoKeyword(keyword: string): boolean {
+    return this.configuration.todoKeywords.includes(keyword);
+  }
+
+  private handleTodoKeyword(): OrgNode {
+    const todoKeywordNode = this.astBuilder.createTodoKeywordNode();
+    this.astBuilder.attachToTree(todoKeywordNode);
+    return todoKeywordNode;
   }
 
   private buildOrgDataForOperator(operator: string): OrgNode {
@@ -172,9 +193,16 @@ class Parser {
   }
 }
 
-export function parse(text: string): OrgNode {
+export function parse(
+  text: string,
+  configuration: ParserConfiguration = {}
+): OrgNode {
+  configuration = {
+    ...parserConfiguration,
+    ...configuration,
+  };
   const ctx = new AstContext();
-  const tokenizer = new Tokenizer(text);
+  const tokenizer = new Tokenizer(text, configuration);
   const tokenIterator = new TokenIterator(tokenizer);
   const astBuilder = new AstBuilder(ctx, tokenIterator);
   const commentHandler = new CommentHandler(astBuilder, tokenIterator);
@@ -187,6 +215,7 @@ export function parse(text: string): OrgNode {
     tokenIterator
   );
   const parser = new Parser(
+    configuration,
     ctx,
     tokenIterator,
     astBuilder,
