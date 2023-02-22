@@ -131,12 +131,39 @@ describe('Properties', () => {
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-34]
-        keyword [0-24]
+          :header-args :tangle no:
+        keyword [0-34]
           text [0-11] ("#+PROPERTY:")
           text [11-24] (" header-args ")
-        blockProperty [24-34]
-          text [24-31] (":tangle")
-          text [31-34] (" no")
+          blockProperty [24-34]
+            text [24-31] (":tangle")
+            text [31-34] (" no")
+      "
+    `);
+  });
+
+  it('Should parse multiple properties with conflict', () => {
+    const orgDoc = `#+PROPERTY: header-args :tangle no
+  #+PROPERTY: header-args :tangle yes`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-72]
+          :header-args :tangle yes:
+        keyword [0-72]
+          text [0-11] ("#+PROPERTY:")
+          text [11-24] (" header-args ")
+          blockProperty [24-34]
+            text [24-31] (":tangle")
+            text [31-34] (" no")
+          newLine [34-35]
+          indent [35-37] ("  ")
+          keyword [37-72]
+            text [37-48] ("#+PROPERTY:")
+            text [48-61] (" header-args ")
+            blockProperty [61-72]
+              text [61-68] (":tangle")
+              text [68-72] (" yes")
       "
     `);
   });

@@ -228,6 +228,21 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     return foundNodes;
   }
 
+  public slice(from: number, to?: number): OrgChildrenList {
+    const newList = new OrgChildrenList();
+    let current = this.#first;
+    let i = 0;
+    to = to ?? this.length;
+    while (current) {
+      if (i >= from && i < to) {
+        newList.push(current.value);
+      }
+      current = current.next;
+      i++;
+    }
+    return newList;
+  }
+
   /**
    * Removes one or multiple nodes from the OrgChildrenList.
    * Instead of completely removing the nodes, their connections with neighboring nodes are preserved.

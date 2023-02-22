@@ -40,7 +40,7 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [13/19]
+** Org nodes [15/19]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [X] List Progress
@@ -50,13 +50,13 @@ Of these requirements I want the following from this parser:
 - [X] Links
 - [X] Src blocs
 - [ ] Latex blocks
-- [ ] Keywords
+- [X] Keywords
 - [X] Html/quotes blocks
 - [X] Verbatim
 - [ ] Inline HTML
 - [ ] Html attributes
 - [X] Comments
-- [ ] Properties
+- [X] Properties
 - [X] Date and time
 - [X] Tags
 - [ ] Tables
@@ -68,14 +68,15 @@ Of these requirements I want the following from this parser:
 - [ ] Noweb support
 - [ ] Results block
 - [ ] Cross-links
+- [ ] Footnote
 ** Autoformatting [0/3]
 - [ ] Auto-align tables
 - [ ] Calculate the progress of the list
 - [ ] Insert headline by level
 
 * Also see
-  
-- [[https://github.com/rasendubi/uniorg][Uniorg - another one AST for org mode]] 
+- [[https://github.com/rasendubi/uniorg][Uniorg - another one AST for org mode]]
+- [[https://github.com/milisims/tree-sitter-org][Tree sitter grammar for org mode]] 
 * Contribute
 
 #+html: <span class="badge-buymeacoffee">

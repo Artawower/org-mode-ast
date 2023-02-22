@@ -1,10 +1,4 @@
-import {
-  NodeType,
-  OrgChildrenList,
-  OrgNode,
-  OrgStruct,
-  TokenType,
-} from 'models';
+import { NodeType, OrgChildrenList, OrgNode, TokenType } from 'models';
 import { TokenIterator } from 'tokenizer';
 import { AstContext } from './ast-context';
 
@@ -225,9 +219,20 @@ export class AstBuilder {
     }
   }
 
+  private isPartOfPropertyKeyword(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      (srcNode.is(NodeType.BlockProperty),
+      dstNode.is(NodeType.Keyword) &&
+        dstNode.children.first.isEqual('#+property:'))
+    ) {
+      return dstNode;
+    }
+  }
+
   private readonly parentMatchers = [
     this.isParentAlreadyExist,
     this.isPropertyDrawer,
+    this.isPartOfPropertyKeyword,
     this.isPartOfKeyword,
     this.isPartOfBlockProperty,
     this.isDestinationRootNode,
@@ -398,15 +403,6 @@ export class AstBuilder {
     );
   }
 
-  public getRawValueFromNode(node: OrgNode): string {
-    if (node.value) {
-      return node.value;
-    }
-    if (node.children) {
-      return node.children.map((n) => this.getRawValueFromNode(n)).join('');
-    }
-  }
-
   public parentNodeExist(node: OrgNode, types: NodeType | NodeType[]): boolean {
     if (!Array.isArray(types)) {
       types = [types];
@@ -423,11 +419,9 @@ export class AstBuilder {
 
   public getRawValueFromNodes(nodes: OrgChildrenList | OrgNode): string {
     if (nodes instanceof OrgChildrenList) {
-      return nodes
-        .map((n) => n?.value || this.getRawValueFromNodes(n))
-        .join('');
+      return nodes.map((n) => n.rawValue).join('');
     }
-    return nodes?.value || this.getRawValueFromNodes(nodes.children);
+    return nodes.rawValue;
   }
 
   public createIndentNode(val?: string): OrgNode {

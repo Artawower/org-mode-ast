@@ -229,10 +229,6 @@ describe('Org node', () => {
 
     orgBold.addChild(orgText);
     rootNode.addChild(orgBold);
-    console.log(
-      '✎: [line 193][org-node.spec.ts] rootNode.toString(): ',
-      rootNode.toString()
-    );
     expect(rootNode.start).toBe(0);
     expect(rootNode.end).toBe(24);
   });
@@ -591,11 +587,6 @@ describe('Org node', () => {
       boldOperator2,
     ]);
 
-    console.log(
-      '✎: [line 546][org-node.spec.ts] rootNode.toString(): ',
-      orgRootNode.toString()
-    );
-    console.log('-'.repeat(80));
     const orgBoldNode = new OrgNode({ type: NodeType.Bold });
     const orgItalicNode = new OrgNode({ type: NodeType.Italic });
 
@@ -604,18 +595,8 @@ describe('Org node', () => {
     orgItalicNode.addChildren([italicOperator1, italicText, italicOperator2]);
 
     orgRootNode.addChild(orgItalicNode);
-    console.log(
-      '✎: [line 546][org-node.spec.ts] rootNode.toString(): ',
-      orgRootNode.toString()
-    );
-    console.log('-'.repeat(80));
 
     orgRootNode.removeChildren([boldOperator1, boldText, boldOperator2]);
-    console.log(
-      '✎: [line 553][org-node.spec.ts] rootNode.toString(): ',
-      orgRootNode.toString()
-    );
-    console.log('-'.repeat(80));
 
     orgBoldNode.addChildren([boldOperator1, boldText, boldOperator2]);
     orgRootNode.addChild(orgBoldNode);
@@ -726,16 +707,7 @@ describe('Org node', () => {
       nestedText,
       crossedOperator2,
     ]);
-    console.log(
-      '✎: [line 726][org-node.spec.ts] crossedParentNode: ',
-      crossedParentNode.toString()
-    );
     orgRootNode.addChild(crossedParentNode);
-
-    console.log(
-      '✎: [line 626][org-node.spec.ts] orgRootNode.toString(): ',
-      orgRootNode.toString()
-    );
 
     const italicParentNode = new OrgNode({ type: NodeType.Italic });
     orgRootNode.removeChildren([
@@ -743,31 +715,14 @@ describe('Org node', () => {
       crossedParentNode,
       italicOperator2,
     ]);
-    console.log(
-      '✎: [line 744][org-node.spec.ts] crossedParentNode: ',
-      crossedParentNode.toString()
-    );
     italicParentNode.addChildren([
       italicOperator1,
       crossedParentNode,
       italicOperator2,
     ]);
-    console.log(
-      '✎: [line 753][org-node.spec.ts] italicParentNode: ',
-      italicParentNode.toString()
-    );
     orgRootNode.addChild(italicParentNode);
-    console.log(
-      '✎: [line 757][org-node.spec.ts] orgRootNode: ',
-      orgRootNode.toString()
-    );
 
     orgRootNode.addChildren([simpleText2]);
-
-    console.log(
-      '✎: [line 769][org-node.spec.ts] astBuilder.getRawValueFromNode(orgRootNode): ',
-      astBuilder.getRawValueFromNode(orgRootNode)
-    );
     expect(orgRootNode.toString()).toMatchInlineSnapshot(`
       "root [0-39]
         text [0-11] ("Simple text")
@@ -885,13 +840,58 @@ describe('Org node', () => {
     headerNode.setSection(sectionNode);
     sectionNode.addChild(sectionContentText);
 
-    console.log(rootNode.toString());
-
     rootNode.removeNode(headerNode);
 
     expect(rootNode.toString()).toMatchInlineSnapshot(`
       "root [0-0]
       "
     `);
+  });
+
+  it('Should return correct raw value from node', () => {
+    const orgNode = new OrgNode({ type: NodeType.Text, value: 'Hello world!' });
+    expect(orgNode.rawValue).toEqual('Hello world!');
+  });
+
+  it('Should return correct raw value from multiple nested nodes', () => {
+    const orgRoot = new OrgNode({ type: NodeType.Root });
+    const orgBold = new OrgNode({ type: NodeType.Bold });
+    const orgBoldOperator = new OrgNode({
+      type: NodeType.Operator,
+      value: '*',
+    });
+    const orgText = new OrgNode({ type: NodeType.Text, value: 'Hello ' });
+    const orgBold2Operator = new OrgNode({
+      type: NodeType.Operator,
+      value: '*',
+    });
+    const orgCrossed = new OrgNode({ type: NodeType.Crossed });
+    const orgCrossedOperator = new OrgNode({
+      type: NodeType.Operator,
+      value: '+',
+    });
+    const orgCrossedText = new OrgNode({
+      type: NodeType.Text,
+      value: 'world!',
+    });
+    const orgCrossedOperator2 = new OrgNode({
+      type: NodeType.Operator,
+      value: '+',
+    });
+
+    orgRoot.addChild(orgBold);
+    orgCrossed.addChildren([
+      orgCrossedOperator,
+      orgCrossedText,
+      orgCrossedOperator2,
+    ]);
+    orgBold.addChildren([
+      orgBoldOperator,
+      orgText,
+      orgCrossed,
+      orgBold2Operator,
+    ]);
+
+    expect(orgRoot.rawValue).toEqual('*Hello +world!+*');
   });
 });

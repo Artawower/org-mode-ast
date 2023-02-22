@@ -71,6 +71,21 @@ export class OrgNode {
     return this.end - this.start;
   }
 
+  /** Return raw text value from node, included nested nodes */
+  get rawValue(): string {
+    if (this.children) {
+      return this.getRawValueFromNodes(this.children);
+    }
+    if (this.value) {
+      return this.value;
+    }
+    return '';
+  }
+
+  private getRawValueFromNodes(nodes: OrgChildrenList): string {
+    return nodes.map((n) => n.rawValue).join('');
+  }
+
   constructor(nodeData: OrgStruct) {
     this.type = nodeData.type;
     if (nodeData.section) {
@@ -229,6 +244,9 @@ export class OrgNode {
     }
   }
 
+  // TODO: master create special abstraction to change buffer properties
+  // and finding parent nodes
+  // REFACTOR
   /**
    * Go through all children and update meta information about current nodes.
    * Including properties, list counter, etc
@@ -243,15 +261,42 @@ export class OrgNode {
           collectedProperties[key.toLowerCase()] = value;
         }
       });
-
-      const nodeWithProperties = this.findParent(
+      this.setPropertyForNode(
+        collectedProperties,
         NodeType.Headline,
         NodeType.Root
       );
-      nodeWithProperties.mergeProperties(collectedProperties);
+    }
+
+    if (
+      this.is(NodeType.Keyword) &&
+      this.children.first.isEqual('#+property:') &&
+      this.children.get(1)
+    ) {
+      const key = this.children.get(1).value.trim();
+      const value = this.getRawValueFromNodes(this.children.slice(2));
+      collectedProperties[key] = value;
+      this.setPropertyForNode(
+        collectedProperties,
+        NodeType.Headline,
+        NodeType.Root
+      );
     }
   }
 
+  private setPropertyForNode(
+    properties: { [key: string]: string },
+    ...parentType: NodeType[]
+  ): void {
+    const nodeWithProperties = this.findParent(...parentType);
+    console.log(
+      '✎: [line 272][org-node.ts] nodeWithProperties: ',
+      nodeWithProperties
+    );
+    nodeWithProperties.mergeProperties(properties);
+  }
+
+  // TODO: master move this method into separated abstraction
   public findParent(...parentType: NodeType[]): OrgNode {
     if (this.is(...parentType)) {
       return this;
@@ -362,5 +407,13 @@ export class OrgNode {
       node.children?.first?.forEachNestedChildren(callback);
       node = node.next;
     }
+  }
+
+  /**
+   * Check if value equals to the given value.
+   * Both params will be trimmed and lowercased.
+   */
+  public isEqual(value: string): boolean {
+    return this.value.trim().toLowerCase() === value.trim().toLowerCase();
   }
 }

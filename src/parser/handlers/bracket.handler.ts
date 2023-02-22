@@ -58,7 +58,7 @@ export class BracketHandler implements OrgHandler {
     return unresolvedNode;
   }
 
-  public handleNewLine(): void {}
+  public handleEndOfLine(): void {}
 
   // TODO: refactor this method, so complex!
   private tryHandlePairBracket(closedBracket: OrgNode): OrgNode {

@@ -14,6 +14,7 @@ import {
   BlockHandler,
   BracketHandler,
   CommentHandler,
+  KeywordHandler,
   ListHandler,
   PropertiesHandler,
 } from './handlers';
@@ -27,9 +28,8 @@ class Parser {
     private readonly astBuilder: AstBuilder,
     private readonly bracketHandler: BracketHandler,
     private readonly listHandler: ListHandler,
-    private readonly blockHandler: BlockHandler,
     private readonly commentHandler: CommentHandler,
-    private readonly propertiesHandler: PropertiesHandler
+    private readonly keywordHandler: KeywordHandler
   ) {}
 
   public parse(): OrgNode {
@@ -41,6 +41,7 @@ class Parser {
     this.tokenIterator.forEach(() => {
       this.handleToken();
     });
+    this.handleEndOfLine();
   }
 
   private tokensHandlers = {
@@ -50,7 +51,7 @@ class Parser {
     [TokenType.Operator]: () => this.handleOperator(),
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
-    [TokenType.Keyword]: () => this.handleKeyword(),
+    [TokenType.Keyword]: () => this.keywordHandler.handle(),
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
   } satisfies Record<string, () => OrgNode | void>;
@@ -144,40 +145,15 @@ class Parser {
   }
 
   private handleNewLine(): OrgNode {
-    this.bracketHandler.handleNewLine();
+    this.handleEndOfLine();
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
     return newLineNode;
   }
 
-  // TODO: master separated handler
-  private handleKeyword(): OrgNode {
-    if (this.blockHandler.isBlockKeyword(this.tokenIterator.currentValue)) {
-      return this.blockHandler.handle();
-    }
-    if (this.propertiesHandler.isPropertyKeyword()) {
-      return this.propertiesHandler.handle();
-    }
-    if (this.isTodoKeyword(this.tokenIterator.currentValue)) {
-      return this.handleTodoKeyword();
-    }
-    if (this.propertiesHandler.isBlockPropertyKeyword()) {
-      return this.blockHandler.handleBlockProperty();
-    }
-    const textNode = this.astBuilder.createText();
-    const createdKeyword = this.astBuilder.createKeyword(textNode);
-    this.astBuilder.attachToTree(createdKeyword);
-    return createdKeyword;
-  }
-
-  private isTodoKeyword(keyword: string): boolean {
-    return this.configuration.todoKeywords.includes(keyword);
-  }
-
-  private handleTodoKeyword(): OrgNode {
-    const todoKeywordNode = this.astBuilder.createTodoKeywordNode();
-    this.astBuilder.attachToTree(todoKeywordNode);
-    return todoKeywordNode;
+  private handleEndOfLine(): void {
+    this.bracketHandler.handleEndOfLine();
+    this.keywordHandler.handleEndOfLine();
   }
 
   private buildOrgDataForOperator(operator: string): OrgNode {
@@ -214,6 +190,14 @@ export function parse(
     astBuilder,
     tokenIterator
   );
+  const keywordHandler = new KeywordHandler(
+    configuration,
+    ctx,
+    astBuilder,
+    tokenIterator,
+    blockHandler,
+    propertiesHandler
+  );
   const parser = new Parser(
     configuration,
     ctx,
@@ -221,9 +205,8 @@ export function parse(
     astBuilder,
     bracketHandler,
     listHandler,
-    blockHandler,
     commentHandler,
-    propertiesHandler
+    keywordHandler
   );
   return parser.parse();
 }

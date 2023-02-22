@@ -115,4 +115,41 @@ describe('Org children', () => {
       "
     `);
   });
+
+  it('Should correct slice items', () => {
+    const orgChildrenList = new OrgChildrenList();
+
+    const firstOrgNode = new OrgNode({
+      type: NodeType.Operator,
+      value: '*',
+    });
+    const secondOrgNode = new OrgNode({
+      type: NodeType.Text,
+      value: 'First node',
+    });
+
+    const thirdOrgNode = new OrgNode({
+      type: NodeType.Text,
+      value: 'Third node',
+    });
+
+    const fourthNode = new OrgNode({
+      type: NodeType.Operator,
+      value: '*',
+    });
+
+    orgChildrenList.push(firstOrgNode);
+    orgChildrenList.push(secondOrgNode);
+    orgChildrenList.push(thirdOrgNode);
+    orgChildrenList.push(fourthNode);
+
+    const slicedNodes = orgChildrenList.slice(1, 3);
+
+    expect(slicedNodes.length).toBe(2);
+    expect(slicedNodes).toMatchInlineSnapshot(`
+      OrgChildrenList {
+        "length": 2,
+      }
+    `);
+  });
 });
