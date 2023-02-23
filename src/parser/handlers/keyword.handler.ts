@@ -48,11 +48,7 @@ export class KeywordHandler implements OrgHandler {
   }
 
   public handleEndOfLine(): void {
-    console.log(
-      '✎: [line 57][keyword.handler.ts] this.lastKeyword: ',
-      this.lastKeyword
-    );
-    this.lastKeyword.calculateNodeProperties();
+    this.lastKeyword?.calculateNodeProperties();
     this.resetLastStoredKeyword();
   }
 
