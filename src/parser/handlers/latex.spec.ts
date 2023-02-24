@@ -10,7 +10,7 @@ describe('Latex', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-37]
         text [0-10] ("This is a ")
-        inlineLatex [10-18]
+        latexFragment [10-18]
           operator [10-11] ("$")
           text [11-17] ("\\\\alpha")
           operator [17-18] ("$")

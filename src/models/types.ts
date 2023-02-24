@@ -27,7 +27,7 @@ export enum NodeType {
   Bold = 'bold',
   Crossed = 'crossed',
   InlineCode = 'inlineCode',
-  InlineLatex = 'inlineLatex',
+  LatexFragment = 'latexFragment',
   Verbatim = 'verbatim',
   Italic = 'italic',
 
