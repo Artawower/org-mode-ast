@@ -886,4 +886,16 @@ console.log(a);
       { start: 11, end: 22, type: 'text', value: ' NAME VALUE' },
     ]);
   });
+
+  it('Should tokenize inline latex block', () => {
+    const orgDoc = `This is a latex block: $\\alpha$`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 23, type: 'text', value: 'This is a latex block: ' },
+      { start: 23, end: 24, type: 'bracket', value: '$' },
+      { start: 24, end: 30, type: 'text', value: '\\alpha' },
+      { start: 30, end: 31, type: 'bracket', value: '$' },
+    ]);
+  });
 });

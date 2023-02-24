@@ -20,6 +20,7 @@ export class BracketHandler implements OrgHandler {
       | NodeType.Crossed
       | NodeType.Italic
       | NodeType.InlineCode
+      | NodeType.InlineLatex
       | NodeType.Verbatim;
   } = {
     '*': NodeType.Bold,
@@ -27,6 +28,7 @@ export class BracketHandler implements OrgHandler {
     '+': NodeType.Crossed,
     '=': NodeType.Verbatim,
     '~': NodeType.InlineCode,
+    $: NodeType.InlineLatex,
   };
 
   // NOTE: https://regex101.com/r/IPfgId/1

@@ -1,9 +1,10 @@
 import { ParserConfiguration, RawToken, Token, TokenType } from 'models';
 
 export class Tokenizer {
+  // TODO: master move this settings to parser configuration list
   private readonly delimiter = ' ';
   private readonly pariBrackets = ['[', ']', '<', '>'];
-  private readonly formatterBrackets = ['=', '+', '/', '*', '~'];
+  private readonly formatterBrackets = ['=', '+', '/', '*', '~', '$'];
   private readonly keywordStartOperator = '#+';
   private readonly brackets: string[] = [
     ...this.formatterBrackets,
