@@ -69,6 +69,7 @@ Of these requirements I want the following from this parser:
 - [ ] Results block
 - [ ] Cross-links
 - [ ] Footnote
+- [ ] Entities
 ** Autoformatting [0/3]
 - [ ] Auto-align tables
 - [ ] Calculate the progress of the list
