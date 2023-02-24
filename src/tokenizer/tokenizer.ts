@@ -228,6 +228,10 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
+    if (this.lastToken.value === '$' && c === '$') {
+      this.upsertToken({ type: TokenType.Bracket, value: c }, true);
+      return;
+    }
     if (
       this.lastToken &&
       this.isFormatterBracket(this.lastToken.value) &&

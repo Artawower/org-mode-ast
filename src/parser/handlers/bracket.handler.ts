@@ -29,6 +29,7 @@ export class BracketHandler implements OrgHandler {
     '=': NodeType.Verbatim,
     '~': NodeType.InlineCode,
     $: NodeType.LatexFragment,
+    $$: NodeType.LatexFragment,
   };
 
   // NOTE: https://regex101.com/r/IPfgId/1

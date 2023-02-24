@@ -890,7 +890,7 @@ console.log(a);
   it('Should tokenize inline latex block', () => {
     const orgDoc = `This is a latex block: $\\alpha$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
+    // console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 23, type: 'text', value: 'This is a latex block: ' },
       { start: 23, end: 24, type: 'bracket', value: '$' },
@@ -898,4 +898,31 @@ console.log(a);
       { start: 30, end: 31, type: 'bracket', value: '$' },
     ]);
   });
+
+  fit('Should tokenize latex with 2 $', () => {
+    const orgDoc = `This is also a latex text: $$1+1=2$$`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 905][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 27, type: 'text', value: 'This is also a latex text: ' },
+      { start: 27, end: 29, type: 'bracket', value: '$$' },
+      { start: 29, end: 30, type: 'text', value: '1' },
+      { start: 30, end: 31, type: 'bracket', value: '+' },
+      { start: 31, end: 32, type: 'text', value: '1' },
+      { start: 32, end: 33, type: 'bracket', value: '=' },
+      { start: 33, end: 34, type: 'text', value: '2' },
+      { start: 34, end: 36, type: 'bracket', value: '$$' },
+    ]);
+  });
+
+  // it('Should parse latex fragment with backslash', () => {
+  //   const orgDoc = "\\(e^{i \\pi}\\)"
+  //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+  //   // console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
+  //   expect(result).toEqual([
+  //     { start: 0, end: 1, type: 'bracket', value: '\\' },
+  //     { start: 1, end }
+  //   ])
+
+  // })
 });
