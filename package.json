@@ -7,7 +7,7 @@
     "start": "node --loader tsm src/index.ts",
     "build": "tsc --project tsconfig.json",
     "test": "jest",
-    "test:silent": "test --silent",
+    "test:silent": "jest --silent=true",
     "test:coverage": "jest --coverage",
     "coverage": "jest --coverage",
     "lint": "eslint . --ext .ts"

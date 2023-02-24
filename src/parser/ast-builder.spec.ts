@@ -63,7 +63,7 @@ describe('AST builder tests', () => {
       ],
     });
 
-    const rawValue = builder.getRawValueFromNode(nestedOrgData);
+    const rawValue = builder.getRawValueFromNodes(nestedOrgData);
     expect(rawValue).toBe('=*console.log(123)*=');
   });
 

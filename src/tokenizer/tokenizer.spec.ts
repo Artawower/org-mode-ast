@@ -899,7 +899,7 @@ console.log(a);
     ]);
   });
 
-  fit('Should tokenize latex with 2 $', () => {
+  it('Should tokenize latex with 2 $', () => {
     const orgDoc = `This is also a latex text: $$1+1=2$$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     console.log('✎: [line 905][tokenizer.spec.ts] result: ', result);
