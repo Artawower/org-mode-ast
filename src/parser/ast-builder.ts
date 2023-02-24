@@ -1,4 +1,4 @@
-import { NodeType, OrgChildrenList, OrgNode, TokenType } from 'models';
+import { Block, NodeType, OrgChildrenList, OrgNode, TokenType } from 'models';
 import { TokenIterator } from 'tokenizer';
 import { AstContext } from './ast-context';
 
@@ -454,7 +454,7 @@ export class AstBuilder {
   }
 
   public createBlockNode(
-    type: NodeType.HtmlBlock | NodeType.SrcBlock | NodeType.QuoteBlock,
+    type: Block,
     properties?: { [key: string]: string }
   ): OrgNode {
     const srcBlockNode = new OrgNode({

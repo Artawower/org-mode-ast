@@ -1,4 +1,5 @@
 import {
+  Block,
   BlockPosition,
   BlockType,
   NodeType,
@@ -14,19 +15,25 @@ import { TokenIterator } from 'tokenizer';
 // TODO: master this class should be refactored!
 export class BlockHandler implements OrgHandler {
   private blockTypeToNode: {
-    [key: string]: NodeType.HtmlBlock | NodeType.SrcBlock | NodeType.QuoteBlock;
+    [key: string]: Block;
   } = {
     src: NodeType.SrcBlock,
     quote: NodeType.QuoteBlock,
     html: NodeType.HtmlBlock,
+    export: NodeType.ExportBlock,
+    comment: NodeType.CommentBlock,
+    example: NodeType.ExampleBlock,
   };
 
   private blockHanderls: {
     [key: string]: (pos: BlockPosition, type: string) => OrgNode;
   } = {
     src: (pos, type) => this.handleRawBlock(pos, type),
+    quote: (pos, type) => this.handleBlockWithFormat(pos, type),
     html: (pos, type) => this.handleRawBlock(pos, type),
-    quote: (pos, type) => this.handleQuoteBlock(pos, type),
+    export: (pos, type) => this.handleRawBlock(pos, type),
+    comment: (pos, type) => this.handleBlockWithFormat(pos, type),
+    example: (pos, type) => this.handleRawBlock(pos, type),
   };
 
   constructor(
@@ -208,22 +215,21 @@ export class BlockHandler implements OrgHandler {
     return metaInfo;
   }
 
-  private handleQuoteBlock(position: BlockPosition, type: BlockType): OrgNode {
+  private handleBlockWithFormat(
+    position: BlockPosition,
+    type: BlockType
+  ): OrgNode {
     const keywordTextNode = this.astBuilder.createText();
     const keywordNode = this.astBuilder.createKeyword(keywordTextNode);
 
     if (position === 'begin') {
-      this.ctx.quoteBlockBegin = keywordNode;
+      this.ctx.blockBegin = keywordNode;
       this.astBuilder.attachToTree(keywordNode);
       return keywordNode;
     }
 
-    if (position === 'end' && this.ctx.quoteBlockBegin) {
-      this.mergeNodesBetweenBlockKeywords(
-        this.ctx.quoteBlockBegin,
-        type,
-        false
-      );
+    if (position === 'end' && this.ctx.blockBegin) {
+      this.mergeNodesBetweenBlockKeywords(this.ctx.blockBegin, type, false);
       this.ctx.resetQuoteBlockInfo();
     }
 

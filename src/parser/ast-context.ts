@@ -9,7 +9,8 @@ export class AstContext {
 
   // TODO: master move to block handler
   public srcBlockBegin: OrgNode = null;
-  public quoteBlockBegin: OrgNode = null;
+  // TODO: master should be map of all posbible blocks ?
+  public blockBegin: OrgNode = null;
 
   get lastParentList(): OrgNode {
     if (!this.#nestedLists.length) {
@@ -74,6 +75,6 @@ export class AstContext {
   }
 
   public resetQuoteBlockInfo(): void {
-    this.quoteBlockBegin = null;
+    this.blockBegin = null;
   }
 }

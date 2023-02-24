@@ -40,7 +40,10 @@ export enum NodeType {
   BlockFooter = 'blockFooter',
   BlockBody = 'blockBody',
   QuoteBlock = 'quoteBlock',
+  ExampleBlock = 'exampleBlock',
   HtmlBlock = 'htmlBlock',
+  ExportBlock = 'exportBlock',
+  CommentBlock = 'commentBlock',
   HeaderArg = 'headerArg',
 
   Keyword = 'keyword',
@@ -53,6 +56,14 @@ export enum NodeType {
   // Workaround for structures that have section + title
   Title = 'title',
 }
+
+export type Block =
+  | NodeType.SrcBlock
+  | NodeType.QuoteBlock
+  | NodeType.HtmlBlock
+  | NodeType.ExportBlock
+  | NodeType.ExampleBlock
+  | NodeType.CommentBlock;
 
 export enum TokenType {
   Headline = 'headline',

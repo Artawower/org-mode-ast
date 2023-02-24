@@ -119,4 +119,59 @@ print('Hello world')
       "
     `);
   });
+
+  it('Should parse latex export block', () => {
+    const orgDoc = `#+BEGIN_EXPORT latex
+In physics, the mass-energy equivalence is stated 
+by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.    
+#+END_EXPORT`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-153]
+        exportBlock [0-153]
+          blockHeader [0-20]
+            keyword [0-20]
+              text [0-14] ("#+BEGIN_EXPORT")
+              text [14-20] (" latex")
+          newLine [20-21]
+          blockBody [21-140]
+            text [21-140] ("In physics, the mass-energy equivalence is stated \\nby the equation $E=mc^2$, discovered in 1905 by Albert Einstein.    ")
+          newLine [140-141]
+          blockFooter [141-153]
+            keyword [141-153]
+              text [141-153] ("#+END_EXPORT")
+      "
+    `);
+  });
+
+  it('Should parse simple comment block', () => {
+    const orgDoc = `#+BEGIN_COMMENT
+    This is my comment with *Bold* text!
+#+END_COMMENT`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-70]
+        commentBlock [0-70]
+          blockHeader [0-15]
+            keyword [0-15]
+              text [0-15] ("#+BEGIN_COMMENT")
+          newLine [15-16]
+          blockBody [16-56]
+            indent [16-20] ("    ")
+            text [20-44] ("This is my comment with ")
+            bold [44-50]
+              operator [44-45] ("*")
+              text [45-49] ("Bold")
+              operator [49-50] ("*")
+            text [50-56] (" text!")
+          newLine [56-57]
+          blockFooter [57-70]
+            keyword [57-70]
+              text [57-70] ("#+END_COMMENT")
+      "
+    `);
+  });
 });
