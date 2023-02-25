@@ -51,6 +51,8 @@ export enum NodeType {
   LinkUrl = 'linkUrl',
   LinkName = 'linkName',
 
+  HorizontalRule = 'horizontalRule',
+
   Section = 'section',
 
   // Workaround for structures that have section + title
@@ -74,6 +76,7 @@ export enum TokenType {
   Comment = 'comment',
   Operator = 'operator',
   Indent = 'indent',
+  HorizontalRule = 'horizontalRule',
 }
 
 export interface RawToken {

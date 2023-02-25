@@ -40,26 +40,33 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [15/19]
+** Org nodes [17/26]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [X] List Progress
+- [ ] Headline tags
+- [ ] List item tags
 - [X] Headlines
 - [X] Inline code
 - [X] Inline quotes
 - [X] Links
 - [X] Src blocs
-- [ ] Latex blocks
+- [X] Latex blocks
+- [ ] Latex fragment (partial)
+- [ ] Latex environment
 - [X] Keywords
 - [X] Html/quotes blocks
 - [X] Verbatim
+- [ ] Fixed width value
 - [ ] Inline HTML
-- [ ] Html attributes
+- [ ] attributes
 - [X] Comments
 - [X] Properties
+- [X] Horizontal rule
 - [X] Date and time
 - [X] Tags
 - [ ] Tables
+- [ ] Float dates
 
   Am I missing something? Please, let me know.
 ** Common features [0/0]
@@ -70,6 +77,7 @@ Of these requirements I want the following from this parser:
 - [ ] Cross-links
 - [ ] Footnote
 - [ ] Entities
+- [ ] Inline source blocks
 ** Autoformatting [0/3]
 - [ ] Auto-align tables
 - [ ] Calculate the progress of the list

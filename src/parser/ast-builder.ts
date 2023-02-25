@@ -492,6 +492,13 @@ export class AstBuilder {
     });
   }
 
+  public createHorizontalRuleNode(value: string): OrgNode {
+    return new OrgNode({
+      type: NodeType.HorizontalRule,
+      value,
+    });
+  }
+
   public createPropertyNode(
     val?: string,
     children?: OrgNode[] | OrgChildrenList

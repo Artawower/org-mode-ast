@@ -915,6 +915,33 @@ console.log(a);
     ]);
   });
 
+  it('Should parse horizontal rule', () => {
+    const orgDoc = '------';
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 919][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 6, type: 'horizontalRule', value: '------' },
+    ]);
+  });
+
+  it('Should not parse text as horizontal rule', () => {
+    const orgDoc = 'Some text ------';
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 929][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 16, type: 'text', value: 'Some text ------' },
+    ]);
+  });
+
+  it('Should not parse text as horizontal rule when text is exist after rule', () => {
+    const orgDoc = '------ Some text';
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 939][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 16, type: 'text', value: '------ Some text' },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

@@ -18,6 +18,7 @@ import {
   ListHandler,
   PropertiesHandler,
 } from './handlers';
+import { HorizontalRuleHandler } from './handlers/horizontal-rule.handler';
 import { parserConfiguration } from './parser.configuration';
 
 class Parser {
@@ -29,7 +30,8 @@ class Parser {
     private readonly bracketHandler: BracketHandler,
     private readonly listHandler: ListHandler,
     private readonly commentHandler: CommentHandler,
-    private readonly keywordHandler: KeywordHandler
+    private readonly keywordHandler: KeywordHandler,
+    private readonly horizontalRuleHandler: HorizontalRuleHandler
   ) {}
 
   public parse(): OrgNode {
@@ -52,6 +54,7 @@ class Parser {
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
     [TokenType.Keyword]: () => this.keywordHandler.handle(),
+    [TokenType.HorizontalRule]: () => this.horizontalRuleHandler.handle(),
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
   } satisfies Record<string, () => OrgNode | void>;
@@ -134,7 +137,7 @@ class Parser {
   private handleIndent(): OrgNode {
     const indentNode = this.astBuilder.createIndentNode();
 
-    if (this.astBuilder.isListOperator(this.tokenIterator.nextToken.value)) {
+    if (this.astBuilder.isListOperator(this.tokenIterator.nextToken?.value)) {
       this.ctx.nextIndentNode = indentNode;
       this.astBuilder.increaseLastPosition(this.tokenIterator.currentValue);
       return;
@@ -181,6 +184,11 @@ export function parse(
   const tokenizer = new Tokenizer(text, configuration);
   const tokenIterator = new TokenIterator(tokenizer);
   const astBuilder = new AstBuilder(ctx, tokenIterator);
+  const horizontalRuleHandler = new HorizontalRuleHandler(
+    configuration,
+    astBuilder,
+    tokenIterator
+  );
   const commentHandler = new CommentHandler(astBuilder, tokenIterator);
   const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
   const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
@@ -206,7 +214,8 @@ export function parse(
     bracketHandler,
     listHandler,
     commentHandler,
-    keywordHandler
+    keywordHandler,
+    horizontalRuleHandler
   );
   return parser.parse();
 }

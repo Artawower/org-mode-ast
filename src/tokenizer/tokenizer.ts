@@ -5,6 +5,9 @@ export class Tokenizer {
   private readonly delimiter = ' ';
   private readonly pariBrackets = ['[', ']', '<', '>'];
   private readonly formatterBrackets = ['=', '+', '/', '*', '~', '$'];
+  private readonly horizontalRuleChar = '-';
+  private readonly newLineChar = '\n';
+  private readonly horizontalRuleMinLength = 5;
   private readonly keywordStartOperator = '#+';
   private readonly brackets: string[] = [
     ...this.formatterBrackets,
@@ -163,6 +166,14 @@ export class Tokenizer {
       this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
+    if (this.isPrevToken(TokenType.Operator) && this.lastToken.value === '-') {
+      this.upsertToken({ type: TokenType.Text, value: c }, true);
+      return;
+    }
+    if (this.isHorizontalRule(c)) {
+      this.upsertToken({ type: TokenType.HorizontalRule, value: c }, true);
+      return;
+    }
     this.upsertToken({ type: TokenType.Text, value: c });
   }
 
@@ -265,6 +276,22 @@ export class Tokenizer {
     this.checkIsLastTextTokenKeyword();
   }
 
+  private isHorizontalRule(c: string): boolean {
+    const prevTokenNewLine =
+      !this.lastToken.prev || this.lastToken.prev.isType(TokenType.NewLine);
+    const isDash = c === '-';
+    const consistOfDashes =
+      this.lastToken.value.replaceAll('-', '').length === 0;
+    const horizontalRuleLengthSatisfied =
+      this.lastToken.value.length + 1 >= this.horizontalRuleMinLength;
+    return (
+      prevTokenNewLine &&
+      isDash &&
+      horizontalRuleLengthSatisfied &&
+      consistOfDashes
+    );
+  }
+
   private appendTextToken(c: string): void {
     if (this.lastToken?.isType(TokenType.NewLine)) {
       this.createToken({ type: TokenType.Text, value: c });
@@ -353,10 +380,27 @@ export class Tokenizer {
   private buildTokens(c: string) {
     const tokenAggregator = this.tokenAggregators[c];
     if (tokenAggregator) {
+      this.satisfyPreviousResult(c);
       tokenAggregator(c);
       return;
     }
     this.handleText(c);
+  }
+
+  private satisfyPreviousResult(c: string) {
+    this.checkLastTokenHorizontalRule(c);
+  }
+
+  private checkLastTokenHorizontalRule(c: string): void {
+    if (
+      !this.lastToken ||
+      !this.lastToken.isType(TokenType.HorizontalRule) ||
+      c === this.horizontalRuleChar ||
+      c === this.newLineChar
+    ) {
+      return;
+    }
+    this.lastToken.setType(TokenType.Text);
   }
 
   private createToken(token: RawToken) {
