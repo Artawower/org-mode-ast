@@ -7,10 +7,10 @@ import {
   OrgHandler,
   OrgNode,
   SrcBlockMetaInfo,
-} from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { AstContext } from 'parser/ast-context';
-import { TokenIterator } from 'tokenizer';
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { AstContext } from '../ast-context.js';
+import { TokenIterator } from '../../tokenizer/index.js';
 
 // TODO: master this class should be refactored!
 export class BlockHandler implements OrgHandler {
@@ -64,7 +64,7 @@ export class BlockHandler implements OrgHandler {
    */
   private handleRawBlock(position: BlockPosition, type: BlockType): OrgNode {
     const keywordTextNode = this.astBuilder.createText();
-    const keywordNode = this.astBuilder.createKeyword(keywordTextNode);
+    const keywordNode = this.astBuilder.createKeywordNode(keywordTextNode);
 
     if (position === 'begin') {
       this.ctx.srcBlockBegin = keywordNode;
@@ -220,7 +220,7 @@ export class BlockHandler implements OrgHandler {
     type: BlockType
   ): OrgNode {
     const keywordTextNode = this.astBuilder.createText();
-    const keywordNode = this.astBuilder.createKeyword(keywordTextNode);
+    const keywordNode = this.astBuilder.createKeywordNode(keywordTextNode);
 
     if (position === 'begin') {
       this.ctx.blockBegin = keywordNode;

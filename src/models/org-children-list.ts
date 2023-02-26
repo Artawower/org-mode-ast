@@ -1,4 +1,4 @@
-import { OrgNode } from './org-node';
+import { OrgNode } from './org-node.js';
 
 const customInspectSymbol = Symbol.for('nodejs.util.inspect.custom');
 
@@ -229,6 +229,9 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   public slice(from: number, to?: number): OrgChildrenList {
+    if (to < 0) {
+      to = this.length + to;
+    }
     const newList = new OrgChildrenList();
     let current = this.#first;
     let i = 0;

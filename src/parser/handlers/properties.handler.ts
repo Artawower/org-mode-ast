@@ -1,7 +1,12 @@
-import { NodeType, OrgChildrenList, OrgHandler, OrgNode } from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { AstContext } from 'parser/ast-context';
-import { TokenIterator } from 'tokenizer';
+import {
+  NodeType,
+  OrgChildrenList,
+  OrgHandler,
+  OrgNode,
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { AstContext } from '../ast-context.js';
+import { TokenIterator } from '../../tokenizer/index.js';
 
 export class PropertiesHandler implements OrgHandler {
   private propertiesBeginNode: OrgNode;

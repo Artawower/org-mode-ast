@@ -1,13 +1,19 @@
-import { ParserConfiguration, RawToken, Token, TokenType } from 'models';
+import {
+  ParserConfiguration,
+  RawToken,
+  Token,
+  TokenType,
+} from '../models/index.js';
 
 export class Tokenizer {
-  // TODO: master move this settings to parser configuration list
+  // TODO: master move this settings to parser configuration
   private readonly delimiter = ' ';
-  private readonly pariBrackets = ['[', ']', '<', '>'];
+  private readonly pariBrackets = ['[', ']', '<', '>', '{', '}'];
   private readonly formatterBrackets = ['=', '+', '/', '*', '~', '$'];
   private readonly horizontalRuleChar = '-';
   private readonly newLineChar = '\n';
   private readonly horizontalRuleMinLength = 5;
+  private readonly latexEnvironmentBlocks = ['\\begin', '\\end'];
   private readonly keywordStartOperator = '#+';
   private readonly brackets: string[] = [
     ...this.formatterBrackets,
@@ -18,7 +24,7 @@ export class Tokenizer {
   private begin = 0;
   private end = 0;
 
-  // TODO: make it as linked list
+  // TODO: make linked list
   private point = 0;
   private tokenAggregators: { [key: string]: (c: string) => void };
   private firstToken: Token;
@@ -41,6 +47,7 @@ export class Tokenizer {
       '.': (c: string) => this.handlePoint(c),
       ')': (c: string) => this.handleParenthesis(c),
       '\n': (c: string) => this.handleNewLine(c),
+      '\\': (c: string) => this.handleBackslash(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -126,7 +133,6 @@ export class Tokenizer {
 
     if (this.isPrevToken(TokenType.Keyword)) {
       this.createToken({ type: TokenType.Text, value: c });
-      // this.upsertToken({ type: TokenType.Text, value: c });
       return;
     }
     this.appendTextToken(c);
@@ -234,6 +240,13 @@ export class Tokenizer {
     this.createToken({ type: TokenType.NewLine, value: c });
   }
 
+  private handleBackslash(c: string): void {
+    this.createToken({
+      type: TokenType.Keyword,
+      value: c,
+    });
+  }
+
   private isValueNumber(value: string): boolean {
     return !!value.match(/^[0-9]+$/);
   }
@@ -270,10 +283,20 @@ export class Tokenizer {
 
     if (this.isPrevToken(TokenType.Keyword)) {
       this.appendPrevValue(c);
+      this.checkSpecificKeyword();
       return;
     }
     this.appendTextToken(c);
     this.checkIsLastTextTokenKeyword();
+  }
+
+  private checkSpecificKeyword(): void {
+    const isLatexKeyword = this.latexEnvironmentBlocks.includes(
+      this.lastToken.value
+    );
+    if (isLatexKeyword) {
+      this.lastToken.setType(TokenType.LatexEnvironmentKeyword);
+    }
   }
 
   private isHorizontalRule(c: string): boolean {
@@ -329,6 +352,9 @@ export class Tokenizer {
     }
     if (this.isBlockKeyword(this.lastToken.value)) {
       this.forceMergeLastTokens(2, TokenType.Keyword);
+    }
+    if (this.lastToken.value.startsWith(':')) {
+      this.lastToken.setType(TokenType.Keyword);
     }
   }
 

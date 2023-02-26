@@ -1,4 +1,4 @@
-import { NodeType, OrgNode } from 'models';
+import { NodeType, OrgNode } from '../models/index.js';
 
 /**
  * Method for pretty debug org tree. Useful for long AST.

@@ -1,4 +1,4 @@
-import { OrgNode } from 'models';
+import { OrgNode } from '../models/index.js';
 
 export class AstContext {
   #nextIndentNode: OrgNode;

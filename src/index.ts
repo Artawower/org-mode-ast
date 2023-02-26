@@ -1,1 +1,1 @@
-console.log('amma start works!');
+export * from './parser/index.js';

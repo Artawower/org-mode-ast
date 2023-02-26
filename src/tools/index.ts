@@ -1,2 +1,2 @@
-export * from './tools';
-export * from './is-number';
+export * from './tools.js';
+export * from './is-number.js';

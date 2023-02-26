@@ -53,7 +53,7 @@ Of these requirements I want the following from this parser:
 - [X] Src blocs
 - [X] Latex blocks
 - [ ] Latex fragment (partial)
-- [ ] Latex environment
+- [ ] Latex environment (next)
 - [X] Keywords
 - [X] Html/quotes blocks
 - [X] Verbatim

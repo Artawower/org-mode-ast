@@ -1,9 +1,13 @@
-import { OrgHandler, OrgNode, ParserConfiguration } from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { AstContext } from 'parser/ast-context';
-import { TokenIterator } from 'tokenizer';
-import { BlockHandler } from './block.handler';
-import { PropertiesHandler } from './properties.handler';
+import {
+  OrgHandler,
+  OrgNode,
+  ParserConfiguration,
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { AstContext } from '../ast-context.js';
+import { TokenIterator } from '../../tokenizer/index.js';
+import { BlockHandler } from './block.handler.js';
+import { PropertiesHandler } from './properties.handler.js';
 
 export class KeywordHandler implements OrgHandler {
   private lastKeyword: OrgNode;
@@ -31,7 +35,7 @@ export class KeywordHandler implements OrgHandler {
       return this.blockHandler.handleBlockProperty();
     }
     const textNode = this.astBuilder.createText();
-    const createdKeyword = this.astBuilder.createKeyword(textNode);
+    const createdKeyword = this.astBuilder.createKeywordNode(textNode);
     this.lastKeyword = createdKeyword;
     this.astBuilder.attachToTree(createdKeyword);
     return createdKeyword;

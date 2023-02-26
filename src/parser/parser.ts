@@ -6,10 +6,10 @@ import {
   ParserConfiguration,
   TokenType,
   UnsupportedOperator,
-} from 'models';
-import { TokenIterator, Tokenizer } from 'tokenizer';
-import { AstBuilder } from './ast-builder';
-import { AstContext } from './ast-context';
+} from '../models/index.js';
+import { TokenIterator, Tokenizer } from '../tokenizer/index.js';
+import { AstBuilder } from './ast-builder.js';
+import { AstContext } from './ast-context.js';
 import {
   BlockHandler,
   BracketHandler,
@@ -17,9 +17,10 @@ import {
   KeywordHandler,
   ListHandler,
   PropertiesHandler,
-} from './handlers';
-import { HorizontalRuleHandler } from './handlers/horizontal-rule.handler';
-import { parserConfiguration } from './parser.configuration';
+  HorizontalRuleHandler,
+  LatexEnvironmentHandler,
+} from './handlers/index.js';
+import { parserConfiguration } from './parser.configuration.js';
 
 class Parser {
   constructor(
@@ -31,7 +32,8 @@ class Parser {
     private readonly listHandler: ListHandler,
     private readonly commentHandler: CommentHandler,
     private readonly keywordHandler: KeywordHandler,
-    private readonly horizontalRuleHandler: HorizontalRuleHandler
+    private readonly horizontalRuleHandler: HorizontalRuleHandler,
+    private readonly latexEnvironmentHandler: LatexEnvironmentHandler
   ) {}
 
   public parse(): OrgNode {
@@ -169,6 +171,8 @@ class Parser {
     if (this.astBuilder.isPropertyOperator(operator)) {
       return this.astBuilder.createUnresolvedNode();
     }
+
+    return this.astBuilder.createTextNode(this.tokenIterator.currentValue);
   }
 }
 
@@ -206,6 +210,11 @@ export function parse(
     blockHandler,
     propertiesHandler
   );
+  const latexEnvironmentHandler = new LatexEnvironmentHandler(
+    configuration,
+    astBuilder,
+    tokenIterator
+  );
   const parser = new Parser(
     configuration,
     ctx,
@@ -215,7 +224,8 @@ export function parse(
     listHandler,
     commentHandler,
     keywordHandler,
-    horizontalRuleHandler
+    horizontalRuleHandler,
+    latexEnvironmentHandler
   );
   return parser.parse();
 }

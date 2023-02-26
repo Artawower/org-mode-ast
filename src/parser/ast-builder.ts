@@ -1,6 +1,12 @@
-import { Block, NodeType, OrgChildrenList, OrgNode, TokenType } from 'models';
-import { TokenIterator } from 'tokenizer';
-import { AstContext } from './ast-context';
+import {
+  Block,
+  NodeType,
+  OrgChildrenList,
+  OrgNode,
+  TokenType,
+} from '../models/index.js';
+import { TokenIterator } from '../tokenizer/index.js';
+import { AstContext } from './ast-context.js';
 
 export class AstBuilder {
   public lastNode: OrgNode;
@@ -300,7 +306,7 @@ export class AstBuilder {
     return headline;
   }
 
-  public createKeyword(...children: OrgNode[]): OrgNode {
+  public createKeywordNode(...children: OrgNode[]): OrgNode {
     const keywordNode = new OrgNode({
       type: NodeType.Keyword,
     });
@@ -308,6 +314,7 @@ export class AstBuilder {
     return keywordNode;
   }
 
+  // TODO: master delete. Redundant.
   public createText(): OrgNode {
     return new OrgNode({
       type: NodeType.Text,

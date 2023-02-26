@@ -1,7 +1,12 @@
-import { NodeType, OrgChildrenList, OrgHandler, OrgNode } from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { TokenIterator } from 'tokenizer';
-import { isNumber } from 'tools';
+import {
+  NodeType,
+  OrgChildrenList,
+  OrgHandler,
+  OrgNode,
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { TokenIterator } from '../../tokenizer/index.js';
+import { isNumber } from '../../tools/index.js';
 
 export class BracketHandler implements OrgHandler {
   private bracketsStack: OrgChildrenList = new OrgChildrenList();
@@ -13,6 +18,8 @@ export class BracketHandler implements OrgHandler {
     ']': '[',
     '>': '<',
   };
+
+  private readonly bracketsWithRawContent = ['$', '$$'];
 
   private readonly textFormattersNodeTypeMap: {
     [key: string]:
@@ -94,16 +101,39 @@ export class BracketHandler implements OrgHandler {
     const orgNode = this.handleBracketSequence(potentialBraketNodes);
 
     if (orgNode) {
-      this.bracketsStack.removeNodes(potentialBraketNodes);
-      realParent.removeChildren(potentialBraketNodes);
-      orgNode.addChildren(potentialBraketNodes);
-      realParent.addChild(orgNode);
-      this.astBuilder.mergeNeighborsNodesWithSameType(
-        potentialBraketNodes.first
-      );
+      this.normalizeBracketedNodes(orgNode, potentialBraketNodes);
     }
 
     return orgNode;
+  }
+
+  private normalizeBracketedNodes(
+    bracketNodeParent: OrgNode,
+    bracketNodes: OrgChildrenList
+  ): void {
+    const realParent = bracketNodes.first.parent;
+
+    this.bracketsStack.removeNodes(bracketNodes);
+    realParent.removeChildren(bracketNodes);
+
+    const shouldHaveRawContent = this.bracketsWithRawContent.includes(
+      bracketNodes.first.value
+    );
+    if (shouldHaveRawContent) {
+      const rawValue = this.astBuilder.getRawValueFromNodes(
+        bracketNodes.slice(1, -1)
+      );
+      const textNode = this.astBuilder.createTextNode(rawValue);
+      bracketNodes = new OrgChildrenList(
+        bracketNodes.first,
+        textNode,
+        bracketNodes.last
+      );
+    }
+
+    bracketNodeParent.addChildren(bracketNodes);
+    realParent.addChild(bracketNodeParent);
+    this.astBuilder.mergeNeighborsNodesWithSameType(bracketNodes.first);
   }
 
   private readonly bracketedNodesHandler: Array<

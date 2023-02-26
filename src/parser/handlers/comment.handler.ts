@@ -1,6 +1,6 @@
-import { OrgHandler, OrgNode, TokenType } from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { TokenIterator } from 'tokenizer';
+import { OrgHandler, OrgNode, TokenType } from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { TokenIterator } from '../../tokenizer/index.js';
 
 export class CommentHandler implements OrgHandler {
   public static readonly tokenType = TokenType.Comment;

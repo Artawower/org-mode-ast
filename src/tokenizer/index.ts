@@ -1,2 +1,2 @@
-export * from './tokenizer';
-export * from './token-iterator';
+export * from './tokenizer.js';
+export * from './token-iterator.js';

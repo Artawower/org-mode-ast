@@ -4,7 +4,7 @@
   "description": "Simple and dumb org-mode parser",
   "type": "module",
   "scripts": {
-    "start": "node --loader tsm src/index.ts",
+    "start": "yarn build & node dist/index.js",
     "build": "tsc --project tsconfig.json",
     "test": "jest",
     "test:silent": "jest --silent=true",
@@ -12,7 +12,10 @@
     "coverage": "jest --coverage",
     "lint": "eslint . --ext .ts"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "author": "me <artawower@mail.ru> (https://du-blog.ru/)",
   "license": "MIT",
   "devDependencies": {
@@ -25,7 +28,7 @@
     "jsonify-console": "1.1.4",
     "prettier": "2.8.1",
     "ts-jest": "28.0.8",
-    "tsm": "2.2.2",
+    "tsm": "2.3.0",
     "typescript": "4.9.4"
   }
 }

@@ -1,4 +1,4 @@
-import { OrgNode } from './org-node';
+import { OrgNode } from './org-node.js';
 
 export enum NodeType {
   Root = 'root',
@@ -72,6 +72,7 @@ export enum TokenType {
   Text = 'text',
   NewLine = 'newLine',
   Keyword = 'keyword',
+  LatexEnvironmentKeyword = 'latexEnvironmentKeyword',
   Bracket = 'bracket',
   Comment = 'comment',
   Operator = 'operator',
@@ -152,6 +153,10 @@ export interface SrcBlockMetaInfo {
 
 export interface ParserConfiguration {
   todoKeywords?: string[];
+  latexEnvironmentBlocks?: {
+    begin: string;
+    end: string;
+  };
 }
 
 export type BlockPosition = 'begin' | 'end';

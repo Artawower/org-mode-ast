@@ -208,7 +208,6 @@ fdescribe('Tokenizer', () => {
 *** DONE [#B] Third most important headline
 * HOLD [#c] Headline 3`;
     const result = tokenize(headline, parserConfiguration);
-    console.log('✎: [line 162][tokenizer.spec.ts] result: ', result);
     expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
@@ -421,7 +420,6 @@ Some text`;
 :ID:      123
 :END:`;
     const result = tokenize(orgDoc, parserConfiguration);
-    console.log('✎: [line 351][tokenizer.spec.ts] result: ', result);
     expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Keyword, value: ':PROPERTIES:', start: 0, end: 12 },
       { type: TokenType.NewLine, value: '\n', start: 12, end: 13 },
@@ -572,7 +570,6 @@ Some text`;
 3) List item 3`;
 
     const result = tokenize(orgDoc, parserConfiguration);
-    console.log(result);
     expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Operator, value: '1) ', start: 0, end: 3 },
       { type: TokenType.Text, value: 'List item 1', start: 3, end: 14 },
@@ -610,7 +607,6 @@ const a = 1;
 #+END_SRC`;
 
     const result = tokenize(orgDoc, parserConfiguration);
-    console.log('✎: [line 536][tokenizer.spec.ts] result: ', result);
     expect(tokenListToArray(result)).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
       { start: 11, end: 14, type: 'text', value: ' js' },
@@ -630,7 +626,6 @@ console.log(a);
 #+END_SRC`;
 
     const result = tokenize(orgDoc, parserConfiguration);
-    console.log('✎: [line 556][tokenizer.spec.ts] result: ', result);
     expect(tokenListToArray(result)).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
       { start: 11, end: 15, type: 'text', value: ' js ' },
@@ -677,7 +672,6 @@ console.log(a);
   it('Should not tokenize comment token from middle of text', () => {
     const orgDoc = `This is not a # comment`;
     const result = tokenize(orgDoc, parserConfiguration);
-    console.log('✎: [line 593][tokenizer.spec.ts] result: ', result);
     expect(tokenListToArray(result)).toEqual([
       { start: 0, end: 23, type: 'text', value: 'This is not a # comment' },
     ]);
@@ -695,7 +689,6 @@ console.log(a);
     ];
     orgDocs.forEach((orgDoc) => {
       const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-      console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
       expect(result).toEqual([
         { start: 0, end: 1, type: 'bracket', value: '<' },
         {
@@ -712,7 +705,6 @@ console.log(a);
   it('Should tokenize cative timestamp at the middle of text', () => {
     const orgDoc = `This is <2023-01-09 Mon> active date!`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 613][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 8, type: 'text', value: 'This is ' },
       { start: 8, end: 9, type: 'bracket', value: '<' },
@@ -734,7 +726,6 @@ console.log(a);
     ];
     orgDocs.forEach((orgDoc) => {
       const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-      console.log('✎: [line 606][tokenizer.spec.ts] result: ', result);
       expect(result).toEqual([
         { start: 0, end: 1, type: 'bracket', value: '[' },
         {
@@ -752,7 +743,6 @@ console.log(a);
     const orgDoc = `* Need to buy new mechanical keyboard [2023-01-09 Mon]!`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 614][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'headline', value: '* ' },
       {
@@ -771,7 +761,6 @@ console.log(a);
   it('Should tokenize active date range', () => {
     const orgDoc = `<2023-01-09 Mon>--<2023-01-10 Tue>`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    // console.log('✎: [line 624][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '<' },
       { start: 1, end: 15, type: 'text', value: '2023-01-09 Mon' },
@@ -786,7 +775,6 @@ console.log(a);
   it('Should tokenize inactive date with time', () => {
     const orgDoc = `[2023-01-09 Mon 10:00]`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    // console.log('✎: [line 634][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '[' },
       { start: 1, end: 21, type: 'text', value: '2023-01-09 Mon 10:00' },
@@ -797,7 +785,6 @@ console.log(a);
   it('Should tokenize text with opened bracket', () => {
     const orgDoc = `This is a reminder for meeting on <2023-01-09 Mon 14:00. Don't forget to attend.`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    // console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         start: 0,
@@ -818,7 +805,6 @@ console.log(a);
   it('Should tokenize simple org link', () => {
     const orgDoc = `[[http://google.com][LINK NAME!]]`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 654][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '[' },
       { start: 1, end: 2, type: 'bracket', value: '[' },
@@ -838,7 +824,6 @@ console.log(a);
 </div>
 #+END_HTML`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 670][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 12, type: 'keyword', value: '#+BEGIN_HTML' },
       { start: 12, end: 13, type: 'newLine', value: '\n' },
@@ -868,7 +853,6 @@ console.log(a);
   it('Should tokenize inline code', () => {
     const orgDoc = `This is a code block: ~code~`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 689][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 22, type: 'text', value: 'This is a code block: ' },
       { start: 22, end: 23, type: 'bracket', value: '~' },
@@ -880,7 +864,6 @@ console.log(a);
   it('Should tokenize property keyword', () => {
     const orgDoc = `#+PROPERTY: NAME VALUE`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 699][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+PROPERTY:' },
       { start: 11, end: 22, type: 'text', value: ' NAME VALUE' },
@@ -890,11 +873,10 @@ console.log(a);
   it('Should tokenize inline latex block', () => {
     const orgDoc = `This is a latex block: $\\alpha$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    // console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 23, type: 'text', value: 'This is a latex block: ' },
       { start: 23, end: 24, type: 'bracket', value: '$' },
-      { start: 24, end: 30, type: 'text', value: '\\alpha' },
+      { start: 24, end: 30, type: 'keyword', value: '\\alpha' },
       { start: 30, end: 31, type: 'bracket', value: '$' },
     ]);
   });
@@ -902,7 +884,6 @@ console.log(a);
   it('Should tokenize latex with 2 $', () => {
     const orgDoc = `This is also a latex text: $$1+1=2$$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 905][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 27, type: 'text', value: 'This is also a latex text: ' },
       { start: 27, end: 29, type: 'bracket', value: '$$' },
@@ -918,7 +899,6 @@ console.log(a);
   it('Should parse horizontal rule', () => {
     const orgDoc = '------';
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 919][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 6, type: 'horizontalRule', value: '------' },
     ]);
@@ -927,18 +907,62 @@ console.log(a);
   it('Should not parse text as horizontal rule', () => {
     const orgDoc = 'Some text ------';
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 929][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 16, type: 'text', value: 'Some text ------' },
     ]);
   });
 
-  it('Should not parse text as horizontal rule when text is exist after rule', () => {
+  it('Should not tokenize text as horizontal rule when text is exist after rule', () => {
     const orgDoc = '------ Some text';
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 939][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 16, type: 'text', value: '------ Some text' },
+    ]);
+  });
+
+  it('Should tokenize latex environment', () => {
+    const orgDoc = `\\begin{align*}
+2x - 5y &= 8 \\\\
+3x + 9y &= -12
+\\end{align*}`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        start: 0,
+        end: 6,
+        type: 'latexEnvironmentKeyword',
+        value: '\\begin',
+      },
+      { start: 6, end: 7, type: 'bracket', value: '{' },
+      { start: 7, end: 12, type: 'text', value: 'align' },
+      { start: 12, end: 13, type: 'bracket', value: '*' },
+      { start: 13, end: 14, type: 'bracket', value: '}' },
+      { start: 14, end: 15, type: 'newLine', value: '\n' },
+      { start: 15, end: 24, type: 'text', value: '2x - 5y &' },
+      { start: 24, end: 25, type: 'bracket', value: '=' },
+      { start: 25, end: 28, type: 'text', value: ' 8 ' },
+      { start: 28, end: 29, type: 'keyword', value: '\\' },
+      { start: 29, end: 30, type: 'keyword', value: '\\' },
+      { start: 30, end: 31, type: 'newLine', value: '\n' },
+      { start: 31, end: 34, type: 'text', value: '3x ' },
+      { start: 34, end: 35, type: 'bracket', value: '+' },
+      { start: 35, end: 40, type: 'text', value: ' 9y &' },
+      { start: 40, end: 41, type: 'bracket', value: '=' },
+      { start: 41, end: 42, type: 'text', value: ' ' },
+      { start: 42, end: 43, type: 'operator', value: '-' },
+      { start: 43, end: 45, type: 'text', value: '12' },
+      { start: 45, end: 46, type: 'newLine', value: '\n' },
+      {
+        start: 46,
+        end: 50,
+        type: 'latexEnvironmentKeyword',
+        value: '\\end',
+      },
+      { start: 50, end: 51, type: 'bracket', value: '{' },
+      { start: 51, end: 56, type: 'text', value: 'align' },
+      { start: 56, end: 57, type: 'bracket', value: '*' },
+      { start: 57, end: 58, type: 'bracket', value: '}' },
     ]);
   });
 

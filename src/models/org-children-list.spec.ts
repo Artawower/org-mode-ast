@@ -1,6 +1,6 @@
-import { OrgChildrenList } from './org-children-list';
-import { OrgNode } from './org-node';
-import { NodeType } from './types';
+import { OrgChildrenList } from './org-children-list.js';
+import { OrgNode } from './org-node.js';
+import { NodeType } from './types.js';
 
 describe('Org children', () => {
   let children: OrgChildrenList;

@@ -1,7 +1,7 @@
-import { prettyTreePrint } from 'tools';
-import { NodeAlreadyHaveParent, NodeCouldNotHaveChildren } from './errors';
-import { OrgChildrenList } from './org-children-list';
-import { BlockProperties, NodeType, OrgStruct } from './types';
+import { prettyTreePrint } from '../tools/index.js';
+import { NodeAlreadyHaveParent, NodeCouldNotHaveChildren } from './errors.js';
+import { OrgChildrenList } from './org-children-list.js';
+import { BlockProperties, NodeType, OrgStruct } from './types.js';
 
 export class OrgNode {
   public type!: NodeType;

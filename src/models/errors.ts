@@ -1,5 +1,5 @@
-import { OrgNode } from './org-node';
-import { Token } from './types';
+import { OrgNode } from './org-node.js';
+import { Token } from './types.js';
 
 export class HandlerNotFoundError extends Error {
   public readonly type = 'HandlerNotFoundError';

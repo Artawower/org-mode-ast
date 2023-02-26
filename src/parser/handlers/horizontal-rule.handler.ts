@@ -1,6 +1,10 @@
-import { OrgHandler, OrgNode, ParserConfiguration } from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { TokenIterator } from 'tokenizer';
+import {
+  OrgHandler,
+  OrgNode,
+  ParserConfiguration,
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { TokenIterator } from '../../tokenizer/index.js';
 
 export class HorizontalRuleHandler implements OrgHandler {
   constructor(
