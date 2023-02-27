@@ -271,7 +271,7 @@ export class AstBuilder {
 
     if (!dstNode.parent) {
       throw new Error(
-        `Something went wrong, couldn't find last node, ${srcNode.type}, prev node: ${dstNode.type}`
+        `Something went wrong, couldn't find last node: [${srcNode.type}: ${srcNode.value}], prev node: [${dstNode.type}: ${dstNode.value}]`
       );
     }
 
@@ -600,6 +600,13 @@ export class AstBuilder {
     });
   }
 
+  public createLatexEnvironmentNode(value: string): OrgNode {
+    return new OrgNode({
+      type: NodeType.LatexEnvironment,
+      value,
+    });
+  }
+
   public isPropertyOperator(tokenValue: string): boolean {
     return tokenValue === ':';
   }
@@ -607,19 +614,22 @@ export class AstBuilder {
   /**
    * Merge neighbors when they have same type, or one of them Unresolved
    */
-  public mergeNeighborsNodesWithSameType(node?: OrgNode): void {
+  public mergeNeighborsNodesWithSameType(
+    node?: OrgNode,
+    ...mergeableTypes: NodeType[]
+  ): void {
     if (!node) {
       return;
     }
     let currentNode = node;
 
     while (currentNode) {
-      if (this.couldBeMergedIntoText(currentNode)) {
+      if (this.couldBeMergedIntoText(currentNode, ...mergeableTypes)) {
         currentNode.type = NodeType.Text;
       }
       if (
-        this.couldBeMergedIntoText(currentNode) &&
-        this.couldBeMergedIntoText(currentNode.prev)
+        this.couldBeMergedIntoText(currentNode, ...mergeableTypes) &&
+        this.couldBeMergedIntoText(currentNode.prev, ...mergeableTypes)
       ) {
         const prev = currentNode.prev;
         prev.appendValue(currentNode.value);
@@ -629,7 +639,13 @@ export class AstBuilder {
     }
   }
 
-  private couldBeMergedIntoText(node?: OrgNode): boolean {
+  private couldBeMergedIntoText(
+    node?: OrgNode,
+    ...mergeableTypes: NodeType[]
+  ): boolean {
+    if (mergeableTypes?.length) {
+      return mergeableTypes.includes(node?.type);
+    }
     return (
       node?.type === NodeType.Text ||
       node?.type === NodeType.Unresolved ||

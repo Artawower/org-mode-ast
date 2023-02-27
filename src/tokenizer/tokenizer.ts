@@ -8,7 +8,7 @@ import {
 export class Tokenizer {
   // TODO: master move this settings to parser configuration
   private readonly delimiter = ' ';
-  private readonly pariBrackets = ['[', ']', '<', '>', '{', '}'];
+  private readonly pairBrackets = ['[', ']', '<', '>'];
   private readonly formatterBrackets = ['=', '+', '/', '*', '~', '$'];
   private readonly horizontalRuleChar = '-';
   private readonly newLineChar = '\n';
@@ -17,7 +17,7 @@ export class Tokenizer {
   private readonly keywordStartOperator = '#+';
   private readonly brackets: string[] = [
     ...this.formatterBrackets,
-    ...this.pariBrackets,
+    ...this.pairBrackets,
   ];
   private readonly listItemCloseSymbols = [')', '.'];
 
@@ -48,6 +48,8 @@ export class Tokenizer {
       ')': (c: string) => this.handleParenthesis(c),
       '\n': (c: string) => this.handleNewLine(c),
       '\\': (c: string) => this.handleBackslash(c),
+      '{': (c: string) => this.handleLatexBrackets(c),
+      '}': (c: string) => this.handleLatexBrackets(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -266,6 +268,10 @@ export class Tokenizer {
       return;
     }
     this.createToken({ type: TokenType.Bracket, value: c });
+  }
+
+  private handleLatexBrackets(c: string): void {
+    this.createToken({ type: TokenType.LatexBracket, value: c });
   }
 
   private handleText(c: string): void {

@@ -62,6 +62,16 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     other.forEach((node) => this.push(node));
   }
 
+  public filter(predicate: (node: OrgNode) => unknown): OrgChildrenList {
+    const newList = new OrgChildrenList();
+    this.forEach((node) => {
+      if (predicate(node)) {
+        newList.push(node);
+      }
+    });
+    return newList;
+  }
+
   public get(index: number) {
     let current = this.#first;
     let i = 0;

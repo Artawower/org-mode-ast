@@ -27,9 +27,11 @@ export enum NodeType {
   Bold = 'bold',
   Crossed = 'crossed',
   InlineCode = 'inlineCode',
-  LatexFragment = 'latexFragment',
   Verbatim = 'verbatim',
   Italic = 'italic',
+
+  LatexFragment = 'latexFragment',
+  LatexEnvironment = 'latexEnvironment',
 
   SrcBlock = 'srcBlock',
   BlockHeader = 'blockHeader',
@@ -74,6 +76,7 @@ export enum TokenType {
   Keyword = 'keyword',
   LatexEnvironmentKeyword = 'latexEnvironmentKeyword',
   Bracket = 'bracket',
+  LatexBracket = 'latexBracket',
   Comment = 'comment',
   Operator = 'operator',
   Indent = 'indent',
@@ -153,10 +156,6 @@ export interface SrcBlockMetaInfo {
 
 export interface ParserConfiguration {
   todoKeywords?: string[];
-  latexEnvironmentBlocks?: {
-    begin: string;
-    end: string;
-  };
 }
 
 export type BlockPosition = 'begin' | 'end';

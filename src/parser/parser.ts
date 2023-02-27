@@ -57,6 +57,9 @@ class Parser {
     [TokenType.NewLine]: () => this.handleNewLine(),
     [TokenType.Keyword]: () => this.keywordHandler.handle(),
     [TokenType.HorizontalRule]: () => this.horizontalRuleHandler.handle(),
+    [TokenType.LatexBracket]: () => this.latexEnvironmentHandler.handle(),
+    [TokenType.LatexEnvironmentKeyword]: () =>
+      this.latexEnvironmentHandler.handle(),
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
   } satisfies Record<string, () => OrgNode | void>;

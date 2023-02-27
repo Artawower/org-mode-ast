@@ -40,6 +40,7 @@ export class BracketHandler implements OrgHandler {
   };
 
   // NOTE: https://regex101.com/r/IPfgId/1
+  // TODO: master make regexp for time with shifting
   private readonly dateRegex =
     /\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?$/;
 
@@ -53,10 +54,6 @@ export class BracketHandler implements OrgHandler {
     this.astBuilder.attachToTree(unresolvedNode);
 
     const closedBracketNode = this.tryHandlePairBracket(unresolvedNode);
-    console.log(
-      '✎: [line 43][bracket-handler.ts] closedBracketNode: ',
-      closedBracketNode
-    );
 
     if (closedBracketNode) {
       this.removeFormattingInsideInlineCode(closedBracketNode);
@@ -298,22 +295,8 @@ export class BracketHandler implements OrgHandler {
     );
     const rawValue = this.astBuilder.getRawValueFromNodes(unmergedChildren);
 
-    // orgNode.removeChildren(unmergedChildren);
     const newTextNode = this.astBuilder.createTextNode(rawValue);
-    // orgNode.removeChildren(orgNode.children);
-
-    // orgNode.children.first.addNextNode(newTextNode);
     orgNode.setChildren([firstChildNode, newTextNode, lastChildNode]);
-
-    // const nestedNode = orgNode.children.get(1);
-
-    // if (nestedNode?.type !== NodeType.InlineCode) {
-    //   return;
-    // }
-
-    // nestedNode.type = NodeType.Text;
-    // nestedNode.setValue(this.astBuilder.getRawValueFromNode(nestedNode));
-    // nestedNode.setChildren(undefined);
   }
 
   private getOpenedBracket(openedBracket: string): string {
@@ -322,7 +305,10 @@ export class BracketHandler implements OrgHandler {
 
   // TODO: master handle new line
   public clearBracketsPairs(): void {
-    this.astBuilder.mergeNeighborsNodesWithSameType(this.bracketsStack.first);
+    // NOTE: another handler could unattached node from the parent.
+    // It means that this node already has found pair.
+    const filteredBrackets = this.bracketsStack.filter((b) => b.parent);
+    this.astBuilder.mergeNeighborsNodesWithSameType(filteredBrackets.first);
     this.bracketsStack.clear();
   }
 }

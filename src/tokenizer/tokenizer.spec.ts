@@ -934,10 +934,10 @@ console.log(a);
         type: 'latexEnvironmentKeyword',
         value: '\\begin',
       },
-      { start: 6, end: 7, type: 'bracket', value: '{' },
+      { start: 6, end: 7, type: 'latexBracket', value: '{' },
       { start: 7, end: 12, type: 'text', value: 'align' },
       { start: 12, end: 13, type: 'bracket', value: '*' },
-      { start: 13, end: 14, type: 'bracket', value: '}' },
+      { start: 13, end: 14, type: 'latexBracket', value: '}' },
       { start: 14, end: 15, type: 'newLine', value: '\n' },
       { start: 15, end: 24, type: 'text', value: '2x - 5y &' },
       { start: 24, end: 25, type: 'bracket', value: '=' },
@@ -959,10 +959,10 @@ console.log(a);
         type: 'latexEnvironmentKeyword',
         value: '\\end',
       },
-      { start: 50, end: 51, type: 'bracket', value: '{' },
+      { start: 50, end: 51, type: 'latexBracket', value: '{' },
       { start: 51, end: 56, type: 'text', value: 'align' },
       { start: 56, end: 57, type: 'bracket', value: '*' },
-      { start: 57, end: 58, type: 'bracket', value: '}' },
+      { start: 57, end: 58, type: 'latexBracket', value: '}' },
     ]);
   });
 
