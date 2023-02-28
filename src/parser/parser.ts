@@ -46,9 +46,10 @@ class Parser {
       this.handleToken();
     });
     this.handleEndOfLine();
+    this.handleEndOfFile();
   }
 
-  private tokensHandlers = {
+  private readonly tokensHandlers = {
     [TokenType.Headline]: () => this.handleHeadline(),
     [TokenType.Text]: () => this.handleText(),
     [TokenType.Bracket]: () => this.bracketHandler.handle(),
@@ -162,6 +163,10 @@ class Parser {
   private handleEndOfLine(): void {
     this.bracketHandler.handleEndOfLine();
     this.keywordHandler.handleEndOfLine();
+  }
+
+  private handleEndOfFile(): void {
+    this.latexEnvironmentHandler.handleEndOfFile();
   }
 
   private buildOrgDataForOperator(operator: string): OrgNode {

@@ -966,6 +966,47 @@ console.log(a);
     ]);
   });
 
+  it('Should not tokenize latex environment keyword when previous line is not EOL', () => {
+    const orgDoc = `Some text that broken latex environment \\begin{align*}
+2x - 5y &= 8 \\\\
+3x + 9y &= -12
+BROKE\\end{align*}`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        start: 0,
+        end: 46,
+        type: 'text',
+        value: 'Some text that broken latex environment \\begin',
+      },
+      { start: 46, end: 47, type: 'latexBracket', value: '{' },
+      { start: 47, end: 52, type: 'text', value: 'align' },
+      { start: 52, end: 53, type: 'bracket', value: '*' },
+      { start: 53, end: 54, type: 'latexBracket', value: '}' },
+      { start: 54, end: 55, type: 'newLine', value: '\n' },
+      { start: 55, end: 64, type: 'text', value: '2x - 5y &' },
+      { start: 64, end: 65, type: 'bracket', value: '=' },
+      { start: 65, end: 68, type: 'text', value: ' 8 ' },
+      { start: 68, end: 69, type: 'keyword', value: '\\' },
+      { start: 69, end: 70, type: 'keyword', value: '\\' },
+      { start: 70, end: 71, type: 'newLine', value: '\n' },
+      { start: 71, end: 74, type: 'text', value: '3x ' },
+      { start: 74, end: 75, type: 'bracket', value: '+' },
+      { start: 75, end: 80, type: 'text', value: ' 9y &' },
+      { start: 80, end: 81, type: 'bracket', value: '=' },
+      { start: 81, end: 82, type: 'text', value: ' ' },
+      { start: 82, end: 83, type: 'operator', value: '-' },
+      { start: 83, end: 85, type: 'text', value: '12' },
+      { start: 85, end: 86, type: 'newLine', value: '\n' },
+      { start: 86, end: 95, type: 'text', value: 'BROKE\\end' },
+      { start: 95, end: 96, type: 'latexBracket', value: '{' },
+      { start: 96, end: 101, type: 'text', value: 'align' },
+      { start: 101, end: 102, type: 'bracket', value: '*' },
+      { start: 102, end: 103, type: 'latexBracket', value: '}' },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

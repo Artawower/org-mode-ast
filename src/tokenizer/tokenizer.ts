@@ -300,8 +300,18 @@ export class Tokenizer {
     const isLatexKeyword = this.latexEnvironmentBlocks.includes(
       this.lastToken.value
     );
-    if (isLatexKeyword) {
+    if (!isLatexKeyword) {
+      return;
+    }
+    const prevTokenNewLine =
+      !this.lastToken.prev || this.lastToken.prev?.isType(TokenType.NewLine);
+    if (prevTokenNewLine) {
       this.lastToken.setType(TokenType.LatexEnvironmentKeyword);
+      return;
+    }
+    this.lastToken.setType(TokenType.Text);
+    if (this.lastToken.prev?.isType(TokenType.Text)) {
+      this.forceMergeLastTokens(2, TokenType.Text);
     }
   }
 

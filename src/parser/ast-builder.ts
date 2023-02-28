@@ -271,7 +271,7 @@ export class AstBuilder {
 
     if (!dstNode.parent) {
       throw new Error(
-        `Something went wrong, couldn't find last node: [${srcNode.type}: ${srcNode.value}], prev node: [${dstNode.type}: ${dstNode.value}]`
+        `Something went wrong, couldn't find parent for: [${srcNode.type}: ${srcNode.value}], prev node: [${dstNode.type}: ${dstNode.value}]`
       );
     }
 

@@ -64,7 +64,21 @@ export class LatexEnvironmentHandler implements OrgHandler {
     }
 
     this.astBuilder.attachToTree(orgNode);
-    return orgNode;
+    const mergedNode = this.#tryMergeInconsistentLatexNodes(orgNode);
+    return mergedNode ?? orgNode;
+  }
+
+  #tryMergeInconsistentLatexNodes(latexNameNode: OrgNode): OrgNode {
+    const isOpenedBracket =
+      this.tokenIterator.currentValue === this.#latexOpenedBracket;
+
+    if (isOpenedBracket) {
+      return;
+    }
+    if (!this.#beginLatexEnvironmentKeyword && latexNameNode.prev) {
+      this.astBuilder.mergeNeighborsNodesWithSameType(latexNameNode.prev);
+      return latexNameNode.prev;
+    }
   }
 
   #handleOpenedLatexBracket(): OrgNode {
@@ -143,9 +157,13 @@ export class LatexEnvironmentHandler implements OrgHandler {
       this.#beginLatexEnvironmentKeyword = orgNode;
     }
 
-    if (this.isEndLatexEnvironmentKeyword) {
+    if (
+      this.#beginLatexEnvironmentKeyword &&
+      this.isEndLatexEnvironmentKeyword
+    ) {
       this.#endLatexEnvironmentKeyword = orgNode;
     }
+
     this.astBuilder.attachToTree(orgNode);
     return orgNode;
   }
@@ -156,5 +174,21 @@ export class LatexEnvironmentHandler implements OrgHandler {
 
   public isLatexEnvironmentKeyword(keyword: string): boolean {
     return Object.values(this.#latexEnvironmentBlocks).includes(keyword);
+  }
+
+  public handleEndOfFile(): void {
+    if (this.#beginLatexEnvironmentKeyword) {
+      this.astBuilder.mergeNeighborsNodesWithSameType(
+        this.#beginLatexEnvironmentKeyword,
+        NodeType.Text
+      );
+      return;
+    }
+    if (this.#beginLatexBracket) {
+      this.astBuilder.mergeNeighborsNodesWithSameType(
+        this.#beginLatexBracket,
+        NodeType.Text
+      );
+    }
   }
 }
