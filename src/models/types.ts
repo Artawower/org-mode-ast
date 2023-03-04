@@ -48,6 +48,8 @@ export enum NodeType {
   CommentBlock = 'commentBlock',
   HeaderArg = 'headerArg',
 
+  FixedWidth = 'fixedWidth',
+
   Keyword = 'keyword',
   Link = 'link',
   LinkUrl = 'linkUrl',

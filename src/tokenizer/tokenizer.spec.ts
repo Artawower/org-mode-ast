@@ -1007,6 +1007,36 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should parse colon with space as operator', () => {
+    const orgDoc = `: `;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: ': ' },
+    ]);
+  });
+
+  it('Should tokenize fixed with values', () => {
+    const orgDoc = `: Fixed value`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: ': ' },
+      { start: 2, end: 13, type: 'text', value: 'Fixed value' },
+    ]);
+  });
+
+  it('Should tokenize multiple fixed width values', () => {
+    const orgDoc = `: Fixed value
+: Fixed value`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: ': ' },
+      { start: 2, end: 13, type: 'text', value: 'Fixed value' },
+      { start: 13, end: 14, type: 'newLine', value: '\n' },
+      { start: 14, end: 16, type: 'operator', value: ': ' },
+      { start: 16, end: 27, type: 'text', value: 'Fixed value' },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "yarn build & node dist/index.js",
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.prod.json",
     "test": "jest",
     "test:silent": "jest --silent=true",
     "test:coverage": "jest --coverage",

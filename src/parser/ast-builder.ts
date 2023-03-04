@@ -533,6 +533,19 @@ export class AstBuilder {
     });
   }
 
+  public createFixedWidthNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.FixedWidth,
+    });
+  }
+
+  public createOperatorNode(value: string): OrgNode {
+    return new OrgNode({
+      type: NodeType.Operator,
+      value,
+    });
+  }
+
   public createLinkNode(): OrgNode {
     const linkNode = new OrgNode({
       type: NodeType.Link,
@@ -605,10 +618,6 @@ export class AstBuilder {
       type: NodeType.LatexEnvironment,
       value,
     });
-  }
-
-  public isPropertyOperator(tokenValue: string): boolean {
-    return tokenValue === ':';
   }
 
   /**

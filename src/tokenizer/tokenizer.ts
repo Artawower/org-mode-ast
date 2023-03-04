@@ -5,6 +5,8 @@ import {
   TokenType,
 } from '../models/index.js';
 
+// TODO: master This code is candidate number one to be refactored.
+// Seriously, spend some time to make it more readable...
 export class Tokenizer {
   // TODO: master move this settings to parser configuration
   private readonly delimiter = ' ';
@@ -43,7 +45,7 @@ export class Tokenizer {
       '#': (c: string) => this.handleNumberSign(c),
       '-': (c: string) => this.handleDash(c),
       '+': (c: string) => this.handlePlus(c),
-      ':': (c: string) => this.handleComma(c),
+      ':': (c: string) => this.handleColon(c),
       '.': (c: string) => this.handlePoint(c),
       ')': (c: string) => this.handleParenthesis(c),
       '\n': (c: string) => this.handleNewLine(c),
@@ -108,6 +110,14 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
+    if (
+      this.lastToken?.isType(TokenType.Operator) &&
+      this.lastToken.value === ':'
+    ) {
+      this.upsertToken({ type: TokenType.Operator, value: c }, true);
+      return;
+    }
+
     if (!this.lastToken || this.lastToken?.isType(TokenType.NewLine)) {
       this.createToken({ type: TokenType.Indent, value: c });
       return;
@@ -200,7 +210,7 @@ export class Tokenizer {
     this.handleBracket(c);
   }
 
-  private handleComma(c: string): void {
+  private handleColon(c: string): void {
     if (
       this.lastToken?.value?.startsWith(':') ||
       this.lastToken?.isType(TokenType.Keyword)
@@ -279,6 +289,7 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
+
     if (
       this.isPrevToken(TokenType.Operator) &&
       this.lastToken.value === this.keywordStartOperator
@@ -336,7 +347,11 @@ export class Tokenizer {
       this.createToken({ type: TokenType.Text, value: c });
       return;
     }
-    if (this.lastToken?.value.startsWith(':') && !this.isDelimiter(c)) {
+    if (
+      this.lastToken?.value[0] === ':' &&
+      !this.isDelimiter(this.lastToken?.value[1]) &&
+      !this.isDelimiter(c)
+    ) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       return;
     }
@@ -369,7 +384,10 @@ export class Tokenizer {
     if (this.isBlockKeyword(this.lastToken.value)) {
       this.forceMergeLastTokens(2, TokenType.Keyword);
     }
-    if (this.lastToken.value.startsWith(':')) {
+    if (
+      this.lastToken.value.startsWith(':') &&
+      !this.lastToken.value.startsWith(': ')
+    ) {
       this.lastToken.setType(TokenType.Keyword);
     }
   }

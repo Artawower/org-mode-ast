@@ -10,6 +10,7 @@ import {
 import { TokenIterator, Tokenizer } from '../tokenizer/index.js';
 import { AstBuilder } from './ast-builder.js';
 import { AstContext } from './ast-context.js';
+import { ColonHandler } from './handlers/colon.handler.js';
 import {
   BlockHandler,
   BracketHandler,
@@ -33,7 +34,8 @@ class Parser {
     private readonly commentHandler: CommentHandler,
     private readonly keywordHandler: KeywordHandler,
     private readonly horizontalRuleHandler: HorizontalRuleHandler,
-    private readonly latexEnvironmentHandler: LatexEnvironmentHandler
+    private readonly latexEnvironmentHandler: LatexEnvironmentHandler,
+    private readonly colonHandler: ColonHandler
   ) {}
 
   public parse(): OrgNode {
@@ -66,7 +68,9 @@ class Parser {
   } satisfies Record<string, () => OrgNode | void>;
 
   private handleToken(): void {
-    const handler = this.tokensHandlers[this.tokenIterator.type];
+    const handler =
+      this.getOnHoldHandler() ?? this.tokensHandlers[this.tokenIterator.type];
+
     if (!handler) {
       throw new HandlerNotFoundError(this.tokenIterator.type);
     }
@@ -97,12 +101,14 @@ class Parser {
     }
   }
 
-  private handleEmptyHandlerValue(): void {
-    const tokenWithPotentialUndefinedResult = [TokenType.Indent];
-    if (tokenWithPotentialUndefinedResult.includes(this.tokenIterator.type)) {
-      return;
+  private getOnHoldHandler(): () => OrgNode | void {
+    if (this.colonHandler.holdOn) {
+      return () => this.colonHandler.handle();
     }
-    throw new HandlerDidNotReturnValue(this.tokenIterator.token);
+  }
+
+  private handleEmptyHandlerValue(): void {
+    console.info(new HandlerDidNotReturnValue(this.tokenIterator.token));
   }
 
   private handleHeadline(): OrgNode {
@@ -154,6 +160,7 @@ class Parser {
   }
 
   private handleNewLine(): OrgNode {
+    console.log('Handle end of line!');
     this.handleEndOfLine();
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
@@ -163,6 +170,7 @@ class Parser {
   private handleEndOfLine(): void {
     this.bracketHandler.handleEndOfLine();
     this.keywordHandler.handleEndOfLine();
+    this.colonHandler.handleNewLine();
   }
 
   private handleEndOfFile(): void {
@@ -170,14 +178,14 @@ class Parser {
   }
 
   private buildOrgDataForOperator(operator: string): OrgNode {
+    // TODO: master move this check to list handler!
     if (this.astBuilder.isListOperator(operator)) {
       const orgNode = this.listHandler.handle();
       return orgNode;
     }
 
-    // TODO also check is not a tag and opened propery drawer
-    if (this.astBuilder.isPropertyOperator(operator)) {
-      return this.astBuilder.createUnresolvedNode();
+    if (this.colonHandler.isColonOperator(operator)) {
+      return this.colonHandler.handle();
     }
 
     return this.astBuilder.createTextNode(this.tokenIterator.currentValue);
@@ -210,6 +218,11 @@ export function parse(
     astBuilder,
     tokenIterator
   );
+  const colonHandler = new ColonHandler(
+    configuration,
+    astBuilder,
+    tokenIterator
+  );
   const keywordHandler = new KeywordHandler(
     configuration,
     ctx,
@@ -233,7 +246,8 @@ export function parse(
     commentHandler,
     keywordHandler,
     horizontalRuleHandler,
-    latexEnvironmentHandler
+    latexEnvironmentHandler,
+    colonHandler
   );
   return parser.parse();
 }
