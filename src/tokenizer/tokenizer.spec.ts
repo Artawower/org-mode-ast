@@ -772,7 +772,7 @@ console.log(a);
     ]);
   });
 
-  fit('Should tokenize date with offset', () => {
+  it('Should tokenize date with offset', () => {
     const orgDoc = `<2023-01-09 Mon +1h>`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([

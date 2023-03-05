@@ -159,4 +159,59 @@ some text`;
       "
     `);
   });
+
+  it('Should parse headline with priority', () => {
+    const orgDoc = `* [#A] Hello world`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-18]
+        headline [0-18]
+            :level 1:
+          title [0-18]
+            operator [0-2] ("* ")
+            priority [2-6]
+              operator [2-3] ("[")
+              text [3-5] ("#A")
+              operator [5-6] ("]")
+            text [6-18] (" Hello world")
+      "
+    `);
+  });
+
+  it('Should parse headline with numberic priority', () => {
+    const orgDoc = `* [#2] Hello world`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-18]
+        headline [0-18]
+            :level 1:
+          title [0-18]
+            operator [0-2] ("* ")
+            priority [2-6]
+              operator [2-3] ("[")
+              text [3-5] ("#2")
+              operator [5-6] ("]")
+            text [6-18] (" Hello world")
+      "
+    `);
+  });
+
+  it('Should not parse priority when it not inside headline', () => {
+    const orgDoc = `[#2] Hello world
+Another text`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-29]
+        text [0-16] ("[#2] Hello world")
+        newLine [16-17]
+        text [17-29] ("Another text")
+      "
+    `);
+  });
 });

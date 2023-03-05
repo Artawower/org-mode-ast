@@ -49,6 +49,7 @@ export enum NodeType {
   HeaderArg = 'headerArg',
 
   FixedWidth = 'fixedWidth',
+  Priority = 'priority',
 
   Keyword = 'keyword',
   Link = 'link',

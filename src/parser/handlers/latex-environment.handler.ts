@@ -179,16 +179,12 @@ export class LatexEnvironmentHandler implements OrgHandler {
   public handleEndOfFile(): void {
     if (this.#beginLatexEnvironmentKeyword) {
       this.astBuilder.mergeNeighborsNodesWithSameType(
-        this.#beginLatexEnvironmentKeyword,
-        NodeType.Text
+        this.#beginLatexEnvironmentKeyword
       );
       return;
     }
     if (this.#beginLatexBracket) {
-      this.astBuilder.mergeNeighborsNodesWithSameType(
-        this.#beginLatexBracket,
-        NodeType.Text
-      );
+      this.astBuilder.mergeNeighborsNodesWithSameType(this.#beginLatexBracket);
     }
   }
 }

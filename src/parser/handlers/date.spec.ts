@@ -245,7 +245,7 @@ describe('Date', () => {
     `);
   });
 
-  fit('Should parse date range with offset', () => {
+  it('Should parse date range with offset', () => {
     const orgDoc = `<2023-01-09 Mon>--<2023-01-10 Tue ++1w +1d>`;
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();

@@ -491,6 +491,12 @@ export class AstBuilder {
     });
   }
 
+  public createPriorityNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.Priority,
+    });
+  }
+
   public createBlockPropertyNode(child?: OrgNode): OrgNode {
     const blockProperty = new OrgNode({
       type: NodeType.BlockProperty,

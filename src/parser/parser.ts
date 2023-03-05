@@ -89,7 +89,7 @@ class Parser {
       this.tokenIterator.token?.isType(TokenType.NewLine) ||
       this.tokenIterator.isLastToken;
     if (lineBreak) {
-      this.bracketHandler.clearBracketsPairs();
+      this.bracketHandler.handleEndOfLine();
       this.ctx.insideListItem = false;
     }
     if (
@@ -119,12 +119,17 @@ class Parser {
   }
 
   private handleText(): OrgNode {
-    const lastTokenWasNewLine = this.astBuilder.lastNode.value?.endsWith('\n');
+    // TODO: master think if it's necessary
+    if (this.astBuilder.lastNode.is(NodeType.Text)) {
+      this.astBuilder.lastNode.appendValue(this.tokenIterator.currentValue);
+      return;
+    }
 
     const textNode = this.astBuilder.createText();
 
     this.astBuilder.attachToTree(textNode);
 
+    const lastTokenWasNewLine = this.astBuilder.lastNode.value?.endsWith('\n');
     if (
       lastTokenWasNewLine &&
       this.astBuilder.lastNode.type !== NodeType.Indent
@@ -168,7 +173,7 @@ class Parser {
   }
 
   private handleEndOfLine(): void {
-    this.bracketHandler.handleEndOfLine();
+    // this.bracketHandler.handleEndOfLine();
     this.keywordHandler.handleEndOfLine();
     this.colonHandler.handleNewLine();
   }

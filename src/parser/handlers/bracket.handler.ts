@@ -11,6 +11,8 @@ import { isNumber } from '../../tools/index.js';
 export class BracketHandler implements OrgHandler {
   private bracketsStack: OrgChildrenList = new OrgChildrenList();
   readonly #dateRangeDelimiter = '--';
+  readonly #priorityValueRegexp = /#([\w\d]{1})$/;
+  readonly #unresolvedNodes = new OrgChildrenList();
 
   // TODO: master add configuration object for parser
   private readonly listProgressSeparator = '/';
@@ -58,6 +60,7 @@ export class BracketHandler implements OrgHandler {
 
     if (closedBracketNode) {
       this.removeFormattingInsideInlineCode(closedBracketNode);
+      this.storeUnresolvedNode(closedBracketNode);
       return closedBracketNode;
     }
 
@@ -66,7 +69,18 @@ export class BracketHandler implements OrgHandler {
     return unresolvedNode;
   }
 
-  public handleEndOfLine(): void {}
+  private storeUnresolvedNode(orgNode: OrgNode): void {
+    this.#unresolvedNodes.push(orgNode);
+  }
+
+  private normalizeUnresolvedNode(node: OrgNode) {
+    if (node.type === NodeType.Unresolved) {
+      const rawValue = node.rawValue;
+      node.removeChildren(node.children);
+      node.setValue(rawValue);
+      node.type = NodeType.Text;
+    }
+  }
 
   // TODO: refactor this method, so complex!
   private tryHandlePairBracket(closedBracket: OrgNode): OrgNode {
@@ -139,6 +153,7 @@ export class BracketHandler implements OrgHandler {
   > = [
     this.handleChecboxBrackets.bind(this),
     this.handleDateBrackets.bind(this),
+    this.handlePriorityBrachets.bind(this),
     this.handleLinkBrackets.bind(this),
     this.handleListProgressBrackets.bind(this),
     this.handleFormatBrackets.bind(this),
@@ -223,6 +238,41 @@ export class BracketHandler implements OrgHandler {
     }
   }
 
+  private handlePriorityBrachets(bracketedNodes: OrgChildrenList): OrgNode {
+    // TODO: master check if priority inside headline and there no was previous priority
+    const isInsideHeadline = bracketedNodes.first?.parent?.parent?.is(
+      NodeType.Headline
+    );
+    const isPreviousNodeOperator = bracketedNodes.first?.prev?.is(
+      NodeType.Operator
+    );
+
+    if (
+      bracketedNodes.length !== 3 ||
+      !isInsideHeadline ||
+      !isPreviousNodeOperator
+    ) {
+      return;
+    }
+    const isOpenedPriorityBracket = bracketedNodes.first.value === '[';
+    const isClosedPriorityBracket = bracketedNodes.last.value === ']';
+    const priorityValue = bracketedNodes.get(1).value;
+    const isPriorityValue = this.#priorityValueRegexp.test(priorityValue);
+    console.log(
+      '✎: [line 236][bracket.handler.ts] isPriorityValue: ',
+      isPriorityValue,
+      priorityValue
+    );
+
+    const isPriorityBrackets =
+      isOpenedPriorityBracket && isClosedPriorityBracket && isPriorityValue;
+
+    if (!isPriorityBrackets) {
+      return;
+    }
+    return this.astBuilder.createPriorityNode();
+  }
+
   private handleFormatBrackets(bracketedNodes: OrgChildrenList): OrgNode {
     const type = this.textFormattersNodeTypeMap[bracketedNodes.last.value];
 
@@ -288,7 +338,11 @@ export class BracketHandler implements OrgHandler {
 
   // TODO: extract date date property by groups
   private isDate(text: string): boolean {
-    console.log('✎: [line 264][bracket.handler.ts] text: ', text);
+    console.log(
+      '✎: [line 264][bracket.handler.ts] text: ',
+      text,
+      !!text?.match(this.dateRegex)
+    );
     return !!text?.match(this.dateRegex);
   }
 
@@ -329,11 +383,18 @@ export class BracketHandler implements OrgHandler {
   }
 
   // TODO: master handle new line
-  public clearBracketsPairs(): void {
+  public handleEndOfLine(): void {
     // NOTE: another handler could unattached node from the parent.
     // It means that this node already has found pair.
     const filteredBrackets = this.bracketsStack.filter((b) => b.parent);
     this.astBuilder.mergeNeighborsNodesWithSameType(filteredBrackets.first);
+    this.#unresolvedNodes.forEach((n) => {
+      if (n.is(NodeType.Unresolved)) {
+        this.normalizeUnresolvedNode(n);
+        this.astBuilder.mergeNeighborsNodesWithSameType(n);
+      }
+    });
+    this.#unresolvedNodes.clear();
     this.bracketsStack.clear();
   }
 }
