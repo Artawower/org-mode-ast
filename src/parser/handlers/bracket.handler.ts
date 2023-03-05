@@ -10,6 +10,7 @@ import { isNumber } from '../../tools/index.js';
 
 export class BracketHandler implements OrgHandler {
   private bracketsStack: OrgChildrenList = new OrgChildrenList();
+  readonly #dateRangeDelimiter = '--';
 
   // TODO: master add configuration object for parser
   private readonly listProgressSeparator = '/';
@@ -39,10 +40,10 @@ export class BracketHandler implements OrgHandler {
     $$: NodeType.LatexFragment,
   };
 
-  // NOTE: https://regex101.com/r/IPfgId/1
+  // NOTE: https://regex101.com/r/6qKjFj/1
   // TODO: master make regexp for time with shifting
   private readonly dateRegex =
-    /\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?$/;
+    /(<|\[)\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?( (\+|\-){0,2}\d+(h|m|y|d|w))*(>|\])$/;
 
   constructor(
     private astBuilder: AstBuilder,
@@ -251,19 +252,43 @@ export class BracketHandler implements OrgHandler {
   }
 
   private handleDateBrackets(bracketedNodes: OrgChildrenList): OrgNode {
-    if (
-      bracketedNodes.length !== 3 ||
-      !this.isDate(bracketedNodes.get(1).value)
-    ) {
+    if (!this.isDate(this.astBuilder.getRawValueFromNodes(bracketedNodes))) {
       return;
     }
 
+    this.tryCreateRangeDate(bracketedNodes.first.prev);
+    // TODO: check date range (previous node)
     const dateNode = this.astBuilder.createDateNode();
 
     return dateNode;
   }
 
+  private tryCreateRangeDate(dateDelimiterNode?: OrgNode): void {
+    if (
+      !this.isDateDelimiterNode(dateDelimiterNode) ||
+      !dateDelimiterNode?.prev.is(NodeType.Date)
+    ) {
+      return;
+    }
+    const dateRangeNode = this.astBuilder.createDateRangeNode();
+    const parentNode = dateDelimiterNode.parent;
+    const dateRangeChildren = parentNode.children.getNodesBetweenPairs(
+      dateDelimiterNode.prev,
+      null,
+      true
+    );
+    parentNode.removeChildren(dateRangeChildren);
+    dateRangeNode.addChildren(dateRangeChildren);
+    parentNode.addChild(dateRangeNode);
+  }
+
+  private isDateDelimiterNode(node?: OrgNode): boolean {
+    return node?.value === this.#dateRangeDelimiter;
+  }
+
+  // TODO: extract date date property by groups
   private isDate(text: string): boolean {
+    console.log('✎: [line 264][bracket.handler.ts] text: ', text);
     return !!text?.match(this.dateRegex);
   }
 

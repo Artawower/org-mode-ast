@@ -214,4 +214,101 @@ describe('Date', () => {
       "
     `);
   });
+
+  it('Should parse date with hour offset', () => {
+    const orgDoc = `<2023-01-09 Mon 14:00 +1h>`,
+      result = parse(orgDoc.toString());
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-26]
+        date [0-26]
+          operator [0-1] ("<")
+          text [1-25] ("2023-01-09 Mon 14:00 +1h")
+          operator [25-26] (">")
+      "
+    `);
+  });
+
+  it('Should parse date with negative offset', () => {
+    const orgDoc = `<2023-01-09 Mon 14:00 ++3y -1h>`,
+      result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-31]
+        date [0-31]
+          operator [0-1] ("<")
+          text [1-30] ("2023-01-09 Mon 14:00 ++3y -1h")
+          operator [30-31] (">")
+      "
+    `);
+  });
+
+  fit('Should parse date range with offset', () => {
+    const orgDoc = `<2023-01-09 Mon>--<2023-01-10 Tue ++1w +1d>`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-43]
+        dateRange [0-43]
+          date [0-16]
+            operator [0-1] ("<")
+            text [1-15] ("2023-01-09 Mon")
+            operator [15-16] (">")
+          text [16-18] ("--")
+          date [18-43]
+            operator [18-19] ("<")
+            text [19-42] ("2023-01-10 Tue ++1w +1d")
+            operator [42-43] (">")
+      "
+    `);
+  });
+
+  it('Should parse date range', () => {
+    const orgDoc = `<2023-01-09 Mon>--<2023-01-10 Tue>`,
+      result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-34]
+        dateRange [0-34]
+          date [0-16]
+            operator [0-1] ("<")
+            text [1-15] ("2023-01-09 Mon")
+            operator [15-16] (">")
+          text [16-18] ("--")
+          date [18-34]
+            operator [18-19] ("<")
+            text [19-33] ("2023-01-10 Tue")
+            operator [33-34] (">")
+      "
+    `);
+  });
+
+  it('Should parser date range with offset between text nodes', () => {
+    const orgDoc = `This is *bold text with <2023-01-09 Mon>--<2023-01-10 Tue> date range*`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-70]
+        text [0-8] ("This is ")
+        bold [8-70]
+          operator [8-9] ("*")
+          text [9-24] ("bold text with ")
+          dateRange [24-58]
+            date [24-40]
+              operator [24-25] ("<")
+              text [25-39] ("2023-01-09 Mon")
+              operator [39-40] (">")
+            text [40-42] ("--")
+            date [42-58]
+              operator [42-43] ("<")
+              text [43-57] ("2023-01-10 Tue")
+              operator [57-58] (">")
+          text [58-69] (" date range")
+          operator [69-70] ("*")
+      "
+    `);
+  });
 });

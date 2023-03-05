@@ -40,7 +40,7 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [19/27]
+** Org nodes [20/27]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [ ] Paragraph?
@@ -67,7 +67,7 @@ Of these requirements I want the following from this parser:
 - [X] Date and time
 - [X] Tags
 - [ ] Tables
-- [ ] Float dates
+- [X] Float dates
 
   Am I missing something? Please, let me know.
 ** Common features [0/0]

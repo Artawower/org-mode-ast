@@ -485,6 +485,12 @@ export class AstBuilder {
     });
   }
 
+  public createDateRangeNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.DateRange,
+    });
+  }
+
   public createBlockPropertyNode(child?: OrgNode): OrgNode {
     const blockProperty = new OrgNode({
       type: NodeType.BlockProperty,

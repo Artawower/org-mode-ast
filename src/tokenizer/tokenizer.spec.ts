@@ -772,6 +772,18 @@ console.log(a);
     ]);
   });
 
+  fit('Should tokenize date with offset', () => {
+    const orgDoc = `<2023-01-09 Mon +1h>`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 1, type: 'bracket', value: '<' },
+      { start: 1, end: 16, type: 'text', value: '2023-01-09 Mon ' },
+      { start: 16, end: 17, type: 'bracket', value: '+' },
+      { start: 17, end: 19, type: 'text', value: '1h' },
+      { start: 19, end: 20, type: 'bracket', value: '>' },
+    ]);
+  });
+
   it('Should tokenize inactive date with time', () => {
     const orgDoc = `[2023-01-09 Mon 10:00]`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
