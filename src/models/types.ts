@@ -20,6 +20,8 @@ export enum NodeType {
   Comment = 'comment',
   TodoKeyword = 'todoKeyword',
 
+  TagList = 'tagList',
+
   List = 'list',
   ListItem = 'listItem',
   Progress = 'progress',

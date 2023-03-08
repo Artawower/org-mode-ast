@@ -214,4 +214,87 @@ Another text`;
       "
     `);
   });
+
+  it('Should parse headline with single tag', () => {
+    const orgDoc = `* headline with :tag:`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-21]
+        headline [0-21]
+            :level 1:
+          title [0-21]
+            operator [0-2] ("* ")
+            text [2-16] ("headline with ")
+            tagList [16-21]
+              operator [16-17] (":")
+              text [17-20] ("tag")
+              operator [20-21] (":")
+      "
+    `);
+  });
+
+  it('Should parse multiple headline tags', () => {
+    const orgDoc = `* Headline
+** headline 2 :tag1:tag2:amma_tag?:`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-46]
+        headline [0-46]
+            :level 1:
+          title [0-11]
+            operator [0-2] ("* ")
+            text [2-10] ("Headline")
+            newLine [10-11]
+          section [11-46]
+            headline [11-46]
+                :level 2:
+              title [11-46]
+                operator [11-14] ("** ")
+                text [14-25] ("headline 2 ")
+                tagList [25-46]
+                  operator [25-26] (":")
+                  text [26-30] ("tag1")
+                  operator [30-31] (":")
+                  text [31-35] ("tag2")
+                  operator [35-36] (":")
+                  text [36-45] ("amma_tag?")
+                  operator [45-46] (":")
+      "
+    `);
+  });
+
+  it('Should not parse tags without ending colon', () => {
+    const orgDoc = `* Headline :not_tag:not_tag2`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-28]
+        headline [0-28]
+            :level 1:
+          title [0-28]
+            operator [0-2] ("* ")
+            text [2-28] ("Headline :not_tag:not_tag2")
+      "
+    `);
+  });
+
+  it('Should not parse tag list when it does not start from colon', () => {
+    const orgDoc = `* Headline not_tag:not_tag2:`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-28]
+        headline [0-28]
+            :level 1:
+          title [0-28]
+            operator [0-2] ("* ")
+            text [2-28] ("Headline not_tag:not_tag2:")
+      "
+    `);
+  });
 });

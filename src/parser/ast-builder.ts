@@ -485,6 +485,12 @@ export class AstBuilder {
     });
   }
 
+  public createTagListNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.TagList,
+    });
+  }
+
   public createDateRangeNode(): OrgNode {
     return new OrgNode({
       type: NodeType.DateRange,

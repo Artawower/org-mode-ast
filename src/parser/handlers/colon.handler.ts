@@ -1,22 +1,26 @@
 import {
   NodeType,
+  OrgChildrenList,
   OrgHandler,
   OrgNode,
   ParserConfiguration,
   TokenType,
 } from 'models';
 import { AstBuilder } from 'parser/ast-builder';
+import { AstContext } from 'parser/ast-context';
 import { TokenIterator } from 'tokenizer';
 
 export class ColonHandler implements OrgHandler {
   readonly #fixedWidthOperator = ': ';
   readonly #colonOperator = ':';
   readonly #colonOperators = [this.#fixedWidthOperator, this.#colonOperator];
+  readonly #potentialTagOperators = new OrgChildrenList();
 
   #lastFixedWidthNode: OrgNode;
 
   constructor(
     private readonly configuration: ParserConfiguration,
+    private readonly ctx: AstContext,
     private readonly astBuilder: AstBuilder,
     private readonly tokenIterator: TokenIterator
   ) {}
@@ -39,12 +43,20 @@ export class ColonHandler implements OrgHandler {
       return this.createFixedWidthNode();
     }
 
-    if (this.isColonOperator(this.tokenIterator.currentValue)) {
-      const unresolvedNode = this.astBuilder.createUnresolvedNode();
-      return unresolvedNode;
+    if (!this.isColonOperator(this.tokenIterator.currentValue)) {
+      this.appendFixedWidthContent();
+      return;
     }
 
-    this.appendFixedWidthContent();
+    const operatorNode = this.astBuilder.createOperatorNode(
+      this.tokenIterator.currentValue
+    );
+
+    if (this.ctx.insideHeadline) {
+      this.#potentialTagOperators.push(operatorNode);
+    }
+
+    return operatorNode;
   }
 
   public isColonOperator(operator: string): boolean {
@@ -83,5 +95,51 @@ export class ColonHandler implements OrgHandler {
 
   public handleNewLine(): void {
     this.#lastFixedWidthNode = null;
+    this.#buildTags();
+  }
+
+  #buildTags(): void {
+    if (this.#potentialTagOperators.isEmpty) {
+      return;
+    }
+
+    const firstColonOperator = this.#potentialTagOperators.first;
+    const lastColonOperator = this.#potentialTagOperators.last;
+    const isLastNodeEol =
+      !lastColonOperator.next || lastColonOperator.is(NodeType.NewLine);
+    const realParent = firstColonOperator.parent;
+
+    const nodesBetweenColons = realParent.children.getNodesBetweenPairs(
+      firstColonOperator,
+      lastColonOperator,
+      true
+    );
+
+    if (!isLastNodeEol) {
+      this.#makeTextFromHeadlineColons(nodesBetweenColons);
+      return;
+    }
+
+    // TODO: master last node should be set automatically when remove children!
+    this.astBuilder.lastNode =
+      firstColonOperator.prev ?? firstColonOperator.parent;
+    realParent.removeChildren(nodesBetweenColons);
+
+    const tagListNode = this.astBuilder.createTagListNode();
+
+    tagListNode.addChildren(nodesBetweenColons);
+
+    this.#potentialTagOperators.clear();
+    this.astBuilder.attachToTree(tagListNode);
+
+    this.#potentialTagOperators.clear();
+  }
+
+  #makeTextFromHeadlineColons(nodesBetweenColons: OrgChildrenList): void {
+    this.astBuilder.mergeNeighborsNodesWithSameType(
+      nodesBetweenColons.first,
+      NodeType.Operator,
+      NodeType.Text
+    );
   }
 }

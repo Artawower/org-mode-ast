@@ -334,6 +334,21 @@ Some text`;
     ]);
   });
 
+  it('Should tokenize headline with tags', () => {
+    const headline = `* Headline 123 :tag1:tag2:`;
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+    console.log('✎: [line 340][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Headline 123 ', start: 2, end: 15 },
+      { type: TokenType.Operator, value: ':', start: 15, end: 16 },
+      { type: TokenType.Text, value: 'tag1', start: 16, end: 20 },
+      { type: TokenType.Operator, value: ':', start: 20, end: 21 },
+      { type: TokenType.Text, value: 'tag2', start: 21, end: 25 },
+      { type: TokenType.Operator, value: ':', start: 25, end: 26 },
+    ]);
+  });
+
   // Simple text
   it('Should tokenize simple text', () => {
     const headline = `Some text`;
@@ -419,8 +434,9 @@ Some text`;
     const orgDoc = `:PROPERTIES:
 :ID:      123
 :END:`;
-    const result = tokenize(orgDoc, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 438][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
       { type: TokenType.Keyword, value: ':PROPERTIES:', start: 0, end: 12 },
       { type: TokenType.NewLine, value: '\n', start: 12, end: 13 },
       { type: TokenType.Keyword, value: ':ID:', start: 13, end: 17 },
@@ -625,8 +641,9 @@ const a = 1;
 console.log(a);
 #+END_SRC`;
 
-    const result = tokenize(orgDoc, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
       { start: 11, end: 15, type: 'text', value: ' js ' },
       { start: 15, end: 22, type: 'keyword', value: ':tangle' },
@@ -817,6 +834,7 @@ console.log(a);
   it('Should tokenize simple org link', () => {
     const orgDoc = `[[http://google.com][LINK NAME!]]`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 835][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '[' },
       { start: 1, end: 2, type: 'bracket', value: '[' },
@@ -882,11 +900,41 @@ console.log(a);
     ]);
   });
 
+  it('Should tokenize keyword', () => {
+    const orgDoc = `#+KEYWORD: VALUE`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 10, type: 'keyword', value: '#+KEYWORD:' },
+      { start: 10, end: 16, type: 'text', value: ' VALUE' },
+    ]);
+  });
+
+  it('Should tokenize keyword started with indentation', () => {
+    const orgDoc = `* Heading
+     #+KEYWORD: VALUE`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 916][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'headline', value: '* ' },
+      { start: 2, end: 9, type: 'text', value: 'Heading' },
+      { start: 9, end: 10, type: 'newLine', value: '\n' },
+      { start: 10, end: 15, type: 'indent', value: '     ' },
+      { start: 15, end: 25, type: 'keyword', value: '#+KEYWORD:' },
+      { start: 25, end: 31, type: 'text', value: ' VALUE' },
+    ]);
+  });
+
   it('Should tokenize inline latex block', () => {
     const orgDoc = `This is a latex block: $\\alpha$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 903][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
-      { start: 0, end: 23, type: 'text', value: 'This is a latex block: ' },
+      {
+        start: 0,
+        end: 23,
+        type: 'text',
+        value: 'This is a latex block: ',
+      },
       { start: 23, end: 24, type: 'bracket', value: '$' },
       { start: 24, end: 30, type: 'keyword', value: '\\alpha' },
       { start: 30, end: 31, type: 'bracket', value: '$' },
@@ -896,8 +944,14 @@ console.log(a);
   it('Should tokenize latex with 2 $', () => {
     const orgDoc = `This is also a latex text: $$1+1=2$$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 914][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
-      { start: 0, end: 27, type: 'text', value: 'This is also a latex text: ' },
+      {
+        start: 0,
+        end: 27,
+        type: 'text',
+        value: 'This is also a latex text: ',
+      },
       { start: 27, end: 29, type: 'bracket', value: '$$' },
       { start: 29, end: 30, type: 'text', value: '1' },
       { start: 30, end: 31, type: 'bracket', value: '+' },
@@ -1040,12 +1094,57 @@ BROKE\\end{align*}`;
     const orgDoc = `: Fixed value
 : Fixed value`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1058][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'operator', value: ': ' },
       { start: 2, end: 13, type: 'text', value: 'Fixed value' },
       { start: 13, end: 14, type: 'newLine', value: '\n' },
       { start: 14, end: 16, type: 'operator', value: ': ' },
       { start: 16, end: 27, type: 'text', value: 'Fixed value' },
+    ]);
+  });
+
+  it('Should parse fixed width started from spaces', () => {
+    const orgDoc = `: Fixed width line 1
+        *Bold text*
+        : Fixed width line 2`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1113][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: ': ' },
+      {
+        start: 2,
+        end: 20,
+        type: 'text',
+        value: 'Fixed width line 1',
+      },
+      { start: 20, end: 21, type: 'newLine', value: '\n' },
+      { start: 21, end: 29, type: 'indent', value: '        ' },
+      { start: 29, end: 30, type: 'bracket', value: '*' },
+      { start: 30, end: 39, type: 'text', value: 'Bold text' },
+      { start: 39, end: 40, type: 'bracket', value: '*' },
+      { start: 40, end: 41, type: 'newLine', value: '\n' },
+      { start: 41, end: 49, type: 'indent', value: '        ' },
+      { start: 49, end: 51, type: 'operator', value: ': ' },
+      {
+        start: 51,
+        end: 69,
+        type: 'text',
+        value: 'Fixed width line 2',
+      },
+    ]);
+  });
+
+  xit('Should tokenize list tag', () => {
+    const orgDoc = `- I'am a tag :: I'am a value`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1071][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: '- ' },
+      { start: 2, end: 13, type: 'text', value: "I'am a tag " },
+      { start: 13, end: 20, type: 'keyword', value: ":: I'am" },
+      { start: 20, end: 28, type: 'text', value: ' a value' },
     ]);
   });
 

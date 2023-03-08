@@ -17,7 +17,7 @@ export class TokenIterator {
   }
 
   get prevToken(): Token {
-    return this.#token.prev;
+    return this.#token?.prev;
   }
 
   get nextToken(): Token {

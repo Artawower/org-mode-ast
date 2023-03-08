@@ -165,7 +165,6 @@ class Parser {
   }
 
   private handleNewLine(): OrgNode {
-    console.log('Handle end of line!');
     this.handleEndOfLine();
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
@@ -225,6 +224,7 @@ export function parse(
   );
   const colonHandler = new ColonHandler(
     configuration,
+    ctx,
     astBuilder,
     tokenIterator
   );

@@ -138,8 +138,21 @@ export class Tokenizer {
       this.appendPrevValue(c);
       return;
     }
+
     if (this.shouldFormatterHasSpaceAtTheEnd()) {
       this.appendPrevValue(c);
+      return;
+    }
+
+    // NOTE: for src block property
+
+    if (
+      this.lastToken.prev?.value === ':' &&
+      this.lastToken.isType(TokenType.Text) &&
+      !this.isEol(this.lastToken.prev?.prev)
+    ) {
+      this.forceMergeLastTokens(2, TokenType.Keyword);
+      this.createToken({ type: TokenType.Text, value: c });
       return;
     }
 
@@ -196,10 +209,7 @@ export class Tokenizer {
   }
 
   private handlePlus(c: string): void {
-    if (
-      this.isNextChar(this.delimiter) &&
-      (!this.lastToken || this.lastToken.isType(TokenType.NewLine))
-    ) {
+    if (this.isNextChar(this.delimiter) && this.isEol(this.lastToken)) {
       this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
@@ -211,18 +221,51 @@ export class Tokenizer {
   }
 
   private handleColon(c: string): void {
+    if (this.isPropertyKeyword(c)) {
+      return;
+    }
     if (
-      this.lastToken?.value?.startsWith(':') ||
-      this.lastToken?.isType(TokenType.Keyword)
+      this.isEol(this.lastToken?.prev) &&
+      (this.lastToken?.value?.startsWith(':') ||
+        this.lastToken?.isType(TokenType.Keyword))
     ) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
       return;
     }
-    if (this.isTokenSeparator(this.lastToken)) {
+    if (
+      this.isTokenSeparator(this.lastToken) ||
+      (this.lastToken.prev?.isType(TokenType.Operator) &&
+        this.lastToken.prev?.value === ':')
+    ) {
       this.createToken({ type: TokenType.Operator, value: c });
       return;
     }
+    // If its keyword
+    if (this.lastToken?.value.startsWith('#+')) {
+      this.appendPrevValue(c);
+      return;
+    }
     this.upsertToken({ type: TokenType.Text, value: c }, true);
+  }
+
+  private isPropertyKeyword(c: string): boolean {
+    const prev = this.lastToken?.prev;
+    const isPrevText = this.lastToken?.isType(TokenType.Text);
+    const isStartedFromColon = prev?.value === ':';
+    const isPropertyStartedFromnewLine = this.isEol(prev?.prev);
+
+    if (isPrevText && isStartedFromColon && isPropertyStartedFromnewLine) {
+      this.createToken({ type: TokenType.Operator, value: c });
+      this.forceMergeLastTokens(3, TokenType.Keyword);
+      return true;
+    }
+  }
+
+  // TODO: master REPLACE ALL checking like
+  // !this.lastToken || this.lastToken.isType(TokenType.NewLine)
+  // into this method
+  private isEol(token: Token): boolean {
+    return !token || token?.isType(TokenType.NewLine);
   }
 
   private handlePoint(c: string): void {
@@ -298,6 +341,7 @@ export class Tokenizer {
       return;
     }
 
+    // TODO: master check is code reachable
     if (this.isPrevToken(TokenType.Keyword)) {
       this.appendPrevValue(c);
       this.checkSpecificKeyword();
@@ -314,8 +358,8 @@ export class Tokenizer {
     if (!isLatexKeyword) {
       return;
     }
-    const prevTokenNewLine =
-      !this.lastToken.prev || this.lastToken.prev?.isType(TokenType.NewLine);
+    const prevTokenNewLine = this.isEol(this.lastToken.prev);
+
     if (prevTokenNewLine) {
       this.lastToken.setType(TokenType.LatexEnvironmentKeyword);
       return;
@@ -347,14 +391,14 @@ export class Tokenizer {
       this.createToken({ type: TokenType.Text, value: c });
       return;
     }
-    if (
-      this.lastToken?.value[0] === ':' &&
-      !this.isDelimiter(this.lastToken?.value[1]) &&
-      !this.isDelimiter(c)
-    ) {
-      this.upsertToken({ type: TokenType.Keyword, value: c }, true);
-      return;
-    }
+    // if (
+    //   this.lastToken?.value[0] === ':' &&
+    //   !this.isDelimiter(this.lastToken?.value[1]) &&
+    //   !this.isDelimiter(c)
+    // ) {
+    //   this.upsertToken({ type: TokenType.Keyword, value: c }, true);
+    //   return;
+    // }
     if (
       this.isPrevToken(TokenType.Keyword) &&
       this.isBlockKeyword(this.lastToken?.value.slice(2)) &&
