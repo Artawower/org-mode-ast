@@ -1094,7 +1094,6 @@ BROKE\\end{align*}`;
     const orgDoc = `: Fixed value
 : Fixed value`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1058][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'operator', value: ': ' },
       { start: 2, end: 13, type: 'text', value: 'Fixed value' },
@@ -1104,7 +1103,7 @@ BROKE\\end{align*}`;
     ]);
   });
 
-  it('Should parse fixed width started from spaces', () => {
+  it('Should tokenize fixed width started from spaces', () => {
     const orgDoc = `: Fixed width line 1
         *Bold text*
         : Fixed width line 2`;
@@ -1133,6 +1132,23 @@ BROKE\\end{align*}`;
         type: 'text',
         value: 'Fixed width line 2',
       },
+    ]);
+  });
+
+  it('Should note tokenize colon operator inside center of text', () => {
+    const orgDoc = `Some text: Hello world`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 22, type: 'text', value: 'Some text: Hello world' },
+    ]);
+  });
+
+  it('Should not tokenize fixed width operator when previous value is not space or eol', () => {
+    const orgDoc = `Some text : Hello world`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1152][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 23, type: 'text', value: 'Some text : Hello world' },
     ]);
   });
 

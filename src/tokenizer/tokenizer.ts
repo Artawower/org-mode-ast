@@ -110,11 +110,11 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
-    if (
-      this.lastToken?.isType(TokenType.Operator) &&
-      this.lastToken.value === ':'
-    ) {
-      this.upsertToken({ type: TokenType.Operator, value: c }, true);
+    if (this.handleFixedWidthOperator(c)) {
+      return;
+    }
+
+    if (this.handleSpaceAfterIncorrectFixedWidthOperator(c)) {
       return;
     }
 
@@ -161,6 +161,35 @@ export class Tokenizer {
       return;
     }
     this.appendTextToken(c);
+  }
+
+  private handleFixedWidthOperator(c: string): boolean {
+    const lastTokenNewLineOrSpaceWithNewLine = this.isEolWithOptionalIndent(
+      this.lastToken?.prev
+    );
+    if (
+      !this.lastToken?.isType(TokenType.Operator) ||
+      this.lastToken.value !== ':' ||
+      !lastTokenNewLineOrSpaceWithNewLine
+    ) {
+      return;
+    }
+    this.upsertToken({ type: TokenType.Operator, value: c }, true);
+    return true;
+  }
+
+  private handleSpaceAfterIncorrectFixedWidthOperator(c: string): boolean {
+    if (this.lastToken?.value !== ':') {
+      return;
+    }
+    this.upsertToken({ type: TokenType.Text, value: c }, true);
+
+    this.lastToken;
+
+    if (this.lastToken.prev?.isType(TokenType.Text)) {
+      this.forceMergeLastTokens(2, TokenType.Text);
+    }
+    return true;
   }
 
   private isListOperator(token: Token): boolean {
@@ -264,8 +293,15 @@ export class Tokenizer {
   // TODO: master REPLACE ALL checking like
   // !this.lastToken || this.lastToken.isType(TokenType.NewLine)
   // into this method
-  private isEol(token: Token): boolean {
+  private isEol(token?: Token): boolean {
     return !token || token?.isType(TokenType.NewLine);
+  }
+
+  private isEolWithOptionalIndent(token: Token): boolean {
+    return (
+      this.isEol(token) ||
+      (token?.isType(TokenType.Indent) && this.isEol(token.prev))
+    );
   }
 
   private handlePoint(c: string): void {

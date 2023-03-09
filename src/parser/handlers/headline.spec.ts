@@ -297,4 +297,20 @@ Another text`;
       "
     `);
   });
+
+  it('Should not parse tag form headline which contents spaces', () => {
+    const orgDoc = `* Headline :not_tag: not_tag2:`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-30]
+        headline [0-30]
+            :level 1:
+          title [0-30]
+            operator [0-2] ("* ")
+            text [2-30] ("Headline :not_tag: not_tag2:")
+      "
+    `);
+  });
 });
