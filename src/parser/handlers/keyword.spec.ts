@@ -66,4 +66,27 @@ And amma text after keyword`;
       "
     `);
   });
+
+  // TODO: think about complex keyword structure
+  xit('Should parse keyword with tag list', () => {
+    const orgData = `#+FILETAGS: :tag1:tag2:tag3:`;
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-28]
+        keyword [0-12]
+          key [0-11] ("#+FILETAGS:")
+          value [11-28]
+            text [11-12] (" ")
+            tagList [12-28]
+              operator [12-13] (":")
+              text [13-17] ("tag1")
+              operator [17-18] (":")
+              text [18-22] ("tag2")
+              operator [22-23] (":")
+              text [23-27] ("tag3")
+              operator [27-28] (":")
+      "
+    `);
+  });
 });

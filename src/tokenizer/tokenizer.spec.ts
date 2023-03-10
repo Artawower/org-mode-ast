@@ -1164,6 +1164,23 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should tokenize file tags', () => {
+    const orgDoc = `#+FILETAGS: :tag1:tag2:tag3:`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result.toString()).toEqual([
+      { start: 0, end: 11, type: 'keyword', value: '#+FILETAGS:' },
+      { start: 11, end: 12, type: 'text', value: ' ' },
+      { start: 12, end: 13, type: 'operator', value: ':' },
+      { start: 13, end: 17, type: 'text', value: 'tag1' },
+      { start: 17, end: 18, type: 'operator', value: ':' },
+      { start: 18, end: 22, type: 'text', value: 'tag2' },
+      { start: 22, end: 23, type: 'operator', value: ':' },
+      { start: 23, end: 27, type: 'text', value: 'tag3' },
+      { start: 27, end: 28, type: 'operator', value: ':' },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
