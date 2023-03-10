@@ -141,8 +141,6 @@ This text will end list
 
     const result = parse(orgDoc);
 
-    console.log(result.toString());
-
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-109]
@@ -386,6 +384,74 @@ This text will end list
             title [48-57]
               operator [48-51] ("2) ")
               text [51-57] ("Item 2")
+      "
+    `);
+  });
+
+  it('Should parse list with tag', () => {
+    const orgData = `- Tag :: Item 1
+- Item 2
+- Tag2 :: item 3`;
+
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-41]
+        list [0-41]
+            :unordered:
+            :level 0:
+          listItem [0-16]
+            title [0-16]
+              operator [0-2] ("- ")
+              listTag [2-6] ("Tag ")
+              operator [6-8] ("::")
+              text [8-15] (" Item 1")
+              newLine [15-16]
+          listItem [16-25]
+            title [16-25]
+              operator [16-18] ("- ")
+              text [18-24] ("Item 2")
+              newLine [24-25]
+          listItem [25-41]
+            title [25-41]
+              operator [25-27] ("- ")
+              listTag [27-32] ("Tag2 ")
+              operator [32-34] ("::")
+              text [34-41] (" item 3")
+      "
+    `);
+  });
+
+  it("Should not parse list tag which doesn't start from space", () => {
+    const orgData = `- Tag:: Item 1`;
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-14]
+        list [0-14]
+            :unordered:
+            :level 0:
+          listItem [0-14]
+            title [0-14]
+              operator [0-2] ("- ")
+              text [2-14] ("Tag:: Item 1")
+      "
+    `);
+  });
+
+  it("Should not parse list tag which doesn't end with space", () => {
+    const orgData = `- Tag ::Item 1`;
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-14]
+        list [0-14]
+            :unordered:
+            :level 0:
+          listItem [0-14]
+            title [0-14]
+              operator [0-2] ("- ")
+              text [2-14] ("Tag ::Item 1")
       "
     `);
   });

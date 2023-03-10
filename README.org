@@ -15,7 +15,7 @@
 
 * Abstract syntax tree via typescript for org mode.
 #+html: <img src="./images/tree.png" align="right" width="18%">
-- No regexp
+- No regexp for parsing
 - Fast
 - Minimum dependencies as possible
 - Real tree structure
@@ -40,13 +40,12 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [21/26]
+** Org nodes [22/25]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [X] List Progress
 - [X] Headline tags
-- [ ] Filetags
-- [ ] List item tags
+- [X] List item tags
 - [X] Headlines
 - [X] Inline code
 - [X] Inline quotes
@@ -74,6 +73,7 @@ Of these requirements I want the following from this parser:
 ** Middle priority
 - [ ] Paragraph 
 - [ ] Planning
+- [ ] Filetags
 - [ ] Footnote
 - [ ] Latex fragment (partial)
 ** Low-priority features
@@ -101,9 +101,3 @@ Of these requirements I want the following from this parser:
 
 
 Any help is greatly appreciated. 
-
-
-** Fastnote?
-
-
-- Bulk tag editing

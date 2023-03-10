@@ -337,7 +337,6 @@ Some text`;
   it('Should tokenize headline with tags', () => {
     const headline = `* Headline 123 :tag1:tag2:`;
     const result = tokenListToArray(tokenize(headline, parserConfiguration));
-    console.log('✎: [line 340][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Headline 123 ', start: 2, end: 15 },
@@ -435,7 +434,6 @@ Some text`;
 :ID:      123
 :END:`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 438][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { type: TokenType.Keyword, value: ':PROPERTIES:', start: 0, end: 12 },
       { type: TokenType.NewLine, value: '\n', start: 12, end: 13 },
@@ -642,7 +640,6 @@ console.log(a);
 #+END_SRC`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 644][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
       { start: 11, end: 15, type: 'text', value: ' js ' },
@@ -834,7 +831,6 @@ console.log(a);
   it('Should tokenize simple org link', () => {
     const orgDoc = `[[http://google.com][LINK NAME!]]`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 835][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '[' },
       { start: 1, end: 2, type: 'bracket', value: '[' },
@@ -913,7 +909,6 @@ console.log(a);
     const orgDoc = `* Heading
      #+KEYWORD: VALUE`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 916][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'headline', value: '* ' },
       { start: 2, end: 9, type: 'text', value: 'Heading' },
@@ -927,7 +922,6 @@ console.log(a);
   it('Should tokenize inline latex block', () => {
     const orgDoc = `This is a latex block: $\\alpha$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 903][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         start: 0,
@@ -944,7 +938,6 @@ console.log(a);
   it('Should tokenize latex with 2 $', () => {
     const orgDoc = `This is also a latex text: $$1+1=2$$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 914][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         start: 0,
@@ -1109,7 +1102,6 @@ BROKE\\end{align*}`;
         : Fixed width line 2`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1113][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'operator', value: ': ' },
       {
@@ -1146,7 +1138,6 @@ BROKE\\end{align*}`;
   it('Should not tokenize fixed width operator when previous value is not space or eol', () => {
     const orgDoc = `Some text : Hello world`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1152][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 23, type: 'text', value: 'Some text : Hello world' },
     ]);
@@ -1155,7 +1146,6 @@ BROKE\\end{align*}`;
   xit('Should tokenize list tag', () => {
     const orgDoc = `- I'am a tag :: I'am a value`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1071][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 2, type: 'operator', value: '- ' },
       { start: 2, end: 13, type: 'text', value: "I'am a tag " },
@@ -1168,7 +1158,7 @@ BROKE\\end{align*}`;
     const orgDoc = `#+FILETAGS: :tag1:tag2:tag3:`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    expect(result.toString()).toEqual([
+    expect(result).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+FILETAGS:' },
       { start: 11, end: 12, type: 'text', value: ' ' },
       { start: 12, end: 13, type: 'operator', value: ':' },
@@ -1178,6 +1168,31 @@ BROKE\\end{align*}`;
       { start: 22, end: 23, type: 'operator', value: ':' },
       { start: 23, end: 27, type: 'text', value: 'tag3' },
       { start: 27, end: 28, type: 'operator', value: ':' },
+    ]);
+  });
+
+  it('Should tokenize list tag as operator', () => {
+    const orgDoc = `- I'am a tag :: I'am a value`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: '- ' },
+      { start: 2, end: 13, type: 'text', value: "I'am a tag " },
+      { start: 13, end: 15, type: 'operator', value: '::' },
+      { start: 15, end: 28, type: 'text', value: " I'am a value" },
+    ]);
+  });
+
+  it('Should not tokenize list tag when no space after operator', () => {
+    const orgDoc = `- I'am a tag ::I'am a value`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'operator', value: '- ' },
+      {
+        start: 2,
+        end: 27,
+        type: 'text',
+        value: "I'am a tag ::I'am a value",
+      },
     ]);
   });
 

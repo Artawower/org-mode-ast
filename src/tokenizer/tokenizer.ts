@@ -250,12 +250,18 @@ export class Tokenizer {
   }
 
   private handleColon(c: string): void {
+    if (this.isListTagOperator(c)) {
+      return;
+    }
+    if (this.isNotListTagOperator(c)) {
+      return;
+    }
     if (this.isPropertyKeyword(c)) {
       return;
     }
     if (
       this.isEol(this.lastToken?.prev) &&
-      (this.lastToken?.value?.startsWith(':') ||
+      (this.lastToken?.value === ':' ||
         this.lastToken?.isType(TokenType.Keyword))
     ) {
       this.upsertToken({ type: TokenType.Keyword, value: c }, true);
@@ -277,13 +283,44 @@ export class Tokenizer {
     this.upsertToken({ type: TokenType.Text, value: c }, true);
   }
 
+  private isNotListTagOperator(c: string): boolean {
+    if (
+      this.lastToken?.value !== ':' ||
+      c !== ':' ||
+      this.isDelimiter(this.nextChar)
+    ) {
+      return;
+    }
+
+    this.upsertToken({ type: TokenType.Text, value: c }, true);
+
+    if (this.lastToken.prev?.isType(TokenType.Text)) {
+      this.forceMergeLastTokens(2, TokenType.Text);
+    }
+
+    return true;
+  }
+
+  private isListTagOperator(c: string): boolean {
+    if (
+      !this.lastToken?.isType(TokenType.Operator) ||
+      this.lastToken.value !== ':' ||
+      !this.isDelimiter(this.nextChar)
+    ) {
+      return;
+    }
+
+    this.upsertToken({ type: TokenType.Operator, value: c });
+    return true;
+  }
+
   private isPropertyKeyword(c: string): boolean {
     const prev = this.lastToken?.prev;
     const isPrevText = this.lastToken?.isType(TokenType.Text);
-    const isStartedFromColon = prev?.value === ':';
+    const isLastColon = prev?.value === ':';
     const isPropertyStartedFromnewLine = this.isEol(prev?.prev);
 
-    if (isPrevText && isStartedFromColon && isPropertyStartedFromnewLine) {
+    if (isPrevText && isLastColon && isPropertyStartedFromnewLine) {
       this.createToken({ type: TokenType.Operator, value: c });
       this.forceMergeLastTokens(3, TokenType.Keyword);
       return true;

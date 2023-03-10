@@ -183,6 +183,11 @@ class Parser {
 
   private buildOrgDataForOperator(operator: string): OrgNode {
     // TODO: master move this check to list handler!
+    if (this.listHandler.isListTagOperator(operator)) {
+      const orgNode = this.listHandler.handleListTag();
+      return orgNode;
+    }
+
     if (this.astBuilder.isListOperator(operator)) {
       const orgNode = this.listHandler.handle();
       return orgNode;

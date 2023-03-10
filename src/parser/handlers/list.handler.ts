@@ -9,6 +9,8 @@ import { AstContext } from '../ast-context.js';
 import { TokenIterator } from '../../tokenizer/index.js';
 
 export class ListHandler implements OrgHandler {
+  readonly #listTagOperator = '::';
+
   constructor(
     private ctx: AstContext,
     private astBuilder: AstBuilder,
@@ -67,5 +69,19 @@ export class ListHandler implements OrgHandler {
     // this.astBuilder.attachToTree(listItemNode);
     this.astBuilder.saveLastNode(listTitleNode);
     this.ctx.insideListItem = true;
+  }
+
+  public isListTagOperator(operator: string): boolean {
+    return this.ctx.insideListItem && operator === this.#listTagOperator;
+  }
+
+  public handleListTag(): OrgNode {
+    const listTagNode = this.astBuilder.createOperatorNode(
+      this.tokenIterator.currentValue
+    );
+
+    this.astBuilder.lastNode.type = NodeType.ListTag;
+
+    return listTagNode;
   }
 }

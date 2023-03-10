@@ -25,6 +25,7 @@ export enum NodeType {
   List = 'list',
   ListItem = 'listItem',
   Progress = 'progress',
+  ListTag = 'listTag',
 
   Bold = 'bold',
   Crossed = 'crossed',
