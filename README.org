@@ -40,7 +40,7 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [22/25]
+** Org nodes [23/24]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [X] List Progress
@@ -57,8 +57,7 @@ Of these requirements I want the following from this parser:
 - [X] Html/quotes blocks
 - [X] Verbatim
 - [X] Fixed width value 
-- [ ] Inline HTML
-- [ ] attributes
+- [X] Inline HTML
 - [X] Comments
 - [X] Properties
 - [X] Horizontal rule
@@ -73,8 +72,11 @@ Of these requirements I want the following from this parser:
 ** Middle priority
 - [ ] Paragraph 
 - [ ] Planning
+- [ ] attributes
+- [ ] Dynamic blocks
 - [ ] Filetags
 - [ ] Footnote
+- [ ] Subscripts
 - [ ] Latex fragment (partial)
 ** Low-priority features
 - [ ] Results block

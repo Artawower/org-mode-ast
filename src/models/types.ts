@@ -51,6 +51,8 @@ export enum NodeType {
   CommentBlock = 'commentBlock',
   HeaderArg = 'headerArg',
 
+  InlineHtml = 'inlineHtml',
+
   FixedWidth = 'fixedWidth',
   Priority = 'priority',
 

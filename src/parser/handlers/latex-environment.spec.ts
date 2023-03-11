@@ -82,11 +82,7 @@ describe('Latex environment', () => {
       "root [0-50]
         text [0-14] ("\\\\begin{align*}")
         newLine [14-15]
-        text [15-28] ("2x - 5y &= 8 ")
-        keyword [28-29]
-          text [28-29] ("\\\\")
-        keyword [29-30]
-          text [29-30] ("\\\\")
+        text [15-30] ("2x - 5y &= 8 \\\\\\\\")
         newLine [30-31]
         text [31-45] ("3x + 9y &= -12")
         newLine [45-46]
@@ -115,16 +111,16 @@ describe('Latex environment', () => {
 \\end{align*}`;
 
     const result = parse(orgDoc);
+    console.log(
+      '✎: [line 118][latex-environment.spec.ts] result: ',
+      result.toString()
+    );
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-68]
         text [0-24] ("Some text \\\\begin{align*}")
         newLine [24-25]
-        text [25-38] ("2x - 5y &= 8 ")
-        keyword [38-39]
-          text [38-39] ("\\\\")
-        keyword [39-40]
-          text [39-40] ("\\\\")
+        text [25-40] ("2x - 5y &= 8 \\\\\\\\")
         newLine [40-41]
         text [41-55] ("3x + 9y &= -12")
         newLine [55-56]

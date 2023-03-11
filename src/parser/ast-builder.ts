@@ -115,12 +115,20 @@ export class AstBuilder {
     }
   }
 
-  private isInsideList(srcNode: OrgNode): OrgNode {
+  // TODO: master rename
+  private isInsideList(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
     const isNestedList =
       this.lastSection?.parent?.parent.is(NodeType.List) &&
       this.lastSection?.parent?.parent?.level < srcNode.level;
 
+    const isParentMatched = dstNode.parent.is(
+      NodeType.List,
+      NodeType.ListItem,
+      NodeType.Root
+    );
+
     if (
+      isParentMatched &&
       !this.ctx.insideHeadline &&
       this.lastSection &&
       srcNode.type !== NodeType.ListItem &&
@@ -235,9 +243,21 @@ export class AstBuilder {
     }
   }
 
+  private isInlineHtml(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (srcNode.is(NodeType.NewLine))
+      console.log('✎: [line 240][ast-builder.ts] dstNode: ', dstNode);
+    if (
+      srcNode.is(NodeType.Keyword, NodeType.NewLine) &&
+      dstNode.is(NodeType.InlineHtml)
+    ) {
+      return dstNode;
+    }
+  }
+
   private readonly parentMatchers = [
     this.isParentAlreadyExist,
     this.isPropertyDrawer,
+    this.isInlineHtml,
     this.isPartOfPropertyKeyword,
     this.isPartOfKeyword,
     this.isPartOfBlockProperty,
@@ -265,6 +285,8 @@ export class AstBuilder {
     for (const matcher of this.parentMatchers) {
       const parent = matcher.bind(this)(srcNode, dstNode);
       if (parent) {
+        if (srcNode.is(NodeType.NewLine))
+          console.log('✎: [line 269][ast-builder.ts] matcher: ', matcher);
         return parent;
       }
     }
@@ -482,6 +504,12 @@ export class AstBuilder {
     return new OrgNode({
       type: NodeType.Unresolved,
       value: value ?? this.tokenIterator.currentValue,
+    });
+  }
+
+  public createInlineHtmlNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.InlineHtml,
     });
   }
 

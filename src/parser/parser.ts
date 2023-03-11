@@ -51,6 +51,12 @@ class Parser {
     this.handleEndOfFile();
   }
 
+  /*
+   * Handlers who can hold the parsing process and force attach
+   * next tokens to the handle operation
+   */
+  private holdOnHandlers = [this.colonHandler, this.keywordHandler];
+
   private readonly tokensHandlers = {
     [TokenType.Headline]: () => this.handleHeadline(),
     [TokenType.Text]: () => this.handleText(),
@@ -83,7 +89,6 @@ class Parser {
 
     // TODO: master move to OrgNode class
     this.astBuilder.preserveLastPositionSnapshot(orgData);
-    // this.astBuilder.appendLengthToParentNodes(this.astBuilder.lastPos, this.astBuilder.lastNode?.parent);
 
     const lineBreak =
       this.tokenIterator.token?.isType(TokenType.NewLine) ||
@@ -102,8 +107,9 @@ class Parser {
   }
 
   private getOnHoldHandler(): () => OrgNode | void {
-    if (this.colonHandler.holdOn) {
-      return () => this.colonHandler.handle();
+    const foundHandler = this.holdOnHandlers.find((h) => h.onHold);
+    if (foundHandler) {
+      return () => foundHandler.handleHolded();
     }
   }
 

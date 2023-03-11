@@ -29,7 +29,7 @@ export class ColonHandler implements OrgHandler {
     return this.tokenIterator.currentValue === this.#fixedWidthOperator;
   }
 
-  get holdOn(): boolean {
+  get onHold(): boolean {
     if (this.tokenIterator.token.isType(TokenType.NewLine)) {
       this.#lastFixedWidthNode = null;
       return;
@@ -43,11 +43,6 @@ export class ColonHandler implements OrgHandler {
       return this.createFixedWidthNode();
     }
 
-    if (!this.isColonOperator(this.tokenIterator.currentValue)) {
-      this.appendFixedWidthContent();
-      return;
-    }
-
     const operatorNode = this.astBuilder.createOperatorNode(
       this.tokenIterator.currentValue
     );
@@ -57,6 +52,13 @@ export class ColonHandler implements OrgHandler {
     }
 
     return operatorNode;
+  }
+
+  public handleHolded(): OrgNode {
+    if (!this.isColonOperator(this.tokenIterator.currentValue)) {
+      this.appendFixedWidthContent();
+    }
+    return;
   }
 
   public isColonOperator(operator: string): boolean {
