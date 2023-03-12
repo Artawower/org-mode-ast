@@ -98,8 +98,11 @@ export class AstBuilder {
     }
   }
 
-  private isDestinationRootNode(_srcNode: OrgNode, dstNode: OrgNode): OrgNode {
-    if (dstNode.type === NodeType.Root) {
+  private isDestinationRootNode(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      dstNode.type === NodeType.Root &&
+      !srcNode.is(NodeType.TableCell, NodeType.TableRow)
+    ) {
       return dstNode;
     }
   }
@@ -121,7 +124,7 @@ export class AstBuilder {
       this.lastSection?.parent?.parent.is(NodeType.List) &&
       this.lastSection?.parent?.parent?.level < srcNode.level;
 
-    const isParentMatched = dstNode.parent.is(
+    const isParentMatched = dstNode.parent?.is(
       NodeType.List,
       NodeType.ListItem,
       NodeType.Root
@@ -166,9 +169,13 @@ export class AstBuilder {
     srcNode: OrgNode,
     dstNode: OrgNode
   ): OrgNode {
-    const isSourceNodeHeadline = srcNode.type === NodeType.Headline;
+    const isAvailableSrcNode = !srcNode.is(
+      NodeType.Headline,
+      NodeType.TableRow,
+      NodeType.TableCell
+    );
     if (
-      !isSourceNodeHeadline &&
+      isAvailableSrcNode &&
       [
         NodeType.Root,
         NodeType.Headline,
@@ -244,8 +251,6 @@ export class AstBuilder {
   }
 
   private isInlineHtml(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
-    if (srcNode.is(NodeType.NewLine))
-      console.log('✎: [line 240][ast-builder.ts] dstNode: ', dstNode);
     if (
       srcNode.is(NodeType.Keyword, NodeType.NewLine) &&
       dstNode.is(NodeType.InlineHtml)
@@ -254,9 +259,54 @@ export class AstBuilder {
     }
   }
 
+  private isCellSrc(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (srcNode.is(NodeType.TableCell) && dstNode.is(NodeType.TableRow)) {
+      return dstNode;
+    }
+  }
+
+  private isPartOfTable(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      srcNode.is(NodeType.TableRow, NodeType.NewLine, NodeType.Indent) &&
+      dstNode.is(NodeType.Table)
+    ) {
+      return dstNode;
+    }
+  }
+
+  private isCellDst(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (!dstNode.is(NodeType.TableCell)) {
+      return;
+    }
+
+    const isMatched = srcNode.is(
+      NodeType.Text,
+      NodeType.Bold,
+      NodeType.Italic,
+      NodeType.Crossed,
+      NodeType.Link,
+      NodeType.Date,
+      NodeType.DateRange,
+      NodeType.InlineCode,
+      NodeType.Verbatim,
+      NodeType.TodoKeyword,
+      NodeType.LinkName,
+      NodeType.LinkUrl,
+      NodeType.Operator,
+      NodeType.Unresolved
+    );
+
+    if (isMatched) {
+      return dstNode;
+    }
+  }
+
   private readonly parentMatchers = [
     this.isParentAlreadyExist,
+    this.isCellSrc,
+    this.isPartOfTable,
     this.isPropertyDrawer,
+    this.isCellDst,
     this.isInlineHtml,
     this.isPartOfPropertyKeyword,
     this.isPartOfKeyword,
@@ -285,8 +335,6 @@ export class AstBuilder {
     for (const matcher of this.parentMatchers) {
       const parent = matcher.bind(this)(srcNode, dstNode);
       if (parent) {
-        if (srcNode.is(NodeType.NewLine))
-          console.log('✎: [line 269][ast-builder.ts] matcher: ', matcher);
         return parent;
       }
     }
@@ -663,6 +711,24 @@ export class AstBuilder {
     return new OrgNode({
       type: NodeType.LatexEnvironment,
       value,
+    });
+  }
+
+  public createTableCellNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.TableCell,
+    });
+  }
+
+  public createTableRowNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.TableRow,
+    });
+  }
+
+  public createTableNode(): OrgNode {
+    return new OrgNode({
+      type: NodeType.Table,
     });
   }
 

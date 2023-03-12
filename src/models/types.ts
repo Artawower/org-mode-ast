@@ -67,6 +67,10 @@ export enum NodeType {
 
   // Workaround for structures that have section + title
   Title = 'title',
+
+  Table = 'table',
+  TableCell = 'tableCell',
+  TableRow = 'tableRow',
 }
 
 export type Block =
@@ -89,6 +93,7 @@ export enum TokenType {
   Operator = 'operator',
   Indent = 'indent',
   HorizontalRule = 'horizontalRule',
+  TableOperator = 'tableOperator',
 }
 
 export interface RawToken {

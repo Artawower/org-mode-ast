@@ -40,7 +40,7 @@ Of these requirements I want the following from this parser:
 7. All operations with the tree, such as formatting, auto-insert, etc. must be implemented as a separate logic with its own class.
 
 * Progress
-** Org nodes [23/24]
+** Org nodes [24/24]
 - [X] Bold/italic/crossed out text
 - [X] Lists
 - [X] List Progress
@@ -63,7 +63,7 @@ Of these requirements I want the following from this parser:
 - [X] Horizontal rule
 - [X] Date and time
 - [X] Tags
-- [ ] Tables
+- [X] Tables
 - [X] Float dates
 
   Am I missing something? Please, let me know.

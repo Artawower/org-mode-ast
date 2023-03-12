@@ -52,6 +52,7 @@ export class Tokenizer {
       '\\': (c: string) => this.handleBackslash(c),
       '{': (c: string) => this.handleLatexBrackets(c),
       '}': (c: string) => this.handleLatexBrackets(c),
+      '|': (c: string) => this.handlePipe(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -398,6 +399,10 @@ export class Tokenizer {
 
   private handleLatexBrackets(c: string): void {
     this.createToken({ type: TokenType.LatexBracket, value: c });
+  }
+
+  private handlePipe(c: string): void {
+    this.createToken({ type: TokenType.TableOperator, value: c });
   }
 
   private handleText(c: string): void {

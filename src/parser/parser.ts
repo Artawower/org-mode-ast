@@ -20,6 +20,7 @@ import {
   PropertiesHandler,
   HorizontalRuleHandler,
   LatexEnvironmentHandler,
+  TableHandler,
 } from './handlers/index.js';
 import { parserConfiguration } from './parser.configuration.js';
 
@@ -35,7 +36,8 @@ class Parser {
     private readonly keywordHandler: KeywordHandler,
     private readonly horizontalRuleHandler: HorizontalRuleHandler,
     private readonly latexEnvironmentHandler: LatexEnvironmentHandler,
-    private readonly colonHandler: ColonHandler
+    private readonly colonHandler: ColonHandler,
+    private readonly tableHandler: TableHandler
   ) {}
 
   public parse(): OrgNode {
@@ -71,6 +73,7 @@ class Parser {
       this.latexEnvironmentHandler.handle(),
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
+    [TokenType.TableOperator]: () => this.tableHandler.handle(),
   } satisfies Record<string, () => OrgNode | void>;
 
   private handleToken(): void {
@@ -179,6 +182,7 @@ class Parser {
 
   private handleEndOfLine(): void {
     // this.bracketHandler.handleEndOfLine();
+    this.tableHandler.handleNewLine();
     this.keywordHandler.handleEndOfLine();
     this.colonHandler.handleNewLine();
   }
@@ -252,6 +256,12 @@ export function parse(
     astBuilder,
     tokenIterator
   );
+  const tableHandler = new TableHandler(
+    configuration,
+    astBuilder,
+    tokenIterator
+  );
+
   const parser = new Parser(
     configuration,
     ctx,
@@ -263,7 +273,8 @@ export function parse(
     keywordHandler,
     horizontalRuleHandler,
     latexEnvironmentHandler,
-    colonHandler
+    colonHandler,
+    tableHandler
   );
   return parser.parse();
 }

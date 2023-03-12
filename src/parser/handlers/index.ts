@@ -6,3 +6,4 @@ export * from './properties.handler.js';
 export * from './keyword.handler.js';
 export * from './horizontal-rule.handler.js';
 export * from './latex-environment.handler.js';
+export * from './table.handler';

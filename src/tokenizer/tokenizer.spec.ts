@@ -1196,6 +1196,40 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should tokenize table', () => {
+    const orgDoc = `| A | B | C |
+|---+---+---|
+| 1 | 2 | 3 |`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
+    expect(result).toEqual([
+      { start: 0, end: 1, type: 'tableOperator', value: '|' },
+      { start: 1, end: 4, type: 'text', value: ' A ' },
+      { start: 4, end: 5, type: 'tableOperator', value: '|' },
+      { start: 5, end: 8, type: 'text', value: ' B ' },
+      { start: 8, end: 9, type: 'tableOperator', value: '|' },
+      { start: 9, end: 12, type: 'text', value: ' C ' },
+      { start: 12, end: 13, type: 'tableOperator', value: '|' },
+      { start: 13, end: 14, type: 'newLine', value: '\n' },
+      { start: 14, end: 15, type: 'tableOperator', value: '|' },
+      { start: 15, end: 18, type: 'text', value: '---' },
+      { start: 18, end: 19, type: 'bracket', value: '+' },
+      { start: 19, end: 22, type: 'text', value: '---' },
+      { start: 22, end: 23, type: 'bracket', value: '+' },
+      { start: 23, end: 26, type: 'text', value: '---' },
+      { start: 26, end: 27, type: 'tableOperator', value: '|' },
+      { start: 27, end: 28, type: 'newLine', value: '\n' },
+      { start: 28, end: 29, type: 'tableOperator', value: '|' },
+      { start: 29, end: 32, type: 'text', value: ' 1 ' },
+      { start: 32, end: 33, type: 'tableOperator', value: '|' },
+      { start: 33, end: 36, type: 'text', value: ' 2 ' },
+      { start: 36, end: 37, type: 'tableOperator', value: '|' },
+      { start: 37, end: 40, type: 'text', value: ' 3 ' },
+      { start: 40, end: 41, type: 'tableOperator', value: '|' },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

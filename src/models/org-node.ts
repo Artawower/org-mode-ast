@@ -221,10 +221,6 @@ export class OrgNode {
   }
 
   private recalculateParentEnd(diff: number): void {
-    // if (this.is(NodeType.Section)) {
-    //   this.parent?.recalculateParentEnd(diff);
-    //   return;
-    // }
     if (!this.parent || !diff) {
       return;
     }
