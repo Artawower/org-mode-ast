@@ -165,7 +165,7 @@ export class AstBuilder {
     srcNode: OrgNode,
     dstNode: OrgNode
   ): OrgNode {
-    const isAvailableSrcNode = !srcNode.is(
+    const isAvailableSrcNode = srcNode.isNot(
       NodeType.Headline,
       NodeType.TableRow,
       NodeType.TableCell
@@ -297,9 +297,22 @@ export class AstBuilder {
     }
   }
 
+  private isPartOfSection(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    if (
+      this.ctx.insideHeadline ||
+      dstNode.isNot(NodeType.Title) ||
+      dstNode?.parent?.isNot(NodeType.Headline)
+    ) {
+      return;
+    }
+
+    return dstNode.parent.section;
+  }
+
   private readonly parentMatchers = [
     this.isParentAlreadyExist,
     this.isCellSrc,
+    this.isPartOfSection,
     this.isPartOfTable,
     this.isPropertyDrawer,
     this.isCellDst,

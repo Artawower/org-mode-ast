@@ -313,4 +313,61 @@ Another text`;
       "
     `);
   });
+
+  it('Should parse nested keyword and put it into section', () => {
+    const orgData = `* Headline
+    #+KEYWORD: value`;
+
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-31]
+        headline [0-31]
+            :level 1:
+          title [0-11]
+            operator [0-2] ("* ")
+            text [2-10] ("Headline")
+            newLine [10-11]
+          section [11-31]
+            indent [11-15] ("    ")
+            keyword [15-31]
+              text [15-25] ("#+KEYWORD:")
+              text [25-31] (" value")
+      "
+    `);
+  });
+
+  it('Should parse section content for nested headline', () => {
+    const orgData = `* Headline
+** Headline 2
+Some text, with punctuation and so one
+#+KEYWORD: test
+`;
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-80]
+        headline [0-80]
+            :level 1:
+          title [0-11]
+            operator [0-2] ("* ")
+            text [2-10] ("Headline")
+            newLine [10-11]
+          section [11-80]
+            headline [11-80]
+                :level 2:
+              title [11-25]
+                operator [11-14] ("** ")
+                text [14-24] ("Headline 2")
+                newLine [24-25]
+              section [25-80]
+                text [25-63] ("Some text, with punctuation and so one")
+                newLine [63-64]
+                keyword [64-79]
+                  text [64-74] ("#+KEYWORD:")
+                  text [74-79] (" test")
+                newLine [79-80]
+      "
+    `);
+  });
 });
