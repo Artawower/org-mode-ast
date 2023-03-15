@@ -4,9 +4,9 @@ import {
   OrgNode,
   ParserConfiguration,
   TokenType,
-} from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { TokenIterator } from 'tokenizer';
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder.js';
+import { TokenIterator } from '../../tokenizer/index.js';
 
 export class TableHandler implements OrgHandler {
   #lastPipeOperator: OrgNode;

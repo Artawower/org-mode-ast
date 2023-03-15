@@ -843,6 +843,37 @@ console.log(a);
     ]);
   });
 
+  it('Should tokenize link with nested path', () => {
+    const orgDoc = `[[https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/][Emacs lisp за 15 минут]]`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
+    expect(result).toEqual([
+      { start: 0, end: 1, type: 'bracket', value: '[' },
+      { start: 1, end: 2, type: 'bracket', value: '[' },
+      { start: 2, end: 16, type: 'text', value: 'https://bzg.fr' },
+      { start: 16, end: 17, type: 'bracket', value: '/' },
+      { start: 17, end: 19, type: 'text', value: 'en' },
+      { start: 19, end: 20, type: 'bracket', value: '/' },
+      {
+        start: 20,
+        end: 50,
+        type: 'text',
+        value: 'learn-emacs-lisp-in-15-minutes',
+      },
+      { start: 50, end: 51, type: 'bracket', value: '/' },
+      { start: 51, end: 52, type: 'bracket', value: ']' },
+      { start: 52, end: 53, type: 'bracket', value: '[' },
+      {
+        start: 53,
+        end: 75,
+        type: 'text',
+        value: 'Emacs lisp за 15 минут',
+      },
+      { start: 75, end: 76, type: 'bracket', value: ']' },
+      { start: 76, end: 77, type: 'bracket', value: ']' },
+    ]);
+  });
+
   it('Should tokenize html block', () => {
     const orgDoc = `#+BEGIN_HTML
 <div>

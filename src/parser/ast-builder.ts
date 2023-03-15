@@ -38,12 +38,8 @@ export class AstBuilder {
   }
 
   public attachToTree(orgData: OrgNode): void {
-    // console.log('✎: [line 41][ast-builder.ts] orgData: ', orgData);
     const parentNode = this.findParentForNodeType(orgData);
-    // console.log('✎: [line 42][ast-builder.ts] parentNode: ', parentNode);
     parentNode.addChild(orgData);
-    // console.log(this.#nodeTree.toString());
-    // console.log('----------------');
   }
 
   private findFirstParentNodeWithType(...type: NodeType[]): OrgNode {
@@ -750,7 +746,9 @@ export class AstBuilder {
       }
       if (
         this.couldBeMergedIntoText(currentNode, ...mergeableTypes) &&
-        this.couldBeMergedIntoText(currentNode.prev, ...mergeableTypes)
+        this.couldBeMergedIntoText(currentNode.prev, ...mergeableTypes) &&
+        // TODO: master check it
+        currentNode.value
       ) {
         const prev = currentNode.prev;
         prev.appendValue(currentNode.value);

@@ -146,10 +146,6 @@ describe('Properties', () => {
     const orgDoc = `#+PROPERTY: header-args :tangle no
   #+PROPERTY: header-args :tangle yes`;
     const result = parse(orgDoc);
-    console.log(
-      '✎: [line 149][properties.spec.ts] result: ',
-      result.toString()
-    );
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-72]

@@ -69,10 +69,6 @@ export class KeywordHandler implements OrgHandler {
       this.astBuilder.attachToTree(inlineHtml);
       this.astBuilder.preserveLastPositionSnapshot(inlineHtml);
     }
-    console.log(
-      '✎: [line 62][keyword.handler.ts] this.astBuilder.lastNode: ',
-      this.astBuilder.lastNode
-    );
     this.astBuilder.attachToTree(createdKeyword);
     return createdKeyword;
   }
@@ -116,10 +112,6 @@ export class KeywordHandler implements OrgHandler {
   }
 
   public handleHolded(): OrgNode {
-    // console.log(
-    //   '✎: [line 120]',
-    //   `"${this.astBuilder.lastNode?.value}" - ${this.astBuilder.lastNode?.type} curr: "${this.tokenIterator.currentValue}"`
-    // );
     if (!this.astBuilder.lastNode.is(NodeType.Text)) {
       const lastParent = this.astBuilder.lastNode;
       const orgTextNode = this.astBuilder.createTextNode(

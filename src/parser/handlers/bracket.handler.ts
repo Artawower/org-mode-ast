@@ -13,6 +13,8 @@ export class BracketHandler implements OrgHandler {
   readonly #dateRangeDelimiter = '--';
   readonly #priorityValueRegexp = /#([\w\d]{1})$/;
   readonly #unresolvedNodes = new OrgChildrenList();
+  // readonly #urlRegexp =
+  //   /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
 
   // TODO: master add configuration object for parser
   private readonly listProgressSeparator = '/';
@@ -88,14 +90,16 @@ export class BracketHandler implements OrgHandler {
       return;
     }
 
-    const closedBracketSymbol = this.getOpenedBracket(
+    const openedBracketSymbol = this.getOpenedBracket(
       this.tokenIterator.currentValue
     );
+
     const openedBracket = this.bracketsStack.findLast(
-      (bracketNode) => bracketNode.value === closedBracketSymbol
+      (bracketNode) => bracketNode.value === openedBracketSymbol
     );
 
     if (!openedBracket) {
+      // TODO: master should i make it as text?
       return;
     }
 
@@ -143,9 +147,36 @@ export class BracketHandler implements OrgHandler {
       );
     }
 
+    bracketNodes = this.normalizeOrgLinkUrl(bracketNodeParent, bracketNodes);
+
     bracketNodeParent.addChildren(bracketNodes);
     realParent.addChild(bracketNodeParent);
     this.astBuilder.mergeNeighborsNodesWithSameType(bracketNodes.first);
+  }
+
+  private normalizeOrgLinkUrl(
+    parent: OrgNode,
+    childrenNodes: OrgChildrenList
+  ): OrgChildrenList {
+    if (parent.isNot(NodeType.Link)) {
+      return childrenNodes;
+    }
+    // NOTE: Geting raw value from url link
+    // need to extract raw link inside tokenizer
+    const linkUrlNode = childrenNodes.get(1);
+
+    if (linkUrlNode.length > 3) {
+      const firstChild = linkUrlNode.children.first;
+      const parent = firstChild.parent;
+      const lastChild = linkUrlNode.children.last;
+      const rawValue = this.astBuilder.getRawValueFromNodes(
+        linkUrlNode.children.slice(1, -1)
+      );
+      const textNode = this.astBuilder.createTextNode(rawValue);
+      parent.removeChildren(parent.children);
+      parent.addChildren([firstChild, textNode, lastChild]);
+    }
+    return childrenNodes;
   }
 
   private readonly bracketedNodesHandler: Array<
@@ -154,9 +185,9 @@ export class BracketHandler implements OrgHandler {
     this.handleChecboxBrackets.bind(this),
     this.handleDateBrackets.bind(this),
     this.handlePriorityBrachets.bind(this),
-    this.handleLinkBrackets.bind(this),
     this.handleListProgressBrackets.bind(this),
     this.handleFormatBrackets.bind(this),
+    this.handleLinkBrackets.bind(this),
   ];
 
   private handleBracketSequence(bracketedNodes: OrgChildrenList): OrgNode {
@@ -258,11 +289,6 @@ export class BracketHandler implements OrgHandler {
     const isClosedPriorityBracket = bracketedNodes.last.value === ']';
     const priorityValue = bracketedNodes.get(1).value;
     const isPriorityValue = this.#priorityValueRegexp.test(priorityValue);
-    console.log(
-      '✎: [line 236][bracket.handler.ts] isPriorityValue: ',
-      isPriorityValue,
-      priorityValue
-    );
 
     const isPriorityBrackets =
       isOpenedPriorityBracket && isClosedPriorityBracket && isPriorityValue;
@@ -289,16 +315,19 @@ export class BracketHandler implements OrgHandler {
     if (!nodes) {
       return false;
     }
+
     const leftBracket = nodes.first;
     const rightBracket = nodes.last;
+    const rawValue = this.astBuilder.getRawValueFromNodes(nodes.slice(1, -1));
 
-    return (
-      (nodes?.length === 4 || nodes?.length === 3) &&
+    // (nodes?.length === 4 || this.#urlRegexp.test(rawValue)) &&
+    const isLinkBracket =
       leftBracket.type === NodeType.Operator &&
       leftBracket.value === '[' &&
       rightBracket.type === NodeType.Operator &&
-      rightBracket.value === ']'
-    );
+      rightBracket.value === ']';
+
+    return isLinkBracket;
   }
 
   private handleDateBrackets(bracketedNodes: OrgChildrenList): OrgNode {
@@ -338,11 +367,6 @@ export class BracketHandler implements OrgHandler {
 
   // TODO: extract date date property by groups
   private isDate(text: string): boolean {
-    console.log(
-      '✎: [line 264][bracket.handler.ts] text: ',
-      text,
-      !!text?.match(this.dateRegex)
-    );
     return !!text?.match(this.dateRegex);
   }
 
@@ -386,6 +410,7 @@ export class BracketHandler implements OrgHandler {
   public handleEndOfLine(): void {
     // NOTE: another handler could unattached node from the parent.
     // It means that this node already has found pair.
+    // return;
     const filteredBrackets = this.bracketsStack.filter((b) => b.parent);
     this.astBuilder.mergeNeighborsNodesWithSameType(filteredBrackets.first);
     this.#unresolvedNodes.forEach((n) => {

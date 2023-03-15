@@ -285,10 +285,6 @@ export class OrgNode {
     ...parentType: NodeType[]
   ): void {
     const nodeWithProperties = this.findParent(...parentType);
-    console.log(
-      '✎: [line 272][org-node.ts] nodeWithProperties: ',
-      nodeWithProperties
-    );
     nodeWithProperties.mergeProperties(properties);
   }
 
@@ -389,6 +385,10 @@ export class OrgNode {
 
   public is(...nodeType: NodeType[]): boolean {
     return nodeType.some((t) => t === this.type);
+  }
+
+  public isNot(...nodeType: NodeType[]): boolean {
+    return !this.is(...nodeType);
   }
 
   public toString(offset?: number): string {

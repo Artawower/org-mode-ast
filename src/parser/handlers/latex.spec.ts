@@ -23,10 +23,6 @@ describe('Latex', () => {
     const orgDoc = `This is also a latex text: $$1+1=2$$`;
     const result = parse(orgDoc);
 
-    console.log(
-      '✎: [line 27][latex.spec.ts] result.toString(): ',
-      result.toString()
-    );
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBe(false);
 
     expect(result.toString()).toMatchInlineSnapshot(`

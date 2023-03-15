@@ -72,6 +72,45 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     return newList;
   }
 
+  public replaceNodes(
+    nodes: OrgChildrenList | OrgNode[],
+    ...newNodes: OrgNode[]
+  ) {
+    const firstNode = this.#find(
+      nodes instanceof OrgChildrenList ? nodes.first : nodes[0]
+    );
+
+    let prevNode = firstNode.prev ?? this.#first;
+
+    this.removeNodes(nodes);
+
+    newNodes.forEach((n) => {
+      const childList = new OrgListChild(n);
+      this.insertAfter(prevNode, childList);
+      prevNode = childList;
+    });
+  }
+
+  #find(node: OrgNode): OrgListChild | null {
+    let current = this.#first;
+    while (current) {
+      if (current.value === node) {
+        return current;
+      }
+      current = current.next;
+    }
+    return null;
+  }
+
+  public insertAfter(prevNode: OrgListChild, insertedNode: OrgListChild): void {
+    const next = prevNode.next;
+    prevNode.setNext(insertedNode);
+    insertedNode.setPrev(prevNode);
+    insertedNode.setNext(next);
+    next?.setPrev(insertedNode);
+    this.length++;
+  }
+
   public get(index: number) {
     let current = this.#first;
     let i = 0;
@@ -98,6 +137,15 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     return `[\n  ${Array.from(this)
       .map((node) => node.toString())
       .join('  ')}]`;
+  }
+
+  public toString() {
+    const res =
+      '\n' +
+      Array.from(this).reduce((acc, node) => {
+        return `${acc}\n${node.toString()}`;
+      }, '');
+    return res + '\n-----------------';
   }
 
   /**

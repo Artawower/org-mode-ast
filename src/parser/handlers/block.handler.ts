@@ -44,7 +44,10 @@ export class BlockHandler implements OrgHandler {
 
   public handle(): OrgNode {
     const [blockPosition, blockType] = this.determineBlockType();
-    const blockHandler = this.blockHanderls[blockType.toLowerCase()];
+    const fallbackHandler = (pos: BlockPosition, type: string) =>
+      this.handleBlockWithFormat(pos, type);
+    const blockHandler =
+      this.blockHanderls[blockType.toLowerCase()] ?? fallbackHandler;
 
     if (!blockHandler) {
       throw new Error(`Block type ${blockType} is not supported`);
@@ -169,7 +172,6 @@ export class BlockHandler implements OrgHandler {
   }
 
   private buildHeaderNode(nodes: OrgChildrenList): OrgNode {
-    console.log('✎: [line 165][block-handler.ts] nodes: ', nodes.get(3));
     const headerNodes = new OrgChildrenList();
 
     nodes.forEach((node) => {

@@ -80,8 +80,6 @@ describe('Italic', () => {
     const orgText = `This is /+italic text that wrapped crossed text+/ and this is not italic text`;
     const result = parse(orgText);
 
-    console.log(result.toString());
-
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-77]
         text [0-8] ("This is ")

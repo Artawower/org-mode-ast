@@ -1,5 +1,4 @@
 import {
-  HandlerDidNotReturnValue,
   HandlerNotFoundError,
   NodeType,
   OrgNode,
@@ -117,7 +116,7 @@ class Parser {
   }
 
   private handleEmptyHandlerValue(): void {
-    console.info(new HandlerDidNotReturnValue(this.tokenIterator.token));
+    // console.info(new HandlerDidNotReturnValue(this.tokenIterator.token));
   }
 
   private handleHeadline(): OrgNode {

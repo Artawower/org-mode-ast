@@ -145,4 +145,40 @@ describe('Link test', () => {
       "
     `);
   });
+
+  it('Should not parse as link', () => {
+    const orgDoc = `[https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/]`;
+
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-51]
+        text [0-51] ("[https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/]")
+      "
+    `);
+  });
+
+  it('Should parse link with slashes', () => {
+    const orgDoc = `[[https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/][Emacs lisp за 15 минут]]`;
+
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-77]
+        link [0-77]
+          operator [0-1] ("[")
+          linkUrl [1-52]
+            operator [1-2] ("[")
+            text [2-51] ("https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/")
+            operator [51-52] ("]")
+          linkName [52-76]
+            operator [52-53] ("[")
+            text [53-75] ("Emacs lisp за 15 минут")
+            operator [75-76] ("]")
+          operator [76-77] ("]")
+      "
+    `);
+  });
 });

@@ -50,7 +50,6 @@ describe('Org children', () => {
     children.push(secondOrgNode);
 
     const array = [...children];
-    console.log('✎: [line 53][org-children-list.spec.ts] array: ', array);
     expect(array[0].toString()).toBe(firstOrgNode.toString());
     expect(array[1].toString()).toBe(secondOrgNode.toString());
   });
@@ -150,6 +149,88 @@ describe('Org children', () => {
       OrgChildrenList {
         "length": 2,
       }
+    `);
+  });
+
+  it('Should remove node from children list after modification', () => {
+    const d = new OrgNode({
+      type: NodeType.List,
+    });
+
+    const e = new OrgNode({
+      type: NodeType.Text,
+      value: 'e',
+    });
+
+    const list = new OrgChildrenList(d, e);
+
+    d.addChild(new OrgNode({ type: NodeType.Text, value: 'f' }));
+    d.value = 'qewqwe';
+
+    list.removeNodes([d]);
+
+    expect(list.length).toBe(1);
+    expect(Array.from(list)).toMatchInlineSnapshot(`
+      [
+        OrgNode {
+          "end": 0,
+          "safeCheckMode": false,
+          "start": 0,
+          "type": "text",
+          "value": "e",
+        },
+      ]
+    `);
+  });
+
+  it('Should return empty list with no sliced data', () => {
+    const orgNode1 = new OrgNode({
+      type: NodeType.Text,
+      value: 'First node',
+    });
+    const orgNode2 = new OrgNode({
+      type: NodeType.Text,
+      value: 'Second node',
+    });
+
+    const childrenList = new OrgChildrenList(orgNode1, orgNode2);
+    expect(childrenList.slice(1, -1).length).toBe(0);
+  });
+
+  fit('Should replace nodes inside org children list', () => {
+    const orgNode1 = new OrgNode({
+      type: NodeType.Text,
+      value: 'First node',
+    });
+
+    const orgNode2 = new OrgNode({
+      type: NodeType.Text,
+      value: 'Second node',
+    });
+
+    const orgNode3 = new OrgNode({
+      type: NodeType.Text,
+      value: 'Third node',
+    });
+
+    const childrenList = new OrgChildrenList(orgNode1, orgNode2, orgNode3);
+
+    childrenList.replaceNodes(
+      [orgNode2],
+      new OrgNode({ type: NodeType.Text, value: 'New node' })
+    );
+
+    expect(childrenList.length).toBe(3);
+    expect(childrenList.toString()).toMatchInlineSnapshot(`
+      "
+
+      text [0-0] ("First node")
+
+      text [0-0] ("New node")
+
+      text [0-0] ("Third node")
+
+      -----------------"
     `);
   });
 });

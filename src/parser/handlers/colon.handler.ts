@@ -5,10 +5,10 @@ import {
   OrgNode,
   ParserConfiguration,
   TokenType,
-} from 'models';
-import { AstBuilder } from 'parser/ast-builder';
-import { AstContext } from 'parser/ast-context';
-import { TokenIterator } from 'tokenizer';
+} from '../../models/index.js';
+import { AstBuilder } from '../ast-builder';
+import { AstContext } from '../ast-context';
+import { TokenIterator } from '../../tokenizer/index.js';
 
 export class ColonHandler implements OrgHandler {
   readonly #fixedWidthOperator = ': ';
