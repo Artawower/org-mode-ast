@@ -10,12 +10,19 @@
     "test:silent": "jest --silent=true",
     "test:coverage": "jest --coverage",
     "coverage": "jest --coverage",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "prepublish": "npm run build"
   },
+  "keywords": [
+    "org",
+    "org-mode",
+    "emacs"
+  ],
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
   },
+  "types": "dist/index.d.ts",
   "author": "me <artawower@mail.ru> (https://du-blog.ru/)",
   "license": "MIT",
   "devDependencies": {
