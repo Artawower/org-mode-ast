@@ -197,7 +197,7 @@ describe('Org children', () => {
     expect(childrenList.slice(1, -1).length).toBe(0);
   });
 
-  fit('Should replace nodes inside org children list', () => {
+  it('Should replace nodes inside org children list', () => {
     const orgNode1 = new OrgNode({
       type: NodeType.Text,
       value: 'First node',

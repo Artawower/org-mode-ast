@@ -78,6 +78,7 @@ Of these requirements I want the following from this parser:
 - [ ] Footnote
 - [ ] Subscripts
 - [ ] Latex fragment (partial)
+- [ ] Radioa targets
 ** Low-priority features
 - [ ] Results block
 - [ ] Cross-links

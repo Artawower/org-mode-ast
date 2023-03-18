@@ -16,7 +16,7 @@ export function hasNodeIncorrectRanges(
     const slicedText = text.slice(node.start, node.end);
     return node.value === slicedText
       ? false
-      : `Incorrect range for node ${node.type} with range ${node.start} - ${node.end} it should be: ${slicedText}`;
+      : `Incorrect range for node ${node.type} with range ${node.start} - ${node.end} it should be:\n"${slicedText}" but got:\n"${node.value}"`;
   }
 
   let currentNode = node;

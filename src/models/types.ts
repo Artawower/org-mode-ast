@@ -167,6 +167,16 @@ export interface SrcBlockMetaInfo {
   [key: string]: string | undefined;
 }
 
+// TODO: meta info should be collected via special wrapper
+export interface MetaInfo {
+  title?: string;
+  description?: string;
+  tags?: string[];
+  headings?: [];
+  category?: string;
+  [key: string]: string | string[] | undefined;
+}
+
 export interface ParserConfiguration {
   todoKeywords?: string[];
 }

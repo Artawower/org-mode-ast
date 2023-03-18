@@ -174,4 +174,31 @@ by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
       "
     `);
   });
+
+  it('Should pare src block with difficult elisp code', () => {
+    const orgDoc = `#+begin_src emacs-lisp
+(message "%s" (string-match "\\({\\|;$\\)\\|\\(const [\\w\\[:digit]]+ = [\\d[:digit:]]+$\\)" "  const foo = 1"))
+#+end_src
+`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-137]
+        srcBlock [0-136]
+          blockHeader [0-22]
+            keyword [0-22]
+              text [0-11] ("#+begin_src")
+              text [11-22] (" emacs-lisp")
+          newLine [22-23]
+          blockBody [23-126]
+            text [23-126] ("(message \\"%s\\" (string-match \\"\\\\({\\\\|;$\\\\)\\\\|\\\\(const [\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]+$\\\\)\\" \\"  const foo = 1\\"))")
+          newLine [126-127]
+          blockFooter [127-136]
+            keyword [127-136]
+              text [127-136] ("#+end_src")
+        newLine [136-137]
+      "
+    `);
+  });
 });

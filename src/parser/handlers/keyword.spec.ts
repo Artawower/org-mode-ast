@@ -68,24 +68,101 @@ And amma text after keyword`;
   });
 
   // TODO: think about complex keyword structure
-  xit('Should parse keyword with tag list', () => {
+  it('Should parse keyword with tag list', () => {
     const orgData = `#+FILETAGS: :tag1:tag2:tag3:`;
     const result = parse(orgData);
     expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-28]
-        keyword [0-12]
-          key [0-11] ("#+FILETAGS:")
-          value [11-28]
-            text [11-12] (" ")
-            tagList [12-28]
-              operator [12-13] (":")
-              text [13-17] ("tag1")
-              operator [17-18] (":")
-              text [18-22] ("tag2")
-              operator [22-23] (":")
-              text [23-27] ("tag3")
-              operator [27-28] (":")
+        keyword [0-28]
+          text [0-11] ("#+FILETAGS:")
+          text [11-12] (" ")
+          tagList [12-28]
+            operator [12-13] (":")
+            text [13-17] ("tag1")
+            operator [17-18] (":")
+            text [18-22] ("tag2")
+            operator [22-23] (":")
+            text [23-27] ("tag3")
+            operator [27-28] (":")
+      "
+    `);
+  });
+
+  it('Tags list parging should not have conflict with src block', () => {
+    const orgDoc = `#+BEGIN_SRC js :tangle no :exports none
+    console.log('Hello world!');
+    #+END_SRC`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-86]
+        srcBlock [0-86]
+          blockHeader [0-39]
+            keyword [0-15]
+              text [0-11] ("#+BEGIN_SRC")
+              text [11-15] (" js ")
+            blockProperty [15-26]
+              text [15-22] (":tangle")
+              text [22-26] (" no ")
+            blockProperty [26-39]
+              text [26-34] (":exports")
+              text [34-39] (" none")
+          newLine [39-40]
+          blockBody [40-77]
+            text [40-77] ("    console.log('Hello world!');\\n    ")
+          blockFooter [77-86]
+            keyword [77-86]
+              text [77-86] ("#+END_SRC")
+      "
+    `);
+  });
+
+  it('Should not have conflict with elisp code which contains colon operator', () => {
+    const orgDoc = `#+BEGIN_SRC emacs-lisp
+    (message "Name %s, middle name %s" (plist-get args :name) (plist-get args :middle-name))
+    #+END_SRC`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-129]
+        srcBlock [0-129]
+          blockHeader [0-22]
+            keyword [0-22]
+              text [0-11] ("#+BEGIN_SRC")
+              text [11-22] (" emacs-lisp")
+          newLine [22-23]
+          blockBody [23-120]
+            text [23-120] ("    (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name))\\n    ")
+          blockFooter [120-129]
+            keyword [120-129]
+              text [120-129] ("#+END_SRC")
+      "
+    `);
+  });
+
+  it('Should not break src block with colons', () => {
+    const orgDoc = `#+BEGIN_SRC emacs-lisp
+    (setq test (map-delete test :hi))
+    #+END_SRC`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-74]
+        srcBlock [0-74]
+          blockHeader [0-22]
+            keyword [0-22]
+              text [0-11] ("#+BEGIN_SRC")
+              text [11-22] (" emacs-lisp")
+          newLine [22-23]
+          blockBody [23-65]
+            text [23-65] ("    (setq test (map-delete test :hi))\\n    ")
+          blockFooter [65-74]
+            keyword [65-74]
+              text [65-74] ("#+END_SRC")
       "
     `);
   });

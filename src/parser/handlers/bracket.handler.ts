@@ -318,9 +318,6 @@ export class BracketHandler implements OrgHandler {
 
     const leftBracket = nodes.first;
     const rightBracket = nodes.last;
-    const rawValue = this.astBuilder.getRawValueFromNodes(nodes.slice(1, -1));
-
-    // (nodes?.length === 4 || this.#urlRegexp.test(rawValue)) &&
     const isLinkBracket =
       leftBracket.type === NodeType.Operator &&
       leftBracket.value === '[' &&
@@ -414,6 +411,9 @@ export class BracketHandler implements OrgHandler {
     const filteredBrackets = this.bracketsStack.filter((b) => b.parent);
     this.astBuilder.mergeNeighborsNodesWithSameType(filteredBrackets.first);
     this.#unresolvedNodes.forEach((n) => {
+      if (!n.parent) {
+        return;
+      }
       if (n.is(NodeType.Unresolved)) {
         this.normalizeUnresolvedNode(n);
         this.astBuilder.mergeNeighborsNodesWithSameType(n);

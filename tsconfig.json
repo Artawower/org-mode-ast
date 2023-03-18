@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "target": "es6",
+    "lib": ["es2021", "es7", "es6", "dom"],
     "rootDir": "./src",
     "baseUrl": "./src",
     "module": "es6",
@@ -18,5 +19,5 @@
     "types": ["node", "jest"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

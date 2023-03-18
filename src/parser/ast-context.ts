@@ -5,6 +5,7 @@ export class AstContext {
   #nestedLists: OrgNode[] = [];
 
   public insideHeadline: boolean = null;
+  public insideKeyword: boolean = null;
   public insideListItem = false;
 
   // TODO: master move to block handler

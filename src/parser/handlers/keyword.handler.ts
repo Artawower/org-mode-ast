@@ -40,6 +40,7 @@ export class KeywordHandler implements OrgHandler {
   }
 
   public handle(): OrgNode {
+    this.ctx.insideKeyword = true;
     // TODO: master tmp hack. Need to check correct token value inside tokenizer
     if (this.incorrectLatexEnvironmentKeyword()) {
       return;

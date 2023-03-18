@@ -217,11 +217,13 @@ export class AstBuilder {
   }
 
   private isPartOfKeyword(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
-    if (
-      srcNode.is(NodeType.Text) &&
-      dstNode.is(NodeType.Keyword) &&
-      dstNode.children.length < 2
-    ) {
+    if (dstNode.isNot(NodeType.Keyword)) {
+      return;
+    }
+    if (srcNode.is(NodeType.TagList)) {
+      return dstNode;
+    }
+    if (srcNode.is(NodeType.Text) && dstNode.children.length < 2) {
       return dstNode;
     }
   }
@@ -349,8 +351,12 @@ export class AstBuilder {
     }
 
     if (!dstNode.parent) {
+      console.log(
+        '✎: [line 355][ast-builder.ts] this.lastNode: ',
+        this.lastNode
+      );
       throw new Error(
-        `Something went wrong, couldn't find parent for: [${srcNode.type}: ${srcNode.value}], prev node: [${dstNode.type}: ${dstNode.value}]`
+        `Something went wrong, couldn't find parent for: [${srcNode.type}: ${srcNode.value}](${srcNode.start}:${srcNode.end}), prev node: [${dstNode.type}: ${dstNode.value}](${dstNode.start}:${dstNode.end})`
       );
     }
 
@@ -759,13 +765,16 @@ export class AstBuilder {
       }
       if (
         this.couldBeMergedIntoText(currentNode, ...mergeableTypes) &&
-        this.couldBeMergedIntoText(currentNode.prev, ...mergeableTypes) &&
+        this.couldBeMergedIntoText(currentNode.prev, ...mergeableTypes)
         // TODO: master check it
-        currentNode.value
+        // currentNode.value
       ) {
         const prev = currentNode.prev;
-        prev.appendValue(currentNode.value);
+        prev.appendValue(currentNode.rawValue);
         prev.parent?.removeNode(currentNode);
+        this.lastNode = prev;
+      } else {
+        this.lastNode = currentNode;
       }
       currentNode = currentNode.next;
     }
@@ -775,13 +784,15 @@ export class AstBuilder {
     node?: OrgNode,
     ...mergeableTypes: NodeType[]
   ): boolean {
+    if (!node) {
+      return;
+    }
     if (mergeableTypes?.length) {
       return mergeableTypes.includes(node?.type);
     }
     return (
-      node?.type === NodeType.Text ||
-      node?.type === NodeType.Unresolved ||
-      (node?.type === NodeType.Operator &&
+      node.is(NodeType.Text, NodeType.Unresolved) ||
+      (node.is(NodeType.Operator) &&
         ['<', '>'].includes(node.value) &&
         !node.parent.is(NodeType.Date))
     );

@@ -263,5 +263,7 @@ describe('AST builder tests', () => {
       "text [0-12] ("Hello World!")
       "
     `);
+
+    expect(firstNode.parent).toBeTruthy();
   });
 });

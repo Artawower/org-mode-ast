@@ -1,0 +1,13 @@
+.github
+.vscode
+images
+TODOS.org
+debug.el
+jest.config.cjs
+launch.json
+ts.config.json
+ts.config.prod.json
+./index.js
+.DS_Store
+.eslintrc.cjs
+

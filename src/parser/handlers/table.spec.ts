@@ -160,7 +160,7 @@ describe('Table', () => {
     `);
   });
 
-  fit('Should parse formatting text inside table cells', () => {
+  it('Should parse formatting text inside table cells', () => {
     const orgDoc = `| *bold* | /italic/ | _underline_ | ~code~ | +strike+ |`;
 
     const result = parse(orgDoc);

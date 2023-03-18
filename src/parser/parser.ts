@@ -105,6 +105,7 @@ class Parser {
     ) {
       this.astBuilder.getLastSectionOrCreate();
       this.ctx.insideHeadline = false;
+      this.ctx.insideKeyword = false;
     }
   }
 

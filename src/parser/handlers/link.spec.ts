@@ -181,4 +181,40 @@ describe('Link test', () => {
       "
     `);
   });
+
+  it('Should not parse bracketed text as link', () => {
+    const orgDoc = `[\\w\\[:digit]]+`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-12]
+        text [0-12] ("[\\\\w\\\\[:digit]")
+      "
+    `);
+  });
+
+  it('Should not parse link and should merge text with previous result', () => {
+    const orgDoc = `$[\\w\\[:digit]]`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-14]
+        text [0-14] ("$[\\\\w\\\\[:digit]]")
+      "
+    `);
+  });
+
+  it('Should not parse multiple bracket nodes as link', () => {
+    const orgDoc = `$[\\w\\[:digit]]+ = [\\d[:digit:]]$`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-32]
+        latexFragment [0-32]
+          operator [0-1] ("$")
+          text [1-31] ("[\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]")
+          operator [31-32] ("$")
+      "
+    `);
+  });
 });
