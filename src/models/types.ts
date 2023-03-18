@@ -169,6 +169,7 @@ export interface SrcBlockMetaInfo {
 
 // TODO: meta info should be collected via special wrapper
 export interface MetaInfo {
+  id?: string;
   title?: string;
   description?: string;
   tags?: string[];
