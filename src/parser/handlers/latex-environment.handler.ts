@@ -55,6 +55,10 @@ export class LatexEnvironmentHandler implements OrgHandler {
       ? this.#handleOpenedLatexBracket()
       : this.#handleClosedLatexBracket();
 
+    if (!orgNode) {
+      return;
+    }
+
     if (!isOpenedBracket && this.#endLatexEnvironmentKeyword) {
       const mergedLatexEnvironmentNode =
         this.#mergeLatexEnvironmentNodes(orgNode);
@@ -106,6 +110,9 @@ export class LatexEnvironmentHandler implements OrgHandler {
       this.tokenIterator.currentValue
     );
     const realParent = this.#beginLatexBracket.parent;
+    if (!realParent) {
+      return;
+    }
     const nodesBetweenBrackets = realParent.children.getNodesBetweenPairs(
       this.#beginLatexBracket,
       null,

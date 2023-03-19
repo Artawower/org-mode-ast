@@ -4566,4 +4566,409 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
       "
     `);
   });
+
+  fit('Should parse complext org node with scss description', () => {
+    const orgDoc = `:PROPERTIES:
+:ID: scss
+:END:
+
+#+TITLE: Верстка.
+#+DESCRIPTION: Подборка всякого для верстки.
+#+FILETAGS: :scss:css:sass:вестка:
+#+ID: scss
+#+ACTIVE:
+
+
+* Ссылки
+** Видео
+*** [[https://www.youtube.com/watch?v=nOdDtnHWaDo][Кубы css анимация]]
+** Design tokens
+**** [[https://medium.com/@uxlord/what-the-are-design-tokens-2020-f3c4f1258349][Коротко о проблемах]]
+**** [[https://uxdesign.cc/design-tokens-cheatsheet-927fc1404099#:~:text=Variables%20%E2%89%A0%20Design%20Tokens&text=Design%20Tokens%20are%20used%20in,with%20developers%20using%20these%20terms.][Типы дизайн токенов]]
+**** [[https://youtu.be/M0iZg7mlCEE][Практическое применение токенов]]
+**** [[https://www.figma.com/community/plugin/843461159747178978/Figma-Tokens][Плагин]]
+**** [[https://docs.tokens.studio/][Его документация]]
+**** [[https://www.youtube.com/watch?v=Ka1I5TphDb0][Видео про плагин]] (eng)
+**** [[https://amzn.github.io/style-dictionary/#/][Style dictionary, конвертация design tokens в sass]]
+* Css
+** Outline
+#+BEGIN_SRC scss
+textarea:focus, input:focus{
+    outline: none;
+}
+#+END_SRC
+** Hide scrollbar
+:PROPERTIES:
+:ID: css-hide-scrollbar
+:END:
+#+BEGIN_SRC css
+.example::-webkit-scrollbar {
+  display: none;
+}
+#+END_SRC
+** Многоточие в конце мультистрочного текста:
+#+BEGIN_SRC scss
+.example {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+* Миксины
+** Mixin для media queries
+[[https://rimdev.io/making-media-query-mixins-with-sass/][Подробнее тут]]
+#+BEGIN_SRC scss
+@mixin breakpoint($breakpoint, $direction) {
+  @if map-has-key($breakpoints, $breakpoint) {
+
+    // Get the breakpoint value.
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+
+    @if $direction == max {
+      @media (max-width: ($breakpoint-value - 1)) {
+        @content;
+      }
+    } @else if $direction == min {
+      @media (min-width: $breakpoint-value) {
+        @content;
+      }
+    }
+
+  // If the breakpoint doesn't exist in the map.
+  } @else {
+    @if $direction == max {
+      @media (max-width: $breakpoint) {
+        @content;
+      }
+    } @else if $direction == min {
+      @media (min-width: $breakpoint) {
+        @content;
+      }
+    }
+  }
+}
+
+#+END_SRC`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-2188]
+          :id  scss:
+        propertyDrawer [0-28]
+          property [0-12]
+            text [0-12] (":PROPERTIES:")
+          newLine [12-13]
+          property [13-22]
+            text [13-17] (":ID:")
+            text [17-22] (" scss")
+          newLine [22-23]
+          property [23-28]
+            text [23-28] (":END:")
+        newLine [28-29]
+        newLine [29-30]
+        keyword [30-47]
+          text [30-38] ("#+TITLE:")
+          text [38-47] (" Верстка.")
+        newLine [47-48]
+        keyword [48-92]
+          text [48-62] ("#+DESCRIPTION:")
+          text [62-92] (" Подборка всякого для верстки.")
+        newLine [92-93]
+        keyword [93-127]
+          text [93-104] ("#+FILETAGS:")
+          text [104-105] (" ")
+          tagList [105-127]
+            operator [105-106] (":")
+            text [106-110] ("scss")
+            operator [110-111] (":")
+            text [111-114] ("css")
+            operator [114-115] (":")
+            text [115-119] ("sass")
+            operator [119-120] (":")
+            text [120-126] ("вестка")
+            operator [126-127] (":")
+        newLine [127-128]
+        keyword [128-138]
+          text [128-133] ("#+ID:")
+          text [133-138] (" scss")
+        newLine [138-139]
+        keyword [139-148]
+          text [139-148] ("#+ACTIVE:")
+        newLine [148-149]
+        newLine [149-150]
+        newLine [150-151]
+        headline [151-972]
+            :level 1:
+          title [151-160]
+            operator [151-153] ("* ")
+            text [153-159] ("Ссылки")
+            newLine [159-160]
+          section [160-972]
+            headline [160-240]
+                :level 2:
+              title [160-169]
+                operator [160-163] ("** ")
+                text [163-168] ("Видео")
+                newLine [168-169]
+              section [169-240]
+                headline [169-240]
+                    :level 3:
+                  title [169-240]
+                    operator [169-173] ("*** ")
+                    link [173-239]
+                      operator [173-174] ("[")
+                      linkUrl [174-219]
+                        operator [174-175] ("[")
+                        text [175-218] ("https://www.youtube.com/watch?v=nOdDtnHWaDo")
+                        operator [218-219] ("]")
+                      linkName [219-238]
+                        operator [219-220] ("[")
+                        text [220-237] ("Кубы css анимация")
+                        operator [237-238] ("]")
+                      operator [238-239] ("]")
+                    newLine [239-240]
+                  section [240-240]
+            headline [240-972]
+                :level 2:
+              title [240-257]
+                operator [240-243] ("** ")
+                text [243-256] ("Design tokens")
+                newLine [256-257]
+              section [257-972]
+                headline [257-359]
+                    :level 4:
+                  title [257-359]
+                    operator [257-262] ("**** ")
+                    link [262-358]
+                      operator [262-263] ("[")
+                      linkUrl [263-336]
+                        operator [263-264] ("[")
+                        text [264-335] ("https://medium.com/@uxlord/what-the-are-design-tokens-2020-f3c4f1258349")
+                        operator [335-336] ("]")
+                      linkName [336-357]
+                        operator [336-337] ("[")
+                        text [337-356] ("Коротко о проблемах")
+                        operator [356-357] ("]")
+                      operator [357-358] ("]")
+                    newLine [358-359]
+                  section [359-359]
+                headline [359-577]
+                    :level 4:
+                  title [359-577]
+                    operator [359-364] ("**** ")
+                    link [364-576]
+                      operator [364-365] ("[")
+                      linkUrl [365-554]
+                        operator [365-366] ("[")
+                        text [366-553] ("https://uxdesign.cc/design-tokens-cheatsheet-927fc1404099#:~:text=Variables%20%E2%89%A0%20Design%20Tokens&text=Design%20Tokens%20are%20used%20in,with%20developers%20using%20these%20terms.")
+                        operator [553-554] ("]")
+                      linkName [554-575]
+                        operator [554-555] ("[")
+                        text [555-574] ("Типы дизайн токенов")
+                        operator [574-575] ("]")
+                      operator [575-576] ("]")
+                    newLine [576-577]
+                  section [577-577]
+                headline [577-648]
+                    :level 4:
+                  title [577-648]
+                    operator [577-582] ("**** ")
+                    link [582-647]
+                      operator [582-583] ("[")
+                      linkUrl [583-613]
+                        operator [583-584] ("[")
+                        text [584-612] ("https://youtu.be/M0iZg7mlCEE")
+                        operator [612-613] ("]")
+                      linkName [613-646]
+                        operator [613-614] ("[")
+                        text [614-645] ("Практическое применение токенов")
+                        operator [645-646] ("]")
+                      operator [646-647] ("]")
+                    newLine [647-648]
+                  section [648-648]
+                headline [648-736]
+                    :level 4:
+                  title [648-736]
+                    operator [648-653] ("**** ")
+                    link [653-735]
+                      operator [653-654] ("[")
+                      linkUrl [654-726]
+                        operator [654-655] ("[")
+                        text [655-725] ("https://www.figma.com/community/plugin/843461159747178978/Figma-Tokens")
+                        operator [725-726] ("]")
+                      linkName [726-734]
+                        operator [726-727] ("[")
+                        text [727-733] ("Плагин")
+                        operator [733-734] ("]")
+                      operator [734-735] ("]")
+                    newLine [735-736]
+                  section [736-736]
+                headline [736-791]
+                    :level 4:
+                  title [736-791]
+                    operator [736-741] ("**** ")
+                    link [741-790]
+                      operator [741-742] ("[")
+                      linkUrl [742-771]
+                        operator [742-743] ("[")
+                        text [743-770] ("https://docs.tokens.studio/")
+                        operator [770-771] ("]")
+                      linkName [771-789]
+                        operator [771-772] ("[")
+                        text [772-788] ("Его документация")
+                        operator [788-789] ("]")
+                      operator [789-790] ("]")
+                    newLine [790-791]
+                  section [791-791]
+                headline [791-868]
+                    :level 4:
+                  title [791-868]
+                    operator [791-796] ("**** ")
+                    link [796-861]
+                      operator [796-797] ("[")
+                      linkUrl [797-842]
+                        operator [797-798] ("[")
+                        text [798-841] ("https://www.youtube.com/watch?v=Ka1I5TphDb0")
+                        operator [841-842] ("]")
+                      linkName [842-860]
+                        operator [842-843] ("[")
+                        text [843-859] ("Видео про плагин")
+                        operator [859-860] ("]")
+                      operator [860-861] ("]")
+                    text [861-867] (" (eng)")
+                    newLine [867-868]
+                  section [868-868]
+                headline [868-972]
+                    :level 4:
+                  title [868-972]
+                    operator [868-873] ("**** ")
+                    link [873-971]
+                      operator [873-874] ("[")
+                      linkUrl [874-918]
+                        operator [874-875] ("[")
+                        text [875-917] ("https://amzn.github.io/style-dictionary/#/")
+                        operator [917-918] ("]")
+                      linkName [918-970]
+                        operator [918-919] ("[")
+                        text [919-969] ("Style dictionary, конвертация design tokens в sass")
+                        operator [969-970] ("]")
+                      operator [970-971] ("]")
+                    newLine [971-972]
+                  section [972-972]
+        headline [972-1380]
+            :level 1:
+          title [972-978]
+            operator [972-974] ("* ")
+            text [974-977] ("Css")
+            newLine [977-978]
+          section [978-1380]
+            headline [978-1066]
+                :level 2:
+              title [978-989]
+                operator [978-981] ("** ")
+                text [981-988] ("Outline")
+                newLine [988-989]
+              section [989-1066]
+                srcBlock [989-1065]
+                  blockHeader [989-1005]
+                    keyword [989-1005]
+                      text [989-1000] ("#+BEGIN_SRC")
+                      text [1000-1005] (" scss")
+                  newLine [1005-1006]
+                  blockBody [1006-1055]
+                    text [1006-1055] ("textarea:focus, input:focus{\\n    outline: none;\\n}")
+                  newLine [1055-1056]
+                  blockFooter [1056-1065]
+                    keyword [1056-1065]
+                      text [1056-1065] ("#+END_SRC")
+                newLine [1065-1066]
+            headline [1066-1202]
+                :level 2:
+                :id  css-hide-scrollbar:
+              title [1066-1084]
+                operator [1066-1069] ("** ")
+                text [1069-1083] ("Hide scrollbar")
+                newLine [1083-1084]
+              section [1084-1202]
+                propertyDrawer [1084-1126]
+                  property [1084-1096]
+                    text [1084-1096] (":PROPERTIES:")
+                  newLine [1096-1097]
+                  property [1097-1120]
+                    text [1097-1101] (":ID:")
+                    text [1101-1120] (" css-hide-scrollbar")
+                  newLine [1120-1121]
+                  property [1121-1126]
+                    text [1121-1126] (":END:")
+                newLine [1126-1127]
+                srcBlock [1127-1201]
+                  blockHeader [1127-1142]
+                    keyword [1127-1142]
+                      text [1127-1138] ("#+BEGIN_SRC")
+                      text [1138-1142] (" css")
+                  newLine [1142-1143]
+                  blockBody [1143-1191]
+                    text [1143-1191] (".example::-webkit-scrollbar {\\n  display: none;\\n}")
+                  newLine [1191-1192]
+                  blockFooter [1192-1201]
+                    keyword [1192-1201]
+                      text [1192-1201] ("#+END_SRC")
+                newLine [1201-1202]
+            headline [1202-1380]
+                :level 2:
+              title [1202-1248]
+                operator [1202-1205] ("** ")
+                text [1205-1247] ("Многоточие в конце мультистрочного текста:")
+                newLine [1247-1248]
+              section [1248-1380]
+                keyword [1248-1264]
+                  text [1248-1259] ("#+BEGIN_SRC")
+                  text [1259-1264] (" scss")
+                newLine [1264-1265]
+                text [1265-1378] (".example {\\n  overflow: hidden;\\n  display: -webkit-box;\\n  -webkit-line-clamp: 3;\\n  -webkit-box-orient: vertical;\\n}")
+                newLine [1378-1379]
+                newLine [1379-1380]
+        headline [1380-2188]
+            :level 1:
+          title [1380-1390]
+            operator [1380-1382] ("* ")
+            text [1382-1389] ("Миксины")
+            newLine [1389-1390]
+          section [1390-2188]
+            headline [1390-2188]
+                :level 2:
+              title [1390-1417]
+                operator [1390-1393] ("** ")
+                text [1393-1416] ("Mixin для media queries")
+                newLine [1416-1417]
+              section [1417-2188]
+                link [1417-1490]
+                  operator [1417-1418] ("[")
+                  linkUrl [1418-1474]
+                    operator [1418-1419] ("[")
+                    text [1419-1473] ("https://rimdev.io/making-media-query-mixins-with-sass/")
+                    operator [1473-1474] ("]")
+                  linkName [1474-1489]
+                    operator [1474-1475] ("[")
+                    text [1475-1488] ("Подробнее тут")
+                    operator [1488-1489] ("]")
+                  operator [1489-1490] ("]")
+                newLine [1490-1491]
+                srcBlock [1491-2188]
+                  blockHeader [1491-1507]
+                    keyword [1491-1507]
+                      text [1491-1502] ("#+BEGIN_SRC")
+                      text [1502-1507] (" scss")
+                  newLine [1507-1508]
+                  blockBody [1508-2178]
+                    text [1508-2178] ("@mixin breakpoint($breakpoint, $direction) {\\n  @if map-has-key($breakpoints, $breakpoint) {\\n\\n    // Get the breakpoint value.\\n    $breakpoint-value: map-get($breakpoints, $breakpoint);\\n\\n    @if $direction == max {{\\n      @media (max-width: ($breakpoint-value - 1)) {{\\n        @content;\\n      \\n     @else if $direction == min {{\\n      @media (min-width: $breakpoint-value) {{\\n        @content;\\n      \\n    \\n\\n  // If the breakpoint doesn't exist in the map.\\n   @else {\\n    @if $direction == max {{\\n      @media (max-width: $breakpoint) {{\\n        @content;\\n      \\n     @else if $direction == min {{\\n      @media (min-width: $breakpoint) {\\n        @content;\\n      \\n    \\n  \\n\\n")
+                  newLine [2179-2180]
+                  blockFooter [2180-2189]
+                    keyword [2180-2189]
+                      text [2179-2188] ("#+END_SRC")
+      "
+    `);
+  });
 });
