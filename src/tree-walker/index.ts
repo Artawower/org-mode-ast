@@ -1,2 +1,2 @@
 export * from './tree-walker.js';
-export * from './meta-info.handler';
+export * from './meta-info.handler.js';
