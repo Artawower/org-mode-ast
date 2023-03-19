@@ -16,56 +16,56 @@ export class OrgNode {
 
   public children?: OrgChildrenList;
 
-  #prev?: OrgNode;
+  private _prev?: OrgNode;
   get prev() {
-    return this.#prev;
+    return this._prev;
   }
 
   get lastChild(): OrgNode {
     return this.children?.last;
   }
 
-  #next?: OrgNode;
+  private _next?: OrgNode;
   get next() {
-    return this.#next;
+    return this._next;
   }
 
   // TODO: add getter with generic type checker
-  #level?: number;
+  private _level?: number;
   get level(): number {
-    return this.#level;
+    return this._level;
   }
 
   /**
    * Some nodes, like headlines and list items, could have a title and section content
    */
-  #title?: OrgNode;
+  private _title?: OrgNode;
   get title(): OrgNode {
-    return this.#title;
+    return this._title;
   }
 
-  #section?: OrgNode;
+  private _section?: OrgNode;
   get section(): OrgNode {
-    return this.#section;
+    return this._section;
   }
 
-  #ordered?: boolean;
+  private _ordered?: boolean;
   get ordered(): boolean {
-    return this.#ordered;
+    return this._ordered;
   }
 
-  #properties?: BlockProperties;
+  private _properties?: BlockProperties;
   get properties(): BlockProperties {
-    return this.#properties;
+    return this._properties;
   }
 
-  #checked?: boolean;
+  private _checked?: boolean;
   get checked(): boolean {
-    return this.#checked;
+    return this._checked;
   }
 
   set checked(checked: boolean) {
-    this.#checked = checked;
+    this._checked = checked;
   }
 
   get length(): number {
@@ -90,14 +90,14 @@ export class OrgNode {
   constructor(nodeData: OrgStruct) {
     this.type = nodeData.type;
     if (nodeData.section) {
-      this.#section = new OrgNode(nodeData.section);
+      this._section = new OrgNode(nodeData.section);
     }
     this.value = nodeData.value;
-    this.#level = nodeData.level;
-    this.#title = nodeData.title;
-    this.#ordered = nodeData.ordered;
-    this.#properties = nodeData.properties;
-    this.#checked = nodeData.checked;
+    this._level = nodeData.level;
+    this._title = nodeData.title;
+    this._ordered = nodeData.ordered;
+    this._properties = nodeData.properties;
+    this._checked = nodeData.checked;
     this.addRawChildren(nodeData.children);
   }
 
@@ -119,21 +119,21 @@ export class OrgNode {
   }
 
   public setPrev(prev: OrgNode) {
-    this.#prev = prev;
+    this._prev = prev;
   }
 
   public setNext(next: OrgNode) {
-    this.#next = next;
+    this._next = next;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setProperties(properties: { [key: string]: any }) {
-    this.#properties = properties;
+    this._properties = properties;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public mergeProperties(properties: { [key: string]: any }) {
-    this.#properties = { ...(this.#properties ?? {}), ...properties };
+    this._properties = { ...(this._properties ?? {}), ...properties };
   }
 
   private validateAddedChild(child: OrgNode): void {
@@ -316,7 +316,7 @@ export class OrgNode {
     title.setParent(this);
     const subtreeLength = title.parent?.children?.last?.end ?? title.parent.end;
 
-    this.#title = title;
+    this._title = title;
     title.initPositions();
     this.end += title.length;
     title.parent?.recalculateParentEnd(title.length);
@@ -333,7 +333,7 @@ export class OrgNode {
       section.parent?.title?.children.last.end ??
       section.parent?.children?.last?.end ??
       section.parent.end;
-    this.#section = section;
+    this._section = section;
 
     section.initPositions();
     this.end += section.length;

@@ -72,6 +72,11 @@ describe('Org children', () => {
     expect(children.asArray()).toMatchInlineSnapshot(`
       [
         OrgNode {
+          "_checked": undefined,
+          "_level": undefined,
+          "_ordered": undefined,
+          "_properties": undefined,
+          "_title": undefined,
           "end": 0,
           "safeCheckMode": false,
           "start": 0,
@@ -151,6 +156,11 @@ describe('Org children', () => {
           "next": OrgListChild {
             "prev": [Circular],
             "value": OrgNode {
+              "_checked": undefined,
+              "_level": undefined,
+              "_ordered": undefined,
+              "_properties": undefined,
+              "_title": undefined,
               "end": 0,
               "safeCheckMode": false,
               "start": 0,
@@ -160,6 +170,11 @@ describe('Org children', () => {
           },
           "prev": null,
           "value": OrgNode {
+            "_checked": undefined,
+            "_level": undefined,
+            "_ordered": undefined,
+            "_properties": undefined,
+            "_title": undefined,
             "end": 0,
             "safeCheckMode": false,
             "start": 0,
@@ -173,6 +188,11 @@ describe('Org children', () => {
             "next": [Circular],
             "prev": null,
             "value": OrgNode {
+              "_checked": undefined,
+              "_level": undefined,
+              "_ordered": undefined,
+              "_properties": undefined,
+              "_title": undefined,
               "end": 0,
               "safeCheckMode": false,
               "start": 0,
@@ -181,6 +201,11 @@ describe('Org children', () => {
             },
           },
           "value": OrgNode {
+            "_checked": undefined,
+            "_level": undefined,
+            "_ordered": undefined,
+            "_properties": undefined,
+            "_title": undefined,
             "end": 0,
             "safeCheckMode": false,
             "start": 0,
@@ -213,6 +238,11 @@ describe('Org children', () => {
     expect(Array.from(list)).toMatchInlineSnapshot(`
       [
         OrgNode {
+          "_checked": undefined,
+          "_level": undefined,
+          "_ordered": undefined,
+          "_properties": undefined,
+          "_title": undefined,
           "end": 0,
           "safeCheckMode": false,
           "start": 0,
