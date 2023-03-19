@@ -23,7 +23,6 @@ export function collectFromProperties(orgNode: OrgNode): Partial<MetaInfo> {
   ) {
     return;
   }
-  console.log('PROPERTY?');
   const key = orgNode.children.first.value.slice(1, -1).trim().toLowerCase();
   const val = orgNode.children.last.rawValue.trim();
   return { [key]: val };

@@ -172,6 +172,7 @@ export interface MetaInfo {
   id?: string;
   title?: string;
   description?: string;
+  images?: string[];
   tags?: string[];
   headings?: [];
   category?: string;
