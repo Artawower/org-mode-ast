@@ -21,17 +21,17 @@ export class OrgListChild {
  * This class need to provide way to iterate over linked list of OrgNode children.
  */
 export class OrgChildrenList implements Iterable<OrgNode> {
-  #first: OrgListChild | null = null;
-  #last: OrgListChild | null = null;
+  private header: OrgListChild | null = null;
+  private tail: OrgListChild | null = null;
 
   public length = 0;
 
   get last() {
-    return this.#last?.value;
+    return this.tail?.value;
   }
 
   get first() {
-    return this.#first?.value;
+    return this.header?.value;
   }
 
   get isEmpty(): boolean {
@@ -44,12 +44,12 @@ export class OrgChildrenList implements Iterable<OrgNode> {
 
   public push(node: OrgNode): number {
     const child = new OrgListChild(node);
-    if (!this.#first) {
-      this.#first = child;
+    if (!this.header) {
+      this.header = child;
     }
-    this.#last?.setNext(child);
-    child.setPrev(this.#last);
-    this.#last = child;
+    this.tail?.setNext(child);
+    child.setPrev(this.tail);
+    this.tail = child;
     this.length++;
     return this.length;
   }
@@ -80,7 +80,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
       nodes instanceof OrgChildrenList ? nodes.first : nodes[0]
     );
 
-    let prevNode = firstNode.prev ?? this.#first;
+    let prevNode = firstNode.prev ?? this.header;
 
     this.removeNodes(nodes);
 
@@ -92,7 +92,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   #find(node: OrgNode): OrgListChild | null {
-    let current = this.#first;
+    let current = this.header;
     while (current) {
       if (current.value === node) {
         return current;
@@ -112,7 +112,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   public get(index: number) {
-    let current = this.#first;
+    let current = this.header;
     let i = 0;
     while (i !== index) {
       current = current?.next;
@@ -122,7 +122,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   *[Symbol.iterator](): IterableIterator<OrgNode> {
-    let current = this.#first;
+    let current = this.header;
     while (current) {
       const res = current;
       current = current.next;
@@ -155,7 +155,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
    * @param {OrgNode} newNode - The node that will replace the old node.
    */
   public replaceNode(oldNode: OrgNode, newNode: OrgNode): void {
-    let current = this.#first;
+    let current = this.header;
     while (current) {
       const orgNode = current.value;
       if (orgNode === oldNode) {
@@ -173,7 +173,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   // TODO: i was so lazy to write this method
   // all implementation was made by ChatGPT, check it
   public map<T>(callback: (node: OrgNode) => T): T[] {
-    let current = this.#first;
+    let current = this.header;
     const result: T[] = [];
     while (current) {
       result.push(callback(current.value));
@@ -183,7 +183,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   public join(separator = ','): string {
-    let current = this.#first;
+    let current = this.header;
     let result = '';
     while (current) {
       result += current.toString();
@@ -198,10 +198,10 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   public forEach(
     callback: (node: OrgNode, index: number, last: boolean) => void
   ): void {
-    let current = this.#first;
+    let current = this.header;
     let i = 0;
     while (current) {
-      callback(current.value, i, current === this.#last);
+      callback(current.value, i, current === this.tail);
       current = current.next;
       i++;
     }
@@ -210,7 +210,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   public find(
     predicate: (value: OrgNode, index: number, obj: OrgChildrenList) => boolean
   ): OrgNode | undefined {
-    let current = this.#first;
+    let current = this.header;
     let index = 0;
     while (current) {
       if (predicate(current.value, index, this)) {
@@ -223,7 +223,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   public findLast(predicate: (node: OrgNode) => boolean): OrgNode | undefined {
-    let current = this.#last;
+    let current = this.tail;
     while (current) {
       if (predicate(current.value)) {
         return current.value;
@@ -234,7 +234,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   }
 
   public pop(): OrgNode | undefined {
-    const last = this.#last;
+    const last = this.tail;
     if (last) {
       this.removeNode(last);
       return last.value;
@@ -256,7 +256,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     includeParis = false
   ): OrgChildrenList {
     const foundNodes = new OrgChildrenList();
-    let currentOrgListChild = this.#first;
+    let currentOrgListChild = this.header;
     let startNodeFound = false;
 
     while (currentOrgListChild) {
@@ -291,7 +291,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
       to = this.length + to;
     }
     const newList = new OrgChildrenList();
-    let current = this.#first;
+    let current = this.header;
     let i = 0;
     to = to ?? this.length;
     while (current) {
@@ -311,7 +311,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
    * @param nodes - The nodes to be removed from the OrgChildrenList
    */
   public removeNodes(nodes: OrgNode[] | OrgChildrenList): void {
-    let orgListChild = this.#first;
+    let orgListChild = this.header;
 
     while (orgListChild) {
       const orgNode = orgListChild.value;
@@ -325,18 +325,18 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   private removeNode(node: OrgListChild): void {
     node.prev?.setNext(node.next);
     node.next?.setPrev(node.prev);
-    if (node === this.#first) {
-      this.#first = node.next;
+    if (node === this.header) {
+      this.header = node.next;
     }
-    if (node === this.#last) {
-      this.#last = node.prev;
+    if (node === this.tail) {
+      this.tail = node.prev;
     }
     this.length--;
   }
 
   public clear(): void {
-    this.#first = null;
-    this.#last = null;
+    this.header = null;
+    this.tail = null;
     this.length = 0;
   }
 

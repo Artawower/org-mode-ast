@@ -7,11 +7,6 @@ describe('Inline html', () => {
 #+html: <div class="test">Test</div>`;
 
     const result = parse(orgDoc);
-    console.log(
-      '✎: [line 10][inline-html.spec.ts] result: ',
-      result.toString()
-    );
-
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`

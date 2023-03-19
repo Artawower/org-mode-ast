@@ -147,7 +147,47 @@ describe('Org children', () => {
     expect(slicedNodes.length).toBe(2);
     expect(slicedNodes).toMatchInlineSnapshot(`
       OrgChildrenList {
+        "header": OrgListChild {
+          "next": OrgListChild {
+            "prev": [Circular],
+            "value": OrgNode {
+              "end": 0,
+              "safeCheckMode": false,
+              "start": 0,
+              "type": "text",
+              "value": "Third node",
+            },
+          },
+          "prev": null,
+          "value": OrgNode {
+            "end": 0,
+            "safeCheckMode": false,
+            "start": 0,
+            "type": "text",
+            "value": "First node",
+          },
+        },
         "length": 2,
+        "tail": OrgListChild {
+          "prev": OrgListChild {
+            "next": [Circular],
+            "prev": null,
+            "value": OrgNode {
+              "end": 0,
+              "safeCheckMode": false,
+              "start": 0,
+              "type": "text",
+              "value": "First node",
+            },
+          },
+          "value": OrgNode {
+            "end": 0,
+            "safeCheckMode": false,
+            "start": 0,
+            "type": "text",
+            "value": "Third node",
+          },
+        },
       }
     `);
   });

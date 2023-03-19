@@ -351,10 +351,6 @@ export class AstBuilder {
     }
 
     if (!dstNode.parent) {
-      console.log(
-        '✎: [line 355][ast-builder.ts] this.lastNode: ',
-        this.lastNode
-      );
       throw new Error(
         `Something went wrong, couldn't find parent for: [${srcNode.type}: ${srcNode.value}](${srcNode.start}:${srcNode.end}), prev node: [${dstNode.type}: ${dstNode.value}](${dstNode.start}:${dstNode.end})`
       );

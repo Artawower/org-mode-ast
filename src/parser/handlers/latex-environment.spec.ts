@@ -111,10 +111,6 @@ describe('Latex environment', () => {
 \\end{align*}`;
 
     const result = parse(orgDoc);
-    console.log(
-      '✎: [line 118][latex-environment.spec.ts] result: ',
-      result.toString()
-    );
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-68]

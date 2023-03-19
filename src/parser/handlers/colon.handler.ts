@@ -47,10 +47,6 @@ export class ColonHandler implements OrgHandler {
       this.tokenIterator.currentValue
     );
 
-    console.log(
-      '✎: [line 51][colon.handler.ts] this.astBuilder.lastNode: ',
-      this.astBuilder.lastNode
-    );
     if (this.ctx.insideHeadline || this.ctx.insideKeyword) {
       this.#potentialTagOperators.push(operatorNode);
     }
@@ -111,10 +107,6 @@ export class ColonHandler implements OrgHandler {
 
     const firstColonOperator = this.#potentialTagOperators.first;
     const lastColonOperator = this.#potentialTagOperators.last;
-    console.log(
-      '✎: [line 118][colon.handler.ts] lastColonOperator: ',
-      lastColonOperator
-    );
     const isLastNodeEol =
       !lastColonOperator.next || lastColonOperator.is(NodeType.NewLine);
     const realParent = firstColonOperator.parent;
@@ -126,17 +118,7 @@ export class ColonHandler implements OrgHandler {
     );
 
     if (!isLastNodeEol) {
-      // console.log(
-      //   '✎: [line 130][colon.handler.ts] nodesBetweenColons: ',
-      //   nodesBetweenColons
-      // );
       this.#makeTextFromHeadlineColons(nodesBetweenColons);
-      // console.log(
-      //   '✎: [line 131][colon.handler.ts] nodesBetweenColons: ',
-      //   nodesBetweenColons
-      // );
-      // this.astBuilder.lastNode = nodesBetweenColons.first?.prev;
-      // this.astBuilder.attachToTree(nodesBetweenColons.first);
       return;
     }
 
@@ -156,22 +138,10 @@ export class ColonHandler implements OrgHandler {
   }
 
   #makeTextFromHeadlineColons(nodesBetweenColons: OrgChildrenList): void {
-    console.log(
-      '✎: [line 150][colon.handler.ts] nodesBetweenColons.first: ',
-      nodesBetweenColons.first
-    );
     this.astBuilder.mergeNeighborsNodesWithSameType(
       nodesBetweenColons.first,
       NodeType.Operator,
       NodeType.Text
-    );
-    console.log(
-      '✎: [line 155][colon.handler.ts] nodesBetweenColons.first: ',
-      nodesBetweenColons.first
-    );
-    console.log(
-      '✎: [line 172][colon.handler.ts] nodesBetweenColons: ',
-      nodesBetweenColons
     );
     this.#potentialTagOperators.clear();
   }
