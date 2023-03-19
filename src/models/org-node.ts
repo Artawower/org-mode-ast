@@ -396,6 +396,39 @@ export class OrgNode {
     return prettyTreePrint(this);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public toJson(): any {
+    const sharedDictKeys: Array<keyof this> = ['value', 'properties', 'meta'];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = sharedDictKeys.reduce<Record<keyof this, any>>(
+      (acc, key) => {
+        if (this[key]) {
+          acc[key] = this[key];
+        }
+        return acc;
+      },
+      {
+        type: this.type,
+        start: this.start,
+        end: this.end,
+      } as Record<keyof this, any>
+    );
+
+    if (this.children) {
+      data.children = this.children.map((child) => child.toJson());
+    }
+    if (this.section) {
+      data.section = this.section.toJson();
+    }
+
+    if (this.title) {
+      data.title = this.title.toJson();
+    }
+
+    return data;
+  }
+
   private forEachNestedChildren(callback: (node: OrgNode) => void): void {
     let node = this.children?.first;
 

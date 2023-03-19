@@ -894,4 +894,70 @@ describe('Org node', () => {
 
     expect(orgRoot.rawValue).toEqual('*Hello +world!+*');
   });
+
+  it('Should correct convert org node to JSON', () => {
+    const orgRoot = new OrgNode({ type: NodeType.Root });
+    const orgHeadline = new OrgNode({
+      type: NodeType.Headline,
+      title: new OrgNode({ type: NodeType.Title }),
+    });
+
+    orgRoot.addChild(orgHeadline);
+    const orgHeadlineText = new OrgNode({
+      type: NodeType.Text,
+      value: 'Hello world!',
+    });
+
+    orgHeadline.title.addChild(orgHeadlineText);
+    const section = new OrgNode({ type: NodeType.Section });
+    orgHeadline.setSection(section);
+
+    const secionText = new OrgNode({
+      type: NodeType.Text,
+      value: 'Section content',
+    });
+
+    section.addChild(secionText);
+
+    expect(orgRoot.toJson()).toMatchInlineSnapshot(`
+      {
+        "children": [
+          {
+            "end": 15,
+            "section": {
+              "children": [
+                {
+                  "end": 27,
+                  "start": 12,
+                  "type": "text",
+                  "value": "Section content",
+                },
+              ],
+              "end": 27,
+              "start": 12,
+              "type": "section",
+            },
+            "start": 0,
+            "title": {
+              "children": [
+                {
+                  "end": 12,
+                  "start": 0,
+                  "type": "text",
+                  "value": "Hello world!",
+                },
+              ],
+              "end": 12,
+              "start": 0,
+              "type": "title",
+            },
+            "type": "headline",
+          },
+        ],
+        "end": 15,
+        "start": 0,
+        "type": "root",
+      }
+    `);
+  });
 });
