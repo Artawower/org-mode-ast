@@ -5,6 +5,7 @@ describe('Meta information', () => {
   it('Should include filetags, title, description and category', () => {
     const orgDoc = `:PROPERTIES:
 :ID: qweqwebebe
+:PUBLISHED: true
 :END:
 #+TITLE: some title
 #+DESCRIPTION: some description
@@ -12,6 +13,7 @@ describe('Meta information', () => {
 #+FILETAGS: :tag1:tag2:`;
 
     const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta.published).toBe(true);
     expect(result.meta).toMatchInlineSnapshot(`
       {
         "category": "some category",
@@ -21,6 +23,7 @@ describe('Meta information', () => {
           "tag2",
         ],
         "id": "qweqwebebe",
+        "published": true,
         "title": "some title",
       }
     `);

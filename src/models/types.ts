@@ -176,7 +176,7 @@ export interface MetaInfo {
   tags?: string[];
   headings?: [];
   category?: string;
-  [key: string]: string | string[] | undefined;
+  [key: string]: string | string[] | undefined | boolean;
 }
 
 export interface ParserConfiguration {

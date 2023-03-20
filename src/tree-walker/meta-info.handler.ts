@@ -7,12 +7,23 @@ export function collectFromKeywords(orgNode: OrgNode): Partial<MetaInfo> {
   }
   const key = orgNode.children.first.value.slice(2, -1).toLowerCase();
   const value = orgNode.children.last.rawValue;
-  const normalizedValue =
-    key === 'filetags' ? value.split(':').filter((v) => !!v) : value.trim();
+  const normalizedValue = normalizeKeywordValue(key, value);
 
   return {
     [key]: normalizedValue,
   };
+}
+
+function normalizeKeywordValue(
+  key: string,
+  value: string
+): string | string[] | undefined | boolean {
+  const handlers = {
+    filetags: () => value.split(':').filter((v) => !!v),
+    published: () => !!eval(value.trim()),
+  };
+  const handler = handlers[key] ?? (() => value.trim());
+  return handler();
 }
 
 export function collectFromProperties(orgNode: OrgNode): Partial<MetaInfo> {
@@ -24,7 +35,7 @@ export function collectFromProperties(orgNode: OrgNode): Partial<MetaInfo> {
     return;
   }
   const key = orgNode.children.first.value.slice(1, -1).trim().toLowerCase();
-  const val = orgNode.children.last.rawValue.trim();
+  const val = normalizeKeywordValue(key, orgNode.children.last.rawValue);
   return { [key]: val };
 }
 
