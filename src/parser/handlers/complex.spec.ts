@@ -4567,7 +4567,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
     `);
   });
 
-  fit('Should parse complext org node with scss description', () => {
+  it('Should parse complext org node with scss description', () => {
     const orgDoc = `:PROPERTIES:
 :ID: scss
 :END:

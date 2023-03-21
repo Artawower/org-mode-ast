@@ -743,6 +743,17 @@ export class AstBuilder {
     });
   }
 
+  public checkContext(): void {
+    this.checkExitList();
+  }
+
+  private checkExitList(): void {
+    const lastTokenWasNewLine = this.lastNode.value?.endsWith('\n');
+    if (lastTokenWasNewLine && this.lastNode.isNot(NodeType.Indent)) {
+      this.ctx.exitList();
+    }
+  }
+
   /**
    * Merge neighbors when they have same type, or one of them Unresolved
    */

@@ -21,6 +21,7 @@ export class TableHandler implements OrgHandler {
   ) {}
 
   public handle(): OrgNode {
+    this.astBuilder.checkContext();
     if (!this.#isTableLine()) {
       return;
     }

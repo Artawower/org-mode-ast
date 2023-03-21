@@ -1202,6 +1202,27 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  // TODO: master Conflict with src block peroperties. Need to change logic of src block attribute collecting inside parser.
+  // TODO: tokenizer.ts:150 should be removed.
+  xit('Should tokenize tags with spaces', () => {
+    const orgDoc = `#+FILETAGS: :test:first big note:hello world:`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1208][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      { start: 0, end: 11, type: 'keyword', value: '#+FILETAGS:' },
+      { start: 11, end: 12, type: 'text', value: ' ' },
+      { start: 12, end: 13, type: 'operator', value: ':' },
+      { start: 13, end: 17, type: 'text', value: 'test' },
+      { start: 17, end: 23, type: 'keyword', value: ':first' },
+      {
+        start: 23,
+        end: 45,
+        type: 'text',
+        value: ' big note:hello world:',
+      },
+    ]);
+  });
+
   it('Should tokenize list tag as operator', () => {
     const orgDoc = `- I'am a tag :: I'am a value`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

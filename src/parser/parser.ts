@@ -138,13 +138,7 @@ class Parser {
 
     this.astBuilder.attachToTree(textNode);
 
-    const lastTokenWasNewLine = this.astBuilder.lastNode.value?.endsWith('\n');
-    if (
-      lastTokenWasNewLine &&
-      this.astBuilder.lastNode.type !== NodeType.Indent
-    ) {
-      this.ctx.exitList();
-    }
+    this.astBuilder.checkContext();
 
     return textNode;
   }

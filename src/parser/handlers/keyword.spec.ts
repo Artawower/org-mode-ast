@@ -89,6 +89,25 @@ And amma text after keyword`;
     `);
   });
 
+  // TODO: master uncomment after tokenizer will be changed
+  // to correct handle tags with delimiters
+  xit('Should parse filetags with properties tags', () => {
+    const orgDoc = `#+FILETAGS: :test:first big note:hello world:`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-45]
+        keyword [0-12]
+          text [0-11] ("#+FILETAGS:")
+          text [11-12] (" ")
+        text [12-17] (":test")
+        blockProperty [17-45]
+          text [17-23] (":first")
+          text [23-45] (" big note:hello world:")
+      "
+    `);
+  });
+
   it('Tags list parging should not have conflict with src block', () => {
     const orgDoc = `#+BEGIN_SRC js :tangle no :exports none
     console.log('Hello world!');

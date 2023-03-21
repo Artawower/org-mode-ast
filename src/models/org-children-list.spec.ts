@@ -267,6 +267,28 @@ describe('Org children', () => {
     expect(childrenList.slice(1, -1).length).toBe(0);
   });
 
+  it('Should slice with first start index', () => {
+    const orgNode1 = new OrgNode({
+      type: NodeType.Text,
+      value: 'First node',
+    });
+
+    const orgNode2 = new OrgNode({
+      type: NodeType.Text,
+      value: 'Second node',
+    });
+
+    const childrenList = new OrgChildrenList(orgNode1, orgNode2);
+    expect(childrenList.slice(1).length).toBe(1);
+    expect(childrenList.slice(1).toString()).toMatchInlineSnapshot(`
+      "
+
+      text [0-0] ("Second node")
+
+      -----------------"
+    `);
+  });
+
   it('Should replace nodes inside org children list', () => {
     const orgNode1 = new OrgNode({
       type: NodeType.Text,
