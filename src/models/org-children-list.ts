@@ -195,6 +195,21 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     return result;
   }
 
+  public reduce<T>(
+    callback: (accumulator: T, node?: OrgNode, i?: number) => T,
+    initialValue: T
+  ): T {
+    let current = this.header;
+    let accumulator = initialValue;
+    let i = 0;
+    while (current) {
+      accumulator = callback(accumulator, current.value, i);
+      current = current.next;
+      i++;
+    }
+    return accumulator;
+  }
+
   public forEach(
     callback: (node: OrgNode, index: number, last: boolean) => void
   ): void {
