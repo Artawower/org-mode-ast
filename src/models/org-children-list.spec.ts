@@ -303,4 +303,31 @@ describe('Org children', () => {
       -----------------"
     `);
   });
+
+  it('Should reduce list of org children list', () => {
+    const orgNode1 = new OrgNode({
+      type: NodeType.Text,
+      value: 'First node',
+    });
+
+    const orgNode2 = new OrgNode({
+      type: NodeType.Text,
+      value: 'Second node',
+    });
+
+    const orgNode3 = new OrgNode({
+      type: NodeType.Text,
+      value: 'Third node',
+    });
+
+    const childrenList = new OrgChildrenList(orgNode1, orgNode2, orgNode3);
+
+    const someAccamulatedRes = childrenList.reduce(
+      (acc, node) => acc + node.value,
+      ''
+    );
+    expect(someAccamulatedRes).toMatchInlineSnapshot(
+      `"First nodeSecond nodeThird node"`
+    );
+  });
 });
