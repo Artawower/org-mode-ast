@@ -31,6 +31,12 @@ export function prettyTreePrint(data: OrgNode, level = 0): string {
   if (data.level != null) {
     result += `${indent}    :level ${data.level}:\n`;
   }
+  if (data.meta) {
+    result += Object.keys(data.meta).reduce<string>(
+      (acc, k) => `${acc}${indent}    :${k} ${data.meta[k]}:\n`,
+      ''
+    );
+  }
 
   if (data.properties) {
     Object.keys(data.properties).forEach((k: string) => {

@@ -167,6 +167,29 @@ export interface SrcBlockMetaInfo {
   [key: string]: string | undefined;
 }
 
+export const linkTypes = [
+  'img',
+  'id',
+  'raw',
+  'file',
+  'network',
+  'attachment',
+  'docview',
+  'news',
+  'mailto',
+  'mhe',
+  'rmail',
+  'gnus',
+  'bbdb',
+  'irc',
+  'help',
+  'info',
+  'shell',
+  'elisp',
+] as const;
+
+export type LinkType = (typeof linkTypes)[number] | 'image';
+
 // TODO: meta info should be collected via special wrapper
 export interface MetaInfo {
   id?: string;
@@ -176,11 +199,14 @@ export interface MetaInfo {
   tags?: string[];
   headings?: [];
   category?: string;
+  previewImg?: string;
+  linkType?: LinkType;
   [key: string]: string | string[] | undefined | boolean;
 }
 
 export interface ParserConfiguration {
   todoKeywords?: string[];
+  imgExtensions?: string[];
 }
 
 export type BlockPosition = 'begin' | 'end';

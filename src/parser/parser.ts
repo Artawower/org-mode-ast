@@ -25,7 +25,6 @@ import { parserConfiguration } from './parser.configuration.js';
 
 class Parser {
   constructor(
-    private configuration: ParserConfiguration,
     private readonly ctx: AstContext,
     private readonly tokenIterator: TokenIterator,
     private readonly astBuilder: AstBuilder,
@@ -223,7 +222,11 @@ export function parse(
     tokenIterator
   );
   const commentHandler = new CommentHandler(astBuilder, tokenIterator);
-  const bracketHandler = new BracketHandler(astBuilder, tokenIterator);
+  const bracketHandler = new BracketHandler(
+    configuration,
+    astBuilder,
+    tokenIterator
+  );
   const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
   const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
   const propertiesHandler = new PropertiesHandler(
@@ -257,7 +260,6 @@ export function parse(
   );
 
   const parser = new Parser(
-    configuration,
     ctx,
     tokenIterator,
     astBuilder,

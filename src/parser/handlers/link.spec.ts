@@ -10,6 +10,7 @@ describe('Link test', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-30]
         link [0-30]
+            :linkType network:
           operator [0-1] ("[")
           linkUrl [1-21]
             operator [1-2] ("[")
@@ -32,6 +33,7 @@ describe('Link test', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-22]
         link [0-22]
+            :linkType network:
           operator [0-1] ("[")
           linkUrl [1-21]
             operator [1-2] ("[")
@@ -50,6 +52,7 @@ describe('Link test', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-61]
         link [0-30]
+            :linkType network:
           operator [0-1] ("[")
           linkUrl [1-21]
             operator [1-2] ("[")
@@ -62,6 +65,7 @@ describe('Link test', () => {
           operator [29-30] ("]")
         text [30-31] (" ")
         link [31-61]
+            :linkType network:
           operator [31-32] ("[")
           linkUrl [32-52]
             operator [32-33] ("[")
@@ -92,6 +96,7 @@ describe('Link test', () => {
             operator [11-12] ("*")
           text [12-13] (" ")
           link [13-43]
+              :linkType network:
             operator [13-14] ("[")
             linkUrl [14-34]
               operator [14-15] ("[")
@@ -127,6 +132,7 @@ describe('Link test', () => {
           operator [34-35] ("+")
         text [35-36] (" ")
         link [36-66]
+            :linkType network:
           operator [36-37] ("[")
           linkUrl [37-57]
             operator [37-38] ("[")
@@ -168,6 +174,7 @@ describe('Link test', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-77]
         link [0-77]
+            :linkType network:
           operator [0-1] ("[")
           linkUrl [1-52]
             operator [1-2] ("[")
@@ -214,6 +221,68 @@ describe('Link test', () => {
           operator [0-1] ("$")
           text [1-31] ("[\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]")
           operator [31-32] ("$")
+      "
+    `);
+  });
+
+  it('Should parse file link', () => {
+    const orgDoc = `[[file:~/Documents/notes.org][Notes]]`;
+    const result = parse(orgDoc);
+    hasNodeIncorrectRanges(result, orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-37]
+        link [0-37]
+            :linkType file:
+          operator [0-1] ("[")
+          linkUrl [1-29]
+            operator [1-2] ("[")
+            text [2-28] ("file:~/Documents/notes.org")
+            operator [28-29] ("]")
+          linkName [29-36]
+            operator [29-30] ("[")
+            text [30-35] ("Notes")
+            operator [35-36] ("]")
+          operator [36-37] ("]")
+      "
+    `);
+  });
+
+  it('Should parse id link', () => {
+    const orgDoc = `[[id:1234567890][Notes]]`;
+    const result = parse(orgDoc);
+    hasNodeIncorrectRanges(result, orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-24]
+        link [0-24]
+            :linkType id:
+          operator [0-1] ("[")
+          linkUrl [1-16]
+            operator [1-2] ("[")
+            text [2-15] ("id:1234567890")
+            operator [15-16] ("]")
+          linkName [16-23]
+            operator [16-17] ("[")
+            text [17-22] ("Notes")
+            operator [22-23] ("]")
+          operator [23-24] ("]")
+      "
+    `);
+  });
+
+  it('Should parse image link', () => {
+    const orgDoc = `[[./image.png]]`;
+    const result = parse(orgDoc);
+    hasNodeIncorrectRanges(result, orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-15]
+        link [0-15]
+            :linkType image:
+          operator [0-1] ("[")
+          linkUrl [1-14]
+            operator [1-2] ("[")
+            text [2-13] ("./image.png")
+            operator [13-14] ("]")
+          operator [14-15] ("]")
       "
     `);
   });

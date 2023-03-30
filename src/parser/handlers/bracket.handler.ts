@@ -1,8 +1,11 @@
 import {
+  LinkType,
   NodeType,
   OrgChildrenList,
   OrgHandler,
   OrgNode,
+  ParserConfiguration,
+  linkTypes,
 } from '../../models/index.js';
 import { AstBuilder } from '../ast-builder.js';
 import { TokenIterator } from '../../tokenizer/index.js';
@@ -13,6 +16,9 @@ export class BracketHandler implements OrgHandler {
   readonly #dateRangeDelimiter = '--';
   readonly #priorityValueRegexp = /#([\w\d]{1})$/;
   readonly #unresolvedNodes = new OrgChildrenList();
+  readonly #httpLinkRegexp =
+    /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
+
   // readonly #urlRegexp =
   //   /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
 
@@ -50,8 +56,9 @@ export class BracketHandler implements OrgHandler {
     /(<|\[)\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?( (\+|\-){0,2}\d+(h|m|y|d|w))*(>|\])$/;
 
   constructor(
-    private astBuilder: AstBuilder,
-    private tokenIterator: TokenIterator
+    private readonly configuration: ParserConfiguration,
+    private readonly astBuilder: AstBuilder,
+    private readonly tokenIterator: TokenIterator
   ) {}
 
   public handle(): OrgNode {
@@ -63,6 +70,7 @@ export class BracketHandler implements OrgHandler {
     if (closedBracketNode) {
       this.removeFormattingInsideInlineCode(closedBracketNode);
       this.storeUnresolvedNode(closedBracketNode);
+      this.addMetaInfo(closedBracketNode);
       return closedBracketNode;
     }
 
@@ -118,6 +126,7 @@ export class BracketHandler implements OrgHandler {
 
     if (orgNode) {
       this.normalizeBracketedNodes(orgNode, potentialBraketNodes);
+      // this.addMetaInfo(orgNode);
     }
 
     return orgNode;
@@ -152,6 +161,36 @@ export class BracketHandler implements OrgHandler {
     bracketNodeParent.addChildren(bracketNodes);
     realParent.addChild(bracketNodeParent);
     this.astBuilder.mergeNeighborsNodesWithSameType(bracketNodes.first);
+  }
+
+  private addMetaInfo(orgNode: OrgNode): void {
+    if (orgNode.is(NodeType.Link)) {
+      orgNode.updateMeta({
+        linkType: this.determineLinkType(
+          orgNode.children.get(1).children.get(1)
+        ),
+      });
+    }
+  }
+
+  private determineLinkType(orgNode: OrgNode): LinkType {
+    const link = orgNode.value;
+    const imgType = this.configuration.imgExtensions.find((it) =>
+      link.endsWith(it)
+    );
+
+    if (imgType) {
+      return 'image';
+    }
+
+    const linkType = linkTypes.find((lt) => link.startsWith(`${lt}:`));
+    if (linkType) {
+      return linkType;
+    }
+    if (link.match(this.#httpLinkRegexp)) {
+      return 'network';
+    }
+    return 'raw';
   }
 
   private normalizeOrgLinkUrl(

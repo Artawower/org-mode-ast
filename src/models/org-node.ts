@@ -126,6 +126,10 @@ export class OrgNode {
     this._next = next;
   }
 
+  public updateMeta(partialInfo: MetaInfo): void {
+    this.meta = { ...(this.meta ?? {}), ...partialInfo };
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setProperties(properties: { [key: string]: any }) {
     this._properties = properties;

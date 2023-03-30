@@ -1232,6 +1232,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [842-928]
                       operator [842-844] ("+ ")
                       link [844-927]
+                          :linkType raw:
                         operator [844-845] ("[")
                         linkUrl [845-902]
                           operator [845-846] ("[")
@@ -1247,6 +1248,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [928-997]
                       operator [928-930] ("+ ")
                       link [930-996]
+                          :linkType network:
                         operator [930-931] ("[")
                         linkUrl [931-981]
                           operator [931-932] ("[")
@@ -1262,6 +1264,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [997-1100]
                       operator [997-999] ("+ ")
                       link [999-1099]
+                          :linkType network:
                         operator [999-1000] ("[")
                         linkUrl [1000-1045]
                           operator [1000-1001] ("[")
@@ -1277,6 +1280,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1100-1168]
                       operator [1100-1102] ("+ ")
                       link [1102-1167]
+                          :linkType network:
                         operator [1102-1103] ("[")
                         linkUrl [1103-1154]
                           operator [1103-1104] ("[")
@@ -1292,6 +1296,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1168-1238]
                       operator [1168-1170] ("+ ")
                       link [1170-1237]
+                          :linkType network:
                         operator [1170-1171] ("[")
                         linkUrl [1171-1228]
                           operator [1171-1172] ("[")
@@ -1307,6 +1312,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1238-1368]
                       operator [1238-1240] ("+ ")
                       link [1240-1367]
+                          :linkType raw:
                         operator [1240-1241] ("[")
                         linkUrl [1241-1308]
                           operator [1241-1242] ("[")
@@ -1322,6 +1328,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1368-1472]
                       operator [1368-1370] ("+ ")
                       link [1370-1471]
+                          :linkType raw:
                         operator [1370-1371] ("[")
                         linkUrl [1371-1444]
                           operator [1371-1372] ("[")
@@ -1337,6 +1344,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1472-1615]
                       operator [1472-1474] ("+ ")
                       link [1474-1614]
+                          :linkType network:
                         operator [1474-1475] ("[")
                         linkUrl [1475-1579]
                           operator [1475-1476] ("[")
@@ -1352,6 +1360,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1615-1684]
                       operator [1615-1617] ("+ ")
                       link [1617-1683]
+                          :linkType network:
                         operator [1617-1618] ("[")
                         linkUrl [1618-1659]
                           operator [1618-1619] ("[")
@@ -1367,6 +1376,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1684-1756]
                       operator [1684-1686] ("+ ")
                       link [1686-1755]
+                          :linkType network:
                         operator [1686-1687] ("[")
                         linkUrl [1687-1721]
                           operator [1687-1688] ("[")
@@ -1382,6 +1392,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1756-1897]
                       operator [1756-1758] ("+ ")
                       link [1758-1896]
+                          :linkType network:
                         operator [1758-1759] ("[")
                         linkUrl [1759-1857]
                           operator [1759-1760] ("[")
@@ -1397,6 +1408,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1897-1989]
                       operator [1897-1899] ("+ ")
                       link [1899-1988]
+                          :linkType network:
                         operator [1899-1900] ("[")
                         linkUrl [1900-1951]
                           operator [1900-1901] ("[")
@@ -1412,6 +1424,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     title [1989-2164]
                       operator [1989-1991] ("+ ")
                       link [1991-2091]
+                          :linkType raw:
                         operator [1991-1992] ("[")
                         linkUrl [1992-2038]
                           operator [1992-1993] ("[")
@@ -1424,6 +1437,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         operator [2090-2091] ("]")
                       text [2091-2093] (" (")
                       link [2093-2162]
+                          :linkType network:
                         operator [2093-2094] ("[")
                         linkUrl [2094-2139]
                           operator [2094-2095] ("[")
@@ -2391,6 +2405,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [9997-9998]
                   section [9998-10655]
                     link [9998-10070]
+                        :linkType raw:
                       operator [9998-9999] ("[")
                       linkUrl [9999-10055]
                         operator [9999-10000] ("[")
@@ -2748,6 +2763,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                   title [13871-13987]
                     operator [13871-13875] ("*** ")
                     link [13875-13986]
+                        :linkType network:
                       operator [13875-13876] ("[")
                       linkUrl [13876-13958]
                         operator [13876-13877] ("[")
@@ -3468,6 +3484,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [20228-20229]
                   section [20229-20337]
                     link [20229-20336]
+                        :linkType network:
                       operator [20229-20230] ("[")
                       linkUrl [20230-20321]
                         operator [20230-20231] ("[")
@@ -3487,6 +3504,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [20355-20356]
               section [20356-20726]
                 link [20356-20481]
+                    :linkType raw:
                   operator [20356-20357] ("[")
                   linkUrl [20357-20453]
                     operator [20357-20358] ("[")
@@ -3565,6 +3583,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                   section [20748-21397]
                     text [20748-20793] ("Просто кучка примеров из разработанного мной ")
                     link [20793-20849]
+                        :linkType raw:
                       operator [20793-20794] ("[")
                       linkUrl [20794-20840]
                         operator [20794-20795] ("[")
@@ -3684,6 +3703,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [21771-21772]
               section [21772-21852]
                 link [21772-21851]
+                    :linkType raw:
                   operator [21772-21773] ("[")
                   linkUrl [21773-21830]
                     operator [21773-21774] ("[")
@@ -3801,6 +3821,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [22806-22807]
                     text [22807-22839] ("Создание асинхронного процесаа (")
                     link [22839-22950]
+                        :linkType network:
                       operator [22839-22840] ("[")
                       linkUrl [22840-22933]
                         operator [22840-22841] ("[")
@@ -3891,6 +3912,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [23758-23759]
                 text [23759-23769] ("Подробнее ")
                 link [23769-23853]
+                    :linkType network:
                   operator [23769-23770] ("[")
                   linkUrl [23770-23847]
                     operator [23770-23771] ("[")
@@ -4035,6 +4057,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                   section [24790-25861]
                     indent [24790-24791] (" ")
                     link [24791-24912]
+                        :linkType network:
                       operator [24791-24792] ("[")
                       linkUrl [24792-24894]
                         operator [24792-24793] ("[")
@@ -4283,6 +4306,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [29048-29049]
               section [29049-29098]
                 link [29049-29097]
+                    :linkType raw:
                   operator [29049-29050] ("[")
                   linkUrl [29050-29096]
                     operator [29050-29051] ("[")
@@ -4298,6 +4322,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [29103-29104]
               section [29104-29280]
                 link [29104-29213]
+                    :linkType raw:
                   operator [29104-29105] ("[")
                   linkUrl [29105-29189]
                     operator [29105-29106] ("[")
@@ -4310,6 +4335,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                   operator [29212-29213] ("]")
                 newLine [29213-29214]
                 link [29214-29279]
+                    :linkType raw:
                   operator [29214-29215] ("[")
                   linkUrl [29215-29261]
                     operator [29215-29216] ("[")
@@ -4377,6 +4403,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             newLine [29667-29668]
           section [29668-29737]
             link [29668-29736]
+                :linkType network:
               operator [29668-29669] ("[")
               linkUrl [29669-29705]
                 operator [29669-29670] ("[")
@@ -4718,6 +4745,7 @@ textarea:focus, input:focus{
                   title [169-240]
                     operator [169-173] ("*** ")
                     link [173-239]
+                        :linkType network:
                       operator [173-174] ("[")
                       linkUrl [174-219]
                         operator [174-175] ("[")
@@ -4742,6 +4770,7 @@ textarea:focus, input:focus{
                   title [257-359]
                     operator [257-262] ("**** ")
                     link [262-358]
+                        :linkType network:
                       operator [262-263] ("[")
                       linkUrl [263-336]
                         operator [263-264] ("[")
@@ -4759,6 +4788,7 @@ textarea:focus, input:focus{
                   title [359-577]
                     operator [359-364] ("**** ")
                     link [364-576]
+                        :linkType network:
                       operator [364-365] ("[")
                       linkUrl [365-554]
                         operator [365-366] ("[")
@@ -4776,6 +4806,7 @@ textarea:focus, input:focus{
                   title [577-648]
                     operator [577-582] ("**** ")
                     link [582-647]
+                        :linkType network:
                       operator [582-583] ("[")
                       linkUrl [583-613]
                         operator [583-584] ("[")
@@ -4793,6 +4824,7 @@ textarea:focus, input:focus{
                   title [648-736]
                     operator [648-653] ("**** ")
                     link [653-735]
+                        :linkType network:
                       operator [653-654] ("[")
                       linkUrl [654-726]
                         operator [654-655] ("[")
@@ -4810,6 +4842,7 @@ textarea:focus, input:focus{
                   title [736-791]
                     operator [736-741] ("**** ")
                     link [741-790]
+                        :linkType network:
                       operator [741-742] ("[")
                       linkUrl [742-771]
                         operator [742-743] ("[")
@@ -4827,6 +4860,7 @@ textarea:focus, input:focus{
                   title [791-868]
                     operator [791-796] ("**** ")
                     link [796-861]
+                        :linkType network:
                       operator [796-797] ("[")
                       linkUrl [797-842]
                         operator [797-798] ("[")
@@ -4845,6 +4879,7 @@ textarea:focus, input:focus{
                   title [868-972]
                     operator [868-873] ("**** ")
                     link [873-971]
+                        :linkType network:
                       operator [873-874] ("[")
                       linkUrl [874-918]
                         operator [874-875] ("[")
@@ -4945,6 +4980,7 @@ textarea:focus, input:focus{
                 newLine [1416-1417]
               section [1417-2188]
                 link [1417-1490]
+                    :linkType network:
                   operator [1417-1418] ("[")
                   linkUrl [1418-1474]
                     operator [1418-1419] ("[")
