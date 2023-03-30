@@ -1,17 +1,21 @@
 import { MetaInfo, NodeType, OrgNode } from '../models/index.js';
 import { walkTree } from './tree-walker.js';
 
-export function collectFromKeywords(orgNode: OrgNode): Partial<MetaInfo> {
-  if (orgNode.isNot(NodeType.Keyword)) {
+export function collectFromKeywords(
+  orgNode: OrgNode,
+  metaInfo: MetaInfo
+): void {
+  if (
+    orgNode.isNot(NodeType.Keyword) ||
+    orgNode.parent.is(NodeType.BlockHeader, NodeType.BlockFooter)
+  ) {
     return;
   }
   const key = orgNode.children.first.value.slice(2, -1).toLowerCase();
   const value = orgNode.children.last.rawValue;
   const normalizedValue = normalizeKeywordValue(key, value);
 
-  return {
-    [key]: normalizedValue,
-  };
+  metaInfo[key] = normalizedValue;
 }
 
 function normalizeKeywordValue(
@@ -26,7 +30,10 @@ function normalizeKeywordValue(
   return handler();
 }
 
-export function collectFromProperties(orgNode: OrgNode): Partial<MetaInfo> {
+export function collectFromProperties(
+  orgNode: OrgNode,
+  metaInfo: MetaInfo
+): void {
   if (
     orgNode.isNot(NodeType.Property) ||
     orgNode.parent?.isNot(NodeType.PropertyDrawer) ||
@@ -36,18 +43,55 @@ export function collectFromProperties(orgNode: OrgNode): Partial<MetaInfo> {
   }
   const key = orgNode.children.first.value.slice(1, -1).trim().toLowerCase();
   const val = normalizeKeywordValue(key, orgNode.children.last.rawValue);
-  return { [key]: val };
+  metaInfo[key] = val;
 }
 
-export function withMetaInfo(orgNode: OrgNode): OrgNode {
-  let metaInfo: MetaInfo = {};
+export function collectImages(orgNode: OrgNode, metaInfo: MetaInfo): void {
+  if (orgNode.isNot(NodeType.Link) || orgNode.meta.linkType !== 'image') {
+    return;
+  }
+  metaInfo.images ??= [];
+  metaInfo.images.push(orgNode.children.get(1).children.get(1).value);
+}
 
-  walkTree(orgNode, (node) => {
-    const keywordsInfo = collectFromKeywords(node);
-    const propertiesInfo = collectFromProperties(node);
-    metaInfo = { ...metaInfo, ...keywordsInfo, ...propertiesInfo };
+/*
+ * Collect all available meta info
+ */
+export function withMetaInfo(orgNode: OrgNode): OrgNode {
+  return withOptionalMetaInfo(
+    orgNode,
+    null,
+    collectFromKeywords,
+    collectFromProperties,
+    collectImages
+  );
+}
+
+/*
+ * Get info from top level nodes
+ */
+export function withSuperficialInfo(orgNode: OrgNode): OrgNode {
+  const stopCallback = (node: OrgNode) => {
     if (node.parent && node.parent.isNot(NodeType.Root)) {
       return true;
+    }
+  };
+  return withOptionalMetaInfo(orgNode, stopCallback, collectFromKeywords);
+}
+
+export type MetaInfoHandler = (orgNode: OrgNode, metaInfo: MetaInfo) => void;
+
+export function withOptionalMetaInfo(
+  orgNode: OrgNode,
+  stopCallback?: (orgNode: OrgNode) => boolean,
+  ...handlers: MetaInfoHandler[]
+): OrgNode {
+  const metaInfo: MetaInfo = {};
+
+  walkTree(orgNode, (node) => {
+    handlers.forEach((handler) => handler(node, metaInfo));
+    if (stopCallback) {
+      return stopCallback(node);
     }
   });
 
