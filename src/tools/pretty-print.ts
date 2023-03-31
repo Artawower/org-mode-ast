@@ -1,5 +1,15 @@
 import { NodeType, OrgNode } from '../models/index.js';
 
+function prettifyArrayValue(indent: string, key: string, value: any): string {
+  if (key === 'headings') {
+    return value.reduce((acc, v) => {
+      acc += `${indent}${' '.repeat(v.level * 2)}${v.title}\n`;
+      return acc;
+    }, '\n');
+  }
+  return value.join(',');
+}
+
 /**
  * Method for pretty debug org tree. Useful for long AST.
  *
@@ -14,7 +24,7 @@ export function prettyTreePrint(data: OrgNode, level = 0): string {
   let result = indent;
 
   const val =
-    data.value && data.type !== NodeType.NewLine
+    data.value && data.isNot(NodeType.NewLine)
       ? ` (${JSON.stringify(data.value)})`
       : '';
 
@@ -32,10 +42,16 @@ export function prettyTreePrint(data: OrgNode, level = 0): string {
     result += `${indent}    :level ${data.level}:\n`;
   }
   if (data.meta) {
-    result += Object.keys(data.meta).reduce<string>(
-      (acc, k) => `${acc}${indent}    :${k} ${data.meta[k]}:\n`,
-      ''
-    );
+    result += Object.keys(data.meta).reduce<string>((acc, k) => {
+      const value = Array.isArray(data.meta[k])
+        ? prettifyArrayValue(indent + '    ', k, data.meta[k])
+        : data.meta[k];
+
+      if (k === 'headings') {
+        return `${acc}${indent}    :${k}: ${value}\n`;
+      }
+      return `${acc}${indent}    :${k} ${value}:\n`;
+    }, '');
   }
 
   if (data.properties) {

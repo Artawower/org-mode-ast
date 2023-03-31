@@ -1,2 +1,2 @@
-export * from './tools.js';
+export * from './pretty-print.js';
 export * from './is-number.js';

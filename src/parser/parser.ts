@@ -174,7 +174,6 @@ class Parser {
   }
 
   private handleEndOfLine(): void {
-    // this.bracketHandler.handleEndOfLine();
     this.tableHandler.handleNewLine();
     this.keywordHandler.handleEndOfLine();
     this.colonHandler.handleNewLine();

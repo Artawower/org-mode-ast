@@ -54,6 +54,18 @@ export function collectImages(orgNode: OrgNode, metaInfo: MetaInfo): void {
   metaInfo.images.push(orgNode.children.get(1).children.get(1).value);
 }
 
+export function collectHeadings(orgNode: OrgNode, metaInfo: MetaInfo): void {
+  if (orgNode.isNot(NodeType.Headline)) {
+    return;
+  }
+
+  metaInfo.headings ??= [];
+  metaInfo.headings.push({
+    level: orgNode.level,
+    title: orgNode.title.cleanValue,
+  });
+}
+
 /*
  * Collect all available meta info
  */
@@ -63,7 +75,8 @@ export function withMetaInfo(orgNode: OrgNode): OrgNode {
     null,
     collectFromKeywords,
     collectFromProperties,
-    collectImages
+    collectImages,
+    collectHeadings
   );
 }
 

@@ -190,18 +190,22 @@ export const linkTypes = [
 
 export type LinkType = (typeof linkTypes)[number] | 'image';
 
-// TODO: meta info should be collected via special wrapper
+export interface Heading {
+  title: string;
+  level: number;
+}
+
 export interface MetaInfo {
   id?: string;
   title?: string;
   description?: string;
   images?: string[];
   tags?: string[];
-  headings?: [];
+  headings?: Heading[];
   category?: string;
   previewImg?: string;
   linkType?: LinkType;
-  [key: string]: string | string[] | undefined | boolean;
+  [key: string]: string | string[] | undefined | boolean | Heading[];
 }
 
 export interface ParserConfiguration {

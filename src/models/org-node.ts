@@ -83,6 +83,25 @@ export class OrgNode {
     return '';
   }
 
+  get cleanValue(): string {
+    if (this.value) {
+      return this.value;
+    }
+    const titleValue = this.title?.cleanValue ?? '';
+    const sectionValue = this.section?.cleanValue ?? '';
+    const childrenValue =
+      this.children
+        ?.map((n) => {
+          if (n.is(NodeType.Operator, NodeType.NewLine)) {
+            return '';
+          }
+          return n.cleanValue;
+        })
+        ?.join('') ?? '';
+
+    return `${titleValue}${sectionValue}${childrenValue}`;
+  }
+
   private getRawValueFromNodes(nodes: OrgChildrenList): string {
     return nodes.map((n) => n.rawValue).join('');
   }

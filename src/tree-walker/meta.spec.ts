@@ -40,6 +40,10 @@ describe('Meta information', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-78]
           :title some title:
+          :headings: 
+            Heading 1
+              Heading 2
+
           :images ./image1.png,./image2.png:
         keyword [0-19]
           text [0-8] ("#+TITLE:")
@@ -80,6 +84,16 @@ describe('Meta information', () => {
     `);
     expect(result.meta).toMatchInlineSnapshot(`
       {
+        "headings": [
+          {
+            "level": 1,
+            "title": "Heading 1",
+          },
+          {
+            "level": 2,
+            "title": "Heading 2",
+          },
+        ],
         "images": [
           "./image1.png",
           "./image2.png",
