@@ -90,4 +90,24 @@ describe('Comment', () => {
       "
     `);
   });
+
+  it('Should parse nodes outside of comments', () => {
+    const orgDoc = `# I am a comment!
+*Bold text*`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-29]
+        comment [0-17]
+          operator [0-1] ("#")
+          text [1-17] (" I am a comment!")
+        newLine [17-18]
+        bold [18-29]
+          operator [18-19] ("*")
+          text [19-28] ("Bold text")
+          operator [28-29] ("*")
+      "
+    `);
+  });
 });

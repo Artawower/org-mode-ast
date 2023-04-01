@@ -7,6 +7,14 @@ export class CommentHandler implements OrgHandler {
   #lastCommentNode: OrgNode;
 
   get onHold(): boolean {
+    if (
+      !this.tokenIterator.token ||
+      this.tokenIterator.token.isType(TokenType.NewLine)
+    ) {
+      this.#lastCommentNode = null;
+      return;
+    }
+
     return !!this.#lastCommentNode;
   }
 

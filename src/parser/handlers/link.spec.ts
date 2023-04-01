@@ -348,9 +348,20 @@ describe('Link test', () => {
         keyword [217-226]
           text [217-226] ("#+ACTIVE:")
         newLine [226-227]
-        comment [227-408]
+        comment [227-352]
           operator [227-228] ("#")
-          text [228-408] (" 13[[img https://www.befunky.com/images/wp/wp-2014-08-milky-way-1023340_1280.jpg?auto=webp&format=jpg&width=1750&crop=16:9]]\\n\\n[[./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg]]\\n")
+          text [228-352] (" 13[[img https://www.befunky.com/images/wp/wp-2014-08-milky-way-1023340_1280.jpg?auto=webp&format=jpg&width=1750&crop=16:9]]")
+        newLine [352-353]
+        newLine [353-354]
+        link [354-407]
+            :linkType image:
+          operator [354-355] ("[")
+          linkUrl [355-406]
+            operator [355-356] ("[")
+            text [356-405] ("./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg")
+            operator [405-406] ("]")
+          operator [406-407] ("]")
+        newLine [407-408]
       "
     `);
   });
