@@ -55,7 +55,11 @@ class Parser {
    * Handlers who can hold the parsing process and force attach
    * next tokens to the handle operation
    */
-  private holdOnHandlers = [this.colonHandler, this.keywordHandler];
+  private holdOnHandlers = [
+    this.colonHandler,
+    this.keywordHandler,
+    this.commentHandler,
+  ];
 
   private readonly tokensHandlers = {
     [TokenType.Headline]: () => this.handleHeadline(),
@@ -174,6 +178,7 @@ class Parser {
   }
 
   private handleEndOfLine(): void {
+    this.commentHandler.handleNewLine();
     this.tableHandler.handleNewLine();
     this.keywordHandler.handleEndOfLine();
     this.colonHandler.handleNewLine();

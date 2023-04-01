@@ -77,4 +77,17 @@ describe('Comment', () => {
       "
     `);
   });
+
+  it('Should parse entire string with nested potential nodes as comment', () => {
+    const orgDoc = `# [[https://www.google.com][Google]]`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-36]
+        comment [0-36]
+          operator [0-1] ("#")
+          text [1-36] (" [[https://www.google.com][Google]]")
+      "
+    `);
+  });
 });

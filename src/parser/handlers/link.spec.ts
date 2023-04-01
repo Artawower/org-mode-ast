@@ -286,4 +286,72 @@ describe('Link test', () => {
       "
     `);
   });
+
+  it('Should correct parse image link from complex org document', () => {
+    const orgDoc = `:PROPERTIES:
+:ID: tmp_bucket
+:END:
+#+TITLE: Черный ящик ( ͡° ͜ʖ ͡°)
+#+DESCRIPTION: Временное хранилище для информации к изучению!
+#+STARTUP: show2levels
+#+STARTUP: inlineimages
+#+FILETAGS: :bucket:временное:blackbox:
+#+ACTIVE:
+# 13[[img https://www.befunky.com/images/wp/wp-2014-08-milky-way-1023340_1280.jpg?auto=webp&format=jpg&width=1750&crop=16:9]]
+
+[[./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg]]
+`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-408]
+          :id  tmp_bucket:
+        propertyDrawer [0-34]
+          property [0-12]
+            text [0-12] (":PROPERTIES:")
+          newLine [12-13]
+          property [13-28]
+            text [13-17] (":ID:")
+            text [17-28] (" tmp_bucket")
+          newLine [28-29]
+          property [29-34]
+            text [29-34] (":END:")
+        newLine [34-35]
+        keyword [35-67]
+          text [35-43] ("#+TITLE:")
+          text [43-67] (" Черный ящик ( ͡° ͜ʖ ͡°)")
+        newLine [67-68]
+        keyword [68-129]
+          text [68-82] ("#+DESCRIPTION:")
+          text [82-129] (" Временное хранилище для информации к изучению!")
+        newLine [129-130]
+        keyword [130-152]
+          text [130-140] ("#+STARTUP:")
+          text [140-152] (" show2levels")
+        newLine [152-153]
+        keyword [153-176]
+          text [153-163] ("#+STARTUP:")
+          text [163-176] (" inlineimages")
+        newLine [176-177]
+        keyword [177-216]
+          text [177-188] ("#+FILETAGS:")
+          text [188-189] (" ")
+          tagList [189-216]
+            operator [189-190] (":")
+            text [190-196] ("bucket")
+            operator [196-197] (":")
+            text [197-206] ("временное")
+            operator [206-207] (":")
+            text [207-215] ("blackbox")
+            operator [215-216] (":")
+        newLine [216-217]
+        keyword [217-226]
+          text [217-226] ("#+ACTIVE:")
+        newLine [226-227]
+        comment [227-408]
+          operator [227-228] ("#")
+          text [228-408] (" 13[[img https://www.befunky.com/images/wp/wp-2014-08-milky-way-1023340_1280.jpg?auto=webp&format=jpg&width=1750&crop=16:9]]\\n\\n[[./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg]]\\n")
+      "
+    `);
+  });
 });
