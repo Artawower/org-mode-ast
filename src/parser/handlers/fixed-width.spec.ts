@@ -92,4 +92,18 @@ describe('Fixed width', () => {
       "
     `);
   });
+
+  // FIXME: master
+  xit('Should parse colon as fixed width inside text', () => {
+    const orgDoc = `Дабы не забыть обновить комменты :O`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-35]
+        text [0-33] ("Дабы не забыть обновить комменты ")
+        operator [33-34] (":")
+        text [34-35] ("O")
+      "
+    `);
+  });
 });

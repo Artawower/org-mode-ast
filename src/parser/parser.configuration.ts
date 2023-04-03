@@ -128,4 +128,10 @@ export const parserConfiguration: ParserConfiguration = {
     '.heic',
     '.heif',
   ],
+  httpLinkRegexp:
+    /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim,
+  // NOTE: https://regex101.com/r/6qKjFj/1
+  // TODO: master make regexp for time with shifting
+  dateRegexp:
+    /(<|\[)\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?( (\+|\-){0,2}\d+(h|m|y|d|w))*(>|\])$/,
 };

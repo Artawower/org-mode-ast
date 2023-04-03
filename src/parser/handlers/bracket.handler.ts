@@ -16,8 +16,6 @@ export class BracketHandler implements OrgHandler {
   readonly #dateRangeDelimiter = '--';
   readonly #priorityValueRegexp = /#([\w\d]{1})$/;
   readonly #unresolvedNodes = new OrgChildrenList();
-  readonly #httpLinkRegexp =
-    /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim;
 
   // readonly #urlRegexp =
   //   /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
@@ -49,11 +47,6 @@ export class BracketHandler implements OrgHandler {
     $: NodeType.LatexFragment,
     $$: NodeType.LatexFragment,
   };
-
-  // NOTE: https://regex101.com/r/6qKjFj/1
-  // TODO: master make regexp for time with shifting
-  private readonly dateRegex =
-    /(<|\[)\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?( (\+|\-){0,2}\d+(h|m|y|d|w))*(>|\])$/;
 
   constructor(
     private readonly configuration: ParserConfiguration,
@@ -187,7 +180,7 @@ export class BracketHandler implements OrgHandler {
     if (linkType) {
       return linkType;
     }
-    if (link.match(this.#httpLinkRegexp)) {
+    if (link.match(this.configuration.httpLinkRegexp)) {
       return 'network';
     }
     return 'raw';
@@ -403,7 +396,7 @@ export class BracketHandler implements OrgHandler {
 
   // TODO: extract date date property by groups
   private isDate(text: string): boolean {
-    return !!text?.match(this.dateRegex);
+    return !!text?.match(this.configuration.dateRegexp);
   }
 
   private isOpenedBracket(bracketNode: OrgNode): boolean {
