@@ -58,6 +58,7 @@ export enum NodeType {
 
   Keyword = 'keyword',
   Link = 'link',
+  RawLink = 'rawLink',
   LinkUrl = 'linkUrl',
   LinkName = 'linkName',
 
@@ -94,6 +95,7 @@ export enum TokenType {
   Indent = 'indent',
   HorizontalRule = 'horizontalRule',
   TableOperator = 'tableOperator',
+  Link = 'link',
 }
 
 export interface RawToken {

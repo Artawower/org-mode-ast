@@ -33,7 +33,10 @@ export class Tokenizer {
   private lastToken: Token;
   private todoKeywords: string[] = [];
 
-  constructor(private text: string, configuration: ParserConfiguration) {
+  constructor(
+    private readonly text: string,
+    private readonly configuration: ParserConfiguration
+  ) {
     this.todoKeywords = configuration.todoKeywords ?? [];
     this.initTokenAggregators();
   }
@@ -87,6 +90,8 @@ export class Tokenizer {
       const c = this.text[this.point];
       this.buildTokens(c);
     }
+    this.verifyTokenType(this.lastToken);
+    this.mergeLastPotentialTextTokens();
 
     return this.firstToken;
   }
@@ -111,6 +116,9 @@ export class Tokenizer {
   }
 
   private handleDelimiter(c: string): void {
+    this.verifyTokenType(this.lastToken);
+    this.mergeLastPotentialTextTokens();
+
     if (this.handleFixedWidthOperator(c)) {
       return;
     }
@@ -164,6 +172,48 @@ export class Tokenizer {
     this.appendTextToken(c);
   }
 
+  private mergeLastPotentialTextTokens(): void {
+    if (!this.lastToken?.isType(TokenType.Text)) {
+      return;
+    }
+
+    if (this.isLastTokenWebLink()) {
+      this.lastToken.type = TokenType.Link;
+      return;
+    }
+
+    if (!this.lastToken.prev?.isType(TokenType.Text)) {
+      return;
+    }
+    this.forceMergeLastTokens(2, TokenType.Text);
+  }
+
+  private isLastTokenWebLink(): boolean {
+    if (this.lastToken.value === 'www' && this.nextChar === '.') {
+      return true;
+    }
+    const isStartLink =
+      this.lastToken.value === 'http:' || this.lastToken.value === 'https:';
+    if (
+      isStartLink &&
+      this.text[this.point] === '/' &&
+      this.nextChar === '/' 
+    ) {
+      return true;
+    }
+  }
+
+  private verifyTokenType(token: Token): void {
+    if (
+      !token ||
+      !token?.isType(TokenType.Text) ||
+      !this.configuration.httpLinkRegexp.test(token.value)
+    ) {
+      return;
+    }
+    token.type = TokenType.Link;
+  }
+
   private handleFixedWidthOperator(c: string): boolean {
     const lastTokenNewLineOrSpaceWithNewLine = this.isEolWithOptionalIndent(
       this.lastToken?.prev
@@ -215,6 +265,10 @@ export class Tokenizer {
   }
 
   private handleDash(c: string): void {
+    if (this.lastToken?.isType(TokenType.Link)) {
+      this.appendPrevValue(c);
+      return;
+    }
     if (
       this.lastToken &&
       !this.lastToken.isType(TokenType.NewLine) &&
@@ -366,6 +420,7 @@ export class Tokenizer {
   }
 
   private handleNewLine(c: string): void {
+    this.mergeLastPotentialTextTokens();
     this.createToken({ type: TokenType.NewLine, value: c });
   }
 
@@ -381,6 +436,13 @@ export class Tokenizer {
   }
 
   private handleBracket(c: string): void {
+    this.mergeLastPotentialTextTokens();
+
+    if (['~', '/', '='].includes(c) && this.lastToken?.isType(TokenType.Link)) {
+      this.appendPrevValue(c);
+      return;
+    }
+
     if (this.lastToken?.value === '$' && c === '$') {
       this.upsertToken({ type: TokenType.Bracket, value: c }, true);
       return;
@@ -406,6 +468,12 @@ export class Tokenizer {
   }
 
   private handleText(c: string): void {
+
+    if (this.lastToken?.isType(TokenType.Link)) {
+      this.appendPrevValue(c);
+      return;
+    }
+
     if (this.isPrevToken(TokenType.Comment)) {
       this.appendPrevValue(c);
       return;
@@ -469,20 +537,19 @@ export class Tokenizer {
       this.createToken({ type: TokenType.Text, value: c });
       return;
     }
-    // if (
-    //   this.lastToken?.value[0] === ':' &&
-    //   !this.isDelimiter(this.lastToken?.value[1]) &&
-    //   !this.isDelimiter(c)
-    // ) {
-    //   this.upsertToken({ type: TokenType.Keyword, value: c }, true);
-    //   return;
-    // }
     if (
       this.isPrevToken(TokenType.Keyword) &&
       this.isBlockKeyword(this.lastToken?.value.slice(2)) &&
       !this.isDelimiter(c)
     ) {
       this.appendPrevValue(c);
+      return;
+    }
+    if (
+      this.lastToken?.value.endsWith(this.delimiter) &&
+      !this.isDelimiter(c)
+    ) {
+      this.createToken({ type: TokenType.Text, value: c });
       return;
     }
     this.upsertToken({ type: TokenType.Text, value: c });
@@ -499,7 +566,10 @@ export class Tokenizer {
   }
 
   private checkIsLastTextTokenKeyword(): void {
-    if (this.todoKeywords.find((t) => t === this.lastToken.value)) {
+    if (
+      this.lastToken?.prev?.isType(TokenType.Headline) &&
+      this.todoKeywords.find((t) => t === this.lastToken.value)
+    ) {
       this.lastToken.setType(TokenType.Keyword);
       return;
     }
@@ -543,11 +613,13 @@ export class Tokenizer {
     if (prevToken) {
       prevToken.setNextToken(newToken);
       newToken.setPrevToken(prevToken);
+      this.lastToken = prevToken;
       this.addToken(newToken);
     } else {
       this.lastToken = newToken;
       this.firstToken = newToken;
     }
+    this.lastToken = newToken;
   }
 
   private formattersWithSpaceAtTheEnd = ['-', '+'];
@@ -561,6 +633,7 @@ export class Tokenizer {
 
   private buildTokens(c: string) {
     const tokenAggregator = this.tokenAggregators[c];
+
     if (tokenAggregator) {
       this.satisfyPreviousResult(c);
       tokenAggregator(c);
@@ -642,11 +715,16 @@ export class Tokenizer {
    * Return true when value ends with space, or no value, or value is new line
    */
   private isTokenSeparator(token?: Token): boolean {
-    return (
-      !token ||
-      token.isType(TokenType.NewLine) ||
-      this.isDelimiter(token.value.slice(-1))
-    );
+    return this.isCharSeparator(token?.value);
+    // return (
+    //   !token ||
+    //   token.isType(TokenType.NewLine) ||
+    //   this.isDelimiter(token.value.slice(-1))
+    // );
+  }
+
+  private isCharSeparator(c: string): boolean {
+    return !c || c === '\n' || this.isDelimiter(c.slice(-1));
   }
 
   private isFormatterBracket(c?: string): boolean {

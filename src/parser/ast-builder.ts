@@ -519,6 +519,13 @@ export class AstBuilder {
     });
   }
 
+  public createRawLinkNode(val: string): OrgNode {
+    return new OrgNode({
+      type: NodeType.RawLink,
+      value: val,
+    });
+  }
+
   public createComment(): OrgNode {
     const commentNode = new OrgNode({
       type: NodeType.Comment,

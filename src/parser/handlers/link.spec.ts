@@ -365,4 +365,25 @@ describe('Link test', () => {
       "
     `);
   });
+
+  it('Should parse raw link', () => {
+    const orgDoc = `it's a link https://www.google.com/some-url?q=12`;
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-48]
+        text [0-12] ("it's a link ")
+        rawLink [12-48] ("https://www.google.com/some-url?q=12")
+      "
+    `);
+  });
+
+  it('Should parse raw link from start of file', () => {
+    const orgDoc = 'www.some-link.com';
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-17]
+        rawLink [0-17] ("www.some-link.com")
+      "
+    `);
+  });
 });

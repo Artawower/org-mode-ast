@@ -69,6 +69,7 @@ class Parser {
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
     [TokenType.Keyword]: () => this.keywordHandler.handle(),
+    [TokenType.Link]: () => this.handleRawLink(),
     [TokenType.HorizontalRule]: () => this.horizontalRuleHandler.handle(),
     [TokenType.LatexBracket]: () => this.latexEnvironmentHandler.handle(),
     [TokenType.LatexEnvironmentKeyword]: () =>
@@ -175,6 +176,12 @@ class Parser {
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
     return newLineNode;
+  }
+
+  private handleRawLink(): OrgNode {
+    const rawLinkNode = this.astBuilder.createRawLinkNode(this.tokenIterator.currentValue);
+    this.astBuilder.attachToTree(rawLinkNode);
+    return rawLinkNode;
   }
 
   private handleEndOfLine(): void {

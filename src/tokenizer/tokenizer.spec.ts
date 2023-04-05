@@ -18,9 +18,9 @@ fdescribe('Tokenizer', () => {
   // Headings
   it('Should create tokens for simple headline', () => {
     const headline = '* Hello world';
-    const result = tokenize(headline, parserConfiguration);
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
 
-    expect(tokenListToArray(result)).toEqual([
+    expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
     ]);
@@ -28,8 +28,9 @@ fdescribe('Tokenizer', () => {
 
   it('Should create tokens for simple headline with space at the end', () => {
     const headline = '* Hello world ';
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+
+    expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'Hello world ', start: 2, end: 14 },
     ]);
@@ -133,8 +134,8 @@ fdescribe('Tokenizer', () => {
     const headline = `* TODO Hello world
 *** DONE Headline 2
 * Headline 3`;
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+    expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
       { type: TokenType.Text, value: ' Hello world', start: 6, end: 18 },
@@ -152,8 +153,8 @@ fdescribe('Tokenizer', () => {
     const headline = `* This is not a TODO
 * And this is not a DONE
 * Headline 3`;
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+    expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Text, value: 'This is not a TODO', start: 2, end: 20 },
       { type: TokenType.NewLine, value: '\n', start: 20, end: 21 },
@@ -834,7 +835,7 @@ console.log(a);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '[' },
       { start: 1, end: 2, type: 'bracket', value: '[' },
-      { start: 2, end: 19, type: 'text', value: 'http://google.com' },
+      { start: 2, end: 19, type: 'link', value: 'http://google.com' },
       { start: 19, end: 20, type: 'bracket', value: ']' },
       { start: 20, end: 21, type: 'bracket', value: '[' },
       { start: 21, end: 31, type: 'text', value: 'LINK NAME!' },
@@ -846,29 +847,18 @@ console.log(a);
   it('Should tokenize link with nested path', () => {
     const orgDoc = `[[https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/][Emacs lisp за 15 минут]]`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '[' },
       { start: 1, end: 2, type: 'bracket', value: '[' },
-      { start: 2, end: 16, type: 'text', value: 'https://bzg.fr' },
-      { start: 16, end: 17, type: 'bracket', value: '/' },
-      { start: 17, end: 19, type: 'text', value: 'en' },
-      { start: 19, end: 20, type: 'bracket', value: '/' },
       {
-        start: 20,
-        end: 50,
-        type: 'text',
-        value: 'learn-emacs-lisp-in-15-minutes',
+        start: 2,
+        end: 51,
+        type: 'link',
+        value: 'https://bzg.fr/en/learn-emacs-lisp-in-15-minutes/',
       },
-      { start: 50, end: 51, type: 'bracket', value: '/' },
       { start: 51, end: 52, type: 'bracket', value: ']' },
       { start: 52, end: 53, type: 'bracket', value: '[' },
-      {
-        start: 53,
-        end: 75,
-        type: 'text',
-        value: 'Emacs lisp за 15 минут',
-      },
+      { start: 53, end: 75, type: 'text', value: 'Emacs lisp за 15 минут' },
       { start: 75, end: 76, type: 'bracket', value: ']' },
       { start: 76, end: 77, type: 'bracket', value: ']' },
     ]);
@@ -969,6 +959,7 @@ console.log(a);
   it('Should tokenize latex with 2 $', () => {
     const orgDoc = `This is also a latex text: $$1+1=2$$`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
     expect(result).toEqual([
       {
         start: 0,
@@ -1133,6 +1124,7 @@ BROKE\\end{align*}`;
         : Fixed width line 2`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
     expect(result).toEqual([
       { start: 0, end: 2, type: 'operator', value: ': ' },
       {
@@ -1207,7 +1199,6 @@ BROKE\\end{align*}`;
   xit('Should tokenize tags with spaces', () => {
     const orgDoc = `#+FILETAGS: :test:first big note:hello world:`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1208][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { start: 0, end: 11, type: 'keyword', value: '#+FILETAGS:' },
       { start: 11, end: 12, type: 'text', value: ' ' },
@@ -1279,6 +1270,30 @@ BROKE\\end{align*}`;
       { start: 36, end: 37, type: 'tableOperator', value: '|' },
       { start: 37, end: 40, type: 'text', value: ' 3 ' },
       { start: 40, end: 41, type: 'tableOperator', value: '|' },
+    ]);
+  });
+
+  it('Should tokenize raw link', () => {
+    const orgDoc = `it's a link https://www.google.com`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 12, type: 'text', value: "it's a link " },
+      { start: 12, end: 34, type: 'link', value: 'https://www.google.com' },
+    ]);
+  });
+
+  it('Should tokenize raw link', () => {
+    const orgDoc = `it's a link https://www.google.com/some-link?hello=123`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
+    expect(result).toEqual([
+      { start: 0, end: 12, type: 'text', value: "it's a link " },
+      {
+        start: 12,
+        end: 54,
+        type: 'link',
+        value: 'https://www.google.com/some-link?hello=123',
+      },
     ]);
   });
 
