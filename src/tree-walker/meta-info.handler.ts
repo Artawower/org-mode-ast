@@ -33,7 +33,7 @@ function normalizeKeywordValue(
   value: string
 ): string | string[] | undefined | boolean {
   const handlers = {
-    filetags: () => value.split(':').filter((v) => !!v),
+    filetags: () => value.split(':').filter((v) => !!v.trim()),
     published: () => !!eval(value.trim()),
   };
   const handler = handlers[key] ?? (() => value.trim());
