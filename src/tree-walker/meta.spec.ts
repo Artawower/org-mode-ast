@@ -18,7 +18,7 @@ describe('Meta information', () => {
       {
         "category": "some category",
         "description": "some description",
-        "filetags": [
+        "fileTags": [
           "tag1",
           "tag2",
         ],
@@ -100,6 +100,50 @@ describe('Meta information', () => {
         ],
         "title": "some title",
       }
+    `);
+  });
+
+  it('Should collect filetags from complex example', () => {
+    const orgDoc = `
+:PROPERTIES:
+:ID: tmp_bucket
+:END:
+#+TITLE: Черный ящик ( ͡° ͜ʖ ͡°)
+#+DESCRIPTION: Временное хранилище для информации к изучению!
+#+STARTUP: show2levels
+#+STARTUP: inlineimages
+#+FILETAGS: :bucket:временное:blackbox:
+#+ACTIVE:
+# 13[[img https://www.befunky.com/images/wp/wp-2014-08-milky-way-1023340_1280.jpg?auto=webp&format=jpg&width=1750&crop=16:9]]
+
+[[./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg]]
+
+Это просто временное, постоянно обновляющееся хранилище для тех вещей который я бы очень хотел изучить и посмотреть, но на которые я не нашел время.
+Кроме того, это нечто вроде мотиватора, когда этот список слишком большой - в мире грустит 1 маленький котенок.`;
+
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "active": "#+ACTIVE:",
+        "description": "Временное хранилище для информации к изучению!",
+        "fileTags": [
+          "bucket",
+          "временное",
+          "blackbox",
+        ],
+        "images": [
+          "./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg",
+        ],
+        "startup": "inlineimages",
+        "title": "Черный ящик ( ͡° ͜ʖ ͡°)",
+      }
+    `);
+    expect(result.meta.fileTags).toMatchInlineSnapshot(`
+      [
+        "bucket",
+        "временное",
+        "blackbox",
+      ]
     `);
   });
 });

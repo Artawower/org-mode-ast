@@ -15,7 +15,12 @@ export function collectFromKeywords(
   const value = orgNode.children.last.rawValue;
   const normalizedValue = normalizeKeywordValue(key, value);
 
-  metaInfo[key] = normalizedValue;
+  metaInfo[normalizeKey(key)] = normalizedValue;
+}
+
+function normalizeKey(key: string): string {
+  const keys = { filetags: 'fileTags' };
+  return keys[key] ?? key;
 }
 
 function normalizeKeywordValue(

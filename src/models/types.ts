@@ -207,6 +207,7 @@ export interface MetaInfo {
   category?: string;
   previewImg?: string;
   linkType?: LinkType;
+  fileTags?: string[];
   [key: string]: string | string[] | undefined | boolean | Heading[];
 }
 
