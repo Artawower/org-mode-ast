@@ -15,6 +15,11 @@ export function collectFromKeywords(
   const value = orgNode.children.last.rawValue;
   const normalizedValue = normalizeKeywordValue(key, value);
 
+  const existingValue = metaInfo[normalizeKey(key)];
+  if (existingValue && Array.isArray(existingValue) && Array.isArray(normalizedValue)) {
+    metaInfo[normalizeKey(key)] = [...existingValue, ...normalizedValue] as any;
+    return;
+  }
   metaInfo[normalizeKey(key)] = normalizedValue;
 }
 

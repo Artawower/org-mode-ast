@@ -146,4 +146,40 @@ describe('Meta information', () => {
       ]
     `);
   });
+
+  it('Should parse filetags from entire document', () => {
+    const orgDoc = `:PROPERTIES:
+:ID: tmp_bucket
+:END:
+#+FILETAGS: :bucket:временное:blackbox:
+* Some heading
+Text
+** Nested heading
+#+FILETAGS: :complex:tag:
+`;
+
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "fileTags": [
+          "bucket",
+          "временное",
+          "blackbox",
+          "complex",
+          "tag",
+        ],
+        "headings": [
+          {
+            "level": 1,
+            "title": "Some heading",
+          },
+          {
+            "level": 2,
+            "title": "Nested heading",
+          },
+        ],
+        "id": "tmp_bucket",
+      }
+    `);
+  });
 });
