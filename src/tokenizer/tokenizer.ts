@@ -194,11 +194,7 @@ export class Tokenizer {
     }
     const isStartLink =
       this.lastToken.value === 'http:' || this.lastToken.value === 'https:';
-    if (
-      isStartLink &&
-      this.text[this.point] === '/' &&
-      this.nextChar === '/' 
-    ) {
+    if (isStartLink && this.text[this.point] === '/' && this.nextChar === '/') {
       return true;
     }
   }
@@ -407,7 +403,7 @@ export class Tokenizer {
     const wasSpace = this.lastToken?.prev?.prev?.isBlank;
     if (
       (wasSpace || wasNewLineOrStartDocument) &&
-      this.isValueNumber(this.lastToken.value)
+      this.isValueNumber(this.lastToken?.value)
     ) {
       this.upsertToken({ type: TokenType.Operator, value: c }, true);
       return;
@@ -432,7 +428,7 @@ export class Tokenizer {
   }
 
   private isValueNumber(value: string): boolean {
-    return !!value.match(/^[0-9]+$/);
+    return !!value?.match(/^[0-9]+$/);
   }
 
   private handleBracket(c: string): void {
@@ -468,7 +464,6 @@ export class Tokenizer {
   }
 
   private handleText(c: string): void {
-
     if (this.lastToken?.isType(TokenType.Link)) {
       this.appendPrevValue(c);
       return;
