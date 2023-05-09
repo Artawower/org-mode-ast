@@ -5,7 +5,7 @@ export function walkTree(node: OrgNode, callback: (node: OrgNode) => boolean) {
   if (finished) {
     return;
   }
-  node.section?.title?.children?.forEach((child) => walkTree(child, callback));
+  node.title?.children?.forEach((child) => walkTree(child, callback));
   node.section?.children?.forEach((child) => walkTree(child, callback));
   node.children?.forEach((child) => walkTree(child, callback));
 }
