@@ -125,10 +125,10 @@ class Parser {
   }
 
   private handleHeadline(): OrgNode {
+    this.ctx.exitList();
     this.ctx.insideHeadline = true;
     const headlineNode = this.astBuilder.createHeadline();
     this.astBuilder.attachToTree(headlineNode);
-    this.ctx.exitList();
     return headlineNode;
   }
 

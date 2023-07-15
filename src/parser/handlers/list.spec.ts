@@ -465,13 +465,13 @@ This text will end list
     expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-55]
-        headline [0-55]
+        headline [0-27]
             :level 1:
           title [0-11]
             operator [0-2] ("* ")
             text [2-10] ("headline")
             newLine [10-11]
-          section [11-55]
+          section [11-27]
             list [11-27]
                 :unordered:
                 :level 0:
@@ -480,20 +480,20 @@ This text will end list
                   operator [11-13] ("- ")
                   text [13-26] ("list 1 item 1")
                   newLine [26-27]
-            headline [27-55]
-                :level 1:
-              title [27-40]
-                operator [27-29] ("* ")
-                text [29-39] ("Headline 2")
-                newLine [39-40]
-              section [40-55]
-                list [40-55]
-                    :unordered:
-                    :level 0:
-                  listItem [40-55]
-                    title [40-55]
-                      operator [40-42] ("- ")
-                      text [42-55] ("list 2 item 1")
+        headline [27-55]
+            :level 1:
+          title [27-40]
+            operator [27-29] ("* ")
+            text [29-39] ("Headline 2")
+            newLine [39-40]
+          section [40-55]
+            list [40-55]
+                :unordered:
+                :level 0:
+              listItem [40-55]
+                title [40-55]
+                  operator [40-42] ("- ")
+                  text [42-55] ("list 2 item 1")
       "
     `);
   });
