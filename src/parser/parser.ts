@@ -128,6 +128,7 @@ class Parser {
     this.ctx.insideHeadline = true;
     const headlineNode = this.astBuilder.createHeadline();
     this.astBuilder.attachToTree(headlineNode);
+    this.ctx.exitList();
     return headlineNode;
   }
 
@@ -179,7 +180,9 @@ class Parser {
   }
 
   private handleRawLink(): OrgNode {
-    const rawLinkNode = this.astBuilder.createRawLinkNode(this.tokenIterator.currentValue);
+    const rawLinkNode = this.astBuilder.createRawLinkNode(
+      this.tokenIterator.currentValue
+    );
     this.astBuilder.attachToTree(rawLinkNode);
     return rawLinkNode;
   }
