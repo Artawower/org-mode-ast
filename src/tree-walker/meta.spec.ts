@@ -182,4 +182,24 @@ Text
       }
     `);
   });
+
+  fit('Should not raise an error when document has no properties', () => {
+    const orgDoc = `:PROPERTIES:
+
+:ID: 45d833f9-9429-491c-993a-59bf462e8f41
+
+:END:
+
+
+#+TITLE:
+`;
+
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "id": "45d833f9-9429-491c-993a-59bf462e8f41",
+        "title": "#+TITLE:",
+      }
+    `);
+  });
 });
