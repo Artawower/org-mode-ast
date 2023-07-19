@@ -1,6 +1,6 @@
 import { OrgNode } from './org-node';
 import { NodeType } from './types';
-import { AstBuilder } from '../parser/index';
+import { AstBuilder, parse } from '../parser/index';
 
 describe('Org node', () => {
   const astBuilder = new AstBuilder({} as any, {} as any);
@@ -958,6 +958,39 @@ describe('Org node', () => {
         "start": 0,
         "type": "root",
       }
+    `);
+  });
+
+  it('Should convert to raw value from complex note', () => {
+    const orgDoc = `:PROPERTIES:
+:ID: kitty-auto-dark-mode
+:END:
+
+#+TITLE: Mac OS. Kitty auto dark mode.
+#+DESCRIPTION: Easy way to configure automatic dark mode for kitty + macos.
+#+FILETAGS: :kitty:terminal:macos:osx:trick:
+#+ID: kitty-auto-dark-mode
+
+* Connected Links
+- [[https://www.reddit.com/r/KittyTerminal/comments/vthmcc/set_kitty_theme_based_on_macos_theme_dark_or_light/][Inspired by this post (reddit)]] 
+* Problem.
+There is no native way to automatically synchronize Kitty terminal theme with the macOS system theme.`;
+
+    const parsed = parse(orgDoc);
+    expect(parsed.rawValue).toMatchInlineSnapshot(`
+      ":PROPERTIES:
+      :ID: kitty-auto-dark-mode
+      :END:
+
+      #+TITLE: Mac OS. Kitty auto dark mode.
+      #+DESCRIPTION: Easy way to configure automatic dark mode for kitty + macos.
+      #+FILETAGS: :kitty:terminal:macos:osx:trick:
+      #+ID: kitty-auto-dark-mode
+
+      * Connected Links
+      - [[https://www.reddit.com/r/KittyTerminal/comments/vthmcc/set_kitty_theme_based_on_macos_theme_dark_or_light/][Inspired by this post (reddit)]] 
+      * Problem.
+      There is no native way to automatically synchronize Kitty terminal theme with the macOS system theme."
     `);
   });
 });

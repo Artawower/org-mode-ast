@@ -72,15 +72,23 @@ export class OrgNode {
     return this.end - this.start;
   }
 
+  // FIXME: master fixme
   /** Return raw text value from node, included nested nodes */
   get rawValue(): string {
-    if (this.children) {
-      return this.getRawValueFromNodes(this.children);
+    let val = '';
+    if (this.title?.children?.length) {
+      val += this.getRawValueFromNodes(this.title.children);
+    }
+    if (this.section?.children?.length) {
+      val += this.getRawValueFromNodes(this.section.children);
+    }
+    if (this.children?.length) {
+      val += this.getRawValueFromNodes(this.children);
     }
     if (this.value) {
-      return this.value;
+      val += this.value;
     }
-    return '';
+    return val;
   }
 
   get cleanValue(): string {
@@ -103,7 +111,11 @@ export class OrgNode {
   }
 
   private getRawValueFromNodes(nodes: OrgChildrenList): string {
-    return nodes.map((n) => n.rawValue).join('');
+    return nodes
+      .map((n) => {
+        return n.rawValue;
+      })
+      .join('');
   }
 
   constructor(nodeData: OrgStruct) {
@@ -386,6 +398,7 @@ export class OrgNode {
 
   // TODO: update start/end positions for this operations
   public appendValue(value: string): void {
+    this.value ??= '';
     this.value += value;
     this.end += value.length;
     this.recalculateParentEnd(value.length);

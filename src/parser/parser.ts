@@ -89,7 +89,6 @@ class Parser {
     const orgData = handler();
 
     if (!orgData) {
-      this.handleEmptyHandlerValue();
       return;
     }
 
@@ -118,10 +117,6 @@ class Parser {
     if (foundHandler) {
       return () => foundHandler.handleHolded();
     }
-  }
-
-  private handleEmptyHandlerValue(): void {
-    // console.info(new HandlerDidNotReturnValue(this.tokenIterator.token));
   }
 
   private handleHeadline(): OrgNode {

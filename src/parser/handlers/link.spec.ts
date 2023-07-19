@@ -194,8 +194,8 @@ describe('Link test', () => {
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-12]
-        text [0-12] ("[\\\\w\\\\[:digit]")
+      "root [0-14]
+        text [0-14] ("[\\\\w\\\\[:digit]]+")
       "
     `);
   });

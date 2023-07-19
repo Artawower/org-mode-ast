@@ -216,7 +216,7 @@ export class BracketHandler implements OrgHandler {
   > = [
     this.handleChecboxBrackets.bind(this),
     this.handleDateBrackets.bind(this),
-    this.handlePriorityBrachets.bind(this),
+    this.handlePriorityBrackets.bind(this),
     this.handleListProgressBrackets.bind(this),
     this.handleFormatBrackets.bind(this),
     this.handleLinkBrackets.bind(this),
@@ -301,7 +301,7 @@ export class BracketHandler implements OrgHandler {
     }
   }
 
-  private handlePriorityBrachets(bracketedNodes: OrgChildrenList): OrgNode {
+  private handlePriorityBrackets(bracketedNodes: OrgChildrenList): OrgNode {
     // TODO: master check if priority inside headline and there no was previous priority
     const isInsideHeadline = bracketedNodes.first?.parent?.parent?.is(
       NodeType.Headline
