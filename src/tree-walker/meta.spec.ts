@@ -183,7 +183,7 @@ Text
     `);
   });
 
-  fit('Should not raise an error when document has no properties', () => {
+  it('Should not raise an error when document has no properties', () => {
     const orgDoc = `:PROPERTIES:
 
 :ID: 45d833f9-9429-491c-993a-59bf462e8f41

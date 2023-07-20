@@ -15,6 +15,7 @@ export class KeywordHandler implements OrgHandler {
   #lastKeyword: OrgNode;
 
   readonly #htmlKeyword = '#+html:';
+  readonly #complexKeyword = ['#+filetags:', '#+property:'];
 
   constructor(
     private readonly configuration: ParserConfiguration,
@@ -29,10 +30,14 @@ export class KeywordHandler implements OrgHandler {
     if (this.tokenIterator.token.isType(TokenType.NewLine)) {
       this.resetLastStoredKeyword();
     }
-    return (
-      this.#lastKeyword?.children.first?.value?.toLowerCase() ===
-      this.#htmlKeyword
-    );
+    const keywordKey = this.#lastKeyword?.children.first?.value?.toLowerCase();
+    const isHtmlKeyword = keywordKey === this.#htmlKeyword;
+    const isSimpleKeyword = !this.#complexKeyword.includes(keywordKey);
+    const isPermittedKeyValueKeyword =
+      isSimpleKeyword &&
+      keywordKey &&
+      keywordKey[keywordKey.length - 1] === ':';
+    return keywordKey && (isHtmlKeyword || isPermittedKeyValueKeyword);
   }
 
   get #isHtmlKeyword(): boolean {

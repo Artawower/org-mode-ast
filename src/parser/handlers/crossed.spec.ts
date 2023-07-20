@@ -49,4 +49,18 @@ describe('Crossed tests', () => {
       "
     `);
   });
+
+  it('Should not split text inside property drawer', () => {
+    const orgDoc = `#+DESCRIPTION: Easy way to configure automatic dark mode for kitty +macos`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-73]
+        keyword [0-73]
+          text [0-14] ("#+DESCRIPTION:")
+          text [14-73] (" Easy way to configure automatic dark mode for kitty +macos")
+      "
+    `);
+  });
 });
