@@ -1,9 +1,50 @@
 name: Publish Package to npmjs
+
 on:
+  push:
+    tags:
+      - 'v*'
   release:
     types: [published]
+
 jobs:
-  build:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: install dependencies
+        run: yarn install --frozen-lockfile
+      - name: run tests
+        run: |
+          yarn test:silent
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare files for lint
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint
+        if: steps.tschangeset.outputs.any_changed == 'true'
+        run: yarn lint
+
+  tagged-release:
+    name: 'Tagged Release'
+    runs-on: 'ubuntu-latest'
+    needs: [tests, lint]
+    steps:
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          prerelease: false
+
+  publish:
+    needs: tagged-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
