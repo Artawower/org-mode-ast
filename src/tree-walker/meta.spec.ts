@@ -124,7 +124,7 @@ describe('Meta information', () => {
     const result = withMetaInfo(parse(orgDoc));
     expect(result.meta).toMatchInlineSnapshot(`
       {
-        "active": "#+ACTIVE:",
+        "active": "",
         "description": "Временное хранилище для информации к изучению!",
         "fileTags": [
           "bucket",
@@ -198,7 +198,17 @@ Text
     expect(result.meta).toMatchInlineSnapshot(`
       {
         "id": "45d833f9-9429-491c-993a-59bf462e8f41",
-        "title": "#+TITLE:",
+        "title": "",
+      }
+    `);
+  });
+
+  it('Should not create description meta info property with empty description keyword', () => {
+    const orgDoc = `#+DESCRIPTION:`;
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "description": "",
       }
     `);
   });

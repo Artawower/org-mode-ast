@@ -1,4 +1,9 @@
-import { MetaInfo, NodeType, OrgNode } from '../models/index.js';
+import {
+  MetaInfo,
+  NodeType,
+  OrgChildrenList,
+  OrgNode,
+} from '../models/index.js';
 import { walkTree } from './tree-walker.js';
 
 export function collectFromKeywords(
@@ -11,16 +16,14 @@ export function collectFromKeywords(
   ) {
     return;
   }
-  const key = orgNode.children.first.value.slice(2, -1).toLowerCase();
-  const value = orgNode.children.last.rawValue;
-  const normalizedValue = normalizeKeywordValue(key, value);
+  const [key, val] = extractKeyValue(orgNode.children, 2, -1);
 
   const existingValue = metaInfo[normalizeKey(key)];
-  if (existingValue && Array.isArray(existingValue) && Array.isArray(normalizedValue)) {
-    metaInfo[normalizeKey(key)] = [...existingValue, ...normalizedValue] as any;
+  if (existingValue && Array.isArray(existingValue) && Array.isArray(val)) {
+    metaInfo[normalizeKey(key)] = [...existingValue, ...val] as any;
     return;
   }
-  metaInfo[normalizeKey(key)] = normalizedValue;
+  metaInfo[normalizeKey(key)] = val;
 }
 
 function normalizeKey(key: string): string {
@@ -51,9 +54,23 @@ export function collectFromProperties(
   ) {
     return;
   }
-  const key = orgNode.children.first.value.slice(1, -1).trim().toLowerCase();
-  const val = normalizeKeywordValue(key, orgNode.children.last.rawValue);
+  const [key, val] = extractKeyValue(orgNode.children, 1, -1);
   metaInfo[key] = val;
+}
+
+function extractKeyValue(
+  nodes: OrgChildrenList,
+  ...range: [number, number]
+): [string, string | string[] | undefined | boolean] {
+  const key = nodes.first.value
+    .slice(...range)
+    .trim()
+    .toLowerCase();
+  const isNoKeywordValue = nodes.length <= 1;
+  const rawKeywordValue = isNoKeywordValue ? '' : nodes.last.rawValue;
+
+  const val = normalizeKeywordValue(key, rawKeywordValue);
+  return [key, val];
 }
 
 export function collectImages(orgNode: OrgNode, metaInfo: MetaInfo): void {
