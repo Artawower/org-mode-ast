@@ -45,17 +45,17 @@ export class Tokenizer {
     const commonAggregators = {
       '*': (c: string) => this.handleAsterisk(c),
       [this.delimiter]: (c: string) => this.handleDelimiter(c),
-      '#': (c: string) => this.handleNumberSign(c),
-      '-': (c: string) => this.handleDash(c),
-      '+': (c: string) => this.handlePlus(c),
-      ':': (c: string) => this.handleColon(c),
-      '.': (c: string) => this.handlePoint(c),
-      ')': (c: string) => this.handleParenthesis(c),
-      '\n': (c: string) => this.handleNewLine(c),
-      '\\': (c: string) => this.handleBackslash(c),
-      '{': (c: string) => this.handleLatexBrackets(c),
-      '}': (c: string) => this.handleLatexBrackets(c),
-      '|': (c: string) => this.handlePipe(c),
+      '#': (c: string) => this.preserveLink(this.handleNumberSign)(c),
+      '-': (c: string) => this.preserveLink(this.handleDash)(c),
+      '+': (c: string) => this.preserveLink(this.handlePlus)(c),
+      ':': (c: string) => this.preserveLink(this.handleColon)(c),
+      '.': (c: string) => this.preserveLink(this.handlePoint)(c),
+      ')': (c: string) => this.preserveLink(this.handleParenthesis)(c),
+      '\n': (c: string) => this.preserveLink(this.handleNewLine)(c),
+      '\\': (c: string) => this.preserveLink(this.handleBackslash)(c),
+      '{': (c: string) => this.preserveLink(this.handleLatexBrackets)(c),
+      '}': (c: string) => this.preserveLink(this.handleLatexBrackets)(c),
+      '|': (c: string) => this.preserveLink(this.handlePipe)(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -94,6 +94,16 @@ export class Tokenizer {
     this.mergeLastPotentialTextTokens();
 
     return this.firstToken;
+  }
+
+  private preserveLink(originalFn: (c: string) => void): (c: string) => void {
+    return (c: string) => {
+      if (this.isPrevToken(TokenType.Link) && !this.isDelimiter(c)) {
+        this.appendPrevValue(c);
+        return;
+      }
+      originalFn.bind(this)(c);
+    };
   }
 
   private handleAsterisk(c: string): void {
