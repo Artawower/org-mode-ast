@@ -1,4 +1,4 @@
-import { NodeType, OrgNode } from 'models';
+import { NodeType, OrgNode } from '../models';
 import { parse } from '../parser';
 
 export function getDiff(newText: string, oldText: string): OrgNode[] {
