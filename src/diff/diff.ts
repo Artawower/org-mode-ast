@@ -1,10 +1,10 @@
 import { NodeType, OrgNode } from 'models';
 import { parse } from '../parser';
 
-export function getDiff(oldText: string, newText: string): OrgNode[] {
-  const oldNode = parse(oldText);
+export function getDiff(newText: string, oldText: string): OrgNode[] {
   const newNode = parse(newText);
-  return findOrgNodesDiff(oldNode, newNode);
+  const oldNode = parse(oldText);
+  return findOrgNodesDiff(newNode, oldNode);
 }
 
 const fieldsToCompare = ['section', 'title'];
@@ -19,7 +19,22 @@ function nodeChanged(newNode: OrgNode, oldNode?: OrgNode): boolean {
   const childrenLengthChanged =
     oldNode.children?.length !== newNode.children?.length;
 
-  return valuesNotEqual || titleOrSectionChanged || childrenLengthChanged;
+  const rangeChanged =
+    oldNode.length < newNode.length &&
+    newNode.isNot(
+      NodeType.Root,
+      NodeType.Title,
+      NodeType.Section,
+      NodeType.List,
+      NodeType.ListItem
+    );
+
+  return (
+    valuesNotEqual ||
+    titleOrSectionChanged ||
+    childrenLengthChanged ||
+    rangeChanged
+  );
 }
 export function findOrgNodesDiff(
   newNode?: OrgNode,
@@ -38,7 +53,6 @@ export function findOrgNodesDiff(
 
   newNode.children?.forEach((newChild, index) => {
     const oldChild = oldNode.children?.get(index);
-    console.log('✎: [line 51][diff.ts] oldChild type: ', oldChild?.type);
     if (!oldChild) {
       changedNodes.push(newChild);
       return;
