@@ -1305,6 +1305,30 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should tokenize table cell with nested dash', () => {
+    const orgDoc = `| -      | 2  |`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { end: 1, start: 0, type: 'tableOperator', value: '|' },
+      { end: 9, start: 1, type: 'text', value: ' -      ' },
+      { end: 10, start: 9, type: 'tableOperator', value: '|' },
+      { end: 14, start: 10, type: 'text', value: ' 2  ' },
+      { end: 15, start: 14, type: 'tableOperator', value: '|' },
+    ]);
+  });
+
+  it('Should tokenize table cell with dash after word', () => {
+    const orgDoc = `| qwa-      | 2  |`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { end: 1, start: 0, type: 'tableOperator', value: '|' },
+      { end: 12, start: 1, type: 'text', value: ' qwa-      ' },
+      { end: 13, start: 12, type: 'tableOperator', value: '|' },
+      { end: 17, start: 13, type: 'text', value: ' 2  ' },
+      { end: 18, start: 17, type: 'tableOperator', value: '|' },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

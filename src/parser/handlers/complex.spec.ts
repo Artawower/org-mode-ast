@@ -4948,4 +4948,25 @@ textarea:focus, input:focus{
       "
     `);
   });
+
+  it('Should parse complex file from real world', () => {
+    const orgDoc = `| +      | 2  |`;
+
+    const result = parse(orgDoc);
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-15]
+        table [0-15]
+          tableRow [0-15]
+            operator [0-1] ("|")
+            tableCell [1-9]
+              text [1-9] (" +      ")
+            operator [9-10] ("|")
+            tableCell [10-14]
+              text [10-14] (" 2  ")
+            operator [14-15] ("|")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });
