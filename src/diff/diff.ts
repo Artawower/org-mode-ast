@@ -1,5 +1,5 @@
-import { NodeType, OrgNode } from '../models';
-import { parse } from '../parser';
+import { NodeType, OrgNode } from '../models/index.js';
+import { parse } from '../parser/index.js';
 
 export function getDiff(newText: string, oldText: string): OrgNode[] {
   const newNode = parse(newText);
