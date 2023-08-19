@@ -63,6 +63,7 @@ export class LatexEnvironmentHandler implements OrgHandler {
       const mergedLatexEnvironmentNode =
         this.#mergeLatexEnvironmentNodes(orgNode);
       this.astBuilder.attachToTree(mergedLatexEnvironmentNode);
+
       this.#endLatexEnvironmentKeyword = undefined;
       return mergedLatexEnvironmentNode;
     }
@@ -79,7 +80,12 @@ export class LatexEnvironmentHandler implements OrgHandler {
     if (isOpenedBracket) {
       return;
     }
-    if (!this.#beginLatexEnvironmentKeyword && latexNameNode.prev) {
+    if (
+      !this.#beginLatexEnvironmentKeyword &&
+      latexNameNode.prev &&
+      latexNameNode.prev.isNot(NodeType.Unresolved)
+    ) {
+      // TODO: master here!!
       this.astBuilder.mergeNeighborsNodesWithSameType(latexNameNode.prev);
       return latexNameNode.prev;
     }
@@ -125,7 +131,6 @@ export class LatexEnvironmentHandler implements OrgHandler {
     nodesBetweenBrackets.push(closedBracket);
     const rawValue = this.astBuilder.getRawValueFromNodes(nodesBetweenBrackets);
     const textNode = this.astBuilder.createTextNode(rawValue);
-
     this.#beginLatexBracket = null;
     return textNode;
   }

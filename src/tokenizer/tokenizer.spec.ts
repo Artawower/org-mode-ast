@@ -1329,6 +1329,49 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should parse inline code with line started from colon', () => {
+    const orgDoc = `1: ~{ hey }~`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 3,
+        start: 0,
+        type: 'text',
+        value: '1: ',
+      },
+      {
+        end: 4,
+        start: 3,
+        type: 'bracket',
+        value: '~',
+      },
+      {
+        end: 5,
+        start: 4,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        end: 10,
+        start: 5,
+        type: 'text',
+        value: ' hey ',
+      },
+      {
+        end: 11,
+        start: 10,
+        type: 'latexBracket',
+        value: '}',
+      },
+      {
+        end: 12,
+        start: 11,
+        type: 'bracket',
+        value: '~',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

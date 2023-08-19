@@ -104,4 +104,20 @@ describe('InlineCode', () => {
       "
     `);
   });
+
+  it('Should parse complex document from real world 2', () => {
+    const orgDoc = `1: ~{ hey }~`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-12]
+        text [0-3] ("1: ")
+        inlineCode [3-12]
+          operator [3-4] ("~")
+          text [4-11] ("{ hey }")
+          operator [11-12] ("~")
+      "
+    `);
+  });
 });

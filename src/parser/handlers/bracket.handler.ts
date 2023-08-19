@@ -109,17 +109,16 @@ export class BracketHandler implements OrgHandler {
 
     const realParent = openedBracket.parent;
 
-    const potentialBraketNodes = realParent.children.getNodesBetweenPairs(
+    const potentialBracketNodes = realParent.children.getNodesBetweenPairs(
       openedBracket,
       closedBracket,
       true
     );
 
-    const orgNode = this.handleBracketSequence(potentialBraketNodes);
+    const orgNode = this.handleBracketSequence(potentialBracketNodes);
 
     if (orgNode) {
-      this.normalizeBracketedNodes(orgNode, potentialBraketNodes);
-      // this.addMetaInfo(orgNode);
+      this.normalizeBracketedNodes(orgNode, potentialBracketNodes);
     }
 
     return orgNode;
