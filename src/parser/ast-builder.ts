@@ -37,9 +37,10 @@ export class AstBuilder {
     this.preserveLastPositionSnapshot(this.nodeTree);
   }
 
-  public attachToTree(orgData: OrgNode): void {
-    const parentNode = this.findParentForNodeType(orgData);
-    parentNode.addChild(orgData);
+  public attachToTree(orgNode: OrgNode): OrgNode {
+    const parentNode = this.findParentForNodeType(orgNode);
+    parentNode.addChild(orgNode);
+    return orgNode;
   }
 
   private findFirstParentNodeWithType(...type: NodeType[]): OrgNode {
@@ -352,7 +353,8 @@ export class AstBuilder {
 
     if (!dstNode.parent) {
       throw new Error(
-        `Something went wrong, couldn't find parent for: [${srcNode.type}: ${srcNode.value}](${srcNode.start}:${srcNode.end}), prev node: [${dstNode.type}: ${dstNode.value}](${dstNode.start}:${dstNode.end})`
+        `Something went wrong, couldn't find parent for:
+   [${srcNode.type}: ${srcNode.value}](${this.tokenIterator.token.start}:${this.tokenIterator.token.end}), prev node: [${dstNode.type}: ${dstNode.value}](${dstNode.start}:${dstNode.end})`
       );
     }
 

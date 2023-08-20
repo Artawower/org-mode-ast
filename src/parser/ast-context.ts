@@ -7,6 +7,9 @@ export class AstContext {
   public insideHeadline: boolean = null;
   public insideKeyword: boolean = null;
   public insideListItem = false;
+  public beginLatexEnvironmentKeyword: OrgNode;
+  public endLatexEnvironmentKeyword: OrgNode;
+  public beginLatexBracket: OrgNode;
 
   // TODO: master move to block handler
   public srcBlockBegin: OrgNode = null;
@@ -77,5 +80,11 @@ export class AstContext {
 
   public resetQuoteBlockInfo(): void {
     this.blockBegin = null;
+  }
+
+  public resetLatexEnvironmentInfo(): void {
+    this.beginLatexEnvironmentKeyword = null;
+    this.endLatexEnvironmentKeyword = null;
+    this.beginLatexBracket = null;
   }
 }

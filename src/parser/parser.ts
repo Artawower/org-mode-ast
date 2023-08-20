@@ -114,7 +114,6 @@ class Parser {
 
   private getOnHoldHandler(): () => OrgNode | void {
     const foundHandler = this.holdOnHandlers.find((h) => h.onHold);
-    // console.log('✎: [line 117][parser.ts] foundHandler: ', foundHandler);
     if (foundHandler) {
       return () => foundHandler.handleHolded();
     }
@@ -260,6 +259,7 @@ export function parse(
   );
   const latexEnvironmentHandler = new LatexEnvironmentHandler(
     configuration,
+    ctx,
     astBuilder,
     tokenIterator
   );

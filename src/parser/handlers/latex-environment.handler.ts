@@ -6,6 +6,7 @@ import {
 } from '../../models/index.js';
 import { AstBuilder } from '../ast-builder.js';
 import { TokenIterator } from '../../tokenizer/index.js';
+import { AstContext } from 'parser/ast-context.js';
 
 export class LatexEnvironmentHandler implements OrgHandler {
   readonly #latexOpenedBracket = '{';
@@ -20,13 +21,9 @@ export class LatexEnvironmentHandler implements OrgHandler {
     end: '\\end',
   };
 
-  #beginLatexEnvironmentKeyword: OrgNode;
-  #endLatexEnvironmentKeyword: OrgNode;
-
-  #beginLatexBracket: OrgNode;
-
   constructor(
     private readonly configuration: ParserConfiguration,
+    private readonly ctx: AstContext,
     private readonly astBuilder: AstBuilder,
     private readonly tokenIterator: TokenIterator
   ) {}
@@ -42,7 +39,8 @@ export class LatexEnvironmentHandler implements OrgHandler {
   }
 
   public handle(): OrgNode {
-    if (this.#isLatexBrackets()) {
+    const isLatexBracket = this.#isLatexBrackets();
+    if (isLatexBracket) {
       return this.#handleLatexBracket();
     }
     return this.#handleLatexEnvironmentKeyword();
@@ -55,16 +53,23 @@ export class LatexEnvironmentHandler implements OrgHandler {
       ? this.#handleOpenedLatexBracket()
       : this.#handleClosedLatexBracket();
 
+    if (!orgNode && !isOpenedBracket) {
+      const textNode = this.astBuilder.attachToTree(
+        this.astBuilder.createTextNode(this.tokenIterator.currentValue)
+      );
+      return textNode;
+    }
+
     if (!orgNode) {
       return;
     }
 
-    if (!isOpenedBracket && this.#endLatexEnvironmentKeyword) {
+    if (!isOpenedBracket && this.ctx.endLatexEnvironmentKeyword) {
       const mergedLatexEnvironmentNode =
         this.#mergeLatexEnvironmentNodes(orgNode);
       this.astBuilder.attachToTree(mergedLatexEnvironmentNode);
 
-      this.#endLatexEnvironmentKeyword = undefined;
+      this.ctx.endLatexEnvironmentKeyword = undefined;
       return mergedLatexEnvironmentNode;
     }
 
@@ -81,7 +86,7 @@ export class LatexEnvironmentHandler implements OrgHandler {
       return;
     }
     if (
-      !this.#beginLatexEnvironmentKeyword &&
+      !this.ctx.beginLatexEnvironmentKeyword &&
       latexNameNode.prev &&
       latexNameNode.prev.isNot(NodeType.Unresolved)
     ) {
@@ -92,54 +97,55 @@ export class LatexEnvironmentHandler implements OrgHandler {
   }
 
   #handleOpenedLatexBracket(): OrgNode {
-    if (this.#beginLatexBracket) {
+    if (this.ctx.beginLatexBracket) {
       this.#mergePreviousLatexBracket();
     }
-    this.#beginLatexBracket = this.astBuilder.createUnresolvedNode();
-    return this.#beginLatexBracket;
+
+    this.ctx.beginLatexBracket = this.astBuilder.createUnresolvedNode();
+    return this.ctx.beginLatexBracket;
   }
 
   #mergePreviousLatexBracket(): void {
-    this.#beginLatexBracket.type = NodeType.Text;
+    this.ctx.beginLatexBracket.type = NodeType.Text;
     this.astBuilder.mergeNeighborsNodesWithSameType(
-      this.#beginLatexBracket,
+      this.ctx.beginLatexBracket,
       NodeType.Text
     );
-    this.#beginLatexBracket = undefined;
+    this.ctx.beginLatexBracket = undefined;
   }
 
   #handleClosedLatexBracket(): OrgNode {
-    if (!this.#beginLatexBracket) {
+    if (!this.ctx.beginLatexBracket) {
       return this.astBuilder.createTextNode(this.tokenIterator.currentValue);
     }
     const closedBracket = this.astBuilder.createUnresolvedNode(
       this.tokenIterator.currentValue
     );
-    const realParent = this.#beginLatexBracket.parent;
+    const realParent = this.ctx.beginLatexBracket.parent;
     if (!realParent) {
       return;
     }
     const nodesBetweenBrackets = realParent.children.getNodesBetweenPairs(
-      this.#beginLatexBracket,
+      this.ctx.beginLatexBracket,
       null,
       true
     );
     this.astBuilder.lastNode =
-      this.#beginLatexBracket.prev ?? this.#beginLatexBracket.parent;
+      this.ctx.beginLatexBracket.prev ?? this.ctx.beginLatexBracket.parent;
 
     realParent.removeChildren(nodesBetweenBrackets);
     nodesBetweenBrackets.push(closedBracket);
     const rawValue = this.astBuilder.getRawValueFromNodes(nodesBetweenBrackets);
     const textNode = this.astBuilder.createTextNode(rawValue);
-    this.#beginLatexBracket = null;
+    this.ctx.beginLatexBracket = null;
     return textNode;
   }
 
   #mergeLatexEnvironmentNodes(latexNameNode: OrgNode): OrgNode {
-    const realParent = this.#beginLatexEnvironmentKeyword.parent;
+    const realParent = this.ctx.beginLatexEnvironmentKeyword.parent;
     const nodesBetweenLatexEnvironmentKeywords =
       realParent.children.getNodesBetweenPairs(
-        this.#beginLatexEnvironmentKeyword,
+        this.ctx.beginLatexEnvironmentKeyword,
         latexNameNode,
         true
       );
@@ -166,14 +172,14 @@ export class LatexEnvironmentHandler implements OrgHandler {
     );
 
     if (this.isBeginLatexEnvironmentKeyword) {
-      this.#beginLatexEnvironmentKeyword = orgNode;
+      this.ctx.beginLatexEnvironmentKeyword = orgNode;
     }
 
     if (
-      this.#beginLatexEnvironmentKeyword &&
+      this.ctx.beginLatexEnvironmentKeyword &&
       this.isEndLatexEnvironmentKeyword
     ) {
-      this.#endLatexEnvironmentKeyword = orgNode;
+      this.ctx.endLatexEnvironmentKeyword = orgNode;
     }
 
     this.astBuilder.attachToTree(orgNode);
@@ -189,14 +195,16 @@ export class LatexEnvironmentHandler implements OrgHandler {
   }
 
   public handleEndOfFile(): void {
-    if (this.#beginLatexEnvironmentKeyword) {
+    if (this.ctx.beginLatexEnvironmentKeyword) {
       this.astBuilder.mergeNeighborsNodesWithSameType(
-        this.#beginLatexEnvironmentKeyword
+        this.ctx.beginLatexEnvironmentKeyword
       );
       return;
     }
-    if (this.#beginLatexBracket) {
-      this.astBuilder.mergeNeighborsNodesWithSameType(this.#beginLatexBracket);
+    if (this.ctx.beginLatexBracket) {
+      this.astBuilder.mergeNeighborsNodesWithSameType(
+        this.ctx.beginLatexBracket
+      );
     }
   }
 }

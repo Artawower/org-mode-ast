@@ -78,6 +78,7 @@ export class BlockHandler implements OrgHandler {
     if (position === 'end' && this.ctx.srcBlockBegin) {
       this.mergeNodesBetweenBlockKeywords(this.ctx.srcBlockBegin, type, true);
       this.ctx.resetSrcBlockInfo();
+      this.ctx.resetLatexEnvironmentInfo();
     }
 
     this.astBuilder.attachToTree(keywordNode);

@@ -1372,6 +1372,152 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should tokenize src block with potential latex keywords', () => {
+    const orgDoc = `#+BEGIN_SRC typescript
+  private initAuthConfig(): void {
+    this.authConfig = {
+    };
+  }
+  #+END_SRC`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      {
+        end: 11,
+        start: 0,
+        type: 'keyword',
+        value: '#+BEGIN_SRC',
+      },
+      {
+        end: 22,
+        start: 11,
+        type: 'text',
+        value: ' typescript',
+      },
+      {
+        end: 23,
+        start: 22,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 25,
+        start: 23,
+        type: 'indent',
+        value: '  ',
+      },
+      {
+        end: 56,
+        start: 25,
+        type: 'text',
+        value: 'private initAuthConfig(): void ',
+      },
+      {
+        end: 57,
+        start: 56,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        end: 58,
+        start: 57,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 62,
+        start: 58,
+        type: 'indent',
+        value: '    ',
+      },
+      {
+        end: 78,
+        start: 62,
+        type: 'text',
+        value: 'this.authConfig ',
+      },
+      {
+        end: 79,
+        start: 78,
+        type: 'bracket',
+        value: '=',
+      },
+      {
+        end: 80,
+        start: 79,
+        type: 'text',
+        value: ' ',
+      },
+      {
+        end: 81,
+        start: 80,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        end: 82,
+        start: 81,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 86,
+        start: 82,
+        type: 'indent',
+        value: '    ',
+      },
+      {
+        end: 87,
+        start: 86,
+        type: 'latexBracket',
+        value: '}',
+      },
+      {
+        end: 88,
+        start: 87,
+        type: 'text',
+        value: ';',
+      },
+      {
+        end: 89,
+        start: 88,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 91,
+        start: 89,
+        type: 'indent',
+        value: '  ',
+      },
+      {
+        end: 92,
+        start: 91,
+        type: 'latexBracket',
+        value: '}',
+      },
+      {
+        end: 93,
+        start: 92,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 95,
+        start: 93,
+        type: 'indent',
+        value: '  ',
+      },
+      {
+        end: 104,
+        start: 95,
+        type: 'keyword',
+        value: '#+END_SRC',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

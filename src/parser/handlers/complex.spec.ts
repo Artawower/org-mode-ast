@@ -4288,13 +4288,13 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     operator [29411-29412] ("]")
                   operator [29412-29413] ("]")
                 newLine [29413-29414]
-        headline [29414-29781]
+        headline [29414-30244]
             :level 1:
           title [29414-29422]
             operator [29414-29416] ("* ")
             text [29416-29421] ("Тесты")
             newLine [29421-29422]
-          section [29422-29781]
+          section [29422-30244]
             text [29422-29551] ("Тесты пишутся весьма просто. От части потому что не нужно мокать кучу зависимостей. Функция в большинстве случаев самодостаточна.")
             newLine [29551-29552]
             newLine [29552-29553]
@@ -4336,7 +4336,55 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               blockFooter [29775-29781]
                 keyword [29775-29781]
                   text [29775-29781] ("#+END_")
-        headline [29781-29877]
+            text [29781-29789] ("{HIDDEN}")
+            newLine [29789-29790]
+            newLine [29790-29791]
+            srcBlock [29791-29854]
+              blockHeader [29791-29813]
+                keyword [29791-29813]
+                  text [29791-29802] ("#+begin_src")
+                  text [29802-29813] (" emacs-lisp")
+              newLine [29813-29814]
+              blockBody [29814-29844]
+                text [29814-29844] ("(setq v (dolist (i '(1 2 3 4))")
+              newLine [29844-29845]
+              blockFooter [29845-29854]
+                keyword [29845-29854]
+                  text [29845-29854] ("#+end_src")
+            newLine [29854-29855]
+            keyword [29855-29866]
+              text [29855-29865] ("#+RESULTS:")
+              text [29865-29866] (" ")
+            newLine [29866-29867]
+            fixedWidth [29867-29872]
+              operator [29867-29869] (": ")
+              text [29869-29872] ("nil")
+            newLine [29872-29873]
+            newLine [29873-29874]
+            newLine [29874-29875]
+            headline [29875-30244]
+                :level 2:
+              title [29875-29889]
+                operator [29875-29878] ("** ")
+                text [29878-29888] ("Check json")
+                newLine [29888-29889]
+              section [29889-30244]
+                srcBlock [29889-30233]
+                  blockHeader [29889-29911]
+                    keyword [29889-29911]
+                      text [29889-29900] ("#+begin_src")
+                      text [29900-29911] (" emacs-lisp")
+                  newLine [29911-29912]
+                  blockBody [29912-30223]
+                    text [29912-30223] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
+                  newLine [30223-30224]
+                  blockFooter [30224-30233]
+                    keyword [30224-30233]
+                      text [30224-30233] ("#+end_src")
+                newLine [30233-30234]
+                keyword [30234-30244]
+                  text [30234-30244] ("#+RESULTS:")
+        headline [30244-30340]
             :level 1:
           title [29775-29802]
             operator [29775-29777] ("* ")
@@ -4356,7 +4404,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 operator [29868-29869] ("]")
               operator [29869-29870] ("]")
             newLine [29870-29871]
-        headline [29877-32263]
+        headline [30340-32263]
             :level 1:
           title [29871-29893]
             operator [29871-29873] ("* ")
@@ -4366,7 +4414,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               text [29883-29891] ("noexport")
               operator [29891-29892] (":")
             newLine [29892-29893]
-          section [29893-32257]
+          section [29893-31794]
             srcBlock [29893-29955]
               blockHeader [29893-29915]
                 keyword [29893-29915]
@@ -4388,9 +4436,9 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               newLine [29978-29979]
               blockBody [29979-30081]
                 text [29979-30081] ("(message \\"%s\\" (string-match \\"{\\\\|);?$\\" \\"public replaceNonPrintableCharacters(text: string): string {\\"))")
-              newLine [30085-30086]
-              blockFooter [30086-30095]
-                keyword [30086-30095]
+              newLine [30081-30082]
+              blockFooter [30082-30091]
+                keyword [30082-30091]
                   text [30082-30091] ("#+end_src")
             newLine [30091-30092]
             keyword [30092-30103]
@@ -4483,54 +4531,11 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               operator [31751-31753] (": ")
               text [31753-31756] ("nil")
             newLine [31756-31757]
-            text [31757-31765] ("{HIDDEN}")
-            newLine [31765-31766]
-            newLine [31766-31767]
-            srcBlock [31767-31867]
-              blockHeader [31767-31789]
-                keyword [31767-31789]
-                  text [31767-31778] ("#+begin_src")
-                  text [31778-31789] (" emacs-lisp")
-              newLine [31789-31790]
-              blockBody [31790-31857]
-                text [31790-31857] ("(setq v (dolist (i '(1 2 3 4))\\n                i))\\n(message \\"%s\\" v)")
-              newLine [31857-31858]
-              blockFooter [31858-31867]
-                keyword [31858-31867]
-                  text [31858-31867] ("#+end_src")
-            newLine [31867-31868]
-            keyword [31868-31879]
-              text [31868-31878] ("#+RESULTS:")
-              text [31878-31879] (" ")
-            newLine [31879-31880]
-            fixedWidth [31880-31885]
-              operator [31880-31882] (": ")
-              text [31882-31885] ("nil")
-            newLine [31885-31886]
-            newLine [31886-31887]
-            newLine [31887-31888]
-            headline [31888-32257]
-                :level 2:
-              title [31888-31902]
-                operator [31888-31891] ("** ")
-                text [31891-31901] ("Check json")
-                newLine [31901-31902]
-              section [31902-32257]
-                srcBlock [31902-32246]
-                  blockHeader [31902-31924]
-                    keyword [31902-31924]
-                      text [31902-31913] ("#+begin_src")
-                      text [31913-31924] (" emacs-lisp")
-                  newLine [31924-31925]
-                  blockBody [31925-32236]
-                    text [31925-32236] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
-                  newLine [32236-32237]
-                  blockFooter [32237-32246]
-                    keyword [32237-32246]
-                      text [32237-32246] ("#+end_src")
-                newLine [32246-32247]
-                keyword [32247-32257]
-                  text [32247-32257] ("#+RESULTS:")
+            indent [31757-31773] ("                ")
+            text [31773-31776] ("i))")
+            newLine [31776-31777]
+            text [31777-31793] ("(message \\"%s\\" v)")
+            newLine [31793-31794]
       "
     `);
   });
@@ -4622,7 +4627,7 @@ textarea:focus, input:focus{
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-2188]
+      "root [0-2199]
           :id  scss:
         propertyDrawer [0-28]
           property [0-12]
@@ -4906,20 +4911,20 @@ textarea:focus, input:focus{
                 text [1265-1378] (".example {\\n  overflow: hidden;\\n  display: -webkit-box;\\n  -webkit-line-clamp: 3;\\n  -webkit-box-orient: vertical;\\n}")
                 newLine [1378-1379]
                 newLine [1379-1380]
-        headline [1380-2188]
+        headline [1380-2199]
             :level 1:
           title [1380-1390]
             operator [1380-1382] ("* ")
             text [1382-1389] ("Миксины")
             newLine [1389-1390]
-          section [1390-2188]
-            headline [1390-2188]
+          section [1390-2199]
+            headline [1390-2199]
                 :level 2:
               title [1390-1417]
                 operator [1390-1393] ("** ")
                 text [1393-1416] ("Mixin для media queries")
                 newLine [1416-1417]
-              section [1417-2188]
+              section [1417-2199]
                 link [1417-1490]
                     :linkType network:
                   operator [1417-1418] ("[")
@@ -4933,18 +4938,18 @@ textarea:focus, input:focus{
                     operator [1488-1489] ("]")
                   operator [1489-1490] ("]")
                 newLine [1490-1491]
-                srcBlock [1491-2188]
+                srcBlock [1491-2199]
                   blockHeader [1491-1507]
                     keyword [1491-1507]
                       text [1491-1502] ("#+BEGIN_SRC")
                       text [1502-1507] (" scss")
                   newLine [1507-1508]
-                  blockBody [1508-2178]
-                    text [1508-2178] ("@mixin breakpoint($breakpoint, $direction) {\\n  @if map-has-key($breakpoints, $breakpoint) {\\n\\n    // Get the breakpoint value.\\n    $breakpoint-value: map-get($breakpoints, $breakpoint);\\n\\n    @if $direction == max {{\\n      @media (max-width: ($breakpoint-value - 1)) {{\\n        @content;\\n      \\n     @else if $direction == min {{\\n      @media (min-width: $breakpoint-value) {{\\n        @content;\\n      \\n    \\n\\n  // If the breakpoint doesn't exist in the map.\\n   @else {\\n    @if $direction == max {{\\n      @media (max-width: $breakpoint) {{\\n        @content;\\n      \\n     @else if $direction == min {{\\n      @media (min-width: $breakpoint) {\\n        @content;\\n      \\n    \\n  \\n\\n")
-                  newLine [2179-2180]
-                  blockFooter [2180-2189]
-                    keyword [2180-2189]
-                      text [2179-2188] ("#+END_SRC")
+                  blockBody [1508-2189]
+                    text [1508-2189] ("@mixin breakpoint($breakpoint, $direction) {\\n  @if map-has-key($breakpoints, $breakpoint) {\\n\\n    // Get the breakpoint value.\\n    $breakpoint-value: map-get($breakpoints, $breakpoint);\\n\\n    @if $direction == max {{\\n      @media (max-width: ($breakpoint-value - 1)) {{\\n        @content;\\n      }\\n    } @else if $direction == min {{\\n      @media (min-width: $breakpoint-value) {{\\n        @content;\\n      }\\n    }\\n\\n  // If the breakpoint doesn't exist in the map.\\n  } @else {\\n    @if $direction == max {{\\n      @media (max-width: $breakpoint) {{\\n        @content;\\n      }\\n    } @else if $direction == min {{\\n      @media (min-width: $breakpoint) {\\n        @content;\\n      }\\n    }\\n  }\\n}\\n")
+                  newLine [2189-2190]
+                  blockFooter [2190-2199]
+                    keyword [2190-2199]
+                      text [2190-2199] ("#+END_SRC")
       "
     `);
   });

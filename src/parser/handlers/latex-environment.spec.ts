@@ -124,4 +124,31 @@ describe('Latex environment', () => {
       "
     `);
   });
+
+  it('Should extract stored latex envrionment keywords when src block end', () => {
+    const orgDoc = `#+BEGIN_SRC typescript
+  private initAuthConfig(): void {
+    this.authConfig = {
+    };
+  }
+  #+END_SRC`;
+    const result = parse(orgDoc);
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-104]
+        srcBlock [0-104]
+          blockHeader [0-22]
+            keyword [0-22]
+              text [0-11] ("#+BEGIN_SRC")
+              text [11-22] (" typescript")
+          newLine [22-23]
+          blockBody [23-95]
+            text [23-95] ("  private initAuthConfig(): void {\\n    this.authConfig = {\\n    };\\n  }\\n  ")
+          blockFooter [95-104]
+            keyword [95-104]
+              text [95-104] ("#+END_SRC")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });
