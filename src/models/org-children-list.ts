@@ -262,13 +262,13 @@ export class OrgChildrenList implements Iterable<OrgNode> {
    * @desc Return nodes between two nodes
    * @param startNode - The starting node to begin the search from
    * @param endNode - The ending node to finish the search at
-   * @param [includeParis=false] - Whether to include the startNode and endNode in the returned list
+   * @param [includePairs=false] - Whether to include the startNode and endNode in the returned list
    * @returns {OrgChildrenList} - A new OrgChildrenList instance containing the nodes between the startNode and endNode
    */
   public getNodesBetweenPairs(
     startNode: OrgNode,
     endNode?: OrgNode,
-    includeParis = false
+    includePairs = false
   ): OrgChildrenList {
     const foundNodes = new OrgChildrenList();
     let currentOrgListChild = this.header;
@@ -279,7 +279,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
       currentOrgListChild = currentOrgListChild.next;
 
       if (endNode && currentNode === endNode) {
-        if (includeParis) {
+        if (includePairs) {
           foundNodes.push(currentNode);
         }
         return foundNodes;
@@ -287,7 +287,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
 
       if (currentNode === startNode) {
         startNodeFound = true;
-        if (includeParis) {
+        if (includePairs) {
           foundNodes.push(currentNode);
         }
         continue;

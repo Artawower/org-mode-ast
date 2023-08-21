@@ -11,10 +11,6 @@ import { AstContext } from 'parser/ast-context.js';
 export class LatexEnvironmentHandler implements OrgHandler {
   readonly #latexOpenedBracket = '{';
   readonly #latexClosedBracket = '}';
-  readonly #latexBrackets: string[] = [
-    this.#latexOpenedBracket,
-    this.#latexClosedBracket,
-  ];
 
   readonly #latexEnvironmentBlocks = {
     begin: '\\begin',
@@ -43,6 +39,7 @@ export class LatexEnvironmentHandler implements OrgHandler {
     if (isLatexBracket) {
       return this.#handleLatexBracket();
     }
+
     return this.#handleLatexEnvironmentKeyword();
   }
 
@@ -65,8 +62,10 @@ export class LatexEnvironmentHandler implements OrgHandler {
     }
 
     if (!isOpenedBracket && this.ctx.endLatexEnvironmentKeyword) {
+      this.astBuilder.attachToTree(orgNode);
       const mergedLatexEnvironmentNode =
         this.#mergeLatexEnvironmentNodes(orgNode);
+
       this.astBuilder.attachToTree(mergedLatexEnvironmentNode);
 
       this.ctx.endLatexEnvironmentKeyword = undefined;
@@ -91,7 +90,9 @@ export class LatexEnvironmentHandler implements OrgHandler {
       latexNameNode.prev.isNot(NodeType.Unresolved)
     ) {
       // TODO: master here!!
-      this.astBuilder.mergeNeighborsNodesWithSameType(latexNameNode.prev);
+      this.astBuilder.mergeNeighborsNodesWithSameType(
+        this.ctx.beginLatexEnvironmentKeyword
+      );
       return latexNameNode.prev;
     }
   }
@@ -187,7 +188,12 @@ export class LatexEnvironmentHandler implements OrgHandler {
   }
 
   #isLatexBrackets(): boolean {
-    return this.#latexBrackets.includes(this.tokenIterator.currentValue);
+    const isClosedLatexBracket =
+      this.tokenIterator.currentValue === this.#latexClosedBracket;
+    const isOpenedLatexBracket =
+      this.astBuilder.lastNode?.value === '\\begin' &&
+      this.tokenIterator.currentValue === this.#latexOpenedBracket;
+    return isClosedLatexBracket || isOpenedLatexBracket;
   }
 
   public isLatexEnvironmentKeyword(keyword: string): boolean {

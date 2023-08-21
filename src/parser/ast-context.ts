@@ -1,4 +1,4 @@
-import { OrgNode } from '../models/index.js';
+import { OrgChildrenList, OrgNode } from '../models/index.js';
 
 export class AstContext {
   #nextIndentNode: OrgNode;
@@ -10,6 +10,7 @@ export class AstContext {
   public beginLatexEnvironmentKeyword: OrgNode;
   public endLatexEnvironmentKeyword: OrgNode;
   public beginLatexBracket: OrgNode;
+  public bracketsStack: OrgChildrenList = new OrgChildrenList();
 
   // TODO: master move to block handler
   public srcBlockBegin: OrgNode = null;

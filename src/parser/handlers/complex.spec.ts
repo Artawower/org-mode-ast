@@ -1220,9 +1220,11 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 text [789-795] ("Ссылки")
                 newLine [795-796]
               section [796-2007]
-                keyword [796-839]
-                  text [796-839] ("#+START_{SPOILER} Ресурсы для ознакомления ")
-                text [839-840] (">")
+                keyword [796-812]
+                  text [796-804] ("#+START_")
+                  text [804-812] ("{SPOILER")
+                text [812-813] ("}")
+                text [813-840] (" Ресурсы для ознакомления >")
                 newLine [840-841]
                 newLine [841-842]
                 list [842-1989]
@@ -1420,8 +1422,10 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           operator [1986-1987] ("]")
                         operator [1987-1988] ("]")
                       newLine [1988-1989]
-                keyword [1989-2006]
-                  text [1989-2006] ("#+CLOSE_{SPOILER}")
+                keyword [1989-2005]
+                  text [1989-1997] ("#+CLOSE_")
+                  text [1997-2005] ("{SPOILER")
+                text [2005-2006] ("}")
                 newLine [2006-2007]
             headline [2007-2216]
                 :level 2:
@@ -1480,9 +1484,11 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 text [2288-2322] ("Типы данных, переменные, константы")
                 newLine [2322-2323]
               section [2323-10793]
-                keyword [2323-2354]
-                  text [2323-2354] ("#+START_{SPOILER} Основа языка ")
-                text [2354-2355] (">")
+                keyword [2323-2339]
+                  text [2323-2331] ("#+START_")
+                  text [2331-2339] ("{SPOILER")
+                text [2339-2340] ("}")
+                text [2340-2355] (" Основа языка >")
                 newLine [2355-2356]
                 newLine [2356-2357]
                 headline [2357-2745]
@@ -2455,8 +2461,10 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       operator [10772-10773] ("=")
                     newLine [10773-10774]
                     newLine [10774-10775]
-                    keyword [10775-10792]
-                      text [10775-10792] ("#+CLOSE_{SPOILER}")
+                    keyword [10775-10791]
+                      text [10775-10783] ("#+CLOSE_")
+                      text [10783-10791] ("{SPOILER")
+                    text [10791-10792] ("}")
                     newLine [10792-10793]
             headline [10793-14274]
                 :level 2:
@@ -2465,9 +2473,11 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 text [10796-10803] ("Функции")
                 newLine [10803-10804]
               section [10804-14274]
-                keyword [10804-10841]
-                  text [10804-10841] ("#+START_{SPOILER} Читать про функции ")
-                text [10841-10842] (">")
+                keyword [10804-10820]
+                  text [10804-10812] ("#+START_")
+                  text [10812-10820] ("{SPOILER")
+                text [10820-10821] ("}")
+                text [10821-10842] (" Читать про функции >")
                 newLine [10842-10843]
                 newLine [10843-10844]
                 headline [10844-11305]
@@ -2757,8 +2767,10 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       text [13836-13851] ("res: (:by man!)")
                     newLine [13851-13852]
                     newLine [13852-13853]
-                    keyword [13853-13870]
-                      text [13853-13870] ("#+CLOSE_{SPOILER}")
+                    keyword [13853-13869]
+                      text [13853-13861] ("#+CLOSE_")
+                      text [13861-13869] ("{SPOILER")
+                    text [13869-13870] ("}")
                     newLine [13870-13871]
                 headline [13871-14274]
                     :level 3:
@@ -2825,9 +2837,11 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               section [14287-15664]
                 text [14287-14393] ("Орпеторы это точно такие же функции. Вынес в отдельную категорию т.к. в большинстве языков это инструкции.")
                 newLine [14393-14394]
-                keyword [14394-14419]
-                  text [14394-14419] ("#+START_{SPOILER} Детали ")
-                text [14419-14420] (">")
+                keyword [14394-14410]
+                  text [14394-14402] ("#+START_")
+                  text [14402-14410] ("{SPOILER")
+                text [14410-14411] ("}")
+                text [14411-14420] (" Детали >")
                 newLine [14420-14421]
                 newLine [14421-14422]
                 headline [14422-14601]
@@ -2946,8 +2960,10 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       text [15643-15644] ("4")
                     newLine [15644-15645]
                     newLine [15645-15646]
-                    keyword [15646-15663]
-                      text [15646-15663] ("#+CLOSE_{SPOILER}")
+                    keyword [15646-15662]
+                      text [15646-15654] ("#+CLOSE_")
+                      text [15654-15662] ("{SPOILER")
+                    text [15662-15663] ("}")
                     newLine [15663-15664]
             headline [15664-20337]
                 :level 2:
@@ -2956,9 +2972,11 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 text [15667-15689] ("Взаимодействие с emacs")
                 newLine [15689-15690]
               section [15690-20337]
-                keyword [15690-15715]
-                  text [15690-15715] ("#+START_{SPOILER} Детали ")
-                text [15715-15716] (">")
+                keyword [15690-15706]
+                  text [15690-15698] ("#+START_")
+                  text [15698-15706] ("{SPOILER")
+                text [15706-15707] ("}")
+                text [15707-15716] (" Детали >")
                 newLine [15716-15717]
                 newLine [15717-15718]
                 headline [15718-15801]
@@ -3325,8 +3343,10 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       text [19082-19091] ("something")
                     newLine [19091-19092]
                     newLine [19092-19093]
-                    keyword [19093-19110]
-                      text [19093-19110] ("#+CLOSE_{SPOILER}")
+                    keyword [19093-19109]
+                      text [19093-19101] ("#+CLOSE_")
+                      text [19101-19109] ("{SPOILER")
+                    text [19109-19110] ("}")
                     newLine [19110-19111]
                 headline [19111-20192]
                     :level 3:
@@ -3621,7 +3641,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           text [21501-21512] (" emacs-lisp")
                       newLine [21512-21513]
                       blockBody [21513-21676]
-                        text [21513-21676] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]*[[:blank:]]?(\\\\(?2:[^\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\}-[0-9]\\\\{2\\\\}-[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
+                        text [21513-21676] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]*[[:blank:]]?(\\\\(?2:[^\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\-}[0-9]\\\\{2\\\\-}[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
                       newLine [21676-21677]
                       blockFooter [21677-21686]
                         keyword [21677-21686]
@@ -4327,16 +4347,21 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [29748-29757]
                   text [29748-29757] ("#+end_src")
             newLine [29757-29758]
-            undefined [29758-29781]
+            undefined [29758-29788]
+                :language :
               blockHeader [29758-29774]
-                keyword [29758-29774]
-                  text [29758-29774] ("#+BEGIN_{HIDDEN}")
+                keyword [29758-29773]
+                  text [29758-29766] ("#+BEGIN_")
+                  text [29766-29773] ("{HIDDEN")
+                blockLanguage [29773-29774] ("}")
+                    :language :
               newLine [29774-29775]
               blockBody [29775-29775]
-              blockFooter [29775-29781]
-                keyword [29775-29781]
+              blockFooter [29775-29788]
+                keyword [29775-29788]
                   text [29775-29781] ("#+END_")
-            text [29781-29789] ("{HIDDEN}")
+                  text [29781-29788] ("{HIDDEN")
+            text [29788-29789] ("}")
             newLine [29789-29790]
             newLine [29790-29791]
             srcBlock [29791-29854]
@@ -4627,7 +4652,7 @@ textarea:focus, input:focus{
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-2199]
+      "root [0-2192]
           :id  scss:
         propertyDrawer [0-28]
           property [0-12]
@@ -4908,23 +4933,38 @@ textarea:focus, input:focus{
                   text [1248-1259] ("#+BEGIN_SRC")
                   text [1259-1264] (" scss")
                 newLine [1264-1265]
-                text [1265-1378] (".example {\\n  overflow: hidden;\\n  display: -webkit-box;\\n  -webkit-line-clamp: 3;\\n  -webkit-box-orient: vertical;\\n}")
+                text [1265-1274] (".example ")
+                text [1274-1275] ("{")
+                newLine [1275-1276]
+                indent [1276-1278] ("  ")
+                text [1278-1295] ("overflow: hidden;")
+                newLine [1295-1296]
+                indent [1296-1298] ("  ")
+                text [1298-1319] ("display: -webkit-box;")
+                newLine [1319-1320]
+                indent [1320-1322] ("  ")
+                text [1322-1344] ("-webkit-line-clamp: 3;")
+                newLine [1344-1345]
+                indent [1345-1347] ("  ")
+                text [1347-1376] ("-webkit-box-orient: vertical;")
+                newLine [1376-1377]
+                text [1377-1378] ("}")
                 newLine [1378-1379]
                 newLine [1379-1380]
-        headline [1380-2199]
+        headline [1380-2192]
             :level 1:
           title [1380-1390]
             operator [1380-1382] ("* ")
             text [1382-1389] ("Миксины")
             newLine [1389-1390]
-          section [1390-2199]
-            headline [1390-2199]
+          section [1390-2192]
+            headline [1390-2192]
                 :level 2:
               title [1390-1417]
                 operator [1390-1393] ("** ")
                 text [1393-1416] ("Mixin для media queries")
                 newLine [1416-1417]
-              section [1417-2199]
+              section [1417-2192]
                 link [1417-1490]
                     :linkType network:
                   operator [1417-1418] ("[")
@@ -4938,18 +4978,18 @@ textarea:focus, input:focus{
                     operator [1488-1489] ("]")
                   operator [1489-1490] ("]")
                 newLine [1490-1491]
-                srcBlock [1491-2199]
+                srcBlock [1491-2192]
                   blockHeader [1491-1507]
                     keyword [1491-1507]
                       text [1491-1502] ("#+BEGIN_SRC")
                       text [1502-1507] (" scss")
                   newLine [1507-1508]
-                  blockBody [1508-2189]
-                    text [1508-2189] ("@mixin breakpoint($breakpoint, $direction) {\\n  @if map-has-key($breakpoints, $breakpoint) {\\n\\n    // Get the breakpoint value.\\n    $breakpoint-value: map-get($breakpoints, $breakpoint);\\n\\n    @if $direction == max {{\\n      @media (max-width: ($breakpoint-value - 1)) {{\\n        @content;\\n      }\\n    } @else if $direction == min {{\\n      @media (min-width: $breakpoint-value) {{\\n        @content;\\n      }\\n    }\\n\\n  // If the breakpoint doesn't exist in the map.\\n  } @else {\\n    @if $direction == max {{\\n      @media (max-width: $breakpoint) {{\\n        @content;\\n      }\\n    } @else if $direction == min {{\\n      @media (min-width: $breakpoint) {\\n        @content;\\n      }\\n    }\\n  }\\n}\\n")
-                  newLine [2189-2190]
-                  blockFooter [2190-2199]
-                    keyword [2190-2199]
-                      text [2190-2199] ("#+END_SRC")
+                  blockBody [1508-2182]
+                    text [1508-2182] ("@mixin breakpoint($breakpoint, $direction) {\\n  @if map-has-key($breakpoints, $breakpoint) {\\n\\n    // Get the breakpoint value.\\n    $breakpoint-value: map-get($breakpoints, $breakpoint);\\n\\n    @if $direction == max {\\n      @media (max-width: ($breakpoint-value - 1)) {\\n        @content;\\n      }\\n    } @else if $direction == min {\\n      @media (min-width: $breakpoint-value) {\\n        @content;\\n      }\\n    }\\n\\n  // If the breakpoint doesn't exist in the map.\\n  } @else {\\n    @if $direction == max {\\n      @media (max-width: $breakpoint) {\\n        @content;\\n      }\\n    } @else if $direction == min {\\n      @media (min-width: $breakpoint) {\\n        @content;\\n      }\\n    }\\n  }\\n}\\n")
+                  newLine [2182-2183]
+                  blockFooter [2183-2192]
+                    keyword [2183-2192]
+                      text [2183-2192] ("#+END_SRC")
       "
     `);
   });
@@ -4970,6 +5010,36 @@ textarea:focus, input:focus{
             tableCell [10-14]
               text [10-14] (" 2  ")
             operator [14-15] ("|")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
+
+  it('Should parse complex example from real world', () => {
+    const orgDoc = `
+#+begin_src python
+return [f'{*}', '*']
+#+end_src
+
+`;
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-52]
+        newLine [0-1]
+        srcBlock [1-50]
+          blockHeader [1-19]
+            keyword [1-19]
+              text [1-12] ("#+begin_src")
+              text [12-19] (" python")
+          newLine [19-20]
+          blockBody [20-40]
+            text [20-40] ("return [f'{*}', '*']")
+          newLine [40-41]
+          blockFooter [41-50]
+            keyword [41-50]
+              text [41-50] ("#+end_src")
+        newLine [50-51]
+        newLine [51-52]
       "
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();

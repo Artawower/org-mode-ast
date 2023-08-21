@@ -10,9 +10,9 @@ import {
 import { AstBuilder } from '../ast-builder.js';
 import { TokenIterator } from '../../tokenizer/index.js';
 import { isNumber } from '../../tools/index.js';
+import { AstContext } from 'parser/ast-context.js';
 
 export class BracketHandler implements OrgHandler {
-  private bracketsStack: OrgChildrenList = new OrgChildrenList();
   readonly #dateRangeDelimiter = '--';
   readonly #priorityValueRegexp = /#([\w\d]{1})$/;
   readonly #unresolvedNodes = new OrgChildrenList();
@@ -50,6 +50,7 @@ export class BracketHandler implements OrgHandler {
 
   constructor(
     private readonly configuration: ParserConfiguration,
+    private readonly ctx: AstContext,
     private readonly astBuilder: AstBuilder,
     private readonly tokenIterator: TokenIterator
   ) {}
@@ -67,7 +68,7 @@ export class BracketHandler implements OrgHandler {
       return closedBracketNode;
     }
 
-    this.bracketsStack.push(unresolvedNode);
+    this.ctx.bracketsStack.push(unresolvedNode);
 
     return unresolvedNode;
   }
@@ -87,7 +88,7 @@ export class BracketHandler implements OrgHandler {
 
   // TODO: refactor this method, so complex!
   private tryHandlePairBracket(closedBracket: OrgNode): OrgNode {
-    if (this.bracketsStack.isEmpty || this.isOpenedBracket(closedBracket)) {
+    if (this.ctx.bracketsStack.isEmpty || this.isOpenedBracket(closedBracket)) {
       return;
     }
 
@@ -95,7 +96,7 @@ export class BracketHandler implements OrgHandler {
       this.tokenIterator.currentValue
     );
 
-    const openedBracket = this.bracketsStack.findLast(
+    const openedBracket = this.ctx.bracketsStack.findLast(
       (bracketNode) => bracketNode.value === openedBracketSymbol
     );
 
@@ -130,7 +131,7 @@ export class BracketHandler implements OrgHandler {
   ): void {
     const realParent = bracketNodes.first.parent;
 
-    this.bracketsStack.removeNodes(bracketNodes);
+    this.ctx.bracketsStack.removeNodes(bracketNodes);
     realParent.removeChildren(bracketNodes);
 
     const shouldHaveRawContent = this.bracketsWithRawContent.includes(
@@ -439,7 +440,7 @@ export class BracketHandler implements OrgHandler {
     // NOTE: another handler could unattached node from the parent.
     // It means that this node already has found pair.
     // return;
-    const filteredBrackets = this.bracketsStack.filter((b) => b.parent);
+    const filteredBrackets = this.ctx.bracketsStack.filter((b) => b.parent);
     this.astBuilder.mergeNeighborsNodesWithSameType(filteredBrackets.first);
     this.#unresolvedNodes.forEach((n) => {
       if (!n.parent) {
@@ -451,6 +452,6 @@ export class BracketHandler implements OrgHandler {
       }
     });
     this.#unresolvedNodes.clear();
-    this.bracketsStack.clear();
+    this.ctx.bracketsStack.clear();
   }
 }

@@ -72,7 +72,6 @@ export class OrgNode {
     return this.end - this.start;
   }
 
-  // FIXME: master fixme
   /** Return raw text value from node, included nested nodes */
   get rawValue(): string {
     let val = '';

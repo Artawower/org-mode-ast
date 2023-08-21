@@ -233,6 +233,7 @@ export function parse(
   const commentHandler = new CommentHandler(astBuilder, tokenIterator);
   const bracketHandler = new BracketHandler(
     configuration,
+    ctx,
     astBuilder,
     tokenIterator
   );

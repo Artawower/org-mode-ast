@@ -1,6 +1,6 @@
 {
   "name": "org-mode-ast",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "Simple and dumb org-mode parser",
   "type": "module",
   "scripts": {

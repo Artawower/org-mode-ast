@@ -11,8 +11,8 @@ describe('Latex environment', () => {
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-50]
-        latexEnvironment [0-50] ("\\\\begin{align*}\\n2x - 5y &= 8 \\\\\\\\\\n3x + 9y &= -12\\n\\\\end")
+      "root [0-58]
+        latexEnvironment [0-58] ("\\\\begin{align*}\\n2x - 5y &= 8 \\\\\\\\\\n3x + 9y &= -12\\n\\\\end{align*}")
       "
     `);
   });
@@ -30,24 +30,24 @@ describe('Latex environment', () => {
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-88]
-        headline [0-88]
+      "root [0-96]
+        headline [0-96]
             :level 1:
           title [0-10]
             operator [0-2] ("* ")
             text [2-9] ("Heading")
             newLine [9-10]
-          section [10-88]
-            latexEnvironment [10-60] ("\\\\begin{align*}\\n2x - 5y &= 8 \\\\\\\\\\n3x + 9y &= -12\\n\\\\end")
-            newLine [60-61]
-            newLine [61-62]
-            indent [62-66] ("    ")
-            text [66-74] ("This is ")
-            bold [74-87]
-              operator [74-75] ("*")
-              text [75-86] ("description")
-              operator [86-87] ("*")
-            newLine [87-88]
+          section [10-96]
+            latexEnvironment [10-68] ("\\\\begin{align*}\\n2x - 5y &= 8 \\\\\\\\\\n3x + 9y &= -12\\n\\\\end{align*}")
+            newLine [68-69]
+            newLine [69-70]
+            indent [70-74] ("    ")
+            text [74-82] ("This is ")
+            bold [82-95]
+              operator [82-83] ("*")
+              text [83-94] ("description")
+              operator [94-95] ("*")
+            newLine [95-96]
       "
     `);
   });
@@ -98,8 +98,8 @@ describe('Latex environment', () => {
     const result = parse(orgDoc);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-19]
-        latexEnvironment [0-19] ("\\\\begin{align*}\\n\\\\end")
+      "root [0-27]
+        latexEnvironment [0-27] ("\\\\begin{align*}\\n\\\\end{align*}")
       "
     `);
   });
@@ -114,13 +114,15 @@ describe('Latex environment', () => {
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-68]
-        text [0-24] ("Some text \\\\begin{align*}")
+        text [0-16] ("Some text \\\\begin")
+        text [16-24] ("{align*}")
         newLine [24-25]
         text [25-40] ("2x - 5y &= 8 \\\\\\\\")
         newLine [40-41]
         text [41-55] ("3x + 9y &= -12")
         newLine [55-56]
-        text [56-68] ("\\\\end{align*}")
+        text [56-60] ("\\\\end")
+        text [60-68] ("{align*}")
       "
     `);
   });
