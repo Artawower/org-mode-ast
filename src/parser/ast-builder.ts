@@ -12,8 +12,6 @@ export class AstBuilder {
   public lastNode: OrgNode;
   public lastPos = 0;
 
-  private lastSection: OrgNode;
-
   #nodeTree: OrgNode;
 
   get nodeTree(): OrgNode {
@@ -61,9 +59,9 @@ export class AstBuilder {
     if (
       srcNode.type === NodeType.Indent &&
       !this.isListOperator(this.tokenIterator.currentValue) &&
-      this.lastSection
+      this.ctx.lastSection
     ) {
-      return this.lastSection;
+      return this.ctx.lastSection;
     }
   }
 
@@ -118,8 +116,8 @@ export class AstBuilder {
   // TODO: master rename
   private isInsideList(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
     const isNestedList =
-      this.lastSection?.parent?.parent.is(NodeType.List) &&
-      this.lastSection?.parent?.parent?.level < srcNode.level;
+      this.ctx.lastSection?.parent?.parent.is(NodeType.List) &&
+      this.ctx.lastSection?.parent?.parent?.level < srcNode.level;
 
     const isParentMatched = dstNode.parent?.is(
       NodeType.List,
@@ -130,12 +128,12 @@ export class AstBuilder {
     if (
       isParentMatched &&
       !this.ctx.insideHeadline &&
-      this.lastSection &&
+      this.ctx.lastSection &&
       srcNode.type !== NodeType.ListItem &&
       !this.ctx.insideListItem &&
-      (this.lastSection.parent.type !== NodeType.ListItem || isNestedList)
+      (this.ctx.lastSection.parent.type !== NodeType.ListItem || isNestedList)
     ) {
-      return this.lastSection;
+      return this.ctx.lastSection;
     }
   }
 
@@ -337,13 +335,11 @@ export class AstBuilder {
 
   private findParentForNodeType(srcNode: OrgNode, dstNode?: OrgNode): OrgNode {
     dstNode = dstNode || this.lastNode;
-
     if (!dstNode) {
       throw new Error(`Something went wrong, couldn't find last node`);
     }
 
     // TODO: need to combine some functions for less complexity
-
     for (const matcher of this.parentMatchers) {
       const parent = matcher.bind(this)(srcNode, dstNode);
       if (parent) {
@@ -354,14 +350,13 @@ export class AstBuilder {
     if (!dstNode.parent) {
       throw new Error(
         `Something went wrong, couldn't find parent for:
-   [${srcNode.type}: ${srcNode.value}](${this.tokenIterator.token.start}:${this.tokenIterator.token.end}), prev node: [${dstNode.type}: ${dstNode.value}](${dstNode.start}:${dstNode.end})`
+   [${srcNode.type}: ${srcNode.rawValue}](${this.tokenIterator.token.start}:${this.tokenIterator.token.end}), prev node: [${dstNode.type}: ${dstNode.rawValue}](${dstNode.start}:${dstNode.end})`
       );
     }
 
     return this.findParentForNodeType(srcNode, dstNode.parent);
   }
 
-  // TODO: master move all creators to separated abstraction
   public createTitleNode(): OrgNode {
     return new OrgNode({
       type: NodeType.Title,
@@ -436,11 +431,7 @@ export class AstBuilder {
       type: NodeType.Section,
     });
     nodeWithSection.setSection(sectionNode);
-    this.lastSection = sectionNode;
-  }
-
-  public exitSection(): void {
-    this.lastSection = null;
+    this.ctx.lastSection = sectionNode;
   }
 
   public mergeUnresolvedNodes(nodes: OrgNode[], newType?: NodeType): OrgNode[] {

@@ -21,6 +21,10 @@ export class OrgNode {
     return this._prev;
   }
 
+  get childrenList(): OrgNode[] {
+    return this.children?.asArray() || [];
+  }
+
   get lastChild(): OrgNode {
     return this.children?.last;
   }

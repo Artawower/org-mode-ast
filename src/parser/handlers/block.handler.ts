@@ -49,11 +49,8 @@ export class BlockHandler implements OrgHandler {
     const blockHandler =
       this.blockHanderls[blockType.toLowerCase()] ?? fallbackHandler;
 
-    if (!blockHandler) {
-      throw new Error(`Block type ${blockType} is not supported`);
-    }
-
-    return blockHandler(blockPosition, blockType);
+    const node = blockHandler(blockPosition, blockType);
+    return node;
   }
 
   public isBlockKeyword(keyword: string): boolean {
@@ -110,6 +107,8 @@ export class BlockHandler implements OrgHandler {
     );
 
     rawBlock.setChildren(nestedBlockNodes);
+    this.ctx.exitSectionByRange(rawBlock.start, rawBlock.end);
+    this.ctx.exitNestedListInRanges(rawBlock.start, rawBlock.end);
     parentNode.addChild(rawBlock);
   }
 

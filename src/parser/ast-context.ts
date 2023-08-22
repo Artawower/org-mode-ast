@@ -1,3 +1,4 @@
+import { hasIntersection } from 'tools/has-intersection.js';
 import { OrgChildrenList, OrgNode } from '../models/index.js';
 
 export class AstContext {
@@ -11,10 +12,12 @@ export class AstContext {
   public endLatexEnvironmentKeyword: OrgNode;
   public beginLatexBracket: OrgNode;
   public bracketsStack: OrgChildrenList = new OrgChildrenList();
+  // TODO: master should be stack of sections
+  public lastSection: OrgNode;
 
   // TODO: master move to block handler
   public srcBlockBegin: OrgNode = null;
-  // TODO: master should be map of all posbible blocks ?
+  // TODO: master should be map of all possible blocks ?
   public blockBegin: OrgNode = null;
 
   get lastParentList(): OrgNode {
@@ -87,5 +90,22 @@ export class AstContext {
     this.beginLatexEnvironmentKeyword = null;
     this.endLatexEnvironmentKeyword = null;
     this.beginLatexBracket = null;
+  }
+
+  public exitNestedListInRanges(start: number, end: number): void {
+    this.#nestedLists = this.#nestedLists.filter((l) =>
+      hasIntersection(start, end, l.start, l.end)
+    );
+  }
+
+  public exitSectionByRange(start: number, end: number): void {
+    if (!this.lastSection) {
+      return;
+    }
+    if (
+      hasIntersection(start, end, this.lastSection.start, this.lastSection.end)
+    ) {
+      this.lastSection = null;
+    }
   }
 }

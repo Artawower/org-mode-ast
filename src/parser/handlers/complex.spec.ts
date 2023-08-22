@@ -5044,4 +5044,12 @@ return [f'{*}', '*']
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
+
+  xit('Should parse complex example from the real world! 2', () => {
+    const orgDoc = ``;
+    const result = parse(orgDoc);
+
+    expect(result.toString()).toMatchInlineSnapshot();
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });

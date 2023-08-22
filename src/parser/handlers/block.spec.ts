@@ -201,4 +201,53 @@ by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
       "
     `);
   });
+
+  it('Should exit nested list after src block closed', () => {
+    const orgDoc = `* docker-compose.yaml
+#+BEGIN_SRC yaml
+  volumes:
+    - /var/lib/drone:/data
+  environment:
+    DRONE_GITLAB_SERVER: https://gitlab.com
+  ports:
+    - 3000:3000
+#+END_SRC
+
+* Запуск
+`;
+    const result = parse(orgDoc);
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-181]
+        headline [0-172]
+            :level 1:
+          title [0-22]
+            operator [0-2] ("* ")
+            text [2-21] ("docker-compose.yaml")
+            newLine [21-22]
+          section [22-172]
+            srcBlock [22-170]
+              blockHeader [22-38]
+                keyword [22-38]
+                  text [22-33] ("#+BEGIN_SRC")
+                  text [33-38] (" yaml")
+              newLine [38-39]
+              blockBody [39-161]
+                text [39-161] ("  volumes:\\n    - /var/lib/drone:/data\\n  environment:\\n    DRONE_GITLAB_SERVER: https://gitlab.com\\n  ports:\\n    - 3000:3000\\n")
+              blockFooter [161-170]
+                keyword [161-170]
+                  text [161-170] ("#+END_SRC")
+            newLine [170-171]
+            newLine [171-172]
+        headline [172-181]
+            :level 1:
+          title [172-181]
+            operator [172-174] ("* ")
+            text [174-180] ("Запуск")
+            newLine [180-181]
+          section [181-181]
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });
