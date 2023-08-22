@@ -1,4 +1,4 @@
-import { hasIntersection } from 'tools/has-intersection.js';
+import { hasIntersection } from '../tools/has-intersection.js';
 import { OrgChildrenList, OrgNode } from '../models/index.js';
 
 export class AstContext {
