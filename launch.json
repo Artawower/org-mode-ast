@@ -12,7 +12,7 @@
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/link.spec.ts",
+        "${workspaceFolder}/src/.spec.ts",
         "--no-watch"
       ],
       "cwd": "${workspaceFolder}",

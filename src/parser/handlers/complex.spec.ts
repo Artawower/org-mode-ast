@@ -4308,13 +4308,13 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     operator [29411-29412] ("]")
                   operator [29412-29413] ("]")
                 newLine [29413-29414]
-        headline [29414-30244]
+        headline [29414-30281]
             :level 1:
           title [29414-29422]
             operator [29414-29416] ("* ")
             text [29416-29421] ("Тесты")
             newLine [29421-29422]
-          section [29422-30244]
+          section [29422-30281]
             text [29422-29551] ("Тесты пишутся весьма просто. От части потому что не нужно мокать кучу зависимостей. Функция в большинстве случаев самодостаточна.")
             newLine [29551-29552]
             newLine [29552-29553]
@@ -4364,52 +4364,52 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             text [29788-29789] ("}")
             newLine [29789-29790]
             newLine [29790-29791]
-            srcBlock [29791-29854]
+            srcBlock [29791-29891]
               blockHeader [29791-29813]
                 keyword [29791-29813]
                   text [29791-29802] ("#+begin_src")
                   text [29802-29813] (" emacs-lisp")
               newLine [29813-29814]
-              blockBody [29814-29844]
-                text [29814-29844] ("(setq v (dolist (i '(1 2 3 4))")
-              newLine [29844-29845]
-              blockFooter [29845-29854]
-                keyword [29845-29854]
-                  text [29845-29854] ("#+end_src")
-            newLine [29854-29855]
-            keyword [29855-29866]
-              text [29855-29865] ("#+RESULTS:")
-              text [29865-29866] (" ")
-            newLine [29866-29867]
-            fixedWidth [29867-29872]
-              operator [29867-29869] (": ")
-              text [29869-29872] ("nil")
-            newLine [29872-29873]
-            newLine [29873-29874]
-            newLine [29874-29875]
-            headline [29875-30244]
+              blockBody [29814-29881]
+                text [29814-29881] ("(setq v (dolist (i '(1 2 3 4))\\n                i))\\n(message \\"%s\\" v)")
+              newLine [29881-29882]
+              blockFooter [29882-29891]
+                keyword [29882-29891]
+                  text [29882-29891] ("#+end_src")
+            newLine [29891-29892]
+            keyword [29892-29903]
+              text [29892-29902] ("#+RESULTS:")
+              text [29902-29903] (" ")
+            newLine [29903-29904]
+            fixedWidth [29904-29909]
+              operator [29904-29906] (": ")
+              text [29906-29909] ("nil")
+            newLine [29909-29910]
+            newLine [29910-29911]
+            newLine [29911-29912]
+            headline [29912-30281]
                 :level 2:
-              title [29875-29889]
-                operator [29875-29878] ("** ")
-                text [29878-29888] ("Check json")
-                newLine [29888-29889]
-              section [29889-30244]
-                srcBlock [29889-30233]
-                  blockHeader [29889-29911]
-                    keyword [29889-29911]
-                      text [29889-29900] ("#+begin_src")
-                      text [29900-29911] (" emacs-lisp")
-                  newLine [29911-29912]
-                  blockBody [29912-30223]
-                    text [29912-30223] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
-                  newLine [30223-30224]
-                  blockFooter [30224-30233]
-                    keyword [30224-30233]
-                      text [30224-30233] ("#+end_src")
-                newLine [30233-30234]
-                keyword [30234-30244]
-                  text [30234-30244] ("#+RESULTS:")
-        headline [30244-30340]
+              title [29912-29926]
+                operator [29912-29915] ("** ")
+                text [29915-29925] ("Check json")
+                newLine [29925-29926]
+              section [29926-30281]
+                srcBlock [29926-30270]
+                  blockHeader [29926-29948]
+                    keyword [29926-29948]
+                      text [29926-29937] ("#+begin_src")
+                      text [29937-29948] (" emacs-lisp")
+                  newLine [29948-29949]
+                  blockBody [29949-30260]
+                    text [29949-30260] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
+                  newLine [30260-30261]
+                  blockFooter [30261-30270]
+                    keyword [30261-30270]
+                      text [30261-30270] ("#+end_src")
+                newLine [30270-30271]
+                keyword [30271-30281]
+                  text [30271-30281] ("#+RESULTS:")
+        headline [30281-30377]
             :level 1:
           title [29775-29802]
             operator [29775-29777] ("* ")
@@ -4429,7 +4429,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 operator [29868-29869] ("]")
               operator [29869-29870] ("]")
             newLine [29870-29871]
-        headline [30340-32263]
+        headline [30377-32263]
             :level 1:
           title [29871-29893]
             operator [29871-29873] ("* ")
@@ -4439,7 +4439,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               text [29883-29891] ("noexport")
               operator [29891-29892] (":")
             newLine [29892-29893]
-          section [29893-31794]
+          section [29893-31757]
             srcBlock [29893-29955]
               blockHeader [29893-29915]
                 keyword [29893-29915]
@@ -4556,11 +4556,6 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
               operator [31751-31753] (": ")
               text [31753-31756] ("nil")
             newLine [31756-31757]
-            indent [31757-31773] ("                ")
-            text [31773-31776] ("i))")
-            newLine [31776-31777]
-            text [31777-31793] ("(message \\"%s\\" v)")
-            newLine [31793-31794]
       "
     `);
   });
@@ -5045,11 +5040,65 @@ return [f'{*}', '*']
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
 
-  xit('Should parse complex example from the real world! 2', () => {
-    const orgDoc = ``;
+  it('Should parse complex example from the real world! 2', () => {
+    const orgDoc = `**** Примеры
+#+BEGIN_SRC yaml
+affinity:
+  - matchExpression:
+ #+END_SRC
+
+ #+BEGIN_SRC yaml
+affinity:
+      - weight: 1
+#+END_SRC
+**** Пример
+`;
     const result = parse(orgDoc);
 
-    expect(result.toString()).toMatchInlineSnapshot();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-141]
+        headline [0-129]
+            :level 4:
+          title [0-13]
+            operator [0-5] ("**** ")
+            text [5-12] ("Примеры")
+            newLine [12-13]
+          section [13-129]
+            srcBlock [13-71]
+              blockHeader [13-29]
+                keyword [13-29]
+                  text [13-24] ("#+BEGIN_SRC")
+                  text [24-29] (" yaml")
+              newLine [29-30]
+              blockBody [30-62]
+                text [30-62] ("affinity:\\n  - matchExpression:\\n ")
+              blockFooter [62-71]
+                keyword [62-71]
+                  text [62-71] ("#+END_SRC")
+            newLine [71-72]
+            newLine [72-73]
+            indent [73-74] (" ")
+            srcBlock [74-128]
+              blockHeader [74-90]
+                keyword [74-90]
+                  text [74-85] ("#+BEGIN_SRC")
+                  text [85-90] (" yaml")
+              newLine [90-91]
+              blockBody [91-119]
+                text [91-119] ("affinity:\\n      - weight: 1\\n")
+              blockFooter [119-128]
+                keyword [119-128]
+                  text [119-128] ("#+END_SRC")
+            newLine [128-129]
+        headline [129-141]
+            :level 4:
+          title [129-141]
+            operator [129-134] ("**** ")
+            text [134-140] ("Пример")
+            newLine [140-141]
+          section [141-141]
+      "
+    `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
 });

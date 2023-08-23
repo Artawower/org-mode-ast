@@ -107,9 +107,9 @@ export class BlockHandler implements OrgHandler {
     );
 
     rawBlock.setChildren(nestedBlockNodes);
+    parentNode.addChild(rawBlock);
     this.ctx.exitSectionByRange(rawBlock.start, rawBlock.end);
     this.ctx.exitNestedListInRanges(rawBlock.start, rawBlock.end);
-    parentNode.addChild(rawBlock);
   }
 
   private buildNestedBlockNodes(

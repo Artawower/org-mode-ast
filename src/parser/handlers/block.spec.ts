@@ -250,4 +250,33 @@ by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
+
+  it('Should parse src block with indents', () => {
+    const orgDoc = `
+  #+BEGIN_SRC js
+console.log('qweqwe')
+  #+END_SRC
+`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-52]
+        newLine [0-1]
+        indent [1-3] ("  ")
+        srcBlock [3-51]
+          blockHeader [3-17]
+            keyword [3-17]
+              text [3-14] ("#+BEGIN_SRC")
+              text [14-17] (" js")
+          newLine [17-18]
+          blockBody [18-42]
+            text [18-42] ("console.log('qweqwe')\\n  ")
+          blockFooter [42-51]
+            keyword [42-51]
+              text [42-51] ("#+END_SRC")
+        newLine [51-52]
+      "
+    `);
+  });
 });

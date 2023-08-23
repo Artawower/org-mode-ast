@@ -93,8 +93,8 @@ export class AstContext {
   }
 
   public exitNestedListInRanges(start: number, end: number): void {
-    this.#nestedLists = this.#nestedLists.filter((l) =>
-      hasIntersection(start, end, l.start, l.end)
+    this.#nestedLists = this.#nestedLists.filter(
+      (l) => !hasIntersection(start, end, l.start, l.end)
     );
   }
 
@@ -102,9 +102,13 @@ export class AstContext {
     if (!this.lastSection) {
       return;
     }
-    if (
-      hasIntersection(start, end, this.lastSection.start, this.lastSection.end)
-    ) {
+    const lastSectionOverwrited = hasIntersection(
+      start,
+      end,
+      this.lastSection.start,
+      this.lastSection.end
+    );
+    if (lastSectionOverwrited) {
       this.lastSection = null;
     }
   }

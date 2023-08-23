@@ -348,6 +348,14 @@ export class AstBuilder {
     }
 
     if (!dstNode.parent) {
+      console.log(
+        `✎: [ast-builder.ts][${new Date().toString()}] node tree`,
+        this.nodeTree.toString()
+      );
+      console.log(
+        `✎: [ast-builder.ts][${new Date().toString()}] current pos`,
+        this.tokenIterator.token.start
+      );
       throw new Error(
         `Something went wrong, couldn't find parent for:
    [${srcNode.type}: ${srcNode.rawValue}](${this.tokenIterator.token.start}:${this.tokenIterator.token.end}), prev node: [${dstNode.type}: ${dstNode.rawValue}](${dstNode.start}:${dstNode.end})`

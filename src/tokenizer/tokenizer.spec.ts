@@ -1381,7 +1381,6 @@ BROKE\\end{align*}`;
   #+END_SRC`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 709][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         end: 11,
