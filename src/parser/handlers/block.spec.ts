@@ -279,4 +279,67 @@ console.log('qweqwe')
       "
     `);
   });
+
+  it('Shoula parse src block with potential nested list', () => {
+    const orgDoc = `
+#+BEGIN_SRC yaml
+  containers:
+    - name: nginx
+      ports:
+        - containerPort: 80
+---
+spec:
+        - name: nginx
+#+END_SRC
+
+#+BEGIN_SRC yaml
+spec:
+  containers:
+  - name: nginx
+#+END_SRC
+
+*** Просмотр разницы между конфиг файлами
+`;
+    const result = parse(orgDoc);
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-240]
+        newLine [0-1]
+        srcBlock [1-132]
+          blockHeader [1-17]
+            keyword [1-17]
+              text [1-12] ("#+BEGIN_SRC")
+              text [12-17] (" yaml")
+          newLine [17-18]
+          blockBody [18-123]
+            text [18-123] ("  containers:\\n    - name: nginx\\n      ports:\\n        - containerPort: 80\\n---\\nspec:\\n        - name: nginx\\n")
+          blockFooter [123-132]
+            keyword [123-132]
+              text [123-132] ("#+END_SRC")
+        newLine [132-133]
+        newLine [133-134]
+        srcBlock [134-196]
+          blockHeader [134-150]
+            keyword [134-150]
+              text [134-145] ("#+BEGIN_SRC")
+              text [145-150] (" yaml")
+          newLine [150-151]
+          blockBody [151-187]
+            text [151-187] ("spec:\\n  containers:\\n  - name: nginx\\n")
+          blockFooter [187-196]
+            keyword [187-196]
+              text [187-196] ("#+END_SRC")
+        newLine [196-197]
+        newLine [197-198]
+        headline [198-240]
+            :level 3:
+          title [198-240]
+            operator [198-202] ("*** ")
+            text [202-239] ("Просмотр разницы между конфиг файлами")
+            newLine [239-240]
+          section [240-240]
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });

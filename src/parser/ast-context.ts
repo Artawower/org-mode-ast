@@ -3,22 +3,27 @@ import { OrgChildrenList, OrgNode } from '../models/index.js';
 
 export class AstContext {
   #nextIndentNode: OrgNode;
+
   #nestedLists: OrgNode[] = [];
+  public insideListItem = false;
 
   public insideHeadline: boolean = null;
   public insideKeyword: boolean = null;
-  public insideListItem = false;
+
   public beginLatexEnvironmentKeyword: OrgNode;
   public endLatexEnvironmentKeyword: OrgNode;
   public beginLatexBracket: OrgNode;
   public bracketsStack: OrgChildrenList = new OrgChildrenList();
   // TODO: master should be stack of sections
+
   public lastSection: OrgNode;
 
   // TODO: master move to block handler
   public srcBlockBegin: OrgNode = null;
   // TODO: master should be map of all possible blocks ?
   public blockBegin: OrgNode = null;
+
+  public lastValueWasNewLine: boolean = false;
 
   get lastParentList(): OrgNode {
     if (!this.#nestedLists.length) {
@@ -76,6 +81,7 @@ export class AstContext {
 
   public exitList(): void {
     this.#nestedLists = [];
+    this.insideListItem = false;
   }
 
   public resetSrcBlockInfo(): void {
@@ -93,9 +99,10 @@ export class AstContext {
   }
 
   public exitNestedListInRanges(start: number, end: number): void {
-    this.#nestedLists = this.#nestedLists.filter(
-      (l) => !hasIntersection(start, end, l.start, l.end)
-    );
+    this.#nestedLists = this.#nestedLists.filter((l) => {
+      const intersected = hasIntersection(start, end, l.start, l.end);
+      return !intersected;
+    });
   }
 
   public exitSectionByRange(start: number, end: number): void {
@@ -112,4 +119,21 @@ export class AstContext {
       this.lastSection = null;
     }
   }
+
+  // TODO: master delete
+  // /*
+  //  * Store the information that the last token was
+  //  * a new line or a new line with indent
+  //  */
+  // public storeLastNewLineInfo(tokenValue: string): void {
+  //   if (tokenValue === '\n') {
+  //     this.lastValueWasNewLine = true;
+  //   }
+
+  //   if ([' ', '\t'].includes(tokenValue)) {
+  //     return;
+  //   }
+
+  //   this.lastValueWasNewLine = false;
+  // }
 }

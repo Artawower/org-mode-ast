@@ -2355,7 +2355,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                               text [9133-9144] (" emacs-lisp")
                           newLine [9144-9145]
                           blockBody [9145-9404]
-                            text [9145-9404] ("  (setq alist (list '(foo 1) '(bar 2) '(foo 3) '(lose 4)))\\n  (setq new-alist (assq-delete-all 'foo alist)) ;; Возвращает новое значение\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n                   (format \\"new: %s\\" new-alist)))\\n\\" alist)")
+                            text [9145-9404] ("  (setq alist (list '(foo 1) '(bar 2) '(foo 3) '(lose 4)))\\n  (setq new-alist (assq-delete-all 'foo alist)) ;; Возвращает новое значение\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist)\\n                   (format \\"new: %s\\" new-alist)))")
                           newLine [9404-9405]
                           blockFooter [9405-9414]
                             keyword [9405-9414]
@@ -3094,7 +3094,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       text [16831-16840] ("goto-char")
                       operator [16840-16841] ("*")
                     text [16841-16842] (" ")
-                    list [16842-16890]
+                    list [16842-16874]
                         :unordered:
                         :level 0:
                       listItem [16842-16874]
@@ -3102,16 +3102,19 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           operator [16842-16844] ("- ")
                           text [16844-16873] ("переход к конкретному символу")
                           newLine [16873-16874]
-                      listItem [16874-16890]
-                        title [16874-16890]
-                          operator [16874-16876] ("- ")
-                          text [16876-16889] ("начало буфера")
-                          newLine [16889-16890]
-                    bold [16890-16901]
-                      operator [16890-16891] ("*")
-                      text [16891-16900] ("point-min")
-                      operator [16900-16901] ("*")
-                    text [16901-16902] (" ")
+                    bold [16874-16885]
+                      operator [16874-16875] ("*")
+                      text [16875-16884] ("point-min")
+                      operator [16884-16885] ("*")
+                    text [16885-16886] (" ")
+                    list [16886-16902]
+                        :unordered:
+                        :level 0:
+                      listItem [16886-16902]
+                        title [16886-16902]
+                          operator [16886-16888] ("- ")
+                          text [16888-16901] ("начало буфера")
+                          newLine [16901-16902]
                 headline [16902-17784]
                     :level 3:
                   title [16902-16936]
@@ -3726,7 +3729,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       text [22479-22489] ("init-value")
                       operator [22489-22490] ("=")
                     text [22490-22491] (" ")
-                    list [22491-22628]
+                    list [22491-22515]
                         :unordered:
                         :level 0:
                       listItem [22491-22515]
@@ -3734,26 +3737,32 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           operator [22491-22493] ("- ")
                           text [22493-22514] ("значение по умолчанию")
                           newLine [22514-22515]
-                      listItem [22515-22571]
-                        title [22515-22571]
-                          operator [22515-22517] ("- ")
-                          text [22517-22570] ("должен ли быть вызван глобальный мод перед локальным?")
-                          newLine [22570-22571]
-                      listItem [22571-22628]
-                        title [22571-22628]
-                          operator [22571-22573] ("- ")
-                          text [22573-22627] ("определяет что отображать в modeline когда мод включен")
-                          newLine [22627-22628]
-                    verbatim [22628-22636]
-                      operator [22628-22629] ("=")
-                      text [22629-22635] ("global")
-                      operator [22635-22636] ("=")
-                    text [22636-22637] (" ")
-                    verbatim [22637-22646]
-                      operator [22637-22638] ("=")
-                      text [22638-22645] ("lighter")
-                      operator [22645-22646] ("=")
-                    text [22646-22647] (" ")
+                    verbatim [22515-22523]
+                      operator [22515-22516] ("=")
+                      text [22516-22522] ("global")
+                      operator [22522-22523] ("=")
+                    text [22523-22524] (" ")
+                    list [22524-22580]
+                        :unordered:
+                        :level 0:
+                      listItem [22524-22580]
+                        title [22524-22580]
+                          operator [22524-22526] ("- ")
+                          text [22526-22579] ("должен ли быть вызван глобальный мод перед локальным?")
+                          newLine [22579-22580]
+                    verbatim [22580-22589]
+                      operator [22580-22581] ("=")
+                      text [22581-22588] ("lighter")
+                      operator [22588-22589] ("=")
+                    text [22589-22590] (" ")
+                    list [22590-22647]
+                        :unordered:
+                        :level 0:
+                      listItem [22590-22647]
+                        title [22590-22647]
+                          operator [22590-22592] ("- ")
+                          text [22592-22646] ("определяет что отображать в modeline когда мод включен")
+                          newLine [22646-22647]
             headline [22647-22717]
                 :level 2:
               title [22647-22657]
@@ -5099,6 +5108,1652 @@ affinity:
           section [141-141]
       "
     `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
+
+  xit('Should parse complex example from the real world! 3', () => {
+    const orgDoc = `:PROPERTIES:
+:ID: kubernetes-settings
+:END:
+
+#+TITLE: Kubernetes. Использование в продакшене.
+#+DESCRIPTION: Введение, примеры настроек, терминология.
+#+FILETAGS: :kubernetes:кубернетис:оркестратор:k8s:
+#+STARTUP: content
+#+STARTUP: hideblocks
+#+ID: kubernetes-settings
+#+ACTIVE:
+
+
+
+Кубернетис - популярный [[https://ru.wikipedia.org/wiki/%D0%9E%D1%80%D0%BA%D0%B5%D1%81%D1%82%D1%80%D0%BE%D0%B2%D0%BA%D0%B0_(%D0%98%D0%A2)][оркестратор]] контейнеров, также известный как k8s/kube
+
+*Ликбез*:
++ Управлять множеством серверов как одним
++ Сделан гуглом
++ По умолчанию использует докер для запуска контейнеров (однао поддерживает другие механизмы - runtimes. Такие как containerd, CRI-O)
++ Предоставляет набор доступов через API/CLI
++ Поставляется в большинстве облачных решений :)
++ Позволяет быстро масштабировать реальные физические сервера
++ Позволяет мониторить состояние узлов
++ Может быть избыточным при малом количестве изменений, либо маленьких командах
+* Ссылки
+:PROPERTIES:
+:ID: kubernetes-resources
+:END:
++ [[https://k8slens.dev/][IDE для работы с кубером]]
++ [[https://habr.com/ru/company/otus/blog/537162/][Азы]]
++ [[id:kuber][Kubernetes установка]]
++ Для изучения понадобиться [[https://docs.docker.com/desktop/mac/install/][docker for mac]] или [[https://kubernetes.io/ru/docs/tasks/tools/install-minikube/][minikube]]
++ [[https://labs.play-with-k8s.com/][k8s playground]]
++ [[https://www.katacoda.com/][Еще 1 песочница для изучения cloud технологий в т.ч. k8s]]
++ [[https://kubernetes.io/ru/docs/reference/kubectl/cheatsheet/][Шпаргалка для работы с кубером]]
++ [[https://lionelmace.github.io/iks-lab/gitlab-registry.html][Gitlab подключение registry]]
++ [[https://habr.com/ru/company/domclick/blog/577964/][Полный гайд по куберу + cd на голом железе]] (хабр)
++ [[https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/kubectl][zsh plugin для kubernetes]]
++ [[https://ealebed.github.io/posts/2018/%D0%B7%D0%BD%D0%B0%D0%BA%D0%BE%D0%BC%D1%81%D1%82%D0%B2%D0%BE-%D1%81-kubernetes-%D1%87%D0%B0%D1%81%D1%82%D1%8C-16-%D1%80%D0%B0%D0%B7%D0%BB%D0%B8%D1%87%D0%B8%D1%8F-%D0%B2-replication-controller-replica-set-%D0%B8-deployments/][Отличие Replication Controller от Replica Set и Deployments]]
++ [[https://leadwithoutatitle.wordpress.com/2018/03/05/how-to-deploy-mongodb-with-persistent-volume-in-kubernetes/][Kubernetes deploy mongodb]]
++ [[https://github.com/kubernetes/examples/blob/master/staging/nodesjs-mongodb/README.md][Mongo db + nodejs пример]]
++ [[https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes-ru][Настройка nginx ingress с cert-manager]]
++ [[https://www.youtube.com/watch?v=LLVfC08UVqY&t=73s][Курс по кубернетису от Слерм (youtube, ru)]]
+  [[https://github.com/Slurmio/school-dev-k8s][Github с уроками и примерами ребят сверху]]
++ [[https://medium.com/@thms.hmm/docker-for-mac-with-kubernetes-ingress-controller-with-traefik-e194919591bb][Ingress, docker for mac]]
++ [[https://itnext.io/goodbye-docker-desktop-hello-minikube-3649f2a1c469][Установка minicube mac os]]
++ [[https://medium.com/@seohee.sophie.kwon/how-to-run-a-minikube-on-apple-silicon-m1-8373c248d669][Minicube macos m1 (arm)]]
+
+
+** Внешние обучающие ресурсы:noexport:
++ https://github.com/bretfisher/udemy-docker-mastery
++ https://www.youtube.com/watch?v=V6aGfrMXhbA&list=PL8D2P0ruohOBSA_CDqJLflJ8FLJNe26K-&index=2
+** ПО для облегчения работы
++ [[https://k9scli.io/][k9s cli утилита для работы с кубером]]
+* Терминология
+:PROPERTIES:
+:ID: kubernetes-terms
+:END:
+*kubectl* - [[id:cli][cli]] (Command line tool) для управления кубером и приложениями.
+
+*Control plane* - набор контейнеров, которые управляют кластером (аналог менеджеров в [[id:docker-swarm][Docker swarm]], по факту - набор мастер узлов)
+*Master node* Мастер узел состоит из:
+
++ *etcd* - key/value storage
++ API
++ scheduler
++ Controller manager
++ Core DNS - управление ns записями.
+
+C помощью мастер-узла происходит управление всем кластером Kubernetes.
+
+На *Worker node* находятся container runtime (среда запуска контейнера), kubelet и kube-proxy.
+
+Сontainer runtime это то на чем будет запущен ваш Под (например Docker, Container D, Rocket и т.д.).
+
+*Kubelet* это основной «агент узла», который работает на каждой ноде. Гарантирует, что контейнеры в Pod(поде)работают и исправны. Не управляет контейнерами, которые не были созданы Kubernetes.
+
+*Kube-proxy* это демон на каждой ноде, управляет правилами iptable на хосте для достижения балансировки нагрузки службы (одна из реализаций) и следит за изменениями Service и Endpoint.
+
+
+*Pod* (под) - это группа из одного или более контейнера с общим хранилищем/сетевыми ресурсами и спецификацией как запускать контейнеры. Так же это отдельный инстанс приложения. Размещая контейнеры таким образом, Kubernetes устраняет соблазн втиснуть слишком много функций в один образ контейнера.
+
+
+*Controller* - управленец над созданием и обновлением подов.
+
+Концепция *Service (Сервисы)* в Kubernetes используется для группирования нескольких подов, которые выполняют те же функции. Сервисы легко настраиваются для таких целей как обнаружение, горизонтальное масштабирование и балансировка нагрузки.
+
+*Namespace* - фильтр для cli
+
+*Replication Controller* - Уровень абстракции позволяющий создавать несколько экземпляров подов для последующей балансировки нагрузки и повышения отказоустойчивости.
+
+*Replication Set* - тоже самое что и Replication Controller но с поддержкой множественного выбора в селектора, кроме того не поддерживает Rolling Update. По большому счету, replication set это темплейт для подов.
+
+*Deployment* - еще более высокий уровень асбтракции, поддерживает rolling-update/rollback а также множественный выбор в селекторе.
+
+*Stateful Set* - Тоже самое что и deployment, однако позволяет указывать порядок запуска подов, а также иметь persistence volume (пока понятно так ли это)?
+
+* Kubernetes vs swarm
++ Swarm и kubernetes - оркестраторы контейнеров
++ Оба из них - надежные платформы с поддержкой поставщиков
++ Swarm - проще в управлении, добавлении и удалении узлов
++ Kubernetes решает более сложные задачи
+
+  *Преимущеста swarm*
+  + Поставляется с Docker
+  + Прост в управлении
+  + Решает основные задачи, можно сравнить с правилом 20 на 80, в этом случае swarm покрывает около 80 процентов потребностей
+  + Запускается на мноежстве платформ, ARM/windows/32-bit как локально так и на удаленной машине, либо облаке
+  + Реализует механизмы безопасностb из коробки (secure secrets)
+  + Позволяет легко решать возникшие проблемы (благодаря хорошему логированию и комьюнити)
+
+  *Преимущества kubernetes*
+  + Большие облака будут развертывать кубернетис и управлять им за вас.
+  + Множество дистрибутивов от разных популярных компаний
+  + Широкая поддержка комьюнити
+  + Гибкость, огромное количество виджетов и наборов для решения различных юзкейсов
+  + При разработке новых продуктов для инфраструктуры, производитель в 1 очередь учитывает возможность интеграции именно с kubernetes
+
+* Quick Start
+Для начала подключим кубер внутри docker for mac (либо установим minikube)
+#+attr_html: :width 100%
+[[./enable-kuber.jpg]]
+
+** Основные команды
+Представлена лишь малая часть. Бльшинство операций можно выполнить разными способами.
+
+*** kubectl run
+Изменения только для создания подов
+*** kubectl create
+Создает ресурсы с помощью CLI или YAML
+*** kubectl apply
+Создает/обновляет с помощью YAML
+*** kubectl version
+#+START_SPOILER Посмотреть версию кубера: >
+#+BEGIN_SRC bash
+❯ kubectl version
+Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.3", GitCommit:"ca643a4d1f7bfe34773c74f79527be4afd95bf39", GitTreeState:"clean", BuildDate:"2021-07-15T21:04:39Z", GoVersion:"go1.16.6", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.7", GitCommit:"b55a30656180655e4773309bc68268b87394142f", GitTreeState:"clean", BuildDate:"2021-11-01T16:42:19Z", GoVersion:"go1.15.12", Compiler:"gc", Platform:"linux/amd64"}
+#+END_SRC
+#+CLOSE_SPOILER
+** Создание пода:
+*** CLI
+#+BEGIN_SRC bash
+❯ kubectl run my-nginx --image nginx
+pod/my-nginx created
+#+END_SRC
+
+
+Посмотреть доступные поды
+#+BEGIN_SRC bash
+❯ kubectl get pods
+NAME       READY   STATUS    RESTARTS   AGE
+my-nginx   1/1     Running   0          15s
+#+END_SRC
+
+
+Посомтреть все объекты:
+#+BEGIN_SRC bash
+❯ kubectl get all
+NAME           READY   STATUS    RESTARTS   AGE
+pod/my-nginx   1/1     Running   0          86s
+
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/kubernetes     ClusterIP   10.0.0.1      <none>        443/TCP    102d
+service/oauth2-proxy   ClusterIP   10.0.29.165   <none>        4180/TCP   97d
+#+END_SRC
+
+Очистим созданное:
+#+BEGIN_SRC bash
+❯ kubectl delete pod my-nginx
+pod "my-nginx" deleted
+#+END_SRC
+** Создание deployment
+В отличии от pod, deployment это рабочее приложение в кластере
+#+BEGIN_SRC bash
+❯ kubectl create deployment nginx --image nginx
+deployment.apps/nginx created
+#+END_SRC
+
+#+BEGIN_SRC bash
+❯ kubectl get all
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-6799fc88d8-ck2r2   1/1     Running   0          34s
+
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/kubernetes     ClusterIP   10.0.0.1      <none>        443/TCP    102d
+service/oauth2-proxy   ClusterIP   10.0.29.165   <none>        4180/TCP   97d
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   1/1     1            1           35s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/nginx-6799fc88d8   1         1         1       35s
+#+END_SRC
+
+Объектов создалось больше чем ожидалось :) Вокруг пода создается ReplicaseSet и Deployment
+
+Очистим созданное
+#+BEGIN_SRC bash
+❯ kubectl delete deployment nginx
+deployment.apps "nginx" deleted
+#+END_SRC
+** Создание реплик
+Для начала создадим
+#+BEGIN_SRC bash
+❯ kubectl create deployment my-apache --image httpd
+deployment.apps/my-apache created
+❯ kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/my-apache-7b68fdd849-p6d65   1/1     Running   0          9s
+
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/kubernetes     ClusterIP   10.0.0.1      <none>        443/TCP    102d
+service/oauth2-proxy   ClusterIP   10.0.29.165   <none>        4180/TCP   97d
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-apache   1/1     1            1           10s
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-apache-7b68fdd849   1         1         1       10s
+#+END_SRC
+
+Увеличим число реплик
+#+BEGIN_SRC bash
+❯ kubectl scale deploy/my-apache --replicas 2
+#+END_SRC
+
+(альтернативно можно и так запустить =kubectl scale deployment my-apache --replicas 2=)
+#+START_SPOILER Теперь у нас 2 реплики: >
+#+BEGIN_SRC bash
+❯ kubectl get all
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/my-apache-7b68fdd849-4z7fm   1/1     Running   0          6m45s
+pod/my-apache-7b68fdd849-p6d65   1/1     Running   0          9m56s
+
+NAME                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/kubernetes     ClusterIP   10.0.0.1      <none>        443/TCP    102d
+service/oauth2-proxy   ClusterIP   10.0.29.165   <none>        4180/TCP   97d
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-apache   2/2     2            2           9m56s
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-apache-7b68fdd849   2         2         2       9m56s
+#+END_SRC
+#+CLOSE_SPOILER
+** Инспеция deployment 🕵🏻‍♀️
+*** Логи
+Посмотреть логик =kubectl logs deployment <name>
+
+#+START_SPOILER Вывод логов >
+#+BEGIN_SRC bash
+❯ kubectl logs deployment/my-apache
+Found 2 pods, using pod/my-apache-7b68fdd849-p6d65
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 10.244.9.136. Set the 'ServerName' directive globally to suppress this message
+         AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 10.244.9.136. Set the 'ServerName' directive globally to suppress this message
+[Sun Dec 12 22:03:43.199360 2021] [mpm_event:notice] [pid 1:tid 140063025028416] AH00489: Apache/2.4.51 (Unix) configured -- resuming normal operations
+[Sun Dec 12 22:03:43.199507 2021] [core:notice] [pid 1:tid 140063025028416] AH00094: Command line: 'httpd -D FOREGROUND'
+#+END_SRC
+#+CLOSE_SPOILER
+
+Логер, также как и логер в докере (и других юниксовых утилитах) поддерживает
+=--tail <N>=для вывода последних N строк и
+=--follow= для просмотра
+=-l= - лейбл
+*** Describe
+#+BEGIN_SRC bash
+❯ kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+my-apache-7b68fdd849-4z7fm   1/1     Running   0          26m
+my-apache-7b68fdd849-p6d65   1/1     Running   0          30m
+#+END_SRC
+
+#+START_SPOILER Очень большое описание нашего пода >
+#+BEGIN_SRC bash
+❯ kubectl describe pod my-apache-7b68fdd849-p6d65
+Name:         my-apache-7b68fdd849-p6d65
+Namespace:    default
+Priority:     0
+Node:         aks-verifika-53237813-vmss00000c/10.240.0.6
+Start Time:   Mon, 13 Dec 2021 01:03:36 +0300
+Labels:       app=my-apache
+pod-template-hash=7b68fdd849
+Annotations:  <none>
+Status:       Running
+IP:           10.244.9.136
+IPs:
+IP:           10.244.9.136
+Controlled By:  ReplicaSet/my-apache-7b68fdd849
+Containers:
+httpd:
+Container ID:   containerd://e5fa5c4be01456e18bb5eb1b9b7d12edbe52d4c295b50a5d07cfbeb364aee153
+Image:          httpd
+Image ID:       docker.io/library/httpd@sha256:fba8a9f4290180ceee5c74638bb85ff21fd15961e6fdfa4def48e18820512bb1
+Port:           <none>
+Host Port:      <none>
+State:          Running
+Started:      Mon, 13 Dec 2021 01:03:43 +0300
+Ready:          True
+Restart Count:  0
+Environment:    <none>
+Mounts:
+/var/run/secrets/kubernetes.io/serviceaccount from default-token-4rt8v (ro)
+Conditions:
+Type              Status
+Initialized       True
+Ready             True
+ContainersReady   True
+PodScheduled      True
+Volumes:
+default-token-4rt8v:
+Type:        Secret (a volume populated by a Secret)
+SecretName:  default-token-4rt8v
+Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+Type    Reason     Age   From               Message
+----    ------     ----  ----               -------
+Normal  Scheduled  31m   default-scheduler  Successfully assigned default/my-apache-7b68fdd849-p6d65 to aks-verifika-53237813-vmss00000c
+Normal  Pulling    31m   kubelet            Pulling image "httpd"
+Normal  Pulled     31m   kubelet            Successfully pulled image "httpd" in 4.330055703s
+Normal  Created    31m   kubelet            Created container httpd
+Normal  Started    31m   kubelet            Started container httpd
+#+END_SRC
+
+#+CLOSE_SPOILER
+** Services
+:PROPERTIES:
+:ID: kubernetes services
+:END:
+ Service - это стабильный аддресс для пода(ов)
+=kubectl expose= - создает сервис
+=CoreDNS= - позволяет перенаправлять трафик на сервисы по имени
+*** Основные типы сервисов
++ ClusterIP
++ NodePort
++ LoadBalancer
++ ExternalName
+
+**** Cluster ip (default)
+- Доступен только внутри кластера!
+- Имеет внутренний виртуальный IP внутри кластера.
+- Поды могут стучаться по определенному порту
+**** NodePort
+- Необходим для чего-то внешнего, может быть достигнут кем угодно снаружи
+- Доступен на каждом узле
+# TODO: разобраться так ли это
+**** LoadBalancer
+- Контролируется через ендпоинты снаружи кластера (?)
+- Доступен только когда внешний провайдер предоставляет такую возможность (AWS ELB, etc)
+**** External name
+- Добавялет CNAME DNS запись в CoreDNS /Хз что это/
+- Не используется для подов, но дает подам DNS имя для использования где-то снаружи кубера
+*** Создание
+#+BEGIN_SRC bash
+❯ kubectl create deployment httpenv --image=bretfisher/httpenv
+deployment.apps/httpenv created
+
+❯ kubectl scale deployment/httpenv --replicas=5
+deployment.apps/httpenv scaled
+
+❯ kubectl expose deployment/httpenv --port 8888
+service/httpenv exposed
+
+❯ kubectl get services
+NAME           TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+httpenv        ClusterIP   10.0.119.179   <none>        8888/TCP   25h
+kubernetes     ClusterIP   10.0.0.1       <none>        443/TCP    104d
+oauth2-proxy   ClusterIP   10.0.29.165    <none>        4180/TCP   99d
+#+END_SRC
+
+Во 2 инстансе терминала:
+#+BEGIN_SRC bash
+❯ kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash
+If you don't see a command prompt, try pressing enter.
+bash-5.0#
+#+END_SRC
+
+Что тут происходит? Ок, объясняю
+=--rm= - удалить под после завершеия
+=-it= - перенаправление tty в терминал
+=--image= - собственное образ
+=--= - означает что опции закончались, после слешей идет запускаемая команда в контейнере
+
+Внутри 2 инстанса:
+#+BEGIN_SRC bash
+bash-5.0# curl httpenv:8888
+{"HOME":"/root","HOSTNAME":"httpenv-6fdc8554fb-8kvcg","KUBERNETES_PORT":"tcp://10.0.0.1:443","KUBERNETES_PORT_443_TCP":"tcp://10.0.0.1:443","KUBERNETES_PORT_443_TCP_ADDR":"10.0.0.1","KUBERNETES_PORT_443_TCP_PORT":"443","KUBERNETES_PORT_443_TCP_PROTO":"tcp","KUBERNETES_SERVICE_HOST":"10.0.0.1","KUBERNETES_SERVICE_PORT":"443","KUBERNETES_SERVICE_PORT_HTTPS":"443","OAUTH2_PROXY_PORT":"tcp://10.0.29.165:4180","OAUTH2_PROXY_PORT_4180_TCP":"tcp://10.0.29.165:4180","OAUTH2_PROXY_PORT_4180_TCP_ADDR":"10.0.29.165","OAUTH2_PROXY_PORT_4180_TCP_PORT":"4180","OAUTH2_PROXY_PORT_4180_TCP_PROTO":"tcp","OAUTH2_PROXY_SERVICE_HOST":"10.0.29.165","OAUTH2_PROXY_SERVICE_PORT":"4180","OAUTH2_PROXY_SERVICE_PORT_HTTP":"4180","PATH":"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"}
+#+END_SRC
+** CoreDNS
+:PROPERTIES:
+:ID: kubernetes-namespace
+:END:
+CoreDNS посталяется из коробки начиная с 1.11 версии. Предоставляет возможность для взаимодействия между сервисами через namespace, при этом namespace не должен пересекаться с именем пода.
+/Когда речь идет про DNS то это исключительно алиасы на ip адреса *внутри кластера*/
+
+=kubectl get namespace= - получить список всех неймспейсов.
+
+#+START_SPOILER Пример дефолтных namespace >
+#+BEGIN_SRC bash
+❯ kubectl get namespaces
+NAME              STATUS   AGE
+artifactory       Active   105d
+cert-manager      Active   105d
+default           Active   105d
+dev               Active   105d
+igress            Active   105d
+ingress           Active   105d
+jenkins           Active   105d
+kube-node-lease   Active   105d
+kube-public       Active   105d
+kube-system       Active   105d
+oauth             Active   100d
+prometheus        Active   105d
+registry          Active   105d
+staging           Active   82d
+weave             Active   105d
+#+END_SRC
+#+CLOSE_SPOILER
+Сервиса имеют свой [[https://ru.wikipedia.org/wiki/FQDN][FQDN]] вида: =curl <hostname>.<namespace>.svc.cluster.local=
+где =svc= означает что это сервис, а =cluster.local= присваивается в момент инициализации кластера.
+** Generators
+:PROPERTIES:
+:ID: kubernetes-generators
+:END:
+Команда для прверки того что будет создано: =--dry-run -o yaml=
+
+#+BEGIN_SRC bash
+kubectl create deployment test --image nginx --dry-run -o yaml
+#+END_SRC
+
+#+START_SPOILER вывод >
+#+BEGIN_SRC bash
+W1215 21:37:58.001810   94785 helpers.go:557] --dry-run is deprecated and can be replaced with --dry-run=client.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: test
+  name: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: test
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}
+#+END_SRC
+#+CLOSE_SPOILER
+Отличия от вывода JOB
+#+BEGIN_SRC bash :results output
+kubectl create job test --image nginx --dry-run -o yaml
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: test
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+    spec:
+      containers:
+      - image: nginx
+        name: test
+        resources: {}
+      restartPolicy: Never
+status: {}
+#+end_example
+
+#+BEGIN_SRC bash :results output :async
+kubectl expose deployment/httpenv --port 80 --dry-run -o yaml
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: httpenv
+  name: httpenv
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: httpenv
+status:
+  loadBalancer: {}
+#+end_example
+
+*** Создание деплоймента и сразу же expose (как сервис)
+
+#+BEGIN_SRC bash :results output :async
+kubectl run test --image nginx --port 80 --expose --dry-run
+#+END_SRC
+
+#+START_SPOILER Пример >
+#+RESULTS:
+: service/test created (dry run)
+: pod/test created (dry run)
+#+CLOSE_SPOILER
+*** Перезагрузка после падения
+#+BEGIN_SRC bash :results output :async
+kubectl run test --image nginx --restart OnFailure --dry-run -o yaml
+#+END_SRC
+*** TODO [#E] Никогда не перезагружать (вроде это дефолтное поведение)
+#+BEGIN_SRC bash :results output
+kubectl run test --image nginx --restart Never --dry-run -o yaml
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: test
+  name: test
+spec:
+  containers:
+  - image: nginx
+    name: test
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
+#+end_example
+
+*** Schedule! Использование крон задач в кубере
+Не пашет V
+#+BEGIN_SRC bash :results output
+kubectl create cronjob test --image nginx --schedule "*/1 * * * *" --dry-run
+#+END_SRC
+
+#+RESULTS:
+: cronjob.batch/test created (dry run)
+** Kubernetes storage
+:PROPERTIES:
+:ID: kubernetes-storage
+:END:
+
++ =StatefulSets= - относительно новый тип, делающий поды более
++ Volumes - очень похожи на те, что есть в докер контейнере. Однако, в отличии от докер, они привязаны к времени жизни пода.
++ PersistentVolumets - создаются на уровне кластера, может быть разделен между несколькими подами
++ CSI plugin (container storage interface) - новый путь для связи между хранилищами
+** TODO Ingress
+:PROPERTIES:
+:ID: ingress
+:END:
+
+Позволяет конфигурировать работу кластера на 7 уровне OSI - HTTP
+
+:PROPERTIES:
+:ID: kubernetes-ingress
+:END:
+
+:PROPERTIES:
+:ID: kubernetes-ingress
+:END:
+*** Популярные проекси сервера
+- Traefik
+- HAProxy
+- F5
+- Envoy
+- Istio
+*** Установка
+#+BEGIN_SRC bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx
+#+END_SRC
+
+Однако, для bare metal, такой тип установки мне не подошел (не было соединения с host машины и снаружи кластера). Зато подошел такой:
+#+BEGIN_SRC bash
+helm install ingress-nginx ingress-nginx/ingress-nginx --set controller.hostNetwork=true --set controller.service.type=LoadBalancer
+#+END_SRC
+*** Установка Metallb (если нет внешнего балансировщика)
+=kubectl edit configmap -n kube-system kube-proxy=
+#+BEGIN_SRC bash
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: "ipvs"
+ipvs:
+    strictARP: true
+#+END_SRC
+
+После сохранения =helm install metallb metallb/metallb -f values.yaml=
+
+*** Bare metall install problems
++ [[https://www.reddit.com/r/kubernetes/comments/a0wpip/kubernetes_ingress_with_metallb_not_working_what/][Похожая проблема с установкой на bare metal с metallb]]
+
+** TODO CRD Operator Pattern
+** TODO Kubernetes dashboard
+
+#+BEGIN_SRC bash
+NAME: ingress-nginx
+LAST DEPLOYED: Mon Dec 20 18:04:32 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+The ingress-nginx controller has been installed.
+It may take a few minutes for the LoadBalancer IP to be available.
+You can watch the status by running 'kubectl --namespace default get services -o wide -w ingress-nginx-controller'
+
+An example Ingress that makes use of the controller:
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: example
+    namespace: foo
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: www.example.com
+        http:
+          paths:
+            - backend:
+                service:
+                  name: exampleService
+                  port:
+                    number: 80
+              path: /
+    # This section is only required if TLS is to be enabled for the Ingress
+    tls:
+      - hosts:
+        - www.example.com
+        secretName: example-tls
+
+If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: example-tls
+    namespace: foo
+  data:
+    tls.crt: <base64 encoded cert>
+    tls.key: <base64 encoded key>
+  type: kubernetes.io/tls
+#+END_SRC
+
+* Декларативное управление конфигурацией
+:PROPERTIES:
+:ID: kubernetes-declarative
+:END:
+Основная команда для применения имзенений =kubectl apply -f filename.yml=.
+Команду можно применять к целой директории =kubectl apply -f mydir/=.
+Либо url, =kubectl apply -f https://bret.run/pod.yaml= (имхо - абсолютно бесолезный кейс)
+
+** Описание полей yaml файла
+:PROPERTIES:
+:ID: kubernetes-yaml
+:END:
++ *kind* - тип текущего рекурса. Посмотреть все ресурсы можно с помощью =kubectl api-resources=
++ *apiVersions* - версия куба, можно посмотреть =kubectl api-versions=
++ *metaData* - поле для указания метаинформации, имя - обязательно
++ *spec* - хранение наших экшенов
+*** Пример просторого yaml файла с конфигами :noexport:
+#+BEGIN_SRC yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.17.3
+      ports:
+        - containerPort: 80
+#+END_SRC
+
+В 1 файле можно описать несколько объектов через =---=
+#+BEGIN_SRC yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.17.3
+      ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-nginx
+      dude: "true"
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.17.3
+  # ....
+#+END_SRC
+*** Подробнее про спецефикацию
+В целом, вся спецификация доступна [[https://kubernetes.io/docs/reference/#api-reference][тут]], если по какой-то причине, вы так-же как и я, ненавидите браузеры, тогда можно использовать CLI
+Посмотреть все поля спецификации можно с помощью =kubectl explain services --recursive=
+Посмотреть только спецификацию с описанием =kubectl explain services.spec=
+Посомтреть конкретное поле =kubectl explain services.spec.type=
+Такие цепочки можно строить по всей схеме, например:
+
+#+BEGIN_SRC bash
+❯ kubectl explain deployment.spec.template.spec.volumes.nfs.server
+KIND:     Deployment
+VERSION:  apps/v1
+
+FIELD:    server <string>
+
+DESCRIPTION:
+     Server is the hostname or IP address of the NFS server. More info:
+     https://kubernetes.io/docs/concepts/storage/volumes#nfs
+#+END_SRC
+** Просмотр изменений, применяемых командой apply
+*** Поверхностно отценить изменения
+Для просмотра изменений можно использовать флаг =--dry-run=, он принимает аргументы:
+- =--dry-run=client= - просмотр изменений со стороны клиента, без учета того, что уже находится на сервере (кажется весьма бесполезным)
+- =--dry-run=server= - просмотр изменений со стороны сервера
+
+#+START_SPOILER Пример конфиг файла app.yml >
+#+BEGIN_SRC yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-nginx-service
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: app-nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-nginx
+  template:
+    metadata:
+      labels:
+        app: app-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.3
+        ports:
+        - containerPort: 80
+#+END_SRC
+#+CLOSE_SPOILER
+
+Находясь в директории c данным файлом запустим его: =kubectl apply -f app.yml=
+Теперь проверим изменения со стороны клиента
+#+BEGIN_SRC bash
+❯ kubectl apply -f app.yml --dry-run=client
+kservice/app-nginx-service configured (dry run)
+deployment.apps/app-nginx-deployment configured (dry run)
+
+# И со стороны сервера
+❯ kubectl apply -f app.yml --dry-run=server
+service/app-nginx-service unchanged (server dry run)
+deployment.apps/app-nginx-deployment unchanged (server dry run)
+#+END_SRC
+
+Однако это неочень то и информативно. Чтобы увидеть реальные изменения необходимо воспользоваться kubectl diff
+*** Просмотр разницы между конфиг файлами
+/Изменим app.yaml, изменив количество реплик и добавив какой-нибудь label/
+=kubectl diff -f app.yml= Вывод команды весьма сильно похож на вывод диффа между комитами в git.
+** Labels & annotations
+*Labels* - список пар ключ/значение для идентификации вашего ресурсы позже, в select/group/filter операциях.
+располагаются они в блоке metadata. Могут быть назначены практически на любой ресурс.
+#+BEGIN_SRC yaml
+# ...
+metadata:
+  name: app-nginx-deployment
+  labels:
+    tier: ftontend
+    app: api
+    env: prod
+    customer: apple.com
+# ...
+#+END_SRC
+
+Как применять? Например можно получить все nginx поды:
+=kubectl get pods -l app=nginx=
+=kubectl apply -f myfile.yaml -l app=nginx=
+
+Также лейблы используются для нахождения необходимых подов, для этого используется ключ =selector= в спецификации.
+
+
+* Slurm. Kubernetes.
+:PROPERTIES:
+:ID: slurm-kubernetes
+:END:
+** Основные ресурсы :slurm:
+*** Replica set
+  + Является шаблоном для подов
+  + Исходя из вышесказанного - не имеет имени ресурса в шаблоне (т.к. назначает их сам, в процессе создания)
+  + Следит за количеством реплик, при чем как в большую так и в меньшую сторону (удаляет лишние, если создались через pod)
+  + Не следит за изменением мета информации (например изменение образа), только за количеством запущенных реплик!
+*** Deployment
++ Решает проблему обновления приложения (по мета информации)
++ Под копотом создает ReplicaSet
+
+**** Стратегии обновления
+spec -> strategy
+  =RollingUpdate= - стратегия по умолчанию, постепенное обновление реплик (в момент обновления что-то продолжает работать). Приложения должны быть обратно совместимы.
+  =Reacreate= - полное удаление всех реплик и создание новых. Приводит к даунтайму.
+
+  Для =RollingUpdate= можно применить дополнительные настройки:
+
+  =maxSurge= - количество подов, на которое можно поднять единовременное текущий деплой
+  =maxUnavailable= - противоположное значение, максимальное количество реплик на которое можно опустить текущий деплой.
+
+  Можно установить в процентах
+
+  #+BEGIN_SRC yaml
+apiversion: apps/v1
+kind: deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 2
+  strategy:
+    rollingupdate:
+      maxsurge: 10%
+      maxunavailable: 10%
+  #+END_SRC
+*** Resources
+Подробнее про ресурсы [[https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/][тут]]
+1. Память
+2. CPU
+Бывают limits\requests
+
+limits - сколько ресурсов максимально может быть использовано
+
+out of memory killer (OOM) - если приложение попытается запросить больше памяти, кубер его убьет.
+
+requests - резервируемые ресурсы на ноде. На основание ресурсов кубернетис определяет на какую ноду поместить под.
+
+У Кластера есть capacity, по которому определяется размещение подов по requests.
+
+# TODO: разобраться
+/CPU указывается в единицах =m=/, mili cpu 1. Подробнее про них читать [[https://askinglot.com/what-is-millicpu][тут]]
+
+
+**** QoS класс
+- burstable - лимиты больше чем реквесты. Поды такого класса будут удоляться во 2 очередь (перемещаться на другую ноду)
+- Garantued - Лимиты и реквесты равны. Кубер будет держать такие ноды до последнего.
+- Best effort - никаких лимитов. Однако, в случае проблем с нодой (например нехватка ресурсов), такие ресурсы будут перемещены в 1 очередь.
+
+
+
+Пример патча, хуй знает к чему оно тут, надо перенести.
+#+BEGIN_SRC yaml
+kubectl patch deployment my-deployment --patch '{"spec":{"template":{"spec":{"containers":[{"name":"nginx","resources":{"requests":{"cpu":"10"},"limits":{"cpu":"10"}}}]}}}}'
+#+END_SRC
+*** ConfigMap
+Сущность для хранения настроек в виде пар ключ/значение. Позволяет использовать настройки в различных приложения.
+
+Пример
+
+#+BEGIN_SRC yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap-env
+data:
+  dbhost: postgresql
+  DEBUG: "false"
+...
+
+#+END_SRC
+
+Посмотреть список config map можно командой =kubectl get configmap=
+
+*Как использовать?*
+Для использования config map достаточно в спецификации ресурса указать ключ =envFrom=
+
+
+#+BEGIN_SRC yaml
+# ...
+        envFrom:
+        - configMapRef:
+            name: my-configmap-env
+#+END_SRC
+
+**** Получение информации из файла
+#+BEGIN_SRC yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  default.conf: |
+    server {
+        listen       80 default_server;
+        server_name  _;
+
+        default_type text/plain;
+
+        location / {
+            return 200 '$hostname\n';
+        }
+    }
+...
+#+END_SRC
+
+Использование текущего COnfigMap как volume:
+#+START_SPOILER sample >
+#+BEGIN_SRC yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - image: quay.io/testing-farm/nginx:1.12
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d/
+      volumes:
+      - name: config
+        configMap:
+          name: my-configmap
+...
+#+END_SRC
+#+CLOSE_SPOILER
+
+*** Secret
+Сущность для хранения информации которую нельзя оглашать
+
++ generic - пароли/токены для приложений
++ docker-registry - данные авторизации в docker registry
++ tls - TLS сертификаты для ingress
+
+Создание своего секрета
+#+BEGIN_SRC bash
+kubectl create secret generic test --from-literal=test1=asdf --from-literal=dbpassword=1q2w3e
+ #+END_SRC
+
+Информация хранится не в заширофваном виде, а в base64
+
+Как получить значение секрета в переменной окружения?
+
+#+BEGIN_SRC yaml
+        env:
+        - name: TEST
+          value: foo
+        - name: TEST_1
+          valueFrom:
+            secretKeyRef:
+              name: test
+              key: test1
+
+#+END_SRC
+
+**** String data
+kubernetes получает все данные из этого раздела, затем под копотом формирует из них base-64
+
+#+BEGIN_SRC yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test
+stringData:
+  test: updated
+  anotherVar: hello world
+...
+#+END_SRC
+*** DaemonSet
+*** Downward API
+[[https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/][Прокидывание информации о поде в контейнер.]]
+
+#+BEGIN_SRC yaml
+        env:
+        - name: TEST
+          value: foo
+        - name: TEST_1
+          valueFrom:
+            secretKeyRef:
+              name: test
+              key: test1
+        - name: __NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: __POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+#+END_SRC
+*** Static POD
++ Единственный ресурс который ходит не в API напрямую
++ Запускаются перед всем остальным
++ Манифесты лежат на каждом узле
++ Необходимы для того чтобы кублет мог запустить что-то до того как поднялся апи сервер
+*** Pod Anti Affinity :noexport:
++ Количество ресурсов жестко указано в манифесте деплоймента (при появлении новых узлов нужно менять значение, ту проблему решает демонсет)
++ Позволяет точно указать что каждый из подов запускается на 1 узле
+
+  /Что-то вроде exclude/
+
+**** Примеры
+#+BEGIN_SRC yaml
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - rabbitmq
+          topologyKey: kubernetes.io/hostname
+#+END_SRC
+
+*** Pod Affinity
++ Более гибкий вариант node selector
++ Бывают 2 типов: =affinity= и =podAntiAffinity=
++ /Усатый чел сказал что лучши этим не пользоваться, т.к. это не по кубернетес феншую/
+
+
+**** Примеры
+#+BEGIN_SRC yaml
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpression:
+          - key: kubernetes.io/e2e-az-name
+            operator: In
+            values:
+              - e2e-az1 # какая-то метка, которая ставится на узлы ^__^
+              - e2e-az2 # под будет запущен либо на 1 либо на 2 узле с нужным матчингом
+
+ #+END_SRC
+ =preferredDuringSchedulingIgnoredDuringExecution= - обязательно выоплнить на этапе выполнения, но можно игнорировать при запуске
+
+ #+BEGIN_SRC yaml
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: another-node-label-key
+              operator: Exists
+ #+END_SRC
+=preferredDuringSchedulingIgnoredDuringExecution= - постараться выполнить условие, если условие не удовлетворено, запустится "где-то"
+
+*** Daemon Set
++ Количество реплик демонсета == количеству узлов в кластере
++ Запускает поды на всех нодах кластера
++ При добавлении ноды - добавляет поды
++ При удалении ноды GC удаляет под
++ Описание практчиески полностью соответствует *Deployment* (отсутствует поле количества реплик)
+
+**** Пример
+#+BEGIN_SRC yaml
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: node-exporter
+  name: node-exporter
+spec:
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      containers:
+      - name: node-exporter
+        image: k8s.gcr.io/pause:3.3
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 10m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+      nodeSelector:
+        kubernetes.io/os: linux
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/ingress
+#+END_SRC
+
+Из интересного:
+=taints= - кубернетис перестает запускать поды на данных узлах ;)
+=tolerations= - но! кроме ресурсов описанных в tolerations
+Ключ и занчения могут быть любыми, для построения сложных групп доступа/сопротивления
+
+Эффекты: более специфическая вещь, влияющая на то, на каком этапе учитывается данные правила.
+=NoSchedule= - учитывается *при размещении* на новом узле
+=NoExecute= - действует еще и *на запущенные* ноды. Тоесть после навешивания на него taints, существующее поды, попадающие под правила, будут убиты (жестоко убиты! почти как декстером)
+*** StatefulSet
++ Специальная абстракция для приложений, которые хранят свое состояние (бд/брокеры...)
++ Каждый из подов уникальный, и хранит свое состояние, имеет свое место.
++ Каждый под получает к имени индекс (и даже нумерация с 0! Совсем по взрослому)
++ Имеет =PersistentVolumeСlaimTemplate=
++ При удалении (даунгрейде) подов, =PV= остается.
+*** Headless Service
++ Почти тоже самое что и clusterIP, однао имеет =.spec.clusterIP: non=
++ Нет правил трансляций в iptables
++ Имеет записи с именами ендпоинтов (DNS)
+
+**** Пример
+#+BEGIN_SRC yaml
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  clusterIP: None
+  ports:
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+  selector:
+    app: rabbitmq
+#+END_SRC
+
+** Хранение данных
+*** HostPath
++ Самый простой, похож на то что имеется в докере. Монтирует каталог с хостовой фс к контейнеру.
++ Небезопасны. Т.к. могут получить доступ к системным каталогам на хост машине.
+
+  #+BEGIN_SRC yaml
+    spec:
+      containers:
+      - image: quay.io/testing-farm/nginx:1.12
+        # ...
+        volumeMounts:
+        - name: data
+          mountPath: /files
+      volumes:
+      - name: data
+        hostPath:
+          path: /data_pod
+...
+#+END_SRC
+*** EmptyDir
++ Создает временный диск, который прокидывается внутрь контейнера
++ После удаления пода данные удаляются (но не после рестарта)
++ Создается для каждого пода в отдельности
+
+  #+BEGIN_SRC yaml
+    spec:
+      containers:
+      - image: quay.io/testing-farm/nginx:1.12
+        name: nginx
+        #...
+        volumeMounts:
+        - name: data
+          mountPath: /files
+      volumes:
+      - name: data
+        emptyDir: {}
+  #+END_SRC
+*** PV / PVC (Persistent volume)
++ Storage calss - хранит параметры подключения. Опциональное поле.
++ PersistentVolumeClaim - описывает требования к тому
++ PersistentVolume - хранит параметры и статус тома
++ Занимает диск целиком (даже если запросили меньше)
++ Reclaim policy: retain (данные сохраняются) и delete (данные удаляются)
+  #+BEGIN_SRC yaml
+volumes:
+  - name: mypd
+    persistentVolumaClaim:
+      claimName: myclaim
+  #+END_SRC
+
+**** PV Provisioners
+Утилита для автоматического создания дисков. При чем объем выделяется без излишек.
+
+**** Sample
+#+BEGIN_SRC yaml
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: fileshare
+spec:
+  storageClassName: csi-ceph-hdd-ms1
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Mi
+#+END_SRC
+
+#+BEGIN_SRC text
+❯ k apply -f pvc.yaml
+persistentvolumeclaim/fileshare created
+❯ k get pvc
+NAME        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+fileshare   Bound    pvc-adf3594c-5e8f-4e9b-84b2-14d2aa499c7c   10Mi       RWX            hostpath       3s
+#+END_SRC
+
+Использование в deployment:
+#+BEGIN_SRC yaml
+#...
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: config
+        configMap:
+          name: fileshare
+      - name: data
+        persistentVolumeClaim:
+          claimName: fileshare
+#+END_SRC
+**** Увеличение размерности диска
+** InitContainer
++ Подволяет выполнять настройкеи перед запуском основного контейнера
++ Выполняет по порядку описанному в манифесте
++ Можно монтировать те же тома, что и в основных контейнерах
++ Можно запускать от другого пользователя
+** Аннотации :noexport::WIP:
+Что-то вроде динамической конфигурации
+** Сетевые абстракции
+*** Probes
+**** Liveness Probe
++ Контроль за состоянием приложения во время его жизни
++ Исполняется постоянно
+**** Readiness Probe
++ Проверяет, готово ли приложение принимать трафик
++ В случае неудачного выполненися приложение убирается из балансировки
++ Исполняется постоянно
+**** Startup Probe
++ Проверяет, запустилось ли приложение
++ Исполняет при старте
++ Выполняется перед другими пробами
+
+Успешными считаются ответы от проба от *200* до *399*
+
+*Методы проверок*: =httpGet=, =exec=, =tscSocket=
+
+  #+BEGIN_SRC yaml
+---
+# file: practice/1.kube-basics-lecture/4.resources-and-probes/deployment-with-stuff.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - image: quay.io/testing-farm/nginx:1.12
+        name: nginx
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          initialDelaySeconds: 10
+        startupProbe:
+          httpGet:
+            path: /
+            port: 80
+          failureThreshold: 30
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+...
+  #+END_SRC
+*** Сервисы
++ имеет Статисческий IP
++ создает DNS (myservice.mynamespace.svc.cluster.local)
++ По сути правила ipatables (или ipvc)
++ Service - не прокси!
+
+**** ClusterIP (по умолчанию)
+Внутрекластерное взаимодействие.
+**** NodePort
+Проброс внешних портов, от 30000 до 32768
+**** LoadBalancer
+Используется преимущественно у облочных провайдеров. Либо Metallb
+**** ExternalName
+Что-то вроде маршрутизации.
+**** ExternalIPs
+**** Headless service
+Не указывается clusterIP, однако присваивается DNS. Используется для StatefullSet
+*** Ingress (+ controller)
++ Proxy с nginx под копотом.
++ Напрямую перенаправляет запросы в под
++ В рамках ingress можно создавать множество хостов и путей
+
+
+**** cert-manager :noexport:
+
+** Устройство кластера
+*** Master компоненты
+**** Etcd
++ key-value база данных, работает на протоколе raf
+**** API server
++ Центральный компонент Kubernetes
++ Работает через REST API (rest)
++ Авторизация и аутентификация происходит через API servier
+**** Controller-manager
++ Состоит из бинарника ^_^
++ А также различны контроллеров:
+  - Node controller (отслеживает доступность узлов кластера)
+  - Replicaset controller
+  - Endpoint controller (автоматическое создание ендпоинтов для сервисов)
+  ...
++ Встроен garbage collector
++ Запускается по 1 на каждый узел, однако мастером становится лишь 1, тот кто успел первым. Если в течении времени, мастер ничего о себе не обновляет, то его вытесняет другой мастер. Короче все прямо как в жизни, если ты пассивный прокрастинатор, то рано или поздно тебя кто-то вытеснит 😅
+**** Scheduler
+Назначает поды на нодах. Принимает решение о том где и какой под будет запущен. Учитывате множество параметров, которые влияют на то, где на каком узле будет запущен под. Также, при прочих равных, шедулер умеет определять приоритет развертывания с учето того был ли скачен требуемый образ или нет (прям вау эффект).
+Учитывает:
+- Qos
+- Affinity / anti-affinity (можно явно указать, какие поды могут быть на 1 узле, а какие нет)
+- requested resource (равномерное распределение ресурсов между разными узлами)
+- Подписан на событие создания новых подов. Дописывая после создания адрес ноды, на которой будет развернут под.
+
+*** Worker компоненты
+**** Kubelet
++ Работает на каждом кластере (даже на мастер нодах)
++ Не работает в контейнерах
++ Отдает команды докер демону
++ Создаем поды
++ Создает также пробы (хелсчеки, см выше)
+**** Kube-proxy
++ Смотрит kube-api
++ Стоит на всех серверах
++ Управляет сетевыми правилами но нодах
++ В некоторых случаях не предустановлен (т.к. часто используются не коробочные решения)
+** One shot tasks
++ Бекап раз в n времени
++ Миграции
+
+** JOB
++ Запускат под копотом "особенный" под, который запускается, выполняется, и в финале, имеет статус complete.
++ Перезапускает поды до успешного выполнения задачи,  либо истечения таймаутов:
++ За job отвечает job controller, который входит в состав controller manager
++ JOB нельзя переаплаить, только пересоздать
++ Присутствует интересная бага, лимиты не всегда ограничивают по точному числу (иногда +-1)
+
+*** Поля
+- activeDeadLineSeconds (временной лимит)
+- backoffLimit (количественный лимит)
+- RestartPolicy - политика рестарта контейнеров (не подов)
+- completions - хотябы n под должны быть выполнены успешно
+- parallelism - сколлько подов запускать параллельно
+- ttlSecondsAutoFinished - параметр который указывает на время ж
+
+*** Пример простой JOB для вывода hello world
+#+BEGIN_SRC yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 60
+  template:
+    spec:
+      containers:
+      - name: hello
+        image: quay.io/prometheus/busybox
+        args:
+        - /bin/sh
+        - -c
+        - date; echo Hello from the Kubernetes cluster
+      restartPolicy: Never
+
+#+END_SRC
+
+
+- RestartPolicy - политика рестарта контейнеров (не подов)
+** Cron JOB
++ Джобу можно преостановить, запустив =suspend= в true
++ Создает джобы (см выше)
++ Кронджобы должны быть идемпотентными
++ Будет использовать таймзону и время с =controller manager=
+*** Параметры
+- =schedule= - типичное описание крон джобы, например "*/1 * * * *"
+- =concurrencyPolicy= - можно ли запускать новую джобу, если старая еще не завершилась. принимает =Allow=, =Forbid=, =replace=
+- =successfulJobsHistoryLimit= - количество джобов, сохраняемых после успешного выполнения (сохраняются последние 3 джобы)
+- =successfulJobsHistoryLimit= - количество заваленых джоб
+- =startingDeadlineSeconds= - временной кредит который выдается джобе в случае отклонения от расписания. Естественно он должен быть меньше чем период выполнения кронджобы
+** Аутентификация и авторизация в Kubernetes
+*** RBAC (Roll Binding Access Control)
++ Поддерживает внешние сервисы аутентификации (например gitlab 🤷‍♂️)
++ Kubernetes умеет аутентифицировать по сертификатам (TLS, обычно это корневой сертификат кластера, с =CommonName= и =isOrganisation=)
+**** RoleBinding
++ Служит для привязки ролей к разным сущностям (subjects)
++ Зависит от =namespace=
+
+#+BEGIN_SRC yaml
+rolRef:
+  apiGroup: rbac.autrhization.k8s.io
+  kind: Role # or ClusterRole
+  name: ingree-ngin x
+subjects:
+  - kind: ServiceAccount
+    name: ingress-nginx
+    namespace: ingress-nginx
+#+END_SRC
+
+***** Пример
+#+BEGIN_SRC yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: user
+    namespace: s00001
+#+END_SRC
+
+=kg configmap --as=system:serviceaccount:s00001:user=
+
+**** ClusterRole
+**** ClusterRoleBinding
+**** ServiceAccount
++ Придуманы для аутентификации приложений, который будут обараться к API кубера
++ При создании сервис аккаунта автоматически генерируется токен (JWT), подписываемый корневым сертификатом кластера
+
+**** Role
+
+Описывает права доступа к различным объектам кубернетис. Подробные [[https://kubernetes.io/docs/reference/access-authn-authz/authorization/][verbs тут]]
+
+#+BEGIN_SRC yaml
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list"]
+#+END_SRC
+
+Built-in roles:
+В большинстве случаев используются следующие роли:
+#+BEGIN_SRC bash
+❯ kg clusterrole | egrep "^(cluster-)?admin|^view|^edit"
+admin                                                                  2022-02-02T19:14:36Z
+cluster-admin                                                          2022-02-02T19:14:36Z
+edit                                                                   2022-02-02T19:14:36Z
+view                                                                   2022-02-02T19:14:37Z
+#+END_SRC
+*** Контексты
+Связывают кластера, пользователя и неймспейс. По умолчанию неймспейс - =default=
+Использование: =k config set-context slurm.io= (можно указать либо имя, либо --current, что изменит неймспейс по умолчанию)
+Краткая справка: =k config=
+Вывод структуры: =k config view=
+*** ResourceQuota
+Устанавливает количество доступных ресуров и объектов для *неймспейса* в кластере. (Requiest/Limit/Количество ресурсов)
+/В отличии от ResourceQuota, LimitRange ставится для пода/
+*** Pod Security Policy
+Запрещает добавлять поды с определенными проблемами безопасности (например поды с hostpath, либо поды работающие от рута и т.д)
+Однако в ближайшее время это депрекейтнут 🤷‍♂️
+* Debug kubernetes в production
+** Проблемы 🥸
++ Часто в контейнере нет нужных команд
++ Запрет на exec в поде (потому что через него можно смотреть секреты)
++ Readonly файловая система
+
+** И что делать!?
++ kubectl describe
++ kubectl get events /хранятся 1 час/
++ kubectl logs <pod_name> --previous
++ Ключ =terminationMessagePolicy: FallbacktoLogsOnError=, в describe будет добавлено 80 строчек лога кода (или) 
+** Профилировщики
++ Большинство работают по сети
++ Нужно использоватть отдельный порт, либо роутинг на Ингрессе.
+  /В целом штука опасная, т.к. можно заддосить через профайлер../
+*** Python
+  - Prometheus (/он, впринципе, для всего подряд/)
+  - Rookout
+*** Go
+  - Pprof
+* Autoscale
+** HPA (Horizontal Pod Autoscaler)
++ Скейлит deployment через API запросы, увеличивая количество подов.
++ При использовании *HPA* необходимо всегда устанавливать =requests=
+  /Связано это с принцепом работы HPA, как только ресурсы достигают 50%, создаются новые поды/
++ Изменение количества подов на понижение происходит не сразу (т.к. нагрузка мб неравномерной), по дефолту время до снижения количества подов - *5 минут*, его можно контролировать в
+
+  Autoscale через cli
+  =kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=5=
+
+  #+BEGIN_SRC bash
+❯ k get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%   1         5         1          28s
+  #+END_SRC
+
+*** Metric server
++ На каждой ноде где установлен kubelet поднимается
++ Метрики собираются по дефолту кублетом, однако их не собирает центральный узел кубернетиса
++ Чтобы собирать данные метрики как раз и нужен *Metric server*
++ Не хранит данные, предоставляет их в realtime
+  Схема сия чуда:
+  =k get apiservices.apiregistration.k8s.io v1beta1.metrics.k8s.io -o yaml=
+*** HPA v2
+Объекты метрик:
++ Resource (AverageUtilization, AverageValue):
+  - CPU
+  - Memory
++ Pods
+  Можно реализовать внешний api, который позволит по внутренним метрикам определить нужно ли скейлить приложение
++ Object
+  - Позволяет распределять скейлинг через метрики объектов кубернетиса
+    /Например мы можем следить за количество запросов в ingress, и при достижении определенного количества скейлить наши поды/
++ External - скейлинг на основе внешних факторов, которые существуют за рамками кластера.
+  /Например можно брать ресурсы из api, либо какой-то очереди, и при ее заполнении создавать поды-воркеры для выполнения каких-то тяжеловесных вычислени й/
+** Cluster Autoscaler
++ Работает только на облачных серверах
++ Автоматически добавляет новые узлы в кластер
++ Реализуется на стороне провайдера
++ Может быть использован не столько совместно с HPA
++ Используется для динамических раннеров CI/CD, стендов.
+** Vertical POD autoscaler
++ Увеличивает количество лимитов и реквестов на подах.
++ Используется редко.
++ Умеет следить за метриками, проставлять аннотацию =recommendations=
+`;
+    const result = parse(orgDoc);
+
+    expect(result.toString()).toMatchInlineSnapshot();
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
 });

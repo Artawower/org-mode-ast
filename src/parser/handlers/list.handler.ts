@@ -84,4 +84,15 @@ export class ListHandler implements OrgHandler {
 
     return listTagNode;
   }
+
+  public checkListEnded(): void {
+    if (
+      this.astBuilder.lastNode.is(NodeType.NewLine) &&
+      !this.tokenIterator.token.isBlank &&
+      !this.astBuilder.isListOperator(this.tokenIterator.currentValue)
+    ) {
+      this.ctx.exitList();
+      this.ctx.lastSection = null;
+    }
+  }
 }

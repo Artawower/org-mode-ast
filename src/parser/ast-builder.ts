@@ -150,16 +150,6 @@ export class AstBuilder {
     }
   }
 
-  // TODO: remove
-  // private isNestedListItem(srcNode: OrgData, dstNode: OrgData): OrgData {
-  //   const isSrcListItem = srcNode.type === NodeType.ListItem;
-  //   const isTargetList = dstNode.type === NodeType.List;
-
-  //   if (isSrcListItem) {
-  //     return isTargetList ? dstNode : this.findParentForNodeType(srcNode, dstNode.parent);
-  //   }
-  // }
-
   private isCommonDestinationAndSrcNotHeadline(
     srcNode: OrgNode,
     dstNode: OrgNode
@@ -169,15 +159,23 @@ export class AstBuilder {
       NodeType.TableRow,
       NodeType.TableCell
     );
+
+    if (!isAvailableSrcNode) {
+      return;
+    }
+
+    const isHeadlineSection =
+      dstNode.is(NodeType.Section) && dstNode.parent.is(NodeType.Headline);
+
+    const isListItemSection =
+      dstNode.is(NodeType.Section) &&
+      dstNode.parent.is(NodeType.ListItem) &&
+      this.lastNode.isNot(NodeType.NewLine);
+
     if (
-      isAvailableSrcNode &&
-      [
-        NodeType.Root,
-        NodeType.Headline,
-        NodeType.Section,
-        NodeType.List,
-        NodeType.ListItem,
-      ].includes(dstNode.type)
+      dstNode.is(NodeType.Root, NodeType.Headline) ||
+      isHeadlineSection ||
+      isListItemSection
     ) {
       return dstNode;
     }
@@ -310,6 +308,22 @@ export class AstBuilder {
     return dstNode.parent.section;
   }
 
+  private isInsideListItemTitle(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    const isListItemTitle =
+      dstNode.is(NodeType.Title) && dstNode.parent.is(NodeType.ListItem);
+    const isSrcAllowed = srcNode.isNot(
+      NodeType.Headline,
+      NodeType.Section,
+      NodeType.Title
+    );
+    const isTitleEnded = dstNode.children?.last?.is(NodeType.NewLine);
+
+    if (!isListItemTitle || !isSrcAllowed || isTitleEnded) {
+      return;
+    }
+    return dstNode;
+  }
+
   private readonly parentMatchers = [
     this.isParentAlreadyExist,
     this.isCellSrc,
@@ -330,6 +344,7 @@ export class AstBuilder {
     this.isNodeAfterListWithSameLevel,
     this.isInsideList,
     this.isNestedHeadline,
+    this.isInsideListItemTitle,
     this.isCommonDestinationAndSrcNotHeadline,
   ];
 
@@ -681,6 +696,7 @@ export class AstBuilder {
     return dateNode;
   }
 
+  // TODO: master move to tools
   public isListOperator(tokenValue: string): boolean {
     // NOTE: + ,- , 1), 1. - strings indicated list operator
     // https://regex101.com/r/4qq9Ob/1

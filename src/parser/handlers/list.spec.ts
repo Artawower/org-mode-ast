@@ -497,4 +497,79 @@ This text will end list
       "
     `);
   });
+
+  it('Should exit list when new line appeared without indent', () => {
+    const orgData = `- list item 1
+  - nested
+Some text
+---
+  - list item 1 of the new list`;
+
+    const parsed = parse(orgData);
+    expect(parsed.toString()).toMatchInlineSnapshot(`
+      "root [0-70]
+        list [0-25]
+            :unordered:
+            :level 0:
+          listItem [0-25]
+            title [0-14]
+              operator [0-2] ("- ")
+              text [2-13] ("list item 1")
+              newLine [13-14]
+            section [14-25]
+              list [14-25]
+                  :unordered:
+                  :level 1:
+                listItem [14-25]
+                  title [14-25]
+                    indent [14-16] ("  ")
+                    operator [16-18] ("- ")
+                    text [18-24] ("nested")
+                    newLine [24-25]
+        text [25-34] ("Some text")
+        newLine [34-35]
+        text [35-38] ("---")
+        newLine [38-39]
+        list [39-70]
+            :unordered:
+            :level 1:
+          listItem [39-70]
+            title [39-70]
+              indent [39-41] ("  ")
+              operator [41-43] ("- ")
+              text [43-70] ("list item 1 of the new list")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(parsed, orgData)).toBeFalsy();
+  });
+
+  it('Should parse two different lists', () => {
+    const orgData = `- 1
+123
+- 2`;
+
+    const parsed = parse(orgData);
+    expect(parsed.toString()).toMatchInlineSnapshot(`
+      "root [0-11]
+        list [0-4]
+            :unordered:
+            :level 0:
+          listItem [0-4]
+            title [0-4]
+              operator [0-2] ("- ")
+              text [2-3] ("1")
+              newLine [3-4]
+        text [4-7] ("123")
+        newLine [7-8]
+        list [8-11]
+            :unordered:
+            :level 0:
+          listItem [8-11]
+            title [8-11]
+              operator [8-10] ("- ")
+              text [10-11] ("2")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(parsed, orgData)).toBeFalsy();
+  });
 });

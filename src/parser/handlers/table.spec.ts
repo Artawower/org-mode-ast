@@ -220,26 +220,26 @@ describe('Table', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-21]
         newLine [0-1]
-        list [1-21]
+        list [1-10]
             :unordered:
             :level 0:
-          listItem [1-21]
-            title [1-21]
+          listItem [1-10]
+            title [1-10]
               operator [1-3] ("- ")
               text [3-9] ("Item 1")
               newLine [9-10]
-              table [10-21]
-                tableRow [10-15]
-                  operator [10-11] ("|")
-                  tableCell [11-14]
-                    text [11-14] (" A ")
-                  operator [14-15] ("|")
-                newLine [15-16]
-                tableRow [16-21]
-                  operator [16-17] ("|")
-                  tableCell [17-20]
-                    text [17-20] (" b ")
-                  operator [20-21] ("|")
+        table [10-21]
+          tableRow [10-15]
+            operator [10-11] ("|")
+            tableCell [11-14]
+              text [11-14] (" A ")
+            operator [14-15] ("|")
+          newLine [15-16]
+          tableRow [16-21]
+            operator [16-17] ("|")
+            tableCell [17-20]
+              text [17-20] (" b ")
+            operator [20-21] ("|")
       "
     `);
   });

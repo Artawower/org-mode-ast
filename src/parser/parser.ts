@@ -46,6 +46,7 @@ class Parser {
   private buildTree(): void {
     this.tokenIterator.forEach(() => {
       this.handleToken();
+      // this.ctx.storeLastNewLineInfo(this.tokenIterator.currentValue);
     });
     this.handleEndOfLine();
     this.handleEndOfFile();
@@ -80,6 +81,7 @@ class Parser {
   } satisfies Record<string, () => OrgNode | void>;
 
   private handleToken(): void {
+    this.listHandler.checkListEnded();
     const handler =
       this.getOnHoldHandler() ?? this.tokensHandlers[this.tokenIterator.type];
 
