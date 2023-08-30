@@ -1517,6 +1517,47 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should tokenize title', () => {
+    const orgDoc = `#+TITLE: hello`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1523][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      {
+        end: 8,
+        start: 0,
+        type: 'keyword',
+        value: '#+TITLE:',
+      },
+      {
+        end: 14,
+        start: 8,
+        type: 'text',
+        value: ' hello',
+      },
+    ]);
+  });
+
+  it('Should tokenize title with nobreak space.. ->  ', () => {
+    const orgDoc = `#+TITLE: hello`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 1531][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
+      {
+        end: 8,
+        start: 0,
+        type: 'keyword',
+        value: '#+TITLE:',
+      },
+      {
+        end: 14,
+        start: 8,
+        type: 'text',
+        value: ' hello',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

@@ -10,6 +10,7 @@ import {
 export class Tokenizer {
   // TODO: master move this settings to parser configuration
   private readonly delimiter = ' ';
+  private readonly nonbreakingSpace = ' ';
   private readonly pairBrackets = ['[', ']', '<', '>'];
   private readonly formatterBrackets = ['=', '+', '/', '*', '~', '$'];
   private readonly horizontalRuleChar = '-';
@@ -44,7 +45,9 @@ export class Tokenizer {
   private initTokenAggregators() {
     const commonAggregators = {
       '*': (c: string) => this.handleAsterisk(c),
+      // TODO: master dynamic add all delimiters
       [this.delimiter]: (c: string) => this.handleDelimiter(c),
+      [this.nonbreakingSpace]: (c: string) => this.handleDelimiter(c),
       '#': (c: string) => this.preserveLink(this.handleNumberSign)(c),
       '-': (c: string) => this.preserveLink(this.handleDash)(c),
       '+': (c: string) => this.preserveLink(this.handlePlus)(c),

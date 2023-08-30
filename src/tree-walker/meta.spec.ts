@@ -212,4 +212,32 @@ Text
       }
     `);
   });
+
+  it('Should parse hello world example!', () => {
+    const orgDoc = `#+TITLE: 12312
+
+
+
+`;
+
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "title": "12312",
+      }
+    `);
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-18]
+          :title 12312:
+        keyword [0-14]
+          text [0-8] ("#+TITLE:")
+          text [8-14] (" 12312")
+        newLine [14-15]
+        newLine [15-16]
+        newLine [16-17]
+        newLine [17-18]
+      "
+    `);
+  });
 });
