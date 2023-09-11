@@ -46,19 +46,39 @@ export class Tokenizer {
     const commonAggregators = {
       '*': (c: string) => this.handleAsterisk(c),
       // TODO: master dynamic add all delimiters
-      [this.delimiter]: (c: string) => this.handleDelimiter(c),
-      [this.nonbreakingSpace]: (c: string) => this.handleDelimiter(c),
-      '#': (c: string) => this.preserveLink(this.handleNumberSign)(c),
-      '-': (c: string) => this.preserveLink(this.handleDash)(c),
-      '+': (c: string) => this.preserveLink(this.handlePlus)(c),
-      ':': (c: string) => this.preserveLink(this.handleColon)(c),
-      '.': (c: string) => this.preserveLink(this.handlePoint)(c),
-      ')': (c: string) => this.preserveLink(this.handleParenthesis)(c),
+      [this.delimiter]: (c: string) =>
+        this.preserveTableDelimiter(this.handleDelimiter)(c),
+      [this.nonbreakingSpace]: (c: string) =>
+        this.preserveTableDelimiter(this.handleDelimiter)(c),
+      '#': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handleNumberSign))(
+          c
+        ),
+      '-': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handleDash))(c),
+      '+': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handlePlus))(c),
+      ':': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handleColon))(c),
+      '.': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handlePoint))(c),
+      ')': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handleParenthesis))(
+          c
+        ),
       '\n': (c: string) => this.preserveLink(this.handleNewLine)(c),
-      '\\': (c: string) => this.preserveLink(this.handleBackslash)(c),
-      '{': (c: string) => this.preserveLink(this.handleLatexBrackets)(c),
-      '}': (c: string) => this.preserveLink(this.handleLatexBrackets)(c),
-      '|': (c: string) => this.preserveLink(this.handlePipe)(c),
+      '\\': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handleBackslash))(c),
+      '{': (c: string) =>
+        this.preserveTableDelimiter(
+          this.preserveLink(this.handleLatexBrackets)
+        )(c),
+      '}': (c: string) =>
+        this.preserveTableDelimiter(
+          this.preserveLink(this.handleLatexBrackets)
+        )(c),
+      '|': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handlePipe))(c),
     };
     const bracketAggregators = this.brackets.reduce((acc, c) => {
       acc[c] = (c: string) => this.handleBracket(c);
@@ -103,6 +123,18 @@ export class Tokenizer {
     return (c: string) => {
       if (this.isPrevToken(TokenType.Link) && !this.isDelimiter(c)) {
         this.appendPrevValue(c);
+        return;
+      }
+      originalFn.bind(this)(c);
+    };
+  }
+
+  private preserveTableDelimiter(
+    originalFn: (c: string) => void
+  ): (c: string) => void {
+    return (c: string) => {
+      if (this.lastToken?.isType(TokenType.TableDelimiter)) {
+        this.upsertToken({ type: TokenType.TableDelimiter, value: c });
         return;
       }
       originalFn.bind(this)(c);
@@ -274,6 +306,10 @@ export class Tokenizer {
   }
 
   private handleDash(c: string): void {
+    if (this.lastToken?.isType(TokenType.TableOperator)) {
+      this.upsertToken({ type: TokenType.TableDelimiter, value: c }, true);
+      return;
+    }
     if (this.lastToken?.isType(TokenType.Link)) {
       this.appendPrevValue(c);
       return;

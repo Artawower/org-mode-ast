@@ -243,4 +243,42 @@ describe('Table', () => {
       "
     `);
   });
+
+  fit('Should parse table with special symbols', () => {
+    const orgDoc = `| Название          | highlight |
+|-------------------+-----------|
+| eprfr             | +         |
+| neprdu            | +         |`;
+
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-135]
+        table [0-68]
+          tableRow [0-33]
+            operator [0-1] ("|")
+            tableCell [1-20]
+              text [1-20] (" Название          ")
+            operator [20-21] ("|")
+            tableCell [21-32]
+              text [21-32] (" highlight ")
+            operator [32-33] ("|")
+          newLine [33-34]
+          tableDelimiter [34-67] ("|-------------------+-----------|")
+          newLine [67-68]
+        table [68-135]
+          tableRow [68-134]
+            operator [68-69] ("|")
+            tableCell [69-88]
+              text [69-88] (" eprfr             ")
+            operator [88-89] ("|")
+            tableCell [89-133]
+              text [89-122] (" +         | neprdu            | ")
+              unresolved [122-123] ("+")
+              text [123-133] ("         |")
+            operator [133-134] ("|")
+          newLine [134-135]
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });

@@ -52,6 +52,15 @@ export class TableHandler implements OrgHandler {
     return tableCell;
   }
 
+  public handleDelimiter(): OrgNode {
+    const table = this.#createTableIfNotExist();
+    const delimiterNode = this.astBuilder.createTableDelimiterNode(
+      this.tokenIterator.currentValue
+    );
+    table.addChild(delimiterNode);
+    return delimiterNode;
+  }
+
   #isTableLine(): boolean {
     if (this.#tableLine === false) {
       this.#mergeCurrentToken();

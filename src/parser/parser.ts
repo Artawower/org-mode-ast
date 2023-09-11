@@ -78,6 +78,7 @@ class Parser {
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
     [TokenType.TableOperator]: () => this.tableHandler.handle(),
+    [TokenType.TableDelimiter]: () => this.tableHandler.handleDelimiter(),
   } satisfies Record<string, () => OrgNode | void>;
 
   private handleToken(): void {

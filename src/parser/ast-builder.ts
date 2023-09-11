@@ -767,6 +767,13 @@ export class AstBuilder {
     });
   }
 
+  public createTableDelimiterNode(value: string): OrgNode {
+    return new OrgNode({
+      type: NodeType.TableDelimiter,
+      value,
+    });
+  }
+
   public checkContext(): void {
     this.checkExitList();
   }
