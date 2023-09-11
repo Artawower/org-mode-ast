@@ -1611,6 +1611,111 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should parse table with special symbols', () => {
+    const orgDoc = `| 1 | + | 
+| 2 | + |`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 1,
+        start: 0,
+        type: 'tableOperator',
+        value: '|',
+      },
+      {
+        end: 4,
+        start: 1,
+        type: 'text',
+        value: ' 1 ',
+      },
+      {
+        end: 5,
+        start: 4,
+        type: 'tableOperator',
+        value: '|',
+      },
+      {
+        end: 6,
+        start: 5,
+        type: 'text',
+        value: ' ',
+      },
+      {
+        end: 7,
+        start: 6,
+        type: 'bracket',
+        value: '+',
+      },
+      {
+        end: 8,
+        start: 7,
+        type: 'text',
+        value: ' ',
+      },
+      {
+        end: 9,
+        start: 8,
+        type: 'tableOperator',
+        value: '|',
+      },
+      {
+        end: 10,
+        start: 9,
+        type: 'text',
+        value: ' ',
+      },
+      {
+        end: 11,
+        start: 10,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 12,
+        start: 11,
+        type: 'tableOperator',
+        value: '|',
+      },
+      {
+        end: 15,
+        start: 12,
+        type: 'text',
+        value: ' 2 ',
+      },
+      {
+        end: 16,
+        start: 15,
+        type: 'tableOperator',
+        value: '|',
+      },
+      {
+        end: 17,
+        start: 16,
+        type: 'text',
+        value: ' ',
+      },
+      {
+        end: 18,
+        start: 17,
+        type: 'bracket',
+        value: '+',
+      },
+      {
+        end: 19,
+        start: 18,
+        type: 'text',
+        value: ' ',
+      },
+      {
+        end: 20,
+        start: 19,
+        type: 'tableOperator',
+        value: '|',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

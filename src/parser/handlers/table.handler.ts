@@ -52,6 +52,7 @@ export class TableHandler implements OrgHandler {
     return tableCell;
   }
 
+
   public handleDelimiter(): OrgNode {
     const table = this.#createTableIfNotExist();
     const delimiterNode = this.astBuilder.createTableDelimiterNode(

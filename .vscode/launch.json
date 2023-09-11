@@ -13,7 +13,7 @@
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/parser/handlers/list.spec.ts",
+        "${workspaceFolder}/src/parser/handlers/table.spec.ts",
         "--no-watch"
       ],
       "cwd": "${workspaceFolder}",

@@ -48,7 +48,7 @@ class Parser {
       this.handleToken();
       // this.ctx.storeLastNewLineInfo(this.tokenIterator.currentValue);
     });
-    this.handleEndOfLine();
+    this.handleEndOfExpressions();
     this.handleEndOfFile();
   }
 
@@ -77,7 +77,7 @@ class Parser {
       this.latexEnvironmentHandler.handle(),
     // TODO: master make same for other keys
     [CommentHandler.tokenType]: () => this.commentHandler.handle(),
-    [TokenType.TableOperator]: () => this.tableHandler.handle(),
+    [TokenType.TableOperator]: () => this.handleTableOperator(),
     [TokenType.TableDelimiter]: () => this.tableHandler.handleDelimiter(),
   } satisfies Record<string, () => OrgNode | void>;
 
@@ -171,7 +171,7 @@ class Parser {
   }
 
   private handleNewLine(): OrgNode {
-    this.handleEndOfLine();
+    this.handleEndOfExpressions();
     const newLineNode = this.astBuilder.createNewLineNode();
     this.astBuilder.attachToTree(newLineNode);
     return newLineNode;
@@ -185,7 +185,12 @@ class Parser {
     return rawLinkNode;
   }
 
-  private handleEndOfLine(): void {
+  private handleTableOperator(): OrgNode {
+    this.bracketHandler.handleEndOfLine();
+    return this.tableHandler.handle();
+  }
+
+  private handleEndOfExpressions(): void {
     this.commentHandler.handleNewLine();
     this.tableHandler.handleNewLine();
     this.keywordHandler.handleEndOfLine();

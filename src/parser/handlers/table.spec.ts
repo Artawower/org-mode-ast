@@ -244,7 +244,36 @@ describe('Table', () => {
     `);
   });
 
-  fit('Should parse table with special symbols', () => {
+  it('Should parse small table with special symbol inside', () => {
+    const orgDoc = `| 1 | + |
+| 2 | + |`;
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-19]
+        table [0-19]
+          tableRow [0-9]
+            operator [0-1] ("|")
+            tableCell [1-4]
+              text [1-4] (" 1 ")
+            operator [4-5] ("|")
+            tableCell [5-8]
+              text [5-8] (" + ")
+            operator [8-9] ("|")
+          newLine [9-10]
+          tableRow [10-19]
+            operator [10-11] ("|")
+            tableCell [11-14]
+              text [11-14] (" 2 ")
+            operator [14-15] ("|")
+            tableCell [15-18]
+              text [15-18] (" + ")
+            operator [18-19] ("|")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
+
+  it('Should parse table with special symbols', () => {
     const orgDoc = `| Название          | highlight |
 |-------------------+-----------|
 | eprfr             | +         |
@@ -266,17 +295,23 @@ describe('Table', () => {
           tableDelimiter [34-67] ("|-------------------+-----------|")
           newLine [67-68]
         table [68-135]
-          tableRow [68-134]
+          tableRow [68-101]
             operator [68-69] ("|")
             tableCell [69-88]
               text [69-88] (" eprfr             ")
             operator [88-89] ("|")
-            tableCell [89-133]
-              text [89-122] (" +         | neprdu            | ")
-              unresolved [122-123] ("+")
-              text [123-133] ("         |")
-            operator [133-134] ("|")
-          newLine [134-135]
+            tableCell [89-100]
+              text [89-100] (" +         ")
+            operator [100-101] ("|")
+          newLine [101-102]
+          tableRow [102-135]
+            operator [102-103] ("|")
+            tableCell [103-122]
+              text [103-122] (" neprdu            ")
+            operator [122-123] ("|")
+            tableCell [123-134]
+              text [123-134] (" +         ")
+            operator [134-135] ("|")
       "
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
