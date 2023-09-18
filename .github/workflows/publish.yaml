@@ -14,24 +14,30 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
       - name: install dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
+
       - name: run tests
         run: |
-          yarn test:silent
+          bun run test:silent
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare files for lint
         uses: actions/checkout@master
-      - uses: actions/setup-node@v2
+      - uses: oven-sh/setup-bun@v1
         with:
-          node-version: '16'
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+          bun-version: latest
+
+      - name: install dependencies
+        run: bun install --frozen-lockfile
       - name: Lint
         if: steps.tschangeset.outputs.any_changed == 'true'
-        run: yarn lint
+        run: bun run lint
 
   tagged-release:
     name: 'Tagged Release'
@@ -43,6 +49,7 @@ jobs:
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
           prerelease: false
 
+  # TODO: migrate to bun https://github.com/oven-sh/bun/issues/1976
   publish:
     needs: tagged-release
     runs-on: ubuntu-latest

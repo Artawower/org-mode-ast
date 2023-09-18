@@ -4,12 +4,12 @@
   "description": "Simple and dumb org-mode parser",
   "type": "module",
   "scripts": {
-    "start": "yarn build & node dist/index.js",
+    "start": "bun run build & node dist/index.js",
     "build": "tsc --project tsconfig.prod.json",
-    "test": "jest",
-    "test:silent": "jest --silent=true",
-    "test:coverage": "jest --coverage",
-    "coverage": "jest --coverage",
+    "test": "bun jest",
+    "test:silent": "bun run test --silent=true",
+    "test:coverage": "bun run test --coverage",
+    "coverage": "bun run test --coverage",
     "lint": "eslint . --ext .ts",
     "prepublish": "npm run build"
   },
