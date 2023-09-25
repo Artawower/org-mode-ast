@@ -41,7 +41,7 @@ export enum NodeType {
   PropertyDrawer = 'propertyDrawer',
   Property = 'property',
   BlockProperty = 'blockProperty',
-  BlockLanguage = 'blockLanguage',
+  SrcLanguage = 'srcLanguage',
   BlockFooter = 'blockFooter',
   BlockBody = 'blockBody',
   QuoteBlock = 'quoteBlock',

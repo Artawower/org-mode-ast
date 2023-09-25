@@ -653,14 +653,6 @@ export class AstBuilder {
     return propertyNode;
   }
 
-  public createBlockLanguageNode(value: string): OrgNode {
-    return new OrgNode({
-      type: NodeType.BlockLanguage,
-      properties: { language: value.slice(1).trim() },
-      value,
-    });
-  }
-
   public createFixedWidthNode(): OrgNode {
     return new OrgNode({
       type: NodeType.FixedWidth,

@@ -139,10 +139,12 @@ describe('Latex environment', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-104]
         srcBlock [0-104]
+            :language typescript:
           blockHeader [0-22]
             keyword [0-22]
+                :language typescript:
               text [0-11] ("#+BEGIN_SRC")
-              text [11-22] (" typescript")
+              srcLanguage [11-22] (" typescript")
           newLine [22-23]
           blockBody [23-95]
             text [23-95] ("  private initAuthConfig(): void {\\n    this.authConfig = {\\n    };\\n  }\\n  ")

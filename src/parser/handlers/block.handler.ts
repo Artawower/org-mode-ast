@@ -176,6 +176,18 @@ export class BlockHandler implements OrgHandler {
 
     nodes.forEach((node) => {
       const isKeyword = node.is(NodeType.Keyword);
+      const isSrcBlockLanguage =
+        node.children?.length === 2 &&
+        node.is(NodeType.Keyword) &&
+        node.children.last.is(NodeType.Text);
+
+      if (isSrcBlockLanguage) {
+        node.children.last.type = NodeType.SrcLanguage;
+        node.setProperties({
+          language: node.children.last.value.slice(1).trim(),
+        });
+      }
+
       if (isKeyword && headerNodes.isEmpty) {
         headerNodes.push(node);
         return;
@@ -184,11 +196,6 @@ export class BlockHandler implements OrgHandler {
         NodeType.BlockProperty
       );
       const isText = node.is(NodeType.Text);
-
-      if (headerNodes.last?.is(NodeType.Keyword) && isText) {
-        headerNodes.push(this.astBuilder.createBlockLanguageNode(node.value));
-        return;
-      }
 
       if (node.is(NodeType.BlockProperty)) {
         headerNodes.push(node);

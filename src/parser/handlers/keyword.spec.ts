@@ -118,10 +118,12 @@ And amma text after keyword`;
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-86]
         srcBlock [0-86]
+            :language js:
           blockHeader [0-39]
             keyword [0-15]
+                :language js:
               text [0-11] ("#+BEGIN_SRC")
-              text [11-15] (" js ")
+              srcLanguage [11-15] (" js ")
             blockProperty [15-26]
               text [15-22] (":tangle")
               text [22-26] (" no ")
@@ -148,10 +150,12 @@ And amma text after keyword`;
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-129]
         srcBlock [0-129]
+            :language emacs-lisp:
           blockHeader [0-22]
             keyword [0-22]
+                :language emacs-lisp:
               text [0-11] ("#+BEGIN_SRC")
-              text [11-22] (" emacs-lisp")
+              srcLanguage [11-22] (" emacs-lisp")
           newLine [22-23]
           blockBody [23-120]
             text [23-120] ("    (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name))\\n    ")
@@ -172,10 +176,12 @@ And amma text after keyword`;
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-74]
         srcBlock [0-74]
+            :language emacs-lisp:
           blockHeader [0-22]
             keyword [0-22]
+                :language emacs-lisp:
               text [0-11] ("#+BEGIN_SRC")
-              text [11-22] (" emacs-lisp")
+              srcLanguage [11-22] (" emacs-lisp")
           newLine [22-23]
           blockBody [23-65]
             text [23-65] ("    (setq test (map-delete test :hi))\\n    ")

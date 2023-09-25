@@ -1137,7 +1137,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-32263]
+      "root [0-32262]
         newLine [0-1]
         property [1-13]
           text [1-13] (":PROPERTIES:")
@@ -1512,10 +1512,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [2676-2677]
                     newLine [2677-2678]
                     srcBlock [2678-2744]
+                        :language emacs-lisp:
                       blockHeader [2678-2700]
                         keyword [2678-2700]
+                            :language emacs-lisp:
                           text [2678-2689] ("#+begin_src")
-                          text [2689-2700] (" emacs-lisp")
+                          srcLanguage [2689-2700] (" emacs-lisp")
                       newLine [2700-2701]
                       blockBody [2701-2734]
                         text [2701-2734] ("(setq var \\"my-package--variable\\")")
@@ -1575,10 +1577,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [3184-3185]
                     newLine [3185-3186]
                     srcBlock [3186-3350]
+                        :language emacs-lisp:
                       blockHeader [3186-3208]
                         keyword [3186-3208]
+                            :language emacs-lisp:
                           text [3186-3197] ("#+begin_src")
-                          text [3197-3208] (" emacs-lisp")
+                          srcLanguage [3197-3208] (" emacs-lisp")
                       newLine [3208-3209]
                       blockBody [3209-3340]
                         text [3209-3340] ("(defcustom my-custom-variable \\"hello\\"\\n  \\"Some description\\"\\n  :type 'string\\n  :group 'my-custom-group)\\n\\n(message my-custom-variable)")
@@ -1606,10 +1610,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [3536-3537]
                     newLine [3537-3538]
                     srcBlock [3538-3635]
+                        :language emacs-lisp:
                       blockHeader [3538-3560]
                         keyword [3538-3560]
+                            :language emacs-lisp:
                           text [3538-3549] ("#+begin_src")
-                          text [3549-3560] (" emacs-lisp")
+                          srcLanguage [3549-3560] (" emacs-lisp")
                       newLine [3560-3561]
                       blockBody [3561-3625]
                         text [3561-3625] ("  (let ((my-var \\"I'am a local variable\\"))\\n     (message my-var))")
@@ -1646,10 +1652,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [3842-3843]
                     newLine [3843-3844]
                     srcBlock [3844-3997]
+                        :language emacs-lisp:
                       blockHeader [3844-3866]
                         keyword [3844-3866]
+                            :language emacs-lisp:
                           text [3844-3855] ("#+begin_src")
-                          text [3855-3866] (" emacs-lisp")
+                          srcLanguage [3855-3866] (" emacs-lisp")
                       newLine [3866-3867]
                       blockBody [3867-3987]
                         text [3867-3987] ("(let* ((my-var \\"I'am a local variable\\")\\n       (my-var (concat my-var \\" And i can be overwrited!\\")))\\n  (message my-var))")
@@ -1680,10 +1688,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [4199-4200]
                     newLine [4200-4201]
                     srcBlock [4201-4312]
+                        :language emacs-lisp:
                       blockHeader [4201-4223]
                         keyword [4201-4223]
+                            :language emacs-lisp:
                           text [4201-4212] ("#+begin_src")
-                          text [4212-4223] (" emacs-lisp")
+                          srcLanguage [4212-4223] (" emacs-lisp")
                       newLine [4223-4224]
                       blockBody [4224-4302]
                         text [4224-4302] ("(let* ((name \\"Oleg\\"))\\n  (message name)\\n  (setq name \\"Vasya\\")\\n  (message name))")
@@ -1708,10 +1718,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [4412-4413]
                   section [4413-4649]
                     srcBlock [4413-4611]
+                        :language emacs-lisp:
                       blockHeader [4413-4435]
                         keyword [4413-4435]
+                            :language emacs-lisp:
                           text [4413-4424] ("#+begin_src")
-                          text [4424-4435] (" emacs-lisp")
+                          srcLanguage [4424-4435] (" emacs-lisp")
                       newLine [4435-4436]
                       blockBody [4436-4601]
                         text [4436-4601] ("(when-let* ((b 4)\\n            (d nil))\\n  (message \\"This code never will be executed\\"))\\n\\n(when-let* ((b 4)\\n            (d \\"He\\"))\\n  (message \\"But this code will be!\\"))")
@@ -1750,10 +1762,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [4826-4827]
                     newLine [4827-4828]
                     srcBlock [4828-5005]
+                        :language emacs-lisp:
                       blockHeader [4828-4850]
                         keyword [4828-4850]
+                            :language emacs-lisp:
                           text [4828-4839] ("#+begin_src")
-                          text [4839-4850] (" emacs-lisp")
+                          srcLanguage [4839-4850] (" emacs-lisp")
                       newLine [4850-4851]
                       blockBody [4851-4995]
                         text [4851-4995] ("\\n(let ((my-awesome-char ?Q))\\n              (message (string my-awesome-char ?H ?e ?e ?l ?o))\\n              (message (concat '(?W ?o ?r ?l ?d))))")
@@ -1774,10 +1788,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [5065-5066]
                     newLine [5066-5067]
                     srcBlock [5067-5119]
+                        :language emacs-lisp:
                       blockHeader [5067-5089]
                         keyword [5067-5089]
+                            :language emacs-lisp:
                           text [5067-5078] ("#+begin_src")
-                          text [5078-5089] (" emacs-lisp")
+                          srcLanguage [5078-5089] (" emacs-lisp")
                       newLine [5089-5090]
                       blockBody [5090-5109]
                         text [5090-5109] ("(make-string 10 ?|)")
@@ -1808,10 +1824,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [5191-5192]
                     newLine [5192-5193]
                     srcBlock [5193-5265]
+                        :language emacs-lisp:
                       blockHeader [5193-5215]
                         keyword [5193-5215]
+                            :language emacs-lisp:
                           text [5193-5204] ("#+begin_src")
-                          text [5204-5215] (" emacs-lisp")
+                          srcLanguage [5204-5215] (" emacs-lisp")
                       newLine [5215-5216]
                       blockBody [5216-5255]
                         text [5216-5255] ("(message (format \\"Hello %s\\n\\" \\"World?\\"))")
@@ -1844,10 +1862,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [5515-5516]
                     newLine [5516-5517]
                     srcBlock [5517-5591]
+                        :language emacs-lisp:
                       blockHeader [5517-5539]
                         keyword [5517-5539]
+                            :language emacs-lisp:
                           text [5517-5528] ("#+begin_src")
-                          text [5528-5539] (" emacs-lisp")
+                          srcLanguage [5528-5539] (" emacs-lisp")
                       newLine [5539-5540]
                       blockBody [5540-5581]
                         text [5540-5581] ("(setq my-first-list '(\\"Foo\\" \\"Baz\\" \\"Qwe\\"))")
@@ -1864,10 +1884,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [5620-5621]
                       section [5621-5692]
                         srcBlock [5621-5673]
+                            :language emacs-lisp:
                           blockHeader [5621-5643]
                             keyword [5621-5643]
+                                :language emacs-lisp:
                               text [5621-5632] ("#+begin_src")
-                              text [5632-5643] (" emacs-lisp")
+                              srcLanguage [5632-5643] (" emacs-lisp")
                           newLine [5643-5644]
                           blockBody [5644-5663]
                             text [5644-5663] ("(car my-first-list)")
@@ -1892,10 +1914,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [5734-5735]
                       section [5735-5788]
                         srcBlock [5735-5787]
+                            :language emacs-lisp:
                           blockHeader [5735-5757]
                             keyword [5735-5757]
+                                :language emacs-lisp:
                               text [5735-5746] ("#+begin_src")
-                              text [5746-5757] (" emacs-lisp")
+                              srcLanguage [5746-5757] (" emacs-lisp")
                           newLine [5757-5758]
                           blockBody [5758-5777]
                             text [5758-5777] ("(cdr my-first-list)")
@@ -1915,10 +1939,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [5909-5910]
                         newLine [5910-5911]
                         srcBlock [5911-6027]
+                            :language emacs-lisp:
                           blockHeader [5911-5933]
                             keyword [5911-5933]
+                                :language emacs-lisp:
                               text [5911-5922] ("#+begin_src")
-                              text [5922-5933] (" emacs-lisp")
+                              srcLanguage [5922-5933] (" emacs-lisp")
                           newLine [5933-5934]
                           blockBody [5934-6017]
                             text [5934-6017] ("(setq my-first-list '())\\n(push \\"Lalalend\\" my-first-list)\\n(push \\"Hey\\" my-first-list)")
@@ -1941,10 +1967,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [6099-6100]
                         newLine [6100-6101]
                         srcBlock [6101-6245]
+                            :language emacs-lisp:
                           blockHeader [6101-6123]
                             keyword [6101-6123]
+                                :language emacs-lisp:
                               text [6101-6112] ("#+begin_src")
-                              text [6112-6123] (" emacs-lisp")
+                              srcLanguage [6112-6123] (" emacs-lisp")
                           newLine [6123-6124]
                           blockBody [6124-6235]
                             text [6124-6235] ("(setq my-test-2-list '(\\"qweqweqwe\\" \\"123\\"))\\n(add-to-list 'my-test-2-list \\"qwe\\" t)\\n\\n(message \\"%s\\" my-test-2-list)")
@@ -1969,10 +1997,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [6302-6303]
                       section [6303-6482]
                         srcBlock [6303-6451]
+                            :language emacs-lisp:
                           blockHeader [6303-6325]
                             keyword [6303-6325]
+                                :language emacs-lisp:
                               text [6303-6314] ("#+begin_src")
-                              text [6314-6325] (" emacs-lisp")
+                              srcLanguage [6314-6325] (" emacs-lisp")
                           newLine [6325-6326]
                           blockBody [6326-6441]
                             text [6326-6441] ("(setq my-first-list '(?q ?b ?c))\\n(setq my-first-list (append my-first-list (list ?t)))\\n(message \\"%s\\" my-first-list)")
@@ -2009,10 +2039,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [6565-6566]
                         newLine [6566-6567]
                         srcBlock [6567-6692]
+                            :language emacs-lisp:
                           blockHeader [6567-6589]
                             keyword [6567-6589]
+                                :language emacs-lisp:
                               text [6567-6578] ("#+begin_src")
-                              text [6578-6589] (" emacs-lisp")
+                              srcLanguage [6578-6589] (" emacs-lisp")
                           newLine [6589-6590]
                           blockBody [6590-6682]
                             text [6590-6682] ("  (defun greeting (name)\\n    (format \\"Hello %s\\" name))\\n  \\n  (mapcar 'greeting my-first-list)")
@@ -2036,10 +2068,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [6790-6791]
                         newLine [6791-6792]
                         srcBlock [6792-6923]
+                            :language emacs-lisp:
                           blockHeader [6792-6814]
                             keyword [6792-6814]
+                                :language emacs-lisp:
                               text [6792-6803] ("#+begin_src")
-                              text [6803-6814] (" emacs-lisp")
+                              srcLanguage [6803-6814] (" emacs-lisp")
                           newLine [6814-6815]
                           blockBody [6815-6913]
                             text [6815-6913] ("(let* ((v \\"\\"))\\n\\n  (dolist (p '(\\"one\\" \\"two\\" \\"three\\"))\\n    (setq v (concat v \\" \\" p)))\\n  (message v))")
@@ -2064,10 +2098,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [6992-6993]
                       section [6993-7069]
                         srcBlock [6993-7060]
+                            :language emacs-lisp:
                           blockHeader [6993-7015]
                             keyword [6993-7015]
+                                :language emacs-lisp:
                               text [6993-7004] ("#+begin_src")
-                              text [7004-7015] (" emacs-lisp")
+                              srcLanguage [7004-7015] (" emacs-lisp")
                           newLine [7015-7016]
                           blockBody [7016-7050]
                             text [7016-7050] ("(member \\"123\\" '(1233 \\"qwe\\" \\"123\\"))")
@@ -2091,10 +2127,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [7114-7115]
                       section [7115-7519]
                         srcBlock [7115-7272]
+                            :language emacs-lisp:
                           blockHeader [7115-7137]
                             keyword [7115-7137]
+                                :language emacs-lisp:
                               text [7115-7126] ("#+begin_src")
-                              text [7126-7137] (" emacs-lisp")
+                              srcLanguage [7126-7137] (" emacs-lisp")
                           newLine [7137-7138]
                           blockBody [7138-7262]
                             text [7138-7262] ("(setq my-test-list '((\\"qwe\\" . 1) (\\"be\\" . 2)))\\n(setcdr (assoc \\"qwe\\" my-test-list) \\"asdlkajsdakd\\")\\n(message \\"%s\\" my-test-list)")
@@ -2115,10 +2153,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         text [7320-7359] ("А что если этого элемента нет в списке?")
                         newLine [7359-7360]
                         srcBlock [7360-7505]
+                            :language emacs-lisp:
                           blockHeader [7360-7382]
                             keyword [7360-7382]
+                                :language emacs-lisp:
                               text [7360-7371] ("#+begin_src")
-                              text [7371-7382] (" emacs-lisp")
+                              srcLanguage [7371-7382] (" emacs-lisp")
                           newLine [7382-7383]
                           blockBody [7383-7495]
                             text [7383-7495] ("(setq my-test-list '((\\"be\\" . 2)))\\n(setcdr (assoc \\"qwe\\" my-test-list) \\"asdlkajsdakd\\")\\n(message \\"%s\\" my-test-list)")
@@ -2138,10 +2178,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [7549-7550]
                       section [7550-7774]
                         srcBlock [7550-7771]
+                            :language emacs-lisp:
                           blockHeader [7550-7588]
                             keyword [7550-7573]
+                                :language emacs-lisp:
                               text [7550-7561] ("#+BEGIN_SRC")
-                              text [7561-7573] (" emacs-lisp ")
+                              srcLanguage [7561-7573] (" emacs-lisp ")
                             blockProperty [7573-7588]
                               text [7573-7581] (":results")
                               text [7581-7588] (" silent")
@@ -2170,10 +2212,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [7815-7816]
                       section [7816-8128]
                         srcBlock [7816-7884]
+                            :language emacs-lisp:
                           blockHeader [7816-7838]
                             keyword [7816-7838]
+                                :language emacs-lisp:
                               text [7816-7827] ("#+begin_src")
-                              text [7827-7838] (" emacs-lisp")
+                              srcLanguage [7827-7838] (" emacs-lisp")
                           newLine [7838-7839]
                           blockBody [7839-7875]
                             text [7839-7875] ("(setq trees '((a . 1) (b . \\"qwe\\")))\\n")
@@ -2199,10 +2243,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [8028-8029]
                         newLine [8029-8030]
                         srcBlock [8030-8127]
+                            :language emacs-lisp:
                           blockHeader [8030-8052]
                             keyword [8030-8052]
+                                :language emacs-lisp:
                               text [8030-8041] ("#+begin_src")
-                              text [8041-8052] (" emacs-lisp")
+                              srcLanguage [8041-8052] (" emacs-lisp")
                           newLine [8052-8053]
                           blockBody [8053-8117]
                             text [8053-8117] ("(setq another-hashmap '((\\"a\\" \\"First elem\\") (\\"b\\" \\"Second elem\\")))")
@@ -2219,10 +2265,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [8158-8159]
                       section [8159-8426]
                         srcBlock [8159-8223]
+                            :language emacs-lisp:
                           blockHeader [8159-8181]
                             keyword [8159-8181]
+                                :language emacs-lisp:
                               text [8159-8170] ("#+begin_src")
-                              text [8170-8181] (" emacs-lisp")
+                              srcLanguage [8170-8181] (" emacs-lisp")
                           newLine [8181-8182]
                           blockBody [8182-8213]
                             text [8182-8213] ("(message \\"%s\\" (assoc 'a trees))")
@@ -2239,10 +2287,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [8337-8338]
                         newLine [8338-8339]
                         srcBlock [8339-8409]
+                            :language emacs-lisp:
                           blockHeader [8339-8361]
                             keyword [8339-8361]
+                                :language emacs-lisp:
                               text [8339-8350] ("#+begin_src")
-                              text [8350-8361] (" emacs-lisp")
+                              srcLanguage [8350-8361] (" emacs-lisp")
                           newLine [8361-8362]
                           blockBody [8362-8399]
                             text [8362-8399] ("(message \\"%s\\" (cdr (assoc 'a trees)))")
@@ -2267,10 +2317,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [8459-8460]
                       section [8460-8752]
                         srcBlock [8460-8528]
+                            :language emacs-lisp:
                           blockHeader [8460-8482]
                             keyword [8460-8482]
+                                :language emacs-lisp:
                               text [8460-8471] ("#+begin_src")
-                              text [8471-8482] (" emacs-lisp")
+                              srcLanguage [8471-8482] (" emacs-lisp")
                           newLine [8482-8483]
                           blockBody [8483-8518]
                             text [8483-8518] ("(message \\"%s\\" (rassoc \\"qwe\\" trees))")
@@ -2293,10 +2345,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [8611-8612]
                         newLine [8612-8613]
                         srcBlock [8613-8729]
+                            :language emacs-lisp:
                           blockHeader [8613-8635]
                             keyword [8613-8635]
+                                :language emacs-lisp:
                               text [8613-8624] ("#+begin_src")
-                              text [8624-8635] (" emacs-lisp")
+                              srcLanguage [8624-8635] (" emacs-lisp")
                           newLine [8635-8636]
                           blockBody [8636-8719]
                             text [8636-8719] ("(message \\"%s\\" (rassq \\"qwe\\" trees)) ;; nil\\n(message \\"%s\\" (rassq 1 trees)) ;; (a . 1)")
@@ -2321,10 +2375,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [8773-8774]
                       section [8774-9086]
                         srcBlock [8774-9012]
+                            :language emacs-lisp:
                           blockHeader [8774-8796]
                             keyword [8774-8796]
+                                :language emacs-lisp:
                               text [8774-8785] ("#+begin_src")
-                              text [8785-8796] (" emacs-lisp")
+                              srcLanguage [8785-8796] (" emacs-lisp")
                           newLine [8796-8797]
                           blockBody [8797-9002]
                             text [8797-9002] ("  (setq needles-per-cluster\\n        '((2 . (\\"Austrian Pine\\" \\"Red Pine\\"))\\n          (3 . (\\"Pitch Pine\\"))\\n          (5 . (\\"White Pine\\"))))\\n  (setq copy (copy-alist needles-per-cluster))\\n  (message \\"%s\\" copy)")
@@ -2349,10 +2405,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [9121-9122]
                       section [9122-9490]
                         srcBlock [9122-9414]
+                            :language emacs-lisp:
                           blockHeader [9122-9144]
                             keyword [9122-9144]
+                                :language emacs-lisp:
                               text [9122-9133] ("#+begin_src")
-                              text [9133-9144] (" emacs-lisp")
+                              srcLanguage [9133-9144] (" emacs-lisp")
                           newLine [9144-9145]
                           blockBody [9145-9404]
                             text [9145-9404] ("  (setq alist (list '(foo 1) '(bar 2) '(foo 3) '(lose 4)))\\n  (setq new-alist (assq-delete-all 'foo alist)) ;; Возвращает новое значение\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist)\\n                   (format \\"new: %s\\" new-alist)))")
@@ -2381,10 +2439,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [9523-9524]
                       section [9524-9987]
                         srcBlock [9524-9870]
+                            :language emacs-lisp:
                           blockHeader [9524-9546]
                             keyword [9524-9546]
+                                :language emacs-lisp:
                               text [9524-9535] ("#+begin_src")
-                              text [9535-9546] (" emacs-lisp")
+                              srcLanguage [9535-9546] (" emacs-lisp")
                           newLine [9546-9547]
                           blockBody [9547-9860]
                             text [9547-9860] ("  (setq alist2 '((foo . first) (bar . second) (foo2 . third) (qwe . five)))\\n  (setq new-alist (rassq-delete-all 'third alist2)) ;; меняет значение ?\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist2)\\n                   (format \\"new: %s\\" new-alist)))\\n  ;; (message \\"%s\\" (rassq 'foo alist2))")
@@ -2427,10 +2487,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [10070-10071]
                     newLine [10071-10072]
                     srcBlock [10072-10626]
+                        :language emacs-lisp:
                       blockHeader [10072-10094]
                         keyword [10072-10094]
+                            :language emacs-lisp:
                           text [10072-10083] ("#+begin_src")
-                          text [10083-10094] (" emacs-lisp")
+                          srcLanguage [10083-10094] (" emacs-lisp")
                       newLine [10094-10095]
                       blockBody [10095-10616]
                         text [10095-10616] ("  (setq my-first-map #s(\\n                        hash-table\\n                        size 10\\n                        test equal\\n                        data (\\n                              python-mode \\"spam!\\"\\n                              go-mode \\"booo!1 terrible pointer\\"\\n                              org-mode \\"amma fluffy feature ;p\\"\\n                              )))\\n  (puthash 'js-mode \\"ugly language\\" my-first-map)\\n  (message \\"%s\\" (gethash 'python-mode my-first-map))\\n  (message \\"%s\\" (gethash 'js-mode my-first-map))")
@@ -2498,10 +2560,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [11081-11082]
                     newLine [11082-11083]
                     srcBlock [11083-11272]
+                        :language emacs-lisp:
                       blockHeader [11083-11105]
                         keyword [11083-11105]
+                            :language emacs-lisp:
                           text [11083-11094] ("#+begin_src")
-                          text [11094-11105] (" emacs-lisp")
+                          srcLanguage [11094-11105] (" emacs-lisp")
                       newLine [11105-11106]
                       blockBody [11106-11262]
                         text [11106-11262] ("  (defun hello (my-name)\\n    \\"This function will say hello for MY-NAME.\\"\\n    (interactive)\\n    (message (concat \\"Hello, I'am \\" my-name)))\\n\\n  (hello \\"Artur\\")")
@@ -2526,10 +2590,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [11331-11332]
                   section [11332-11586]
                     srcBlock [11332-11555]
+                        :language emacs-lisp:
                       blockHeader [11332-11354]
                         keyword [11332-11354]
+                            :language emacs-lisp:
                           text [11332-11343] ("#+begin_src")
-                          text [11343-11354] (" emacs-lisp")
+                          srcLanguage [11343-11354] (" emacs-lisp")
                       newLine [11354-11355]
                       blockBody [11355-11545]
                         text [11355-11545] ("(defun my-super-optional-function (name &optional last-name patronymic)\\n  (message \\"%s %s %s\\" name (or last-name \\"\\") (or patronymic \\"\\")))\\n\\n(my-super-optional-function \\"Artur\\" nil \\"Proshkov\\")")
@@ -2554,10 +2620,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [11611-11612]
                   section [11612-11903]
                     srcBlock [11612-11861]
+                        :language emacs-lisp:
                       blockHeader [11612-11634]
                         keyword [11612-11634]
+                            :language emacs-lisp:
                           text [11612-11623] ("#+begin_src")
-                          text [11623-11634] (" emacs-lisp")
+                          srcLanguage [11623-11634] (" emacs-lisp")
                       newLine [11634-11635]
                       blockBody [11635-11851]
                         text [11635-11851] ("(defun my-super-function-with-named-args (&rest args)\\n  (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name)))\\n\\n  (my-super-function-with-named-args :name \\"One\\" :middle-name \\"Dude\\")")
@@ -2588,10 +2656,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [11971-11972]
                     newLine [11972-11973]
                     srcBlock [11973-12056]
+                        :language emacs-lisp:
                       blockHeader [11973-11995]
                         keyword [11973-11995]
+                            :language emacs-lisp:
                           text [11973-11984] ("#+begin_src")
-                          text [11984-11995] (" emacs-lisp")
+                          srcLanguage [11984-11995] (" emacs-lisp")
                       newLine [11995-11996]
                       blockBody [11996-12046]
                         text [11996-12046] ("(funcall '(lambda () (message \\"I'am dirty func\\")))")
@@ -2619,10 +2689,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [12200-12201]
                     newLine [12201-12202]
                     srcBlock [12202-12382]
+                        :language emacs-lisp:
                       blockHeader [12202-12224]
                         keyword [12202-12224]
+                            :language emacs-lisp:
                           text [12202-12213] ("#+begin_src")
-                          text [12213-12224] (" emacs-lisp")
+                          srcLanguage [12213-12224] (" emacs-lisp")
                       newLine [12224-12225]
                       blockBody [12225-12372]
                         text [12225-12372] ("(defun my-increment (n)\\n  (+ n 1))\\n\\n(defun mux-5 (n)\\n  (* n 5))\\n\\n(advice-add 'my-increment :filter-return #'mux-5)\\n(message \\"%s\\" (my-increment 10))")
@@ -2646,10 +2718,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [12442-12443]
                     newLine [12443-12444]
                     srcBlock [12444-12642]
+                        :language emacs-lisp:
                       blockHeader [12444-12466]
                         keyword [12444-12466]
+                            :language emacs-lisp:
                           text [12444-12455] ("#+begin_src")
-                          text [12455-12466] (" emacs-lisp")
+                          srcLanguage [12455-12466] (" emacs-lisp")
                       newLine [12466-12467]
                       blockBody [12467-12632]
                         text [12467-12632] ("(defun my-first-func()\\n  (message \\"qweqwe\\"))\\n(my-first-func)\\n(defun my-adv()\\n  (message \\"advice called\\"))\\n(advice-add :after 'my-first-func #'my-adv)\\n(my-first-func)")
@@ -2680,10 +2754,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [12710-12711]
                     newLine [12711-12712]
                     srcBlock [12712-12936]
+                        :language emacs-lisp:
                       blockHeader [12712-12734]
                         keyword [12712-12734]
+                            :language emacs-lisp:
                           text [12712-12723] ("#+begin_src")
-                          text [12723-12734] (" emacs-lisp")
+                          srcLanguage [12723-12734] (" emacs-lisp")
                       newLine [12734-12735]
                       blockBody [12735-12926]
                         text [12735-12926] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n(message \\"enabled: %s, another prop: %s, type: %s\\" (plist-get my-plist :is-enabled) (plist-get my-plist :another-prop) (type-of my-plist))")
@@ -2708,10 +2784,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [13005-13006]
                     newLine [13006-13007]
                     srcBlock [13007-13260]
+                        :language emacs-lisp:
                       blockHeader [13007-13029]
                         keyword [13007-13029]
+                            :language emacs-lisp:
                           text [13007-13018] ("#+begin_src")
-                          text [13018-13029] (" emacs-lisp")
+                          srcLanguage [13018-13029] (" emacs-lisp")
                       newLine [13029-13030]
                       blockBody [13030-13250]
                         text [13030-13250] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n\\n(plist-put my-plist  :another-prop \\"Wow, i was changed\\")\\n(message \\"enabled: %s, another prop: %s\\" (plist-get my-plist :is-enabled) (plist-get my-plist :another-prop))")
@@ -2727,10 +2805,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [13280-13281]
                     newLine [13281-13282]
                     srcBlock [13282-13659]
+                        :language emacs-lisp:
                       blockHeader [13282-13304]
                         keyword [13282-13304]
+                            :language emacs-lisp:
                           text [13282-13293] ("#+begin_src")
-                          text [13293-13304] (" emacs-lisp")
+                          srcLanguage [13293-13304] (" emacs-lisp")
                       newLine [13304-13305]
                       blockBody [13305-13649]
                         text [13305-13649] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n\\n(setq res \\"res: \\")\\n(loop for (k v) on my-plist by 'cddr do\\n      (setq res (concat res (format \\"%s - %s\\" k v) \\"\\n\\")))\\n\\n;; (mapcar (lambda (k) (setq res (concat res (format \\"%s - \\" k ) \\"\\n\\"))) my-plist)\\n\\n\\n;; (dolist (p my-plist)\\n;;   (setq res (concat res (format \\"%s\\" p) \\"\\n\\")))\\n\\n(message res)")
@@ -2746,10 +2826,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [13688-13689]
                     newLine [13689-13690]
                     srcBlock [13690-13821]
+                        :language emacs-lisp:
                       blockHeader [13690-13712]
                         keyword [13690-13712]
+                            :language emacs-lisp:
                           text [13690-13701] ("#+begin_src")
-                          text [13701-13712] (" emacs-lisp")
+                          srcLanguage [13701-13712] (" emacs-lisp")
                       newLine [13712-13713]
                       blockBody [13713-13811]
                         text [13713-13811] ("(setq test '(:hi \\"there\\" :by \\"man!\\"))\\n\\n(setq test (map-delete test :hi))\\n\\n(message \\"res: %s\\" test)")
@@ -2791,10 +2873,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [13986-13987]
                   section [13987-14274]
                     srcBlock [13987-14100]
+                        :language emacs-lisp:
                       blockHeader [13987-14009]
                         keyword [13987-14009]
+                            :language emacs-lisp:
                           text [13987-13998] ("#+begin_src")
-                          text [13998-14009] (" emacs-lisp")
+                          srcLanguage [13998-14009] (" emacs-lisp")
                       newLine [14009-14010]
                       blockBody [14010-14090]
                         text [14010-14090] ("(setq my-custom-timer (run-with-idle-timer 1 nil #'(lambda () (message \\"qwe\\"))))")
@@ -2816,10 +2900,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [14208-14209]
                     newLine [14209-14210]
                     srcBlock [14210-14273]
+                        :language emacs-lisp:
                       blockHeader [14210-14232]
                         keyword [14210-14232]
+                            :language emacs-lisp:
                           text [14210-14221] ("#+begin_src")
-                          text [14221-14232] (" emacs-lisp")
+                          srcLanguage [14221-14232] (" emacs-lisp")
                       newLine [14232-14233]
                       blockBody [14233-14263]
                         text [14233-14263] ("(cancel-timer my-custom-timer)")
@@ -2852,10 +2938,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [14437-14438]
                   section [14438-14601]
                     srcBlock [14438-14582]
+                        :language emacs-lisp:
                       blockHeader [14438-14460]
                         keyword [14438-14460]
+                            :language emacs-lisp:
                           text [14438-14449] ("#+begin_src")
-                          text [14449-14460] (" emacs-lisp")
+                          srcLanguage [14449-14460] (" emacs-lisp")
                       newLine [14460-14461]
                       blockBody [14461-14572]
                         text [14461-14572] ("(setq test-var 'qwe)\\n(message \\"%s\\" (cond ((eq test-var 'q2e) 1)\\n       ((eq test-var 'oe) 2)\\n       (t \\"qwe\\")))")
@@ -2880,10 +2968,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [14610-14611]
                   section [14611-14778]
                     srcBlock [14611-14760]
+                        :language emacs-lisp:
                       blockHeader [14611-14633]
                         keyword [14611-14633]
+                            :language emacs-lisp:
                           text [14611-14622] ("#+begin_src")
-                          text [14622-14633] (" emacs-lisp")
+                          srcLanguage [14622-14633] (" emacs-lisp")
                       newLine [14633-14634]
                       blockBody [14634-14750]
                         text [14634-14750] ("(setq my-counter 0)\\n(while (< my-counter 12)\\n         (setq my-counter (+ my-counter 1)))\\n\\n(message \\"%s\\" my-counter)")
@@ -2911,10 +3001,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [15002-15003]
                     newLine [15003-15004]
                     srcBlock [15004-15294]
+                        :language emacs-lisp:
                       blockHeader [15004-15026]
                         keyword [15004-15026]
+                            :language emacs-lisp:
                           text [15004-15015] ("#+begin_src")
-                          text [15015-15026] (" emacs-lisp")
+                          srcLanguage [15015-15026] (" emacs-lisp")
                       newLine [15026-15027]
                       blockBody [15027-15284]
                         text [15027-15284] ("(setq my-counter 0)\\n\\n\\n(message \\"What is the messafe from catch? Oh this is message: %s\\" (catch 'result\\n  (while (< my-counter 22)\\n    (setq my-counter (+ my-counter 1))\\n    (if (> my-counter 5)\\n        (throw 'result \\"Amma result from catch block\\"))\\n    )))")
@@ -2939,10 +3031,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [15370-15371]
                     newLine [15371-15372]
                     srcBlock [15372-15628]
+                        :language emacs-lisp:
                       blockHeader [15372-15394]
                         keyword [15372-15394]
+                            :language emacs-lisp:
                           text [15372-15383] ("#+begin_src")
-                          text [15383-15394] (" emacs-lisp")
+                          srcLanguage [15383-15394] (" emacs-lisp")
                       newLine [15394-15395]
                       blockBody [15395-15618]
                         text [15395-15618] ("(setq my-counter 0)\\n(cl-defun my-iterator()\\n  (while (< my-counter 12)\\n    (if (> my-counter 3)\\n        (return-from my-iterator)\\n      )\\n    (setq my-counter (+ my-counter 1)))\\n  )\\n\\n(my-iterator)\\n\\n(message \\"%s\\" my-counter)")
@@ -2987,10 +3081,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [15738-15739]
                   section [15739-15801]
                     srcBlock [15739-15800]
+                        :language emacs-lisp:
                       blockHeader [15739-15761]
                         keyword [15739-15761]
+                            :language emacs-lisp:
                           text [15739-15750] ("#+begin_src")
-                          text [15750-15761] (" emacs-lisp")
+                          srcLanguage [15750-15761] (" emacs-lisp")
                       newLine [15761-15762]
                       blockBody [15762-15790]
                         text [15762-15790] ("(insert \\"Hello\\" \\" \\" \\"World\\")")
@@ -3014,10 +3110,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [15861-15862]
                       section [15862-15997]
                         srcBlock [15862-15996]
+                            :language emacs-lisp:
                           blockHeader [15862-15884]
                             keyword [15862-15884]
+                                :language emacs-lisp:
                               text [15862-15873] ("#+begin_src")
-                              text [15873-15884] (" emacs-lisp")
+                              srcLanguage [15873-15884] (" emacs-lisp")
                           newLine [15884-15885]
                           blockBody [15885-15986]
                             text [15885-15986] ("  (switch-to-buffer-other-window \\"*my-first-buffer*\\")\\n  (insert \\"Congratulations! I'am a new buffer\\")")
@@ -3034,10 +3132,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [16016-16017]
                       section [16017-16065]
                         srcBlock [16017-16064]
+                            :language emacs-lisp:
                           blockHeader [16017-16039]
                             keyword [16017-16039]
+                                :language emacs-lisp:
                               text [16017-16028] ("#+begin_src")
-                              text [16028-16039] (" emacs-lisp")
+                              srcLanguage [16028-16039] (" emacs-lisp")
                           newLine [16039-16040]
                           blockBody [16040-16054]
                             text [16040-16054] ("(erase-buffer)")
@@ -3054,10 +3154,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [16088-16089]
                       section [16089-16384]
                         srcBlock [16089-16372]
+                            :language emacs-lisp:
                           blockHeader [16089-16111]
                             keyword [16089-16111]
+                                :language emacs-lisp:
                               text [16089-16100] ("#+begin_src")
-                              text [16100-16111] (" emacs-lisp")
+                              srcLanguage [16100-16111] (" emacs-lisp")
                           newLine [16111-16112]
                           blockBody [16112-16362]
                             text [16112-16362] ("  ;; (read-from-minibuffer \\"Enter your name: \\")\\n  (let ((your-name (read-from-minibuffer \\"Enter your name: \\")))\\n      (switch-to-buffer-other-window \\"*Your personal info\\")\\n  (erase-buffer)\\n  (insert (format \\"Hello %s!\\" your-name))\\n  (other-window 1))")
@@ -3077,10 +3179,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [16404-16405]
                   section [16405-16902]
                     srcBlock [16405-16829]
+                        :language emacs-lisp:
                       blockHeader [16405-16427]
                         keyword [16405-16427]
+                            :language emacs-lisp:
                           text [16405-16416] ("#+begin_src")
-                          text [16416-16427] (" emacs-lisp")
+                          srcLanguage [16416-16427] (" emacs-lisp")
                       newLine [16427-16428]
                       blockBody [16428-16819]
                         text [16428-16819] ("  (defun detect-bad-boys ()\\n    (setq lesson-list '(\\"Buzova\\" \\"Volodin\\" \\"Pupin\\"))\\n  \\n    (defun mark-as-bad (name)\\n      (insert (format \\"Bad boy %s \\n\\" name)))\\n  \\n    (switch-to-buffer-other-window \\"*lisp lesson*\\")\\n    (mapcar 'mark-as-bad lesson-list)\\n    (goto-char (point-min))\\n    (while (search-forward \\"Bad\\")\\n      (replace-match \\"Awful\\"))\\n    (other-window 1)\\n    )\\n  (detect-bad-boys)")
@@ -3129,10 +3233,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [16988-16989]
                     newLine [16989-16990]
                     srcBlock [16990-17467]
+                        :language emacs-lisp:
                       blockHeader [16990-17012]
                         keyword [16990-17012]
+                            :language emacs-lisp:
                           text [16990-17001] ("#+begin_src")
-                          text [17001-17012] (" emacs-lisp")
+                          srcLanguage [17001-17012] (" emacs-lisp")
                       newLine [17012-17013]
                       blockBody [17013-17457]
                         text [17013-17457] ("  ;; (detect-bad-boys)\\n  \\n  \\n  (defun boldify-bad-boys ()\\n    (switch-to-buffer-other-window \\"*lisp lesson*\\")\\n    (goto-char (point-min))\\n    (while (re-search-forward \\"Awful boy \\\\(.+\\\\)\\" nil t)\\n      (message (format \\"Its %s\\" (match-beginning 1)))\\n      (add-text-properties (match-beginning 1)\\n                           (match-end 1)\\n                           (list 'face 'bold-italic)))\\n    ;; (other-window 1)\\n    )\\n  \\n  (boldify-bad-boys)")
@@ -3194,10 +3300,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [17868-17869]
                     newLine [17869-17870]
                     srcBlock [17870-18178]
+                        :language emacs-lisp:
                       blockHeader [17870-17892]
                         keyword [17870-17892]
+                            :language emacs-lisp:
                           text [17870-17881] ("#+begin_src")
-                          text [17881-17892] (" emacs-lisp")
+                          srcLanguage [17881-17892] (" emacs-lisp")
                       newLine [17892-17893]
                       blockBody [17893-18168]
                         text [17893-18168] ("(defun butest-varon-pressed (button)\\n  (message (format \\"Butest-varon pressed!\\")))\\n\\n(define-butest-varon-type 'custom-button\\n  'action 'butest-varon-pressed\\n  'follow-link t\\n  'help-echo \\"Click Butest-varon\\"\\n  'help-args \\"test\\")\\n\\n(make-butest-varon 1 10 :type 'custom-button)")
@@ -3210,10 +3318,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [18239-18240]
                     newLine [18240-18241]
                     srcBlock [18241-18387]
+                        :language emacs-lisp:
                       blockHeader [18241-18263]
                         keyword [18241-18263]
+                            :language emacs-lisp:
                           text [18241-18252] ("#+begin_src")
-                          text [18252-18263] (" emacs-lisp")
+                          srcLanguage [18252-18263] (" emacs-lisp")
                       newLine [18263-18264]
                       blockBody [18264-18377]
                         text [18264-18377] ("(insert-butest-varon \\"Press me\\"\\n               'action (lambda (_arg) (print \\"You are press the butest-varon!\\")))")
@@ -3238,10 +3348,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [18463-18464]
                   section [18464-18551]
                     srcBlock [18464-18550]
+                        :language emacs-lisp:
                       blockHeader [18464-18486]
                         keyword [18464-18486]
+                            :language emacs-lisp:
                           text [18464-18475] ("#+begin_src")
-                          text [18475-18486] (" emacs-lisp")
+                          srcLanguage [18475-18486] (" emacs-lisp")
                       newLine [18486-18487]
                       blockBody [18487-18540]
                         text [18487-18540] ("(completing-read \\"Choose one: \\" '(\\"foo\\" \\"bar\\" \\"baz\\"))")
@@ -3258,10 +3370,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [18576-18577]
                   section [18577-18706]
                     srcBlock [18577-18666]
+                        :language emacs-lisp:
                       blockHeader [18577-18599]
                         keyword [18577-18599]
+                            :language emacs-lisp:
                           text [18577-18588] ("#+begin_src")
-                          text [18588-18599] (" emacs-lisp")
+                          srcLanguage [18588-18599] (" emacs-lisp")
                       newLine [18599-18600]
                       blockBody [18600-18656]
                         text [18600-18656] ("(message \\"U say: %s\\" (read-string \\"Say me something: \\"))")
@@ -3305,10 +3419,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [18819-18820]
                       section [18820-18892]
                         srcBlock [18820-18891]
+                            :language emacs-lisp:
                           blockHeader [18820-18842]
                             keyword [18820-18842]
+                                :language emacs-lisp:
                               text [18820-18831] ("#+begin_src")
-                              text [18831-18842] (" emacs-lisp")
+                              srcLanguage [18831-18842] (" emacs-lisp")
                           newLine [18842-18843]
                           blockBody [18843-18881]
                             text [18843-18881] ("(regionp (buffer-substring start end))")
@@ -3325,10 +3441,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [18937-18938]
                   section [18938-19111]
                     srcBlock [18938-19067]
+                        :language emacs-lisp:
                       blockHeader [18938-18960]
                         keyword [18938-18960]
+                            :language emacs-lisp:
                           text [18938-18949] ("#+begin_src")
-                          text [18949-18960] (" emacs-lisp")
+                          srcLanguage [18949-18960] (" emacs-lisp")
                       newLine [18960-18961]
                       blockBody [18961-19057]
                         text [18961-19057] ("(symbol-name 'something) ;; Символ в строку\\n(intern (symbol-name 'something)) ;; Строка в символ")
@@ -3369,10 +3487,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [19341-19342]
                       section [19342-19454]
                         srcBlock [19342-19453]
+                            :language emacs-lisp:
                           blockHeader [19342-19364]
                             keyword [19342-19364]
+                                :language emacs-lisp:
                               text [19342-19353] ("#+begin_src")
-                              text [19353-19364] (" emacs-lisp")
+                              srcLanguage [19353-19364] (" emacs-lisp")
                           newLine [19364-19365]
                           blockBody [19365-19443]
                             text [19365-19443] ("(setq my-first-overlay (make-overlay (line-end-position) (line-end-position)))")
@@ -3396,10 +3516,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [19633-19634]
                         newLine [19634-19635]
                         srcBlock [19635-19748]
+                            :language emacs-lisp:
                           blockHeader [19635-19657]
                             keyword [19635-19657]
+                                :language emacs-lisp:
                               text [19635-19646] ("#+begin_src")
-                              text [19646-19657] (" emacs-lisp")
+                              srcLanguage [19646-19657] (" emacs-lisp")
                           newLine [19657-19658]
                           blockBody [19658-19738]
                             text [19658-19738] ("(setq my-popup-message (propertize popup-message 'face 'blamer--face 'cursor t))")
@@ -3416,10 +3538,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [19779-19780]
                       section [19780-20059]
                         srcBlock [19780-20058]
+                            :language emacs-lisp:
                           blockHeader [19780-19802]
                             keyword [19780-19802]
+                                :language emacs-lisp:
                               text [19780-19791] ("#+begin_src")
-                              text [19791-19802] (" emacs-lisp")
+                              srcLanguage [19791-19802] (" emacs-lisp")
                           newLine [19802-19803]
                           blockBody [19803-20048]
                             text [19803-20048] ("    (overlay-put blamer--current-overlay 'after-string my-popup-message)\\n    (overlay-put blamer--current-overlay 'intangible t)\\n    (overlay-put blamer--current-overlay 'face 'bold)\\n    (overlay-put blamer--current-overlay 'cursor-intangible t)")
@@ -3436,10 +3560,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [20094-20095]
                       section [20095-20192]
                         srcBlock [20095-20191]
+                            :language emacs-lisp:
                           blockHeader [20095-20117]
                             keyword [20095-20117]
+                                :language emacs-lisp:
                               text [20095-20106] ("#+begin_src")
-                              text [20106-20117] (" emacs-lisp")
+                              srcLanguage [20106-20117] (" emacs-lisp")
                           newLine [20117-20118]
                           blockBody [20118-20181]
                             text [20118-20181] ("(if my-first-overlay\\n        (delete-overlay my-first-overlay))")
@@ -3494,10 +3620,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [20481-20482]
                 newLine [20482-20483]
                 srcBlock [20483-20573]
+                    :language emacs-lisp:
                   blockHeader [20483-20505]
                     keyword [20483-20505]
+                        :language emacs-lisp:
                       text [20483-20494] ("#+begin_src")
-                      text [20494-20505] (" emacs-lisp")
+                      srcLanguage [20494-20505] (" emacs-lisp")
                   newLine [20505-20506]
                   blockBody [20506-20563]
                     text [20506-20563] ("(setq t3 (time-subtract (current-time) (days-to-time 2)))")
@@ -3523,10 +3651,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     operator [20602-20603] ("|")
                   newLine [20603-20604]
                 srcBlock [20604-20692]
+                    :language emacs-lisp:
                   blockHeader [20604-20626]
                     keyword [20604-20626]
+                        :language emacs-lisp:
                       text [20604-20615] ("#+begin_src")
-                      text [20615-20626] (" emacs-lisp")
+                      srcLanguage [20615-20626] (" emacs-lisp")
                   newLine [20626-20627]
                   blockBody [20627-20682]
                     text [20627-20682] ("\\n(message \\"%s\\" (/ (float-time (time-since t3)) (* 60)))")
@@ -3574,10 +3704,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [21025-21026]
                     newLine [21026-21027]
                     srcBlock [21027-21129]
+                        :language emacs-lisp:
                       blockHeader [21027-21049]
                         keyword [21027-21049]
+                            :language emacs-lisp:
                           text [21027-21038] ("#+begin_src")
-                          text [21038-21049] (" emacs-lisp")
+                          srcLanguage [21038-21049] (" emacs-lisp")
                       newLine [21049-21050]
                       blockBody [21050-21119]
                         text [21050-21119] ("(string-match \\"^\\\\([[:blank:]]\\\\)*\\\\(return\\\\)\\" \\"  return {\\n  name: 2\\n}\\")")
@@ -3597,10 +3729,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [21146-21147]
                     newLine [21147-21148]
                     srcBlock [21148-21279]
+                        :language emacs-lisp:
                       blockHeader [21148-21170]
                         keyword [21148-21170]
+                            :language emacs-lisp:
                           text [21148-21159] ("#+begin_src")
-                          text [21159-21170] (" emacs-lisp")
+                          srcLanguage [21159-21170] (" emacs-lisp")
                       newLine [21170-21171]
                       blockBody [21171-21269]
                         text [21171-21269] ("(replace-regexp-in-string \\"[[:blank:]]*=[[:blank:]]*.+\\" \\"\\" \\"    this.myVariable = somethingElse;\\")")
@@ -3610,10 +3744,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           text [21270-21279] ("#+end_src")
                     newLine [21279-21280]
                     srcBlock [21280-21432]
+                        :language emacs-lisp:
                       blockHeader [21280-21302]
                         keyword [21280-21302]
+                            :language emacs-lisp:
                           text [21280-21291] ("#+begin_src")
-                          text [21291-21302] (" emacs-lisp")
+                          srcLanguage [21291-21302] (" emacs-lisp")
                       newLine [21302-21303]
                       blockBody [21303-21422]
                         text [21303-21422] ("(replace-regexp-in-string \\"\\\\(const\\\\|let\\\\|public\\\\|protected\\\\|private\\\\|var\\\\)[[:blank:]]*\\" \\"\\" \\"let anotherOne = userName\\")")
@@ -3638,10 +3774,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [21489-21490]
                   section [21490-21886]
                     srcBlock [21490-21686]
+                        :language emacs-lisp:
                       blockHeader [21490-21512]
                         keyword [21490-21512]
+                            :language emacs-lisp:
                           text [21490-21501] ("#+begin_src")
-                          text [21501-21512] (" emacs-lisp")
+                          srcLanguage [21501-21512] (" emacs-lisp")
                       newLine [21512-21513]
                       blockBody [21513-21676]
                         text [21513-21676] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]*[[:blank:]]?(\\\\(?2:[^\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\-}[0-9]\\\\{2\\\\-}[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
@@ -3651,10 +3789,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           text [21677-21686] ("#+end_src")
                     newLine [21686-21687]
                     srcBlock [21687-21867]
+                        :language emacs-lisp:
                       blockHeader [21687-21709]
                         keyword [21687-21709]
+                            :language emacs-lisp:
                           text [21687-21698] ("#+begin_src")
-                          text [21698-21709] (" emacs-lisp")
+                          srcLanguage [21698-21709] (" emacs-lisp")
                       newLine [21709-21710]
                       blockBody [21710-21857]
                         text [21710-21857] ("(setq test-string \\"feature/VW-221\\")\\n(string-match \\"\\\\(?1:[A-Za-z0-9]+/\\\\)\\\\(?2:VW-[0-9]+\\\\)\\" test-string)\\n(message \\"res \\" (match-string 1 test-string))")
@@ -3709,10 +3849,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [22124-22125]
                     newLine [22125-22126]
                     srcBlock [22126-22471]
+                        :language emacs-lisp:
                       blockHeader [22126-22148]
                         keyword [22126-22148]
+                            :language emacs-lisp:
                           text [22126-22137] ("#+begin_src")
-                          text [22137-22148] (" emacs-lisp")
+                          srcLanguage [22137-22148] (" emacs-lisp")
                       newLine [22148-22149]
                       blockBody [22149-22461]
                         text [22149-22461] (";;;###autoload\\n(define-minor-mode wakatime-ui-mode\\n  \\"Wakatime ui mode. Add time track to doom modeline.\\nTODO:\\nAdd support for other modeline in future.\\"\\n  :init-value nil\\n  :global t\\n  :lighter nil\\n  :group 'wakatime-ui\\n  (if wakatime-ui-mode\\n      (wakatime-ui--watch-time)\\n    (wakatime-ui--stop-watch-time)))")
@@ -3805,10 +3947,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [22896-22897]
                 newLine [22897-22898]
                 srcBlock [22898-23147]
+                    :language emacs-lisp:
                   blockHeader [22898-22920]
                     keyword [22898-22920]
+                        :language emacs-lisp:
                       text [22898-22909] ("#+begin_src")
-                      text [22909-22920] (" emacs-lisp")
+                      srcLanguage [22909-22920] (" emacs-lisp")
                   newLine [22920-22921]
                   blockBody [22921-23137]
                     text [22921-23137] ("(setq process (start-process\\n                    \\"WakatimeUI\\"\\n                    wakatime-ui--buffer\\n                    (wakatime-find-binary)\\n                    (plist-get wakatime-ui--command-args :today-time)))")
@@ -3821,10 +3965,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [23182-23183]
                 newLine [23183-23184]
                 srcBlock [23184-23217]
+                    :language emacs-lisp:
                   blockHeader [23184-23206]
                     keyword [23184-23206]
+                        :language emacs-lisp:
                       text [23184-23195] ("#+begin_src")
-                      text [23195-23206] (" emacs-lisp")
+                      srcLanguage [23195-23206] (" emacs-lisp")
                   newLine [23206-23207]
                   newLine [23207-23208]
                   blockFooter [23208-23217]
@@ -3846,10 +3992,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [23255-23256]
                   section [23256-23847]
                     srcBlock [23256-23835]
+                        :language elisp:
                       blockHeader [23256-23273]
                         keyword [23256-23273]
+                            :language elisp:
                           text [23256-23267] ("#+begin_src")
-                          text [23267-23273] (" elisp")
+                          srcLanguage [23267-23273] (" elisp")
                       newLine [23273-23274]
                       blockBody [23274-23825]
                         text [23274-23825] ("(with-current-buffer \\"*Messages*\\"\\n  (read-only-mode -1)\\n  (erase-buffer))\\n\\n(setq my-mode-map (make-sparse-keymap))\\n(define-key my-mode-map (kbd \\"C-c C-'\\") 'my-mode-cmd1)\\n(define-key my-mode-map (kbd \\"C-c C-b\\") 'my-mode-cmd2)\\n(define-key my-mode-map (kbd \\"C-c C-c\\") 'my-mode-cmd3)\\n(define-key my-mode-map (kbd \\"<mouse-1>\\") 'my-mode-cmd4)\\n;; by convention, major mode's keys should begin with the form C-c C-‹key›\\n\\n;; (dolist (m my-mode-map)\\n;;   (message \\"key: %s\\" m))\\n\\n\\n\\n\\n\\n(map-keymap '(lambda (v g)\\n               (message \\"%s: %s\\" v g)) my-mode-map)")
@@ -3904,10 +4052,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [24008-24009]
                   section [24009-24164]
                     srcBlock [24009-24146]
+                        :language emacs-lisp:
                       blockHeader [24009-24031]
                         keyword [24009-24031]
+                            :language emacs-lisp:
                           text [24009-24020] ("#+begin_src")
-                          text [24020-24031] (" emacs-lisp")
+                          srcLanguage [24020-24031] (" emacs-lisp")
                       newLine [24031-24032]
                       blockBody [24032-24136]
                         text [24032-24136] ("(defmacro inc (var)\\n  (list 'setq var (list '1+ var)))\\n\\n(setq test-var 10)\\n(message \\"%s\\" (inc test-var))")
@@ -3935,10 +4085,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [24221-24222]
                     newLine [24222-24223]
                     srcBlock [24223-24300]
+                        :language emacs-lisp:
                       blockHeader [24223-24245]
                         keyword [24223-24245]
+                            :language emacs-lisp:
                           text [24223-24234] ("#+begin_src")
-                          text [24234-24245] (" emacs-lisp")
+                          srcLanguage [24234-24245] (" emacs-lisp")
                       newLine [24245-24246]
                       blockBody [24246-24290]
                         text [24246-24290] ("(message \\"%s\\" (macroexpand '(inc test-var)))")
@@ -3970,10 +4122,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [24462-24463]
                     newLine [24463-24464]
                     srcBlock [24464-24623]
+                        :language emacs-lisp:
                       blockHeader [24464-24486]
                         keyword [24464-24486]
+                            :language emacs-lisp:
                           text [24464-24475] ("#+begin_src")
-                          text [24475-24486] (" emacs-lisp")
+                          srcLanguage [24475-24486] (" emacs-lisp")
                       newLine [24486-24487]
                       blockBody [24487-24613]
                         text [24487-24613] ("(defmacro inc2 (var1 var2)\\n    (list 'progn (list 'inc var1) (list 'inc var2)))\\n\\n\\n(message \\"%s\\" (macroexpand-all '(inc2 r s)))")
@@ -3998,10 +4152,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [24719-24720]
                   section [24720-24886]
                     srcBlock [24720-24867]
+                        :language emacs-lisp:
                       blockHeader [24720-24742]
                         keyword [24720-24742]
+                            :language emacs-lisp:
                           text [24720-24731] ("#+begin_src")
-                          text [24731-24742] (" emacs-lisp")
+                          srcLanguage [24731-24742] (" emacs-lisp")
                       newLine [24742-24743]
                       blockBody [24743-24857]
                         text [24743-24857] ("(defmacro t-becomes-nil (var)\\n  \`(if (eq ,var t)\\n       (setq ,var nil)))\\n\\n(message \\"%s\\" (t-becomes-nil test-var))")
@@ -4044,10 +4200,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [25065-25066]
                     newLine [25066-25067]
                     srcBlock [25067-25305]
+                        :language emacs-lisp:
                       blockHeader [25067-25089]
                         keyword [25067-25089]
+                            :language emacs-lisp:
                           text [25067-25078] ("#+begin_src")
-                          text [25078-25089] (" emacs-lisp")
+                          srcLanguage [25078-25089] (" emacs-lisp")
                       newLine [25089-25090]
                       blockBody [25090-25295]
                         text [25090-25295] ("(setq my-custom-variable \\"Hello, amma variable\\")\\n\\n(defmacro get-with-prefix (var-name)\\n  \`(symbol-value (intern (concatenate 'string \\"my-custom\\" \\"-\\" (symbol-name ',var-name)))))\\n\\n(get-with-prefix variable)")
@@ -4069,10 +4227,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [25508-25509]
                     newLine [25509-25510]
                     srcBlock [25510-25959]
+                        :language emacs-lisp:
                       blockHeader [25510-25532]
                         keyword [25510-25532]
+                            :language emacs-lisp:
                           text [25510-25521] ("#+begin_src")
-                          text [25521-25532] (" emacs-lisp")
+                          srcLanguage [25521-25532] (" emacs-lisp")
                       newLine [25532-25533]
                       blockBody [25533-25949]
                         text [25533-25949] ("(setq my-custom-variable \\"Hello, amma variable\\")\\n\\n(setq my-plist-with-prop '(:custom-variable nil :test t))\\n\\n(defmacro get-with-prefix (my-plist var-name)\\n  \`(or (plist-get ,my-plist (symbol-value (intern (concatenate 'string \\":\\" (symbol-name ',var-name)))))\\n       (symbol-value (intern (concatenate 'string \\"my\\" \\"-\\" (symbol-name ',var-name))))))\\n\\n(message \\"%s\\" (get-with-prefix my-plist-with-prop custom-variable))")
@@ -4104,10 +4264,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [26186-26187]
                     newLine [26187-26188]
                     srcBlock [26188-26517]
+                        :language emacs-lisp:
                       blockHeader [26188-26210]
                         keyword [26188-26210]
+                            :language emacs-lisp:
                           text [26188-26199] ("#+begin_src")
-                          text [26199-26210] (" emacs-lisp")
+                          srcLanguage [26199-26210] (" emacs-lisp")
                       newLine [26210-26211]
                       blockBody [26211-26507]
                         text [26211-26507] ("(setq test-var 0)\\n(defmacro for (var from init to final do &rest body)\\n  \`(let ((,var ,init))\\n     (while (<= ,var ,final)\\n       ,@body\\n       (setq ,var (1+ ,var)))))\\n\\n\\n(for j from 0 to 4 do\\n     (setq test-var (+ test-var j))\\n     (setq test-var (/ test-var 2)))\\n\\n(message \\"HAVA: %s\\" test-var)")
@@ -4141,10 +4303,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         newLine [26634-26635]
                         newLine [26635-26636]
                         srcBlock [26636-26960]
+                            :language emacs-lisp:
                           blockHeader [26636-26658]
                             keyword [26636-26658]
+                                :language emacs-lisp:
                               text [26636-26647] ("#+begin_src")
-                              text [26647-26658] (" emacs-lisp")
+                              srcLanguage [26647-26658] (" emacs-lisp")
                           newLine [26658-26659]
                           blockBody [26659-26950]
                             text [26659-26950] ("(defmacro pretty-log (&rest body)\\n\\n  (let ((res (concat (make-string 80 ?-) \\"\\n\\")))\\n    (dolist (f body)\\n      (setq res (concat res (format \\"[%s]: %s\\n\\" f (eval f)))))\\n    (message res)))\\n\\n(pretty-log (+ 1 12)\\n            (- 44 22)\\n            (+ (/ 12 2) (* 33 4))\\n            (setq ttt 12))")
@@ -4189,10 +4353,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     newLine [27231-27232]
                   section [27232-28982]
                     srcBlock [27232-28757]
+                        :language emacs-lisp:
                       blockHeader [27232-27254]
                         keyword [27232-27254]
+                            :language emacs-lisp:
                           text [27232-27243] ("#+begin_src")
-                          text [27243-27254] (" emacs-lisp")
+                          srcLanguage [27243-27254] (" emacs-lisp")
                       newLine [27254-27255]
                       blockBody [27255-28747]
                         text [27255-28747] ("(setq res \\"\\")\\n(setq test-alist\\n      '((js-mode (:loggers '(\\"hi there\\") :msg-format-template \\"Hi\\" :argument-divider \\"|\\"))\\n        (typescript-mode (:loggers '(\\"another on\\", \\"and me\\") :msg-format-template \\"bee\\"))\\n        ))\\n\\n(defmacro turbo-log-configure (&rest configs)\\n  (let* ((strategy (or (plist-get configs :strategy) 'replace))\\n         (excluded-keys '(:modes :strategy))\\n         (modes (plist-get configs :modes))\\n         current-config)\\n\\n    (dolist (k excluded-keys)\\n      (setq configs (map-delete configs k)))\\n\\n    (dolist (mode modes)\\n      (unless (assoc mode test-alist)\\n        (push \`(,mode nil) test-alist))\\n\\n      (setq current-config (car (cdr-safe (assoc mode test-alist))))\\n\\n      (if (eq strategy 'replace)\\n          (setq current-config configs)\\n\\n        (loop for (k v) on configs by 'cddr do\\n              (if current-config\\n                  (plist-put current-config k v)\\n                (setq current-config \`(,k ,v)))))\\n\\n      (message \\"QQQ: %s\\" configs)\\n      (if (assq mode test-alist)\\n          (setcdr (assq mode test-alist)\\n                  \`(,current-config))\\n        \`(push '(,mode '(,current-config)) ,test-alist))\\n      )))\\n\\n(turbo-log-configure\\n :modes (typescript-mode js2-mode js-mode)\\n ;; :modes (typescript-mode j-mode)\\n ;; :modes (js-mode)\\n :strategy replace\\n\\n :loggers (\\"console.print\\" \\"console.dbg\\")\\n :msg-format-template \\"\\"HELLO WORLD: %s\\"\\")\\n\\n(message \\"-------------------------------------------------------\\")\\n(message \\"%s\\" (pp test-alist))")
@@ -4256,10 +4422,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 newLine [29036-29037]
               section [29037-29169]
                 srcBlock [29037-29168]
+                    :language bash:
                   blockHeader [29037-29053]
                     keyword [29037-29053]
+                        :language bash:
                       text [29037-29048] ("#+begin_src")
-                      text [29048-29053] (" bash")
+                      srcLanguage [29048-29053] (" bash")
                   newLine [29053-29054]
                   blockBody [29054-29158]
                     text [29054-29158] ("emacs -Q --batch     --eval '(setq byte-compile-error-on-warn t)'     -f batch-byte-compile turbo-log.el")
@@ -4317,21 +4485,23 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     operator [29411-29412] ("]")
                   operator [29412-29413] ("]")
                 newLine [29413-29414]
-        headline [29414-30281]
+        headline [29414-30280]
             :level 1:
           title [29414-29422]
             operator [29414-29416] ("* ")
             text [29416-29421] ("Тесты")
             newLine [29421-29422]
-          section [29422-30281]
+          section [29422-30280]
             text [29422-29551] ("Тесты пишутся весьма просто. От части потому что не нужно мокать кучу зависимостей. Функция в большинстве случаев самодостаточна.")
             newLine [29551-29552]
             newLine [29552-29553]
             srcBlock [29553-29644]
+                :language emacs-lisp:
               blockHeader [29553-29575]
                 keyword [29553-29575]
+                    :language emacs-lisp:
                   text [29553-29564] ("#+begin_src")
-                  text [29564-29575] (" emacs-lisp")
+                  srcLanguage [29564-29575] (" emacs-lisp")
               newLine [29575-29576]
               blockBody [29576-29634]
                 text [29576-29634] ("(ert-deftest my-first-test ()\\n  (should (= (+ 10 10) 20)))")
@@ -4344,10 +4514,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             newLine [29652-29653]
             newLine [29653-29654]
             srcBlock [29654-29757]
+                :language bash:
               blockHeader [29654-29670]
                 keyword [29654-29670]
+                    :language bash:
                   text [29654-29665] ("#+begin_src")
-                  text [29665-29670] (" bash")
+                  srcLanguage [29665-29670] (" bash")
               newLine [29670-29671]
               blockBody [29671-29747]
                 text [29671-29747] ("emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit")
@@ -4356,69 +4528,72 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [29748-29757]
                   text [29748-29757] ("#+end_src")
             newLine [29757-29758]
-            undefined [29758-29788]
-                :language :
-              blockHeader [29758-29774]
+            undefined [29758-29787]
+                :language HIDDEN:
+              blockHeader [29758-29773]
                 keyword [29758-29773]
+                    :language HIDDEN:
                   text [29758-29766] ("#+BEGIN_")
-                  text [29766-29773] ("{HIDDEN")
-                blockLanguage [29773-29774] ("}")
-                    :language :
-              newLine [29774-29775]
-              blockBody [29775-29775]
-              blockFooter [29775-29788]
-                keyword [29775-29788]
-                  text [29775-29781] ("#+END_")
-                  text [29781-29788] ("{HIDDEN")
-            text [29788-29789] ("}")
+                  srcLanguage [29766-29773] ("{HIDDEN")
+              newLine [29773-29774]
+              blockBody [29774-29774]
+              blockFooter [29774-29787]
+                keyword [29774-29787]
+                  text [29774-29780] ("#+END_")
+                  text [29780-29787] ("{HIDDEN")
+            text [29787-29788] ("}")
+            newLine [29788-29789]
             newLine [29789-29790]
-            newLine [29790-29791]
-            srcBlock [29791-29891]
-              blockHeader [29791-29813]
-                keyword [29791-29813]
-                  text [29791-29802] ("#+begin_src")
-                  text [29802-29813] (" emacs-lisp")
-              newLine [29813-29814]
-              blockBody [29814-29881]
-                text [29814-29881] ("(setq v (dolist (i '(1 2 3 4))\\n                i))\\n(message \\"%s\\" v)")
-              newLine [29881-29882]
-              blockFooter [29882-29891]
-                keyword [29882-29891]
-                  text [29882-29891] ("#+end_src")
-            newLine [29891-29892]
-            keyword [29892-29903]
-              text [29892-29902] ("#+RESULTS:")
-              text [29902-29903] (" ")
-            newLine [29903-29904]
-            fixedWidth [29904-29909]
-              operator [29904-29906] (": ")
-              text [29906-29909] ("nil")
+            srcBlock [29790-29890]
+                :language emacs-lisp:
+              blockHeader [29790-29812]
+                keyword [29790-29812]
+                    :language emacs-lisp:
+                  text [29790-29801] ("#+begin_src")
+                  srcLanguage [29801-29812] (" emacs-lisp")
+              newLine [29812-29813]
+              blockBody [29813-29880]
+                text [29813-29880] ("(setq v (dolist (i '(1 2 3 4))\\n                i))\\n(message \\"%s\\" v)")
+              newLine [29880-29881]
+              blockFooter [29881-29890]
+                keyword [29881-29890]
+                  text [29881-29890] ("#+end_src")
+            newLine [29890-29891]
+            keyword [29891-29902]
+              text [29891-29901] ("#+RESULTS:")
+              text [29901-29902] (" ")
+            newLine [29902-29903]
+            fixedWidth [29903-29908]
+              operator [29903-29905] (": ")
+              text [29905-29908] ("nil")
+            newLine [29908-29909]
             newLine [29909-29910]
             newLine [29910-29911]
-            newLine [29911-29912]
-            headline [29912-30281]
+            headline [29911-30280]
                 :level 2:
-              title [29912-29926]
-                operator [29912-29915] ("** ")
-                text [29915-29925] ("Check json")
-                newLine [29925-29926]
-              section [29926-30281]
-                srcBlock [29926-30270]
-                  blockHeader [29926-29948]
-                    keyword [29926-29948]
-                      text [29926-29937] ("#+begin_src")
-                      text [29937-29948] (" emacs-lisp")
-                  newLine [29948-29949]
-                  blockBody [29949-30260]
-                    text [29949-30260] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
-                  newLine [30260-30261]
-                  blockFooter [30261-30270]
-                    keyword [30261-30270]
-                      text [30261-30270] ("#+end_src")
-                newLine [30270-30271]
-                keyword [30271-30281]
-                  text [30271-30281] ("#+RESULTS:")
-        headline [30281-30377]
+              title [29911-29925]
+                operator [29911-29914] ("** ")
+                text [29914-29924] ("Check json")
+                newLine [29924-29925]
+              section [29925-30280]
+                srcBlock [29925-30269]
+                    :language emacs-lisp:
+                  blockHeader [29925-29947]
+                    keyword [29925-29947]
+                        :language emacs-lisp:
+                      text [29925-29936] ("#+begin_src")
+                      srcLanguage [29936-29947] (" emacs-lisp")
+                  newLine [29947-29948]
+                  blockBody [29948-30259]
+                    text [29948-30259] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
+                  newLine [30259-30260]
+                  blockFooter [30260-30269]
+                    keyword [30260-30269]
+                      text [30260-30269] ("#+end_src")
+                newLine [30269-30270]
+                keyword [30270-30280]
+                  text [30270-30280] ("#+RESULTS:")
+        headline [30280-30376]
             :level 1:
           title [29775-29802]
             operator [29775-29777] ("* ")
@@ -4438,7 +4613,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 operator [29868-29869] ("]")
               operator [29869-29870] ("]")
             newLine [29870-29871]
-        headline [30377-32263]
+        headline [30376-32262]
             :level 1:
           title [29871-29893]
             operator [29871-29873] ("* ")
@@ -4450,10 +4625,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             newLine [29892-29893]
           section [29893-31757]
             srcBlock [29893-29955]
+                :language emacs-lisp:
               blockHeader [29893-29915]
                 keyword [29893-29915]
+                    :language emacs-lisp:
                   text [29893-29904] ("#+begin_src")
-                  text [29904-29915] (" emacs-lisp")
+                  srcLanguage [29904-29915] (" emacs-lisp")
               newLine [29915-29916]
               blockBody [29916-29945]
                 text [29916-29945] ("(message \\"\\"\\\\[line [0-9]+\\\\]\\"\\")")
@@ -4463,10 +4640,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                   text [29946-29955] ("#+end_src")
             newLine [29955-29956]
             srcBlock [29956-30091]
+                :language emacs-lisp:
               blockHeader [29956-29978]
                 keyword [29956-29978]
+                    :language emacs-lisp:
                   text [29956-29967] ("#+begin_src")
-                  text [29967-29978] (" emacs-lisp")
+                  srcLanguage [29967-29978] (" emacs-lisp")
               newLine [29978-29979]
               blockBody [29979-30081]
                 text [29979-30081] ("(message \\"%s\\" (string-match \\"{\\\\|);?$\\" \\"public replaceNonPrintableCharacters(text: string): string {\\"))")
@@ -4486,10 +4665,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             newLine [30109-30110]
             newLine [30110-30111]
             srcBlock [30111-30292]
+                :language emacs-lisp:
               blockHeader [30111-30133]
                 keyword [30111-30133]
+                    :language emacs-lisp:
                   text [30111-30122] ("#+begin_src")
-                  text [30122-30133] (" emacs-lisp")
+                  srcLanguage [30122-30133] (" emacs-lisp")
               newLine [30133-30134]
               blockBody [30134-30282]
                 text [30134-30282] ("(setq turbo-log--ecmascript-final-symbols '(?; ?)))\\n(while (or (not (eobp)) (member ?) '(?; ?))))\\n                 (setq current-char char-after))))")
@@ -4499,10 +4680,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                   text [30283-30292] ("#+end_src")
             newLine [30292-30293]
             srcBlock [30293-31304]
+                :language emacs-lisp:
               blockHeader [30293-30315]
                 keyword [30293-30315]
+                    :language emacs-lisp:
                   text [30293-30304] ("#+begin_src")
-                  text [30304-30315] (" emacs-lisp")
+                  srcLanguage [30304-30315] (" emacs-lisp")
               newLine [30315-30316]
               blockBody [30316-31294]
                 text [30316-31294] ("(setq quicktype-mode-configs '((\\"go\\" go-mode \\"\\")\\n                               (\\"ts\\" typescript-mode \\"\\")\\n                               (\\"js\\" js2-mode \\"\\")\\n                               (\\"rs\\" rust-mode \\"\\")\\n                               (\\"c++\\" c++-mode \\"\\")\\n                               (\\"javascript-prop-types\\" js2-mode \\"\\")\\n                               (\\"flow\\" flow-js2-mode \\"\\")\\n                               (\\"swift\\" swift-mode \\"\\")\\n                               (\\"kotlin\\" kotlin-mode \\"\\")\\n                               (\\"elm\\" elm-mode \\"\\")\\n                               (\\"ruby\\" ruby-mode \\"\\")\\n                               (\\"dart\\" dart-mode \\"\\")\\n                               (\\"py\\" python-mode \\"--python-version 3.7\\")\\n                               (\\"haskell\\" haskell-mode \\"\\")))\\n\\n;; (message \\"%s\\" quicktype-mode-configs)\\n(message \\"%s\\" (cl-rassoc 'go-mode quicktype-mode-configs :test #'member))\\n;; (message \\"%s\\" (cl-rassoc \\"Red Pine\\" needles-per-cluster :test #'member))")
@@ -4522,10 +4705,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             newLine [31333-31334]
             newLine [31334-31335]
             srcBlock [31335-31558]
+                :language emacs-lisp:
               blockHeader [31335-31357]
                 keyword [31335-31357]
+                    :language emacs-lisp:
                   text [31335-31346] ("#+begin_src")
-                  text [31346-31357] (" emacs-lisp")
+                  srcLanguage [31346-31357] (" emacs-lisp")
               newLine [31357-31358]
               blockBody [31358-31548]
                 text [31358-31548] ("(setq needles-per-cluster\\n      '((2 \\"Austrian Pine\\" \\"Red Pine\\")\\n        (3 \\"Pitch Pine\\")\\n        (5 \\"White Pine\\")))\\n\\n(message \\"%s\\" (cl-rassoc \\"Red Pine\\" needles-per-cluster :test #'member))")
@@ -4545,10 +4730,12 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
             newLine [31600-31601]
             newLine [31601-31602]
             srcBlock [31602-31738]
+                :language emacs-lisp:
               blockHeader [31602-31624]
                 keyword [31602-31624]
+                    :language emacs-lisp:
                   text [31602-31613] ("#+begin_src")
-                  text [31613-31624] (" emacs-lisp")
+                  srcLanguage [31613-31624] (" emacs-lisp")
               newLine [31624-31625]
               blockBody [31625-31728]
                 text [31625-31728] ("(message \\"%s\\" (string-match \\"\\\\({\\\\|;$\\\\)\\\\|\\\\(const [\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]+$\\\\)\\" \\"  const foo = 1\\"))")
@@ -4882,10 +5069,12 @@ textarea:focus, input:focus{
                 newLine [988-989]
               section [989-1066]
                 srcBlock [989-1065]
+                    :language scss:
                   blockHeader [989-1005]
                     keyword [989-1005]
+                        :language scss:
                       text [989-1000] ("#+BEGIN_SRC")
-                      text [1000-1005] (" scss")
+                      srcLanguage [1000-1005] (" scss")
                   newLine [1005-1006]
                   blockBody [1006-1055]
                     text [1006-1055] ("textarea:focus, input:focus{\\n    outline: none;\\n}")
@@ -4914,10 +5103,12 @@ textarea:focus, input:focus{
                     text [1121-1126] (":END:")
                 newLine [1126-1127]
                 srcBlock [1127-1201]
+                    :language css:
                   blockHeader [1127-1142]
                     keyword [1127-1142]
+                        :language css:
                       text [1127-1138] ("#+BEGIN_SRC")
-                      text [1138-1142] (" css")
+                      srcLanguage [1138-1142] (" css")
                   newLine [1142-1143]
                   blockBody [1143-1191]
                     text [1143-1191] (".example::-webkit-scrollbar {\\n  display: none;\\n}")
@@ -4983,10 +5174,12 @@ textarea:focus, input:focus{
                   operator [1489-1490] ("]")
                 newLine [1490-1491]
                 srcBlock [1491-2192]
+                    :language scss:
                   blockHeader [1491-1507]
                     keyword [1491-1507]
+                        :language scss:
                       text [1491-1502] ("#+BEGIN_SRC")
-                      text [1502-1507] (" scss")
+                      srcLanguage [1502-1507] (" scss")
                   newLine [1507-1508]
                   blockBody [1508-2182]
                     text [1508-2182] ("@mixin breakpoint($breakpoint, $direction) {\\n  @if map-has-key($breakpoints, $breakpoint) {\\n\\n    // Get the breakpoint value.\\n    $breakpoint-value: map-get($breakpoints, $breakpoint);\\n\\n    @if $direction == max {\\n      @media (max-width: ($breakpoint-value - 1)) {\\n        @content;\\n      }\\n    } @else if $direction == min {\\n      @media (min-width: $breakpoint-value) {\\n        @content;\\n      }\\n    }\\n\\n  // If the breakpoint doesn't exist in the map.\\n  } @else {\\n    @if $direction == max {\\n      @media (max-width: $breakpoint) {\\n        @content;\\n      }\\n    } @else if $direction == min {\\n      @media (min-width: $breakpoint) {\\n        @content;\\n      }\\n    }\\n  }\\n}\\n")
@@ -5031,10 +5224,12 @@ return [f'{*}', '*']
       "root [0-52]
         newLine [0-1]
         srcBlock [1-50]
+            :language python:
           blockHeader [1-19]
             keyword [1-19]
+                :language python:
               text [1-12] ("#+begin_src")
-              text [12-19] (" python")
+              srcLanguage [12-19] (" python")
           newLine [19-20]
           blockBody [20-40]
             text [20-40] ("return [f'{*}', '*']")
@@ -5074,10 +5269,12 @@ affinity:
             newLine [12-13]
           section [13-129]
             srcBlock [13-71]
+                :language yaml:
               blockHeader [13-29]
                 keyword [13-29]
+                    :language yaml:
                   text [13-24] ("#+BEGIN_SRC")
-                  text [24-29] (" yaml")
+                  srcLanguage [24-29] (" yaml")
               newLine [29-30]
               blockBody [30-62]
                 text [30-62] ("affinity:\\n  - matchExpression:\\n ")
@@ -5088,10 +5285,12 @@ affinity:
             newLine [72-73]
             indent [73-74] (" ")
             srcBlock [74-128]
+                :language yaml:
               blockHeader [74-90]
                 keyword [74-90]
+                    :language yaml:
                   text [74-85] ("#+BEGIN_SRC")
-                  text [85-90] (" yaml")
+                  srcLanguage [85-90] (" yaml")
               newLine [90-91]
               blockBody [91-119]
                 text [91-119] ("affinity:\\n      - weight: 1\\n")

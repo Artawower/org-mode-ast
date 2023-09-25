@@ -47,7 +47,7 @@ print('Hello world')
     `);
   });
 
-  it('Should parse simple src block with language and additional properties', () => {
+  fit('Should parse simple src block with language and additional properties', () => {
     const orgDoc = `#+BEGIN_SRC python :tangle test.py
 #+END_SRC`;
     const result = parse(orgDoc);
@@ -56,10 +56,12 @@ print('Hello world')
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-44]
         srcBlock [0-44]
+            :language python:
           blockHeader [0-34]
             keyword [0-19]
+                :language python:
               text [0-11] ("#+BEGIN_SRC")
-              text [11-19] (" python ")
+              srcLanguage [11-19] (" python ")
             blockProperty [19-34]
               text [19-26] (":tangle")
               text [26-34] (" test.py")
