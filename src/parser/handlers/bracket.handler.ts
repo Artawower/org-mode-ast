@@ -79,7 +79,9 @@ export class BracketHandler implements OrgHandler {
 
   private normalizeUnresolvedNode(node: OrgNode) {
     if (node.type === NodeType.Unresolved) {
-      const rawValue = node.rawValue;
+      // NOTE: master when node has unresolved type it could have
+      // children and value at the same time
+      const rawValue = node.rawValue + (node.value ?? '');
       node.removeChildren(node.children);
       node.setValue(rawValue);
       node.type = NodeType.Text;
@@ -441,6 +443,8 @@ export class BracketHandler implements OrgHandler {
     // It means that this node already has found pair.
     // return;
     const filteredBrackets = this.ctx.bracketsStack.filter((b) => b.parent);
+    // const t = Array.from(filteredBrackets);
+    // const u = Array.from(this.#unresolvedNodes.get(0).children);
     this.astBuilder.mergeNeighborsNodesWithSameType(filteredBrackets.first);
     this.#unresolvedNodes.forEach((n) => {
       if (!n.parent) {

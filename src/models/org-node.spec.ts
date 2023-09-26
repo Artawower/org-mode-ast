@@ -993,4 +993,49 @@ There is no native way to automatically synchronize Kitty terminal theme with th
       There is no native way to automatically synchronize Kitty terminal theme with the macOS system theme."
     `);
   });
+
+  it('Should correctly stringify text from checkbox node', () => {
+    const doc = `- [ ] checkbox
+- [x] checked checkbox`;
+
+    const parsed = parse(doc);
+
+    expect(parsed.toString()).toMatchInlineSnapshot(`
+      "root [0-37]
+        list [0-37]
+            :unordered:
+            :level 0:
+          listItem [0-15]
+            title [0-15]
+              operator [0-2] ("- ")
+              checkbox [2-5] ("[ ]")
+                  :unchecked:
+                operator [2-3] ("[")
+                text [3-4] (" ")
+                operator [4-5] ("]")
+              text [5-14] (" checkbox")
+              newLine [14-15]
+          listItem [15-37]
+            title [15-37]
+              operator [15-17] ("- ")
+              checkbox [17-20] ("[x]")
+                  :checked:
+                operator [17-18] ("[")
+                text [18-19] ("x")
+                operator [19-20] ("]")
+              text [20-37] (" checked checkbox")
+      "
+    `);
+  });
+
+  it('Should correctly get raw value from checkbox node', () => {
+    const doc = `- [ ] checkbox
+- [x] checked checkbox`;
+
+    const parsed = parse(doc);
+    expect(parsed.rawValue).toMatchInlineSnapshot(`
+      "- [ ] checkbox
+      - [x] checked checkbox"
+    `);
+  });
 });

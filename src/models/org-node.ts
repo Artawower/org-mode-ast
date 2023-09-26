@@ -87,8 +87,7 @@ export class OrgNode {
     }
     if (this.children?.length) {
       val += this.getRawValueFromNodes(this.children);
-    }
-    if (this.value) {
+    } else if (this.value) {
       val += this.value;
     }
     return val;
