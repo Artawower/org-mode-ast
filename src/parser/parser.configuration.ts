@@ -2,7 +2,16 @@ import { ParserConfiguration } from '../models/index.js';
 
 /** Default parser configuration. */
 export const parserConfiguration: ParserConfiguration = {
-  todoKeywords: ['TODO', 'DONE', 'HOLD', 'CANCELED'],
+  todoKeywords: [
+    'TODO',
+    'DONE',
+    'HOLD',
+    'CANCELED',
+    'WAIT',
+    'IDEA',
+    'KILL',
+    'REJECTED',
+  ],
   imgExtensions: [
     '.ase',
     '.art',
