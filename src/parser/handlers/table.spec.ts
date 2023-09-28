@@ -316,4 +316,37 @@ describe('Table', () => {
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
+
+  it('Should not include end of line  into end of the table', () => {
+    const orgDoc = `| Header1          | header2 |
+| col 1 | col 2 |
+
+`;
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-50]
+        table [0-48]
+          tableRow [0-30]
+            operator [0-1] ("|")
+            tableCell [1-19]
+              text [1-19] (" Header1          ")
+            operator [19-20] ("|")
+            tableCell [20-29]
+              text [20-29] (" header2 ")
+            operator [29-30] ("|")
+          newLine [30-31]
+          tableRow [31-48]
+            operator [31-32] ("|")
+            tableCell [32-39]
+              text [32-39] (" col 1 ")
+            operator [39-40] ("|")
+            tableCell [40-47]
+              text [40-47] (" col 2 ")
+            operator [47-48] ("|")
+        newLine [48-49]
+        newLine [49-50]
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });

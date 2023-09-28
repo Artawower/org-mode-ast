@@ -261,9 +261,17 @@ export class AstBuilder {
   }
 
   private isPartOfTable(srcNode: OrgNode, dstNode: OrgNode): OrgNode {
+    const isNewLineBetweenRows =
+      srcNode.is(NodeType.NewLine) &&
+      (!this.tokenIterator.nextToken ||
+        this.tokenIterator.nextToken.isType(
+          TokenType.TableOperator,
+          TokenType.Indent,
+          TokenType.TableDelimiter
+        ));
     if (
-      srcNode.is(NodeType.TableRow, NodeType.NewLine, NodeType.Indent) &&
-      dstNode.is(NodeType.Table)
+      dstNode.is(NodeType.Table) &&
+      (srcNode.is(NodeType.TableRow, NodeType.Indent) || isNewLineBetweenRows)
     ) {
       return dstNode;
     }

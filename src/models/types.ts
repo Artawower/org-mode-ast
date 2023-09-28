@@ -131,8 +131,8 @@ export class Token {
     this.type = t;
   }
 
-  public isType(t: TokenType): boolean {
-    return this.type === t;
+  public isType(...t: TokenType[]): boolean {
+    return t.includes(this.type);
   }
 
   public setNextToken(token: Token): void {

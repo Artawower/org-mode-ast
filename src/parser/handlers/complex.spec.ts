@@ -1953,7 +1953,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                             keyword [6018-6027]
                               text [6018-6027] ("#+end_src")
                         newLine [6027-6028]
-                        table [6028-6047]
+                        table [6028-6046]
                           tableRow [6028-6046]
                             operator [6028-6029] ("|")
                             tableCell [6029-6034]
@@ -1962,7 +1962,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                             tableCell [6035-6045]
                               text [6035-6045] (" Lalalend ")
                             operator [6045-6046] ("|")
-                          newLine [6046-6047]
+                        newLine [6046-6047]
                         text [6047-6099] ("Ну или так (последний аргумент t - добавить в конец)")
                         newLine [6099-6100]
                         newLine [6100-6101]
@@ -2112,13 +2112,13 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                             keyword [7051-7060]
                               text [7051-7060] ("#+end_src")
                         newLine [7060-7061]
-                        table [7061-7069]
+                        table [7061-7068]
                           tableRow [7061-7068]
                             operator [7061-7062] ("|")
                             tableCell [7062-7067]
                               text [7062-7067] (" 123 ")
                             operator [7067-7068] ("|")
-                          newLine [7068-7069]
+                        newLine [7068-7069]
                     headline [7069-7519]
                         :level 4:
                       title [7069-7115]
@@ -3634,7 +3634,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     keyword [20564-20573]
                       text [20564-20573] ("#+end_src")
                 newLine [20573-20574]
-                table [20574-20604]
+                table [20574-20603]
                   tableRow [20574-20603]
                     operator [20574-20575] ("|")
                     tableCell [20575-20582]
@@ -3649,7 +3649,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     tableCell [20599-20602]
                       text [20599-20602] (" 0 ")
                     operator [20602-20603] ("|")
-                  newLine [20603-20604]
+                newLine [20603-20604]
                 srcBlock [20604-20692]
                     :language emacs-lisp:
                   blockHeader [20604-20626]
