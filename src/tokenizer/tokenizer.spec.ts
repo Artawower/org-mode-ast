@@ -1276,6 +1276,39 @@ BROKE\\end{align*}`;
     ]);
   });
 
+  it('Should stop tokenize raw link when faced with new line', () => {
+    const orgDoc = `https://google.com/qwe/qwe/
+
+text`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 27,
+        start: 0,
+        type: 'link',
+        value: 'https://google.com/qwe/qwe/',
+      },
+      {
+        end: 28,
+        start: 27,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 29,
+        start: 28,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 33,
+        start: 29,
+        type: 'text',
+        value: 'text',
+      },
+    ]);
+  });
+
   it('Should tokenize raw link', () => {
     const orgDoc = `it's a link https://www.google.com/some-link?hello=123`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

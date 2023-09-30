@@ -1038,4 +1038,16 @@ There is no native way to automatically synchronize Kitty terminal theme with th
       - [x] checked checkbox"
     `);
   });
+
+  fit('Should return raw value from latex export block', () => {
+    const doc = `#+BEGIN_EXPORT latex
+\LaTeX
+#+END_EXPORT`;
+
+    const parsed = parse(doc);
+    console.log('✎: [line 1048][org-node.spec.ts] parsed: ', parsed);
+    expect(
+      parsed.children.get(0).children.get(2).rawValue
+    ).toMatchInlineSnapshot(`"LaTeX"`);
+  });
 });
