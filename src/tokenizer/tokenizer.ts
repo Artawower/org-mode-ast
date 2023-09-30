@@ -66,7 +66,7 @@ export class Tokenizer {
         this.preserveTableDelimiter(this.preserveLink(this.handleParenthesis))(
           c
         ),
-      '\n': (c: string) => this.preserveLink(this.handleNewLine)(c),
+      '\n': (c: string) => this.handleNewLine(c),
       '\\': (c: string) =>
         this.preserveTableDelimiter(this.preserveLink(this.handleBackslash))(c),
       '{': (c: string) =>
