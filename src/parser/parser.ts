@@ -191,6 +191,9 @@ class Parser {
   }
 
   private handleEndOfExpressions(): void {
+    if (this.astBuilder.lastNode.is(NodeType.NewLine)) {
+      this.ctx.exitList();
+    }
     this.commentHandler.handleNewLine();
     this.tableHandler.handleNewLine();
     this.keywordHandler.handleEndOfLine();

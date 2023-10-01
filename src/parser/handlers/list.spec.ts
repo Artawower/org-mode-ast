@@ -572,4 +572,33 @@ Some text
     `);
     expect(hasNodeIncorrectRanges(parsed, orgData)).toBeFalsy();
   });
+
+  it('Should break lists with indent between them', () => {
+    const orgDoc = `- i1
+
+- i2`;
+
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-10]
+        list [0-5]
+            :unordered:
+            :level 0:
+          listItem [0-5]
+            title [0-5]
+              operator [0-2] ("- ")
+              text [2-4] ("i1")
+              newLine [4-5]
+        newLine [5-6]
+        list [6-10]
+            :unordered:
+            :level 0:
+          listItem [6-10]
+            title [6-10]
+              operator [6-8] ("- ")
+              text [8-10] ("i2")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
 });
