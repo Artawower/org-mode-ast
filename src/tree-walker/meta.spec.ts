@@ -240,4 +240,46 @@ Text
       "
     `);
   });
+
+  it('Should extract connected links of other notes', () => {
+    const orgDoc = `* Some heading
+
+[[id:123123123][Note A]]
+
+** Subheading
+[[id:lalalalal][Note B]]`;
+
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "connectedNotes": {
+          "123123123": "Note A",
+          "lalalalal": "Note B",
+        },
+        "headings": [
+          {
+            "level": 1,
+            "title": "Some heading",
+          },
+          {
+            "level": 2,
+            "title": "Subheading",
+          },
+        ],
+      }
+    `);
+  });
+
+  it('Should extract connected note without name', () => {
+    const orgDoc = `[[id:people]]`;
+
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "connectedNotes": {
+          "people": "",
+        },
+      }
+    `);
+  });
 });

@@ -203,6 +203,7 @@ export interface MetaInfo {
   id?: string;
   title?: string;
   description?: string;
+  connectedNotes?: { [id: string]: string };
   images?: string[];
   tags?: string[];
   headings?: Heading[];
@@ -210,7 +211,13 @@ export interface MetaInfo {
   previewImg?: string;
   linkType?: LinkType;
   fileTags?: string[];
-  [key: string]: string | string[] | undefined | boolean | Heading[];
+  [key: string]:
+    | string
+    | string[]
+    | undefined
+    | boolean
+    | Heading[]
+    | { [id: string]: string };
 }
 
 export interface ParserConfiguration {

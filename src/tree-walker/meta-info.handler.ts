@@ -93,6 +93,33 @@ export function collectHeadings(orgNode: OrgNode, metaInfo: MetaInfo): void {
   });
 }
 
+export function collectConnectedNotes(
+  orgNode: OrgNode,
+  metaInfo: MetaInfo
+): void {
+  if (orgNode.isNot(NodeType.Link)) {
+    return;
+  }
+
+  const linkAddress = orgNode.children.get(1).children.get(1).value;
+  console.log('✎: [line 105][meta-info.handler.ts] linkAddress: ', linkAddress);
+  if (!linkAddress.startsWith('id:')) {
+    return;
+  }
+
+  const linkName =
+    orgNode.children.length === 4
+      ? orgNode.children.get(2).children.get(1).value
+      : '';
+  console.log(
+    '✎: [line 111][meta-info.handler.ts] orgNode.children.get(2): ',
+    orgNode.children.get(2)
+  );
+
+  metaInfo.connectedNotes ??= {};
+  metaInfo.connectedNotes[linkAddress.slice(3)] = linkName;
+}
+
 /*
  * Collect all available meta info
  */
@@ -103,7 +130,8 @@ export function withMetaInfo(orgNode: OrgNode): OrgNode {
     collectFromKeywords,
     collectFromProperties,
     collectImages,
-    collectHeadings
+    collectHeadings,
+    collectConnectedNotes
   );
 }
 
