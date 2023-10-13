@@ -102,7 +102,6 @@ export function collectConnectedNotes(
   }
 
   const linkAddress = orgNode.children.get(1).children.get(1).value;
-  console.log('✎: [line 105][meta-info.handler.ts] linkAddress: ', linkAddress);
   if (!linkAddress.startsWith('id:')) {
     return;
   }
@@ -111,10 +110,6 @@ export function collectConnectedNotes(
     orgNode.children.length === 4
       ? orgNode.children.get(2).children.get(1).value
       : '';
-  console.log(
-    '✎: [line 111][meta-info.handler.ts] orgNode.children.get(2): ',
-    orgNode.children.get(2)
-  );
 
   metaInfo.connectedNotes ??= {};
   metaInfo.connectedNotes[linkAddress.slice(3)] = linkName;

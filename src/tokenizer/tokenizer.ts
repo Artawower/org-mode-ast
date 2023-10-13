@@ -318,7 +318,7 @@ export class Tokenizer {
       this.lastToken &&
       !this.lastToken.isType(TokenType.NewLine) &&
       !this.lastToken.value.trim() &&
-      !this.lastToken.prev?.isType(TokenType.TableOperator)
+      this.lastToken.prev?.isType(TokenType.NewLine)
     ) {
       this.upsertToken({ type: TokenType.Operator, value: c });
       return;

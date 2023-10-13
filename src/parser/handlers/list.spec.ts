@@ -601,4 +601,24 @@ Some text
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
+
+  it('Should not parser list operator in the middle of string', () => {
+    const orgDoc = `[[./Apple.png]] - is a fruit`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-28]
+        link [0-15]
+            :linkType image:
+          operator [0-1] ("[")
+          linkUrl [1-14]
+            operator [1-2] ("[")
+            text [2-13] ("./Apple.png")
+            operator [13-14] ("]")
+          operator [14-15] ("]")
+        text [15-28] (" - is a fruit")
+      "
+    `);
+  });
 });

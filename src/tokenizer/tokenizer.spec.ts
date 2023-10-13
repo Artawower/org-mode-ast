@@ -1030,9 +1030,7 @@ console.log(a);
       { start: 34, end: 35, type: 'bracket', value: '+' },
       { start: 35, end: 40, type: 'text', value: ' 9y &' },
       { start: 40, end: 41, type: 'bracket', value: '=' },
-      { start: 41, end: 42, type: 'text', value: ' ' },
-      { start: 42, end: 43, type: 'operator', value: '-' },
-      { start: 43, end: 45, type: 'text', value: '12' },
+      { start: 41, end: 45, type: 'text', value: ' -12' },
       { start: 45, end: 46, type: 'newLine', value: '\n' },
       {
         start: 46,
@@ -1076,9 +1074,7 @@ BROKE\\end{align*}`;
       { start: 74, end: 75, type: 'bracket', value: '+' },
       { start: 75, end: 80, type: 'text', value: ' 9y &' },
       { start: 80, end: 81, type: 'bracket', value: '=' },
-      { start: 81, end: 82, type: 'text', value: ' ' },
-      { start: 82, end: 83, type: 'operator', value: '-' },
-      { start: 83, end: 85, type: 'text', value: '12' },
+      { start: 81, end: 85, type: 'text', value: ' -12' },
       { start: 85, end: 86, type: 'newLine', value: '\n' },
       { start: 86, end: 95, type: 'text', value: 'BROKE\\end' },
       { start: 95, end: 96, type: 'latexBracket', value: '{' },
@@ -1749,6 +1745,60 @@ text`;
     ]);
   });
 
+  it('Should not tokenize list operator in the middle of text', () => {
+    const orgDoc = `[[./Apple.png]] - is a fruit`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 1,
+        start: 0,
+        type: 'bracket',
+        value: '[',
+      },
+      {
+        end: 2,
+        start: 1,
+        type: 'bracket',
+        value: '[',
+      },
+      {
+        end: 3,
+        start: 2,
+        type: 'text',
+        value: '.',
+      },
+      {
+        end: 4,
+        start: 3,
+        type: 'bracket',
+        value: '/',
+      },
+      {
+        end: 13,
+        start: 4,
+        type: 'text',
+        value: 'Apple.png',
+      },
+      {
+        end: 14,
+        start: 13,
+        type: 'bracket',
+        value: ']',
+      },
+      {
+        end: 15,
+        start: 14,
+        type: 'bracket',
+        value: ']',
+      },
+      {
+        end: 28,
+        start: 15,
+        type: 'text',
+        value: ' - is a fruit',
+      },
+    ]);
+  });
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
