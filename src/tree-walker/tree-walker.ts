@@ -5,7 +5,11 @@ export function walkTree(node: OrgNode, callback: (node: OrgNode) => boolean) {
   if (finished) {
     return;
   }
-  node.title?.children?.forEach((child) => walkTree(child, callback));
-  node.section?.children?.forEach((child) => walkTree(child, callback));
+  if (node.title) {
+    walkTree(node.title, callback);
+  }
+  if (node.section) {
+    walkTree(node.section, callback);
+  }
   node.children?.forEach((child) => walkTree(child, callback));
 }
