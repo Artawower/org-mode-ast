@@ -47,7 +47,7 @@ print('Hello world')
     `);
   });
 
-  fit('Should parse simple src block with language and additional properties', () => {
+  it('Should parse simple src block with language and additional properties', () => {
     const orgDoc = `#+BEGIN_SRC python :tangle test.py
 #+END_SRC`;
     const result = parse(orgDoc);
@@ -101,10 +101,12 @@ print('Hello world')
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-81]
         srcBlock [0-81]
+            :language python:
           blockHeader [0-50]
             keyword [0-19]
+                :language python:
               text [0-11] ("#+BEGIN_SRC")
-              text [11-19] (" python ")
+              srcLanguage [11-19] (" python ")
             blockProperty [19-35]
               text [19-26] (":tangle")
               text [26-35] (" test.py ")
@@ -132,10 +134,12 @@ by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-153]
         exportBlock [0-153]
+            :language latex:
           blockHeader [0-20]
             keyword [0-20]
+                :language latex:
               text [0-14] ("#+BEGIN_EXPORT")
-              text [14-20] (" latex")
+              srcLanguage [14-20] (" latex")
           newLine [20-21]
           blockBody [21-140]
             text [21-140] ("In physics, the mass-energy equivalence is stated \\nby the equation $E=mc^2$, discovered in 1905 by Albert Einstein.    ")
@@ -188,10 +192,12 @@ by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-137]
         srcBlock [0-136]
+            :language emacs-lisp:
           blockHeader [0-22]
             keyword [0-22]
+                :language emacs-lisp:
               text [0-11] ("#+begin_src")
-              text [11-22] (" emacs-lisp")
+              srcLanguage [11-22] (" emacs-lisp")
           newLine [22-23]
           blockBody [23-126]
             text [23-126] ("(message \\"%s\\" (string-match \\"\\\\({\\\\|;$\\\\)\\\\|\\\\(const [\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]+$\\\\)\\" \\"  const foo = 1\\"))")
@@ -229,10 +235,12 @@ by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
             newLine [21-22]
           section [22-172]
             srcBlock [22-170]
+                :language yaml:
               blockHeader [22-38]
                 keyword [22-38]
+                    :language yaml:
                   text [22-33] ("#+BEGIN_SRC")
-                  text [33-38] (" yaml")
+                  srcLanguage [33-38] (" yaml")
               newLine [38-39]
               blockBody [39-161]
                 text [39-161] ("  volumes:\\n    - /var/lib/drone:/data\\n  environment:\\n    DRONE_GITLAB_SERVER: https://gitlab.com\\n  ports:\\n    - 3000:3000\\n")
@@ -267,10 +275,12 @@ console.log('qweqwe')
         newLine [0-1]
         indent [1-3] ("  ")
         srcBlock [3-51]
+            :language js:
           blockHeader [3-17]
             keyword [3-17]
+                :language js:
               text [3-14] ("#+BEGIN_SRC")
-              text [14-17] (" js")
+              srcLanguage [14-17] (" js")
           newLine [17-18]
           blockBody [18-42]
             text [18-42] ("console.log('qweqwe')\\n  ")
@@ -308,10 +318,12 @@ spec:
       "root [0-240]
         newLine [0-1]
         srcBlock [1-132]
+            :language yaml:
           blockHeader [1-17]
             keyword [1-17]
+                :language yaml:
               text [1-12] ("#+BEGIN_SRC")
-              text [12-17] (" yaml")
+              srcLanguage [12-17] (" yaml")
           newLine [17-18]
           blockBody [18-123]
             text [18-123] ("  containers:\\n    - name: nginx\\n      ports:\\n        - containerPort: 80\\n---\\nspec:\\n        - name: nginx\\n")
@@ -321,10 +333,12 @@ spec:
         newLine [132-133]
         newLine [133-134]
         srcBlock [134-196]
+            :language yaml:
           blockHeader [134-150]
             keyword [134-150]
+                :language yaml:
               text [134-145] ("#+BEGIN_SRC")
-              text [145-150] (" yaml")
+              srcLanguage [145-150] (" yaml")
           newLine [150-151]
           blockBody [151-187]
             text [151-187] ("spec:\\n  containers:\\n  - name: nginx\\n")

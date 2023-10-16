@@ -1039,7 +1039,7 @@ There is no native way to automatically synchronize Kitty terminal theme with th
     `);
   });
 
-  fit('Should return raw value from latex export block', () => {
+  it('Should return raw value from latex export block', () => {
     const doc = `#+BEGIN_EXPORT latex
 \LaTeX
 #+END_EXPORT`;

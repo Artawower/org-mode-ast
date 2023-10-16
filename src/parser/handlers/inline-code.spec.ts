@@ -105,7 +105,7 @@ describe('InlineCode', () => {
     `);
   });
 
-  fit('Should parse complex document from real world 2', () => {
+  it('Should parse complex document from real world 2', () => {
     const orgDoc = `1: ~{ hey }~`;
     const result = parse(orgDoc);
 

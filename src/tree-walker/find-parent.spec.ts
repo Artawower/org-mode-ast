@@ -1,10 +1,10 @@
 import { NodeType, OrgNode } from 'models';
-import { findParent } from './find-parent';
+import { findParent, walkThroughParents } from './find-parent';
 import { parse } from 'parser/parser';
 import { findNextNode } from './find-next-node';
 
-describe('find parent', () => {
-  it('Should find parent', () => {
+describe('Walk through parents', () => {
+  it('Should walk through parents', () => {
     const rootNode = new OrgNode({
       type: NodeType.Root,
       start: 0,
@@ -54,7 +54,7 @@ describe('find parent', () => {
       "
     `);
     const collectedParents = [];
-    findParent(sectionText, (orgNode) => {
+    walkThroughParents(sectionText, (orgNode) => {
       collectedParents.push(orgNode.type);
       return false;
     });
@@ -68,7 +68,7 @@ describe('find parent', () => {
     `);
   });
 
-  it('Should find parent list and stop iter', () => {
+  it('Should walk through list and stop iter', () => {
     const orgDoc = `* Headline
 - List 1
 - /*List 2*/`;
@@ -109,7 +109,7 @@ describe('find parent', () => {
     });
 
     const collectedParents = [];
-    findParent(foundItalicNode, (orgNode) => {
+    walkThroughParents(foundItalicNode, (orgNode) => {
       collectedParents.push(orgNode.type);
       return false;
     });
@@ -124,5 +124,70 @@ describe('find parent', () => {
         "root",
       ]
     `);
+  });
+});
+
+describe('find parent', () => {
+  it('Should find parent node', () => {
+    const orgDoc = `* Headline
+- List item
+- List item *2*`;
+
+    const parsed = parse(orgDoc);
+    const boldNode = findNextNode(parsed, (n) => {
+      return n.is(NodeType.Bold);
+    });
+
+    const foundParent = findParent(boldNode, (n) => {
+      return n.is(NodeType.Title);
+    });
+
+    expect(foundParent.toString()).toMatchInlineSnapshot(`
+      "title [23-38]
+        operator [23-25] ("- ")
+        text [25-35] ("List item ")
+        bold [35-38]
+          operator [35-36] ("*")
+          text [36-37] ("2")
+          operator [37-38] ("*")
+      "
+    `);
+  });
+
+  it('Should not find parent node', () => {
+    const orgDoc = `* Headline
+- List item
+- List item *2*`;
+
+    const parsed = parse(orgDoc);
+    const boldNode = findNextNode(parsed, (n) => {
+      return n.is(NodeType.Bold);
+    });
+
+    const foundParent = findParent(boldNode, (n) => {
+      return n.is(NodeType.SrcBlock);
+    });
+
+    expect(foundParent).toBeUndefined();
+  });
+
+  it('Should not find parent node cause of stop statement', () => {
+    const orgDoc = `* Headline
+- List item
+- List item *2*`;
+
+    const parsed = parse(orgDoc);
+    const boldNode = findNextNode(parsed, (n) => {
+      return n.is(NodeType.Bold);
+    });
+
+    const foundParent = findParent(boldNode, (n) => {
+      if (n.is(NodeType.ListItem)) {
+        return [false, true];
+      }
+      return n.is(NodeType.Headline);
+    });
+
+    expect(foundParent).toBeUndefined();
   });
 });
