@@ -66,7 +66,6 @@ function extractKeyValue(
     .trim()
     .slice(...range)
     .toLowerCase();
-  console.log('✎: [line 69][meta-info.handler.ts] key: ', key);
   const isNoKeywordValue = nodes.length <= 1;
   const rawKeywordValue = isNoKeywordValue ? '' : nodes.last.rawValue;
 
