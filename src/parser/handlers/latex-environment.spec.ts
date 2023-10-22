@@ -143,8 +143,8 @@ describe('Latex environment', () => {
           blockHeader [0-22]
             keyword [0-22]
                 :language typescript:
-              text [0-11] ("#+BEGIN_SRC")
-              srcLanguage [11-22] (" typescript")
+              text [0-12] ("#+BEGIN_SRC ")
+              srcLanguage [12-22] ("typescript")
           newLine [22-23]
           blockBody [23-95]
             text [23-95] ("  private initAuthConfig(): void {\\n    this.authConfig = {\\n    };\\n  }\\n  ")

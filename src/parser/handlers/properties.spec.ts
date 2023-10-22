@@ -20,12 +20,12 @@ describe('Properties', () => {
             text [0-12] (":PROPERTIES:")
           newLine [12-13]
           property [13-32]
-            text [13-17] (":ID:")
-            text [17-32] (" headline-test2")
+            text [13-18] (":ID: ")
+            text [18-32] ("headline-test2")
           newLine [32-33]
           property [33-49]
-            text [33-44] (":PUBLISHED:")
-            text [44-49] (" true")
+            text [33-45] (":PUBLISHED: ")
+            text [45-49] ("true")
           newLine [49-50]
           property [50-55]
             text [50-55] (":END:")
@@ -63,12 +63,12 @@ describe('Properties', () => {
           text [41-53] (":PROPERTIES:")
         newLine [53-54]
         property [54-73]
-          text [54-58] (":ID:")
-          text [58-73] (" headline-test2")
+          text [54-59] (":ID: ")
+          text [59-73] ("headline-test2")
         newLine [73-74]
         property [74-90]
-          text [74-85] (":PUBLISHED:")
-          text [85-90] (" true")
+          text [74-86] (":PUBLISHED: ")
+          text [86-90] ("true")
         newLine [90-91]
         property [91-96]
           text [91-96] (":END:")
@@ -104,20 +104,20 @@ describe('Properties', () => {
                 text [11-23] (":PROPERTIES:")
               newLine [23-24]
               property [24-55]
-                text [24-31] (":Title:")
-                text [31-55] ("     Goldberg Variations")
+                text [24-32] (":Title: ")
+                text [32-55] ("    Goldberg Variations")
               newLine [55-56]
               property [56-77]
-                text [56-66] (":Composer:")
-                text [66-77] ("  J.S. Bach")
+                text [56-67] (":Composer: ")
+                text [67-77] (" J.S. Bach")
               newLine [77-78]
               property [78-109]
-                text [78-89] (":Publisher:")
-                text [89-109] (" Deutsche Grammophon")
+                text [78-90] (":Publisher: ")
+                text [90-109] ("Deutsche Grammophon")
               newLine [109-110]
               property [110-123]
-                text [110-118] (":NDisks:")
-                text [118-123] ("    1")
+                text [110-119] (":NDisks: ")
+                text [119-123] ("   1")
               newLine [123-124]
               property [124-129]
                 text [124-129] (":END:")
@@ -133,8 +133,8 @@ describe('Properties', () => {
       "root [0-34]
           :header-args :tangle no:
         keyword [0-34]
-          text [0-11] ("#+PROPERTY:")
-          text [11-24] (" header-args ")
+          text [0-12] ("#+PROPERTY: ")
+          text [12-24] ("header-args ")
           blockProperty [24-34]
             text [24-31] (":tangle")
             text [31-34] (" no")
@@ -151,16 +151,16 @@ describe('Properties', () => {
       "root [0-72]
           :header-args :tangle yes:
         keyword [0-72]
-          text [0-11] ("#+PROPERTY:")
-          text [11-24] (" header-args ")
+          text [0-12] ("#+PROPERTY: ")
+          text [12-24] ("header-args ")
           blockProperty [24-34]
             text [24-31] (":tangle")
             text [31-34] (" no")
           newLine [34-35]
           indent [35-37] ("  ")
           keyword [37-72]
-            text [37-48] ("#+PROPERTY:")
-            text [48-61] (" header-args ")
+            text [37-49] ("#+PROPERTY: ")
+            text [49-61] ("header-args ")
             blockProperty [61-72]
               text [61-68] (":tangle")
               text [68-72] (" yes")

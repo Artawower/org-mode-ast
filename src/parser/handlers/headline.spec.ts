@@ -331,8 +331,8 @@ Another text`;
           section [11-31]
             indent [11-15] ("    ")
             keyword [15-31]
-              text [15-25] ("#+KEYWORD:")
-              text [25-31] (" value")
+              text [15-26] ("#+KEYWORD: ")
+              text [26-31] ("value")
       "
     `);
   });
@@ -364,8 +364,8 @@ Some text, with punctuation and so one
                 text [25-63] ("Some text, with punctuation and so one")
                 newLine [63-64]
                 keyword [64-79]
-                  text [64-74] ("#+KEYWORD:")
-                  text [74-79] (" test")
+                  text [64-75] ("#+KEYWORD: ")
+                  text [75-79] ("test")
                 newLine [79-80]
       "
     `);

@@ -311,31 +311,30 @@ describe('Link test', () => {
             text [0-12] (":PROPERTIES:")
           newLine [12-13]
           property [13-28]
-            text [13-17] (":ID:")
-            text [17-28] (" tmp_bucket")
+            text [13-18] (":ID: ")
+            text [18-28] ("tmp_bucket")
           newLine [28-29]
           property [29-34]
             text [29-34] (":END:")
         newLine [34-35]
         keyword [35-67]
-          text [35-43] ("#+TITLE:")
-          text [43-67] (" Черный ящик ( ͡° ͜ʖ ͡°)")
+          text [35-44] ("#+TITLE: ")
+          text [44-67] ("Черный ящик ( ͡° ͜ʖ ͡°)")
         newLine [67-68]
         keyword [68-129]
-          text [68-82] ("#+DESCRIPTION:")
-          text [82-129] (" Временное хранилище для информации к изучению!")
+          text [68-83] ("#+DESCRIPTION: ")
+          text [83-129] ("Временное хранилище для информации к изучению!")
         newLine [129-130]
         keyword [130-152]
-          text [130-140] ("#+STARTUP:")
-          text [140-152] (" show2levels")
+          text [130-141] ("#+STARTUP: ")
+          text [141-152] ("show2levels")
         newLine [152-153]
         keyword [153-176]
-          text [153-163] ("#+STARTUP:")
-          text [163-176] (" inlineimages")
+          text [153-164] ("#+STARTUP: ")
+          text [164-176] ("inlineimages")
         newLine [176-177]
         keyword [177-216]
-          text [177-188] ("#+FILETAGS:")
-          text [188-189] (" ")
+          text [177-189] ("#+FILETAGS: ")
           tagList [189-216]
             operator [189-190] (":")
             text [190-196] ("bucket")

@@ -46,8 +46,8 @@ describe('Meta information', () => {
 
           :images ./image1.png,./image2.png:
         keyword [0-19]
-          text [0-8] ("#+TITLE:")
-          text [8-19] (" some title")
+          text [0-9] ("#+TITLE: ")
+          text [9-19] ("some title")
         newLine [19-20]
         headline [20-78]
             :level 1:
@@ -231,8 +231,8 @@ Text
       "root [0-18]
           :title 12312:
         keyword [0-14]
-          text [0-8] ("#+TITLE:")
-          text [8-14] (" 12312")
+          text [0-9] ("#+TITLE: ")
+          text [9-14] ("12312")
         newLine [14-15]
         newLine [15-16]
         newLine [16-17]

@@ -22,12 +22,12 @@ export class PropertiesHandler implements OrgHandler {
 
   public isPropertyKeyword(): boolean {
     const keyword = this.tokenIterator.currentValue;
-    return keyword.startsWith(':') && keyword.endsWith(':');
+    return keyword.startsWith(':') && keyword.trim().endsWith(':');
   }
 
   public isBlockPropertyKeyword(): boolean {
     const keyword = this.tokenIterator.currentValue;
-    return keyword.startsWith(':') && !keyword.endsWith(':');
+    return keyword.startsWith(':') && !keyword.trim().endsWith(':');
   }
 
   public handle(): OrgNode {

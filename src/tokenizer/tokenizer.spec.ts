@@ -248,8 +248,9 @@ fdescribe('Tokenizer', () => {
 
   it('Should create tokens for statistics cookies', () => {
     const headline = `* TODO [50%] [#A] Most important headline`;
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+    console.log('✎: [line 252][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
       { type: TokenType.Text, value: ' ', start: 6, end: 7 },
@@ -438,8 +439,8 @@ Some text`;
     expect(result).toEqual([
       { type: TokenType.Keyword, value: ':PROPERTIES:', start: 0, end: 12 },
       { type: TokenType.NewLine, value: '\n', start: 12, end: 13 },
-      { type: TokenType.Keyword, value: ':ID:', start: 13, end: 17 },
-      { type: TokenType.Text, value: '      123', start: 17, end: 26 },
+      { type: TokenType.Keyword, value: ':ID: ', start: 13, end: 18 },
+      { type: TokenType.Text, value: '     123', start: 18, end: 26 },
       { type: TokenType.NewLine, value: '\n', start: 26, end: 27 },
       { type: TokenType.Keyword, value: ':END:', start: 27, end: 32 },
     ]);
@@ -623,8 +624,8 @@ const a = 1;
 
     const result = tokenize(orgDoc, parserConfiguration);
     expect(tokenListToArray(result)).toEqual([
-      { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
-      { start: 11, end: 14, type: 'text', value: ' js' },
+      { start: 0, end: 12, type: 'keyword', value: '#+BEGIN_SRC ' },
+      { start: 12, end: 14, type: 'text', value: 'js' },
       { start: 14, end: 15, type: 'newLine', value: '\n' },
       { start: 15, end: 23, type: 'text', value: 'const a ' },
       { start: 23, end: 24, type: 'bracket', value: '=' },
@@ -642,8 +643,8 @@ console.log(a);
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
-      { start: 0, end: 11, type: 'keyword', value: '#+BEGIN_SRC' },
-      { start: 11, end: 15, type: 'text', value: ' js ' },
+      { start: 0, end: 12, type: 'keyword', value: '#+BEGIN_SRC ' },
+      { start: 12, end: 15, type: 'text', value: 'js ' },
       { start: 15, end: 22, type: 'keyword', value: ':tangle' },
       { start: 22, end: 31, type: 'text', value: ' test.js ' },
       { start: 31, end: 39, type: 'keyword', value: ':exports' },
@@ -912,8 +913,8 @@ console.log(a);
     const orgDoc = `#+PROPERTY: NAME VALUE`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
-      { start: 0, end: 11, type: 'keyword', value: '#+PROPERTY:' },
-      { start: 11, end: 22, type: 'text', value: ' NAME VALUE' },
+      { start: 0, end: 12, type: 'keyword', value: '#+PROPERTY: ' },
+      { start: 12, end: 22, type: 'text', value: 'NAME VALUE' },
     ]);
   });
 
@@ -921,8 +922,8 @@ console.log(a);
     const orgDoc = `#+KEYWORD: VALUE`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
-      { start: 0, end: 10, type: 'keyword', value: '#+KEYWORD:' },
-      { start: 10, end: 16, type: 'text', value: ' VALUE' },
+      { start: 0, end: 11, type: 'keyword', value: '#+KEYWORD: ' },
+      { start: 11, end: 16, type: 'text', value: 'VALUE' },
     ]);
   });
 
@@ -935,8 +936,8 @@ console.log(a);
       { start: 2, end: 9, type: 'text', value: 'Heading' },
       { start: 9, end: 10, type: 'newLine', value: '\n' },
       { start: 10, end: 15, type: 'indent', value: '     ' },
-      { start: 15, end: 25, type: 'keyword', value: '#+KEYWORD:' },
-      { start: 25, end: 31, type: 'text', value: ' VALUE' },
+      { start: 15, end: 26, type: 'keyword', value: '#+KEYWORD: ' },
+      { start: 26, end: 31, type: 'text', value: 'VALUE' },
     ]);
   });
 
@@ -1178,8 +1179,7 @@ BROKE\\end{align*}`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
-      { start: 0, end: 11, type: 'keyword', value: '#+FILETAGS:' },
-      { start: 11, end: 12, type: 'text', value: ' ' },
+      { start: 0, end: 12, type: 'keyword', value: '#+FILETAGS: ' },
       { start: 12, end: 13, type: 'operator', value: ':' },
       { start: 13, end: 17, type: 'text', value: 'tag1' },
       { start: 17, end: 18, type: 'operator', value: ':' },
@@ -1406,16 +1406,16 @@ text`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
       {
-        end: 11,
+        end: 12,
         start: 0,
         type: 'keyword',
-        value: '#+BEGIN_SRC',
+        value: '#+BEGIN_SRC ',
       },
       {
         end: 22,
-        start: 11,
+        start: 12,
         type: 'text',
-        value: ' typescript',
+        value: 'typescript',
       },
       {
         end: 23,
@@ -1546,16 +1546,16 @@ text`;
     console.log('✎: [line 1523][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
-        end: 8,
+        end: 9,
         start: 0,
         type: 'keyword',
-        value: '#+TITLE:',
+        value: '#+TITLE: ',
       },
       {
         end: 14,
-        start: 8,
+        start: 9,
         type: 'text',
-        value: ' hello',
+        value: 'hello',
       },
     ]);
   });
@@ -1567,16 +1567,16 @@ text`;
     console.log('✎: [line 1531][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
-        end: 8,
+        end: 9,
         start: 0,
         type: 'keyword',
-        value: '#+TITLE:',
+        value: '#+TITLE: ',
       },
       {
         end: 14,
-        start: 8,
+        start: 9,
         type: 'text',
-        value: ' hello',
+        value: 'hello',
       },
     ]);
   });

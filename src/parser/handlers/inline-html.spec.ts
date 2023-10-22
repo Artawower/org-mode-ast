@@ -13,12 +13,12 @@ describe('Inline html', () => {
       "root [0-73]
         inlineHtml [0-73]
           keyword [0-36]
-            text [0-7] ("#+html:")
-            text [7-36] (" <div class=\\"test\\">Test</div>")
+            text [0-8] ("#+html: ")
+            text [8-36] ("<div class=\\"test\\">Test</div>")
           newLine [36-37]
           keyword [37-73]
-            text [37-44] ("#+html:")
-            text [44-73] (" <div class=\\"test\\">Test</div>")
+            text [37-45] ("#+html: ")
+            text [45-73] ("<div class=\\"test\\">Test</div>")
       "
     `);
   });
@@ -49,12 +49,12 @@ describe('Inline html', () => {
             newLine [60-61]
             inlineHtml [61-148]
               keyword [61-85]
-                text [61-68] ("#+HTML:")
-                text [68-85] (" <div>Hello</div>")
+                text [61-69] ("#+HTML: ")
+                text [69-85] ("<div>Hello</div>")
               newLine [85-86]
               keyword [86-148]
-                text [86-93] ("#+HTML:")
-                text [93-148] (" <a href=\\"https://google.com\\" target=\\"_blank\\">link</a>\\"")
+                text [86-94] ("#+HTML: ")
+                text [94-148] ("<a href=\\"https://google.com\\" target=\\"_blank\\">link</a>\\"")
       "
     `);
   });
@@ -71,8 +71,8 @@ describe('Inline html', () => {
       "root [0-87]
         inlineHtml [0-25]
           keyword [0-24]
-            text [0-7] ("#+HTML:")
-            text [7-24] (" <div>Hello</div>")
+            text [0-8] ("#+HTML: ")
+            text [8-24] ("<div>Hello</div>")
           newLine [24-25]
         indent [25-29] ("    ")
         text [29-42] ("* Hello world")
@@ -90,8 +90,8 @@ describe('Inline html', () => {
               indent [59-63] ("    ")
               inlineHtml [63-87]
                 keyword [63-87]
-                  text [63-70] ("#+html:")
-                  text [70-87] (" <div>Hello</div>")
+                  text [63-71] ("#+html: ")
+                  text [71-87] ("<div>Hello</div>")
       "
     `);
   });

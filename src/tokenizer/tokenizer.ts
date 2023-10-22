@@ -168,6 +168,10 @@ export class Tokenizer {
       return;
     }
 
+    if (this.handleSpaceAfterKeyword(c)) {
+      return;
+    }
+
     if (this.handleSpaceAfterIncorrectFixedWidthOperator(c)) {
       return;
     }
@@ -210,10 +214,16 @@ export class Tokenizer {
       return;
     }
 
-    if (this.isPrevToken(TokenType.Keyword)) {
-      this.createToken({ type: TokenType.Text, value: c });
+    if (this.isLastTokenTodoKeyword) {
+      this.upsertToken({ type: TokenType.Text, value: c });
       return;
     }
+
+    if (this.isPrevToken(TokenType.Keyword)) {
+      this.appendPrevValue(c);
+      return;
+    }
+
     this.appendTextToken(c);
   }
 
@@ -267,6 +277,14 @@ export class Tokenizer {
       return;
     }
     this.upsertToken({ type: TokenType.Operator, value: c }, true);
+    return true;
+  }
+
+  private handleSpaceAfterKeyword(c: string): boolean {
+    if (!this.isLastKeywordEnd) {
+      return;
+    }
+    this.createToken({ type: TokenType.Text, value: c });
     return true;
   }
 
@@ -361,6 +379,7 @@ export class Tokenizer {
       return;
     }
     if (
+      !this.isLastKeywordEnd &&
       this.isEol(this.lastToken?.prev) &&
       (this.lastToken?.value === ':' ||
         this.lastToken?.isType(TokenType.Keyword))
@@ -514,6 +533,10 @@ export class Tokenizer {
   }
 
   private handleText(c: string): void {
+    if (this.isLastKeywordEnd) {
+      this.createToken({ type: TokenType.Text, value: c });
+      return;
+    }
     if (this.lastToken?.isType(TokenType.Link)) {
       this.appendPrevValue(c);
       return;
@@ -540,6 +563,15 @@ export class Tokenizer {
     }
     this.appendTextToken(c);
     this.checkIsLastTextTokenKeyword();
+  }
+
+  get isLastKeywordEnd(): boolean {
+    return (
+      this.lastToken?.isType(TokenType.Keyword) &&
+      (this.lastToken.value.startsWith('#+') ||
+        this.lastToken.value.startsWith(':')) &&
+      this.lastToken.value.trim().length !== this.lastToken.value.length
+    );
   }
 
   private checkSpecificKeyword(): void {
@@ -613,7 +645,7 @@ export class Tokenizer {
   private checkIsLastTextTokenKeyword(): void {
     if (
       this.lastToken?.prev?.isType(TokenType.Headline) &&
-      this.todoKeywords.find((t) => t === this.lastToken.value)
+      this.isLastTokenTodoKeyword
     ) {
       this.lastToken.setType(TokenType.Keyword);
       return;
@@ -627,6 +659,10 @@ export class Tokenizer {
     ) {
       this.lastToken.setType(TokenType.Keyword);
     }
+  }
+
+  private get isLastTokenTodoKeyword(): boolean {
+    return !!this.todoKeywords.find((t) => t === this.lastToken.value);
   }
 
   /** Force merge last tokens

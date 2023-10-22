@@ -58,8 +58,8 @@ describe('Crossed tests', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-73]
         keyword [0-73]
-          text [0-14] ("#+DESCRIPTION:")
-          text [14-73] (" Easy way to configure automatic dark mode for kitty +macos")
+          text [0-15] ("#+DESCRIPTION: ")
+          text [15-73] ("Easy way to configure automatic dark mode for kitty +macos")
       "
     `);
   });

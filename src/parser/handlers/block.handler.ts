@@ -184,7 +184,7 @@ export class BlockHandler implements OrgHandler {
       if (isSrcBlockLanguage) {
         node.children.last.type = NodeType.SrcLanguage;
         node.setProperties({
-          language: node.children.last.value.slice(1).trim(),
+          language: node.children.last.value.trim(),
         });
       }
 
@@ -248,7 +248,10 @@ export class BlockHandler implements OrgHandler {
 
   private determineBlockType(): [BlockPosition, BlockType] {
     const [pos, type] = this.tokenIterator.currentValue.split('_');
-    return [pos.slice(2, pos.length).toLowerCase() as BlockPosition, type];
+    return [
+      pos.slice(2, pos.length).toLowerCase() as BlockPosition,
+      type.trim(),
+    ];
   }
 
   public handleBlockProperty(): OrgNode {

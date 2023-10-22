@@ -21,8 +21,8 @@ console.log(1)
           blockHeader [29-43]
             keyword [29-43]
                 :language js:
-              text [29-40] ("#+BEGIN_SRC")
-              srcLanguage [40-43] (" js")
+              text [29-41] ("#+BEGIN_SRC ")
+              srcLanguage [41-43] ("js")
           newLine [43-44]
           blockBody [44-58]
             text [44-58] ("console.log(1)")

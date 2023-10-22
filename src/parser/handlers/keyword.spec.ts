@@ -9,8 +9,8 @@ describe('Keyword', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-16]
         keyword [0-16]
-          text [0-10] ("#+KEYWORD:")
-          text [10-16] (" value")
+          text [0-11] ("#+KEYWORD: ")
+          text [11-16] ("value")
       "
     `);
   });
@@ -35,8 +35,8 @@ describe('Keyword', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-28]
         keyword [0-28]
-          text [0-10] ("#+KEYWORD:")
-          text [10-28] (" value with spaces")
+          text [0-11] ("#+KEYWORD: ")
+          text [11-28] ("value with spaces")
       "
     `);
   });
@@ -59,8 +59,8 @@ And amma text after keyword`;
           section [23-76]
             indent [23-27] ("    ")
             keyword [27-48]
-              text [27-37] ("#+KEYWORD:")
-              text [37-48] (" some value")
+              text [27-38] ("#+KEYWORD: ")
+              text [38-48] ("some value")
             newLine [48-49]
             text [49-76] ("And amma text after keyword")
       "
@@ -75,8 +75,7 @@ And amma text after keyword`;
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-28]
         keyword [0-28]
-          text [0-11] ("#+FILETAGS:")
-          text [11-12] (" ")
+          text [0-12] ("#+FILETAGS: ")
           tagList [12-28]
             operator [12-13] (":")
             text [13-17] ("tag1")
@@ -122,8 +121,8 @@ And amma text after keyword`;
           blockHeader [0-39]
             keyword [0-15]
                 :language js:
-              text [0-11] ("#+BEGIN_SRC")
-              srcLanguage [11-15] (" js ")
+              text [0-12] ("#+BEGIN_SRC ")
+              srcLanguage [12-15] ("js ")
             blockProperty [15-26]
               text [15-22] (":tangle")
               text [22-26] (" no ")
@@ -154,8 +153,8 @@ And amma text after keyword`;
           blockHeader [0-22]
             keyword [0-22]
                 :language emacs-lisp:
-              text [0-11] ("#+BEGIN_SRC")
-              srcLanguage [11-22] (" emacs-lisp")
+              text [0-12] ("#+BEGIN_SRC ")
+              srcLanguage [12-22] ("emacs-lisp")
           newLine [22-23]
           blockBody [23-120]
             text [23-120] ("    (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name))\\n    ")
@@ -180,8 +179,8 @@ And amma text after keyword`;
           blockHeader [0-22]
             keyword [0-22]
                 :language emacs-lisp:
-              text [0-11] ("#+BEGIN_SRC")
-              srcLanguage [11-22] (" emacs-lisp")
+              text [0-12] ("#+BEGIN_SRC ")
+              srcLanguage [12-22] ("emacs-lisp")
           newLine [22-23]
           blockBody [23-65]
             text [23-65] ("    (setq test (map-delete test :hi))\\n    ")
