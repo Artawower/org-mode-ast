@@ -52,13 +52,13 @@ export class TableHandler implements OrgHandler {
     return tableCell;
   }
 
-
   public handleDelimiter(): OrgNode {
     const table = this.#createTableIfNotExist();
     const delimiterNode = this.astBuilder.createTableDelimiterNode(
       this.tokenIterator.currentValue
     );
     table.addChild(delimiterNode);
+    this.#lastTableRow = delimiterNode;
     return delimiterNode;
   }
 

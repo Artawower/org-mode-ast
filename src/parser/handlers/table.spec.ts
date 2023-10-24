@@ -282,7 +282,7 @@ describe('Table', () => {
     const result = parse(orgDoc);
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-135]
-        table [0-68]
+        table [0-135]
           tableRow [0-33]
             operator [0-1] ("|")
             tableCell [1-20]
@@ -294,7 +294,6 @@ describe('Table', () => {
           newLine [33-34]
           tableDelimiter [34-67] ("|-------------------+-----------|")
           newLine [67-68]
-        table [68-135]
           tableRow [68-101]
             operator [68-69] ("|")
             tableCell [69-88]
@@ -315,6 +314,41 @@ describe('Table', () => {
       "
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
+
+  it('Table delimtier should not split table', () => {
+    const orgDoc = `| a | b |
+|---+---|
+| 1 | 2 |
+`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-30]
+        table [0-30]
+          tableRow [0-9]
+            operator [0-1] ("|")
+            tableCell [1-4]
+              text [1-4] (" a ")
+            operator [4-5] ("|")
+            tableCell [5-8]
+              text [5-8] (" b ")
+            operator [8-9] ("|")
+          newLine [9-10]
+          tableDelimiter [10-19] ("|---+---|")
+          newLine [19-20]
+          tableRow [20-29]
+            operator [20-21] ("|")
+            tableCell [21-24]
+              text [21-24] (" 1 ")
+            operator [24-25] ("|")
+            tableCell [25-28]
+              text [25-28] (" 2 ")
+            operator [28-29] ("|")
+          newLine [29-30]
+      "
+    `);
   });
 
   it('Should not include end of line  into end of the table', () => {
