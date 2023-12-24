@@ -104,4 +104,21 @@ describe('Verbatim', () => {
       "
     `);
   });
+
+  it('Should not parse verbatim when no space or end/start of line around =', () => {
+    const orgDoc = '* =console.log(123)=1';
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-21]
+        headline [0-21]
+            :level 1:
+          title [0-21]
+            operator [0-2] ("* ")
+            text [2-21] ("=console.log(123)=1")
+      "
+    `);
+  });
 });

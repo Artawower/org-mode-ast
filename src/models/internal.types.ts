@@ -1,3 +1,5 @@
+import { OrgNode } from './org-node.js';
+
 export interface OrgHandler {
-  handle();
+  handle(): OrgNode | null;
 }

@@ -134,7 +134,7 @@ describe('Bold test', () => {
     `);
   });
 
-  it('Should parse bold with that started from brackets symbols', () => {
+  it('Should not parse bold with that started from brackets symbols', () => {
     const orgDoc = `* Hello +[*world*`;
     const result = parse(orgDoc);
 
@@ -146,11 +146,51 @@ describe('Bold test', () => {
             :level 1:
           title [0-17]
             operator [0-2] ("* ")
-            text [2-10] ("Hello +[")
-            bold [10-17]
-              operator [10-11] ("*")
-              text [11-16] ("world")
-              operator [16-17] ("*")
+            text [2-17] ("Hello +[*world*")
+      "
+    `);
+  });
+
+  it('Should parse bold text which started from the beginning of the document', () => {
+    const orgDoc = `*Hello*`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-7]
+        bold [0-7]
+          operator [0-1] ("*")
+          text [1-6] ("Hello")
+          operator [6-7] ("*")
+      "
+    `);
+  });
+
+  it('Should parse bold text after new line', () => {
+    const orgDoc = `
+*Hello*`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-8]
+        newLine [0-1]
+        bold [1-8]
+          operator [1-2] ("*")
+          text [2-7] ("Hello")
+          operator [7-8] ("*")
+      "
+    `);
+  });
+
+  it('Should not parse bold for wrong slash at the end', () => {
+    const orgText = `*Not italic *`;
+    const result = parse(orgText);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-13]
+        text [0-13] ("*Not italic *")
       "
     `);
   });

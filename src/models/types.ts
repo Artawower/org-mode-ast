@@ -30,6 +30,7 @@ export enum NodeType {
   Bold = 'bold',
   Crossed = 'crossed',
   InlineCode = 'inlineCode',
+  Underline = 'underline',
   Verbatim = 'verbatim',
   Italic = 'italic',
 
@@ -98,6 +99,8 @@ export enum TokenType {
   HorizontalRule = 'horizontalRule',
   TableOperator = 'tableOperator',
   Link = 'link',
+  OpenMarkup = 'openMarkup',
+  CloseMarkup = 'closeMarkup',
 }
 
 export interface RawToken {

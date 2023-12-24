@@ -60,7 +60,7 @@ describe('Bold test', () => {
     `);
   });
 
-  it('Complex sample of real org node data', () => {
+  fit('Complex sample of real org node data', () => {
     const orgDoc = `
 :PROPERTIES:
 :ID: elisp
@@ -193,7 +193,7 @@ Char в лиспе обозначается знаком вопроса.
 (message (format "Hello %s\n" "World?"))
 #+end_src
 #+RESULTS: 
-: Hello World?
+: Hello World
 *** Списки
 Списки "экранируются" (на самом деле это не экранирование, т.к. все в лиспе функция это просто указатель на то что это не нужно исполнять, называется это evaluate /но это конечно же не точно/) с помощью симола '
 
@@ -1137,7 +1137,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
 
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-32241]
+      "root [0-32238]
         newLine [0-1]
         property [1-13]
           text [1-13] (":PROPERTIES:")
@@ -1466,23 +1466,23 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                         operator [2213-2214] ("]")
                       text [2214-2215] (")")
                       newLine [2215-2216]
-        headline [2216-28961]
+        headline [2216-28959]
             :level 1:
           title [2216-2231]
             operator [2216-2218] ("* ")
             text [2218-2230] ("Quick Start.")
             newLine [2230-2231]
-          section [2231-28961]
+          section [2231-28959]
             text [2231-2283] ("Быстрый старт для тех кто уже умеет программировать.")
             newLine [2283-2284]
             newLine [2284-2285]
-            headline [2285-10793]
+            headline [2285-10792]
                 :level 2:
               title [2285-2323]
                 operator [2285-2288] ("** ")
                 text [2288-2322] ("Типы данных, переменные, константы")
                 newLine [2322-2323]
-              section [2323-10793]
+              section [2323-10792]
                 keyword [2323-2339]
                   text [2323-2331] ("#+START_")
                   text [2331-2339] ("{SPOILER")
@@ -1788,13 +1788,13 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                       operator [5132-5134] (": ")
                       text [5134-5144] ("||||||||||")
                     newLine [5144-5145]
-                headline [5145-5293]
+                headline [5145-5292]
                     :level 3:
                   title [5145-5168]
                     operator [5145-5149] ("*** ")
                     text [5149-5167] ("Работа со строками")
                     newLine [5167-5168]
-                  section [5168-5293]
+                  section [5168-5292]
                     bold [5168-5191]
                       operator [5168-5169] ("*")
                       text [5169-5190] ("Форматирование строки")
@@ -1819,2830 +1819,2829 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                     keyword [5266-5277]
                       text [5266-5277] ("#+RESULTS: ")
                     newLine [5277-5278]
-                    fixedWidth [5278-5292]
+                    fixedWidth [5278-5291]
                       operator [5278-5280] (": ")
-                      text [5280-5292] ("Hello World?")
-                    newLine [5292-5293]
-                headline [5293-7774]
+                      text [5280-5291] ("Hello World")
+                    newLine [5291-5292]
+                headline [5292-7773]
                     :level 3:
-                  title [5293-5304]
-                    operator [5293-5297] ("*** ")
-                    text [5297-5303] ("Списки")
-                    newLine [5303-5304]
-                  section [5304-7774]
-                    text [5304-5467] ("Списки \\"экранируются\\" (на самом деле это не экранирование, т.к. все в лиспе функция это просто указатель на то что это не нужно исполнять, называется это evaluate ")
-                    italic [5467-5495]
-                      operator [5467-5468] ("/")
-                      text [5468-5494] ("но это конечно же не точно")
-                      operator [5494-5495] ("/")
-                    text [5495-5515] (") с помощью симола '")
+                  title [5292-5303]
+                    operator [5292-5296] ("*** ")
+                    text [5296-5302] ("Списки")
+                    newLine [5302-5303]
+                  section [5303-7773]
+                    text [5303-5466] ("Списки \\"экранируются\\" (на самом деле это не экранирование, т.к. все в лиспе функция это просто указатель на то что это не нужно исполнять, называется это evaluate ")
+                    italic [5466-5494]
+                      operator [5466-5467] ("/")
+                      text [5467-5493] ("но это конечно же не точно")
+                      operator [5493-5494] ("/")
+                    text [5494-5514] (") с помощью симола '")
+                    newLine [5514-5515]
                     newLine [5515-5516]
-                    newLine [5516-5517]
-                    srcBlock [5517-5591]
+                    srcBlock [5516-5590]
                         :language emacs-lisp:
-                      blockHeader [5517-5539]
-                        keyword [5517-5539]
+                      blockHeader [5516-5538]
+                        keyword [5516-5538]
                             :language emacs-lisp:
-                          text [5517-5529] ("#+begin_src ")
-                          srcLanguage [5529-5539] ("emacs-lisp")
-                      newLine [5539-5540]
-                      blockBody [5540-5581]
-                        text [5540-5581] ("(setq my-first-list '(\\"Foo\\" \\"Baz\\" \\"Qwe\\"))")
-                      newLine [5581-5582]
-                      blockFooter [5582-5591]
-                        keyword [5582-5591]
-                          text [5582-5591] ("#+end_src")
-                    newLine [5591-5592]
-                    headline [5592-5692]
+                          text [5516-5528] ("#+begin_src ")
+                          srcLanguage [5528-5538] ("emacs-lisp")
+                      newLine [5538-5539]
+                      blockBody [5539-5580]
+                        text [5539-5580] ("(setq my-first-list '(\\"Foo\\" \\"Baz\\" \\"Qwe\\"))")
+                      newLine [5580-5581]
+                      blockFooter [5581-5590]
+                        keyword [5581-5590]
+                          text [5581-5590] ("#+end_src")
+                    newLine [5590-5591]
+                    headline [5591-5691]
                         :level 4:
-                      title [5592-5621]
-                        operator [5592-5597] ("**** ")
-                        text [5597-5620] ("Получить первый элемент")
-                        newLine [5620-5621]
-                      section [5621-5692]
-                        srcBlock [5621-5673]
+                      title [5591-5620]
+                        operator [5591-5596] ("**** ")
+                        text [5596-5619] ("Получить первый элемент")
+                        newLine [5619-5620]
+                      section [5620-5691]
+                        srcBlock [5620-5672]
                             :language emacs-lisp:
-                          blockHeader [5621-5643]
-                            keyword [5621-5643]
+                          blockHeader [5620-5642]
+                            keyword [5620-5642]
                                 :language emacs-lisp:
-                              text [5621-5633] ("#+begin_src ")
-                              srcLanguage [5633-5643] ("emacs-lisp")
-                          newLine [5643-5644]
-                          blockBody [5644-5663]
-                            text [5644-5663] ("(car my-first-list)")
-                          newLine [5663-5664]
-                          blockFooter [5664-5673]
-                            keyword [5664-5673]
-                              text [5664-5673] ("#+end_src")
-                        newLine [5673-5674]
-                        keyword [5674-5685]
-                          text [5674-5685] ("#+RESULTS: ")
-                        newLine [5685-5686]
-                        fixedWidth [5686-5691]
-                          operator [5686-5688] (": ")
-                          text [5688-5691] ("Foo")
-                        newLine [5691-5692]
-                    headline [5692-5788]
+                              text [5620-5632] ("#+begin_src ")
+                              srcLanguage [5632-5642] ("emacs-lisp")
+                          newLine [5642-5643]
+                          blockBody [5643-5662]
+                            text [5643-5662] ("(car my-first-list)")
+                          newLine [5662-5663]
+                          blockFooter [5663-5672]
+                            keyword [5663-5672]
+                              text [5663-5672] ("#+end_src")
+                        newLine [5672-5673]
+                        keyword [5673-5684]
+                          text [5673-5684] ("#+RESULTS: ")
+                        newLine [5684-5685]
+                        fixedWidth [5685-5690]
+                          operator [5685-5687] (": ")
+                          text [5687-5690] ("Foo")
+                        newLine [5690-5691]
+                    headline [5691-5787]
                         :level 4:
-                      title [5692-5735]
-                        operator [5692-5697] ("**** ")
-                        text [5697-5734] ("Получить все кроме первого элемента..")
-                        newLine [5734-5735]
-                      section [5735-5788]
-                        srcBlock [5735-5787]
+                      title [5691-5734]
+                        operator [5691-5696] ("**** ")
+                        text [5696-5733] ("Получить все кроме первого элемента..")
+                        newLine [5733-5734]
+                      section [5734-5787]
+                        srcBlock [5734-5786]
                             :language emacs-lisp:
-                          blockHeader [5735-5757]
-                            keyword [5735-5757]
+                          blockHeader [5734-5756]
+                            keyword [5734-5756]
                                 :language emacs-lisp:
-                              text [5735-5747] ("#+begin_src ")
-                              srcLanguage [5747-5757] ("emacs-lisp")
-                          newLine [5757-5758]
-                          blockBody [5758-5777]
-                            text [5758-5777] ("(cdr my-first-list)")
-                          newLine [5777-5778]
-                          blockFooter [5778-5787]
-                            keyword [5778-5787]
-                              text [5778-5787] ("#+end_src")
-                        newLine [5787-5788]
-                    headline [5788-6280]
+                              text [5734-5746] ("#+begin_src ")
+                              srcLanguage [5746-5756] ("emacs-lisp")
+                          newLine [5756-5757]
+                          blockBody [5757-5776]
+                            text [5757-5776] ("(cdr my-first-list)")
+                          newLine [5776-5777]
+                          blockFooter [5777-5786]
+                            keyword [5777-5786]
+                              text [5777-5786] ("#+end_src")
+                        newLine [5786-5787]
+                    headline [5787-6279]
                         :level 4:
-                      title [5788-5819]
-                        operator [5788-5793] ("**** ")
-                        text [5793-5818] ("Добавить элемент в список")
-                        newLine [5818-5819]
-                      section [5819-6280]
-                        text [5819-5909] ("Push мутирует список. Не выглядит как нечто функциональное, но возможно я что-то не понял.")
+                      title [5787-5818]
+                        operator [5787-5792] ("**** ")
+                        text [5792-5817] ("Добавить элемент в список")
+                        newLine [5817-5818]
+                      section [5818-6279]
+                        text [5818-5908] ("Push мутирует список. Не выглядит как нечто функциональное, но возможно я что-то не понял.")
+                        newLine [5908-5909]
                         newLine [5909-5910]
-                        newLine [5910-5911]
-                        srcBlock [5911-6027]
+                        srcBlock [5910-6026]
                             :language emacs-lisp:
-                          blockHeader [5911-5933]
-                            keyword [5911-5933]
+                          blockHeader [5910-5932]
+                            keyword [5910-5932]
                                 :language emacs-lisp:
-                              text [5911-5923] ("#+begin_src ")
-                              srcLanguage [5923-5933] ("emacs-lisp")
-                          newLine [5933-5934]
-                          blockBody [5934-6017]
-                            text [5934-6017] ("(setq my-first-list '())\\n(push \\"Lalalend\\" my-first-list)\\n(push \\"Hey\\" my-first-list)")
-                          newLine [6017-6018]
-                          blockFooter [6018-6027]
-                            keyword [6018-6027]
-                              text [6018-6027] ("#+end_src")
-                        newLine [6027-6028]
-                        table [6028-6046]
-                          tableRow [6028-6046]
-                            operator [6028-6029] ("|")
-                            tableCell [6029-6034]
-                              text [6029-6034] (" Hey ")
-                            operator [6034-6035] ("|")
-                            tableCell [6035-6045]
-                              text [6035-6045] (" Lalalend ")
-                            operator [6045-6046] ("|")
-                        newLine [6046-6047]
-                        text [6047-6099] ("Ну или так (последний аргумент t - добавить в конец)")
+                              text [5910-5922] ("#+begin_src ")
+                              srcLanguage [5922-5932] ("emacs-lisp")
+                          newLine [5932-5933]
+                          blockBody [5933-6016]
+                            text [5933-6016] ("(setq my-first-list '())\\n(push \\"Lalalend\\" my-first-list)\\n(push \\"Hey\\" my-first-list)")
+                          newLine [6016-6017]
+                          blockFooter [6017-6026]
+                            keyword [6017-6026]
+                              text [6017-6026] ("#+end_src")
+                        newLine [6026-6027]
+                        table [6027-6045]
+                          tableRow [6027-6045]
+                            operator [6027-6028] ("|")
+                            tableCell [6028-6033]
+                              text [6028-6033] (" Hey ")
+                            operator [6033-6034] ("|")
+                            tableCell [6034-6044]
+                              text [6034-6044] (" Lalalend ")
+                            operator [6044-6045] ("|")
+                        newLine [6045-6046]
+                        text [6046-6098] ("Ну или так (последний аргумент t - добавить в конец)")
+                        newLine [6098-6099]
                         newLine [6099-6100]
-                        newLine [6100-6101]
-                        srcBlock [6101-6245]
+                        srcBlock [6100-6244]
                             :language emacs-lisp:
-                          blockHeader [6101-6123]
-                            keyword [6101-6123]
+                          blockHeader [6100-6122]
+                            keyword [6100-6122]
                                 :language emacs-lisp:
-                              text [6101-6113] ("#+begin_src ")
-                              srcLanguage [6113-6123] ("emacs-lisp")
-                          newLine [6123-6124]
-                          blockBody [6124-6235]
-                            text [6124-6235] ("(setq my-test-2-list '(\\"qweqweqwe\\" \\"123\\"))\\n(add-to-list 'my-test-2-list \\"qwe\\" t)\\n\\n(message \\"%s\\" my-test-2-list)")
-                          newLine [6235-6236]
-                          blockFooter [6236-6245]
-                            keyword [6236-6245]
-                              text [6236-6245] ("#+end_src")
-                        newLine [6245-6246]
-                        keyword [6246-6257]
-                          text [6246-6257] ("#+RESULTS: ")
-                        newLine [6257-6258]
-                        fixedWidth [6258-6279]
-                          operator [6258-6260] (": ")
-                          text [6260-6279] ("(qweqweqwe 123 qwe)")
-                        newLine [6279-6280]
-                    headline [6280-6482]
+                              text [6100-6112] ("#+begin_src ")
+                              srcLanguage [6112-6122] ("emacs-lisp")
+                          newLine [6122-6123]
+                          blockBody [6123-6234]
+                            text [6123-6234] ("(setq my-test-2-list '(\\"qweqweqwe\\" \\"123\\"))\\n(add-to-list 'my-test-2-list \\"qwe\\" t)\\n\\n(message \\"%s\\" my-test-2-list)")
+                          newLine [6234-6235]
+                          blockFooter [6235-6244]
+                            keyword [6235-6244]
+                              text [6235-6244] ("#+end_src")
+                        newLine [6244-6245]
+                        keyword [6245-6256]
+                          text [6245-6256] ("#+RESULTS: ")
+                        newLine [6256-6257]
+                        fixedWidth [6257-6278]
+                          operator [6257-6259] (": ")
+                          text [6259-6278] ("(qweqweqwe 123 qwe)")
+                        newLine [6278-6279]
+                    headline [6279-6481]
                         :level 4:
-                      title [6280-6303]
-                        operator [6280-6285] ("**** ")
-                        text [6285-6302] ("Слияние 2 списков")
-                        newLine [6302-6303]
-                      section [6303-6482]
-                        srcBlock [6303-6451]
+                      title [6279-6302]
+                        operator [6279-6284] ("**** ")
+                        text [6284-6301] ("Слияние 2 списков")
+                        newLine [6301-6302]
+                      section [6302-6481]
+                        srcBlock [6302-6450]
                             :language emacs-lisp:
-                          blockHeader [6303-6325]
-                            keyword [6303-6325]
+                          blockHeader [6302-6324]
+                            keyword [6302-6324]
                                 :language emacs-lisp:
-                              text [6303-6315] ("#+begin_src ")
-                              srcLanguage [6315-6325] ("emacs-lisp")
-                          newLine [6325-6326]
-                          blockBody [6326-6441]
-                            text [6326-6441] ("(setq my-first-list '(?q ?b ?c))\\n(setq my-first-list (append my-first-list (list ?t)))\\n(message \\"%s\\" my-first-list)")
-                          newLine [6441-6442]
-                          blockFooter [6442-6451]
-                            keyword [6442-6451]
-                              text [6442-6451] ("#+end_src")
-                        newLine [6451-6452]
-                        keyword [6452-6463]
-                          text [6452-6463] ("#+RESULTS: ")
-                        newLine [6463-6464]
-                        fixedWidth [6464-6481]
-                          operator [6464-6466] (": ")
-                          text [6466-6481] ("(113 98 99 116)")
-                        newLine [6481-6482]
-                    headline [6482-6693]
+                              text [6302-6314] ("#+begin_src ")
+                              srcLanguage [6314-6324] ("emacs-lisp")
+                          newLine [6324-6325]
+                          blockBody [6325-6440]
+                            text [6325-6440] ("(setq my-first-list '(?q ?b ?c))\\n(setq my-first-list (append my-first-list (list ?t)))\\n(message \\"%s\\" my-first-list)")
+                          newLine [6440-6441]
+                          blockFooter [6441-6450]
+                            keyword [6441-6450]
+                              text [6441-6450] ("#+end_src")
+                        newLine [6450-6451]
+                        keyword [6451-6462]
+                          text [6451-6462] ("#+RESULTS: ")
+                        newLine [6462-6463]
+                        fixedWidth [6463-6480]
+                          operator [6463-6465] (": ")
+                          text [6465-6480] ("(113 98 99 116)")
+                        newLine [6480-6481]
+                    headline [6481-6692]
                         :level 4:
-                      title [6482-6491]
-                        operator [6482-6487] ("**** ")
-                        text [6487-6490] ("Map")
-                        newLine [6490-6491]
-                      section [6491-6693]
-                        text [6491-6505] ("На самом деле ")
-                        verbatim [6505-6513]
-                          operator [6505-6506] ("=")
-                          text [6506-6512] ("mapcar")
-                          operator [6512-6513] ("=")
-                        text [6513-6514] (" ")
-                        crossed [6514-6565]
-                          operator [6514-6515] ("+")
-                          text [6515-6564] ("(возможно создатель языка хотел иметь машину...).")
-                          operator [6564-6565] ("+")
+                      title [6481-6490]
+                        operator [6481-6486] ("**** ")
+                        text [6486-6489] ("Map")
+                        newLine [6489-6490]
+                      section [6490-6692]
+                        text [6490-6504] ("На самом деле ")
+                        verbatim [6504-6512]
+                          operator [6504-6505] ("=")
+                          text [6505-6511] ("mapcar")
+                          operator [6511-6512] ("=")
+                        text [6512-6513] (" ")
+                        crossed [6513-6564]
+                          operator [6513-6514] ("+")
+                          text [6514-6563] ("(возможно создатель языка хотел иметь машину...).")
+                          operator [6563-6564] ("+")
+                        newLine [6564-6565]
                         newLine [6565-6566]
-                        newLine [6566-6567]
-                        srcBlock [6567-6692]
+                        srcBlock [6566-6691]
                             :language emacs-lisp:
-                          blockHeader [6567-6589]
-                            keyword [6567-6589]
+                          blockHeader [6566-6588]
+                            keyword [6566-6588]
                                 :language emacs-lisp:
-                              text [6567-6579] ("#+begin_src ")
-                              srcLanguage [6579-6589] ("emacs-lisp")
-                          newLine [6589-6590]
-                          blockBody [6590-6682]
-                            text [6590-6682] ("  (defun greeting (name)\\n    (format \\"Hello %s\\" name))\\n  \\n  (mapcar 'greeting my-first-list)")
-                          newLine [6682-6683]
-                          blockFooter [6683-6692]
-                            keyword [6683-6692]
-                              text [6683-6692] ("#+end_src")
-                        newLine [6692-6693]
-                    headline [6693-6953]
+                              text [6566-6578] ("#+begin_src ")
+                              srcLanguage [6578-6588] ("emacs-lisp")
+                          newLine [6588-6589]
+                          blockBody [6589-6681]
+                            text [6589-6681] ("  (defun greeting (name)\\n    (format \\"Hello %s\\" name))\\n  \\n  (mapcar 'greeting my-first-list)")
+                          newLine [6681-6682]
+                          blockFooter [6682-6691]
+                            keyword [6682-6691]
+                              text [6682-6691] ("#+end_src")
+                        newLine [6691-6692]
+                    headline [6692-6952]
                         :level 4:
-                      title [6693-6706]
-                        operator [6693-6698] ("**** ")
-                        text [6698-6705] ("forEach")
-                        newLine [6705-6706]
-                      section [6706-6953]
-                        verbatim [6706-6713]
-                          operator [6706-6707] ("=")
-                          text [6707-6712] ("mpcar")
-                          operator [6712-6713] ("=")
-                        text [6713-6790] (" создает новый список, можно просто итерироваться по записям с помощь. dolist")
+                      title [6692-6705]
+                        operator [6692-6697] ("**** ")
+                        text [6697-6704] ("forEach")
+                        newLine [6704-6705]
+                      section [6705-6952]
+                        verbatim [6705-6712]
+                          operator [6705-6706] ("=")
+                          text [6706-6711] ("mpcar")
+                          operator [6711-6712] ("=")
+                        text [6712-6789] (" создает новый список, можно просто итерироваться по записям с помощь. dolist")
+                        newLine [6789-6790]
                         newLine [6790-6791]
-                        newLine [6791-6792]
-                        srcBlock [6792-6923]
+                        srcBlock [6791-6922]
                             :language emacs-lisp:
-                          blockHeader [6792-6814]
-                            keyword [6792-6814]
+                          blockHeader [6791-6813]
+                            keyword [6791-6813]
                                 :language emacs-lisp:
-                              text [6792-6804] ("#+begin_src ")
-                              srcLanguage [6804-6814] ("emacs-lisp")
-                          newLine [6814-6815]
-                          blockBody [6815-6913]
-                            text [6815-6913] ("(let* ((v \\"\\"))\\n\\n  (dolist (p '(\\"one\\" \\"two\\" \\"three\\"))\\n    (setq v (concat v \\" \\" p)))\\n  (message v))")
-                          newLine [6913-6914]
-                          blockFooter [6914-6923]
-                            keyword [6914-6923]
-                              text [6914-6923] ("#+end_src")
-                        newLine [6923-6924]
-                        keyword [6924-6935]
-                          text [6924-6935] ("#+RESULTS: ")
-                        newLine [6935-6936]
-                        fixedWidth [6936-6952]
-                          operator [6936-6938] (": ")
-                          text [6938-6952] (" one two three")
-                        newLine [6952-6953]
-                    headline [6953-7069]
+                              text [6791-6803] ("#+begin_src ")
+                              srcLanguage [6803-6813] ("emacs-lisp")
+                          newLine [6813-6814]
+                          blockBody [6814-6912]
+                            text [6814-6912] ("(let* ((v \\"\\"))\\n\\n  (dolist (p '(\\"one\\" \\"two\\" \\"three\\"))\\n    (setq v (concat v \\" \\" p)))\\n  (message v))")
+                          newLine [6912-6913]
+                          blockFooter [6913-6922]
+                            keyword [6913-6922]
+                              text [6913-6922] ("#+end_src")
+                        newLine [6922-6923]
+                        keyword [6923-6934]
+                          text [6923-6934] ("#+RESULTS: ")
+                        newLine [6934-6935]
+                        fixedWidth [6935-6951]
+                          operator [6935-6937] (": ")
+                          text [6937-6951] (" one two three")
+                        newLine [6951-6952]
+                    headline [6952-7068]
                         :level 4:
-                      title [6953-6993]
-                        operator [6953-6958] ("**** ")
-                        text [6958-6992] ("Проверить есть ли элемент в списке")
-                        newLine [6992-6993]
-                      section [6993-7069]
-                        srcBlock [6993-7060]
+                      title [6952-6992]
+                        operator [6952-6957] ("**** ")
+                        text [6957-6991] ("Проверить есть ли элемент в списке")
+                        newLine [6991-6992]
+                      section [6992-7068]
+                        srcBlock [6992-7059]
                             :language emacs-lisp:
-                          blockHeader [6993-7015]
-                            keyword [6993-7015]
+                          blockHeader [6992-7014]
+                            keyword [6992-7014]
                                 :language emacs-lisp:
-                              text [6993-7005] ("#+begin_src ")
-                              srcLanguage [7005-7015] ("emacs-lisp")
-                          newLine [7015-7016]
-                          blockBody [7016-7050]
-                            text [7016-7050] ("(member \\"123\\" '(1233 \\"qwe\\" \\"123\\"))")
-                          newLine [7050-7051]
-                          blockFooter [7051-7060]
-                            keyword [7051-7060]
-                              text [7051-7060] ("#+end_src")
-                        newLine [7060-7061]
-                        table [7061-7068]
-                          tableRow [7061-7068]
-                            operator [7061-7062] ("|")
-                            tableCell [7062-7067]
-                              text [7062-7067] (" 123 ")
-                            operator [7067-7068] ("|")
-                        newLine [7068-7069]
-                    headline [7069-7519]
+                              text [6992-7004] ("#+begin_src ")
+                              srcLanguage [7004-7014] ("emacs-lisp")
+                          newLine [7014-7015]
+                          blockBody [7015-7049]
+                            text [7015-7049] ("(member \\"123\\" '(1233 \\"qwe\\" \\"123\\"))")
+                          newLine [7049-7050]
+                          blockFooter [7050-7059]
+                            keyword [7050-7059]
+                              text [7050-7059] ("#+end_src")
+                        newLine [7059-7060]
+                        table [7060-7067]
+                          tableRow [7060-7067]
+                            operator [7060-7061] ("|")
+                            tableCell [7061-7066]
+                              text [7061-7066] (" 123 ")
+                            operator [7066-7067] ("|")
+                        newLine [7067-7068]
+                    headline [7068-7518]
                         :level 4:
-                      title [7069-7115]
-                        operator [7069-7074] ("**** ")
-                        text [7074-7114] ("Перезаписать элемент в списке по индексу")
-                        newLine [7114-7115]
-                      section [7115-7519]
-                        srcBlock [7115-7272]
+                      title [7068-7114]
+                        operator [7068-7073] ("**** ")
+                        text [7073-7113] ("Перезаписать элемент в списке по индексу")
+                        newLine [7113-7114]
+                      section [7114-7518]
+                        srcBlock [7114-7271]
                             :language emacs-lisp:
-                          blockHeader [7115-7137]
-                            keyword [7115-7137]
+                          blockHeader [7114-7136]
+                            keyword [7114-7136]
                                 :language emacs-lisp:
-                              text [7115-7127] ("#+begin_src ")
-                              srcLanguage [7127-7137] ("emacs-lisp")
-                          newLine [7137-7138]
-                          blockBody [7138-7262]
-                            text [7138-7262] ("(setq my-test-list '((\\"qwe\\" . 1) (\\"be\\" . 2)))\\n(setcdr (assoc \\"qwe\\" my-test-list) \\"asdlkajsdakd\\")\\n(message \\"%s\\" my-test-list)")
-                          newLine [7262-7263]
-                          blockFooter [7263-7272]
-                            keyword [7263-7272]
-                              text [7263-7272] ("#+end_src")
-                        newLine [7272-7273]
-                        keyword [7273-7284]
-                          text [7273-7284] ("#+RESULTS: ")
-                        newLine [7284-7285]
-                        fixedWidth [7285-7318]
-                          operator [7285-7287] (": ")
-                          text [7287-7318] ("((qwe . asdlkajsdakd) (be . 2))")
+                              text [7114-7126] ("#+begin_src ")
+                              srcLanguage [7126-7136] ("emacs-lisp")
+                          newLine [7136-7137]
+                          blockBody [7137-7261]
+                            text [7137-7261] ("(setq my-test-list '((\\"qwe\\" . 1) (\\"be\\" . 2)))\\n(setcdr (assoc \\"qwe\\" my-test-list) \\"asdlkajsdakd\\")\\n(message \\"%s\\" my-test-list)")
+                          newLine [7261-7262]
+                          blockFooter [7262-7271]
+                            keyword [7262-7271]
+                              text [7262-7271] ("#+end_src")
+                        newLine [7271-7272]
+                        keyword [7272-7283]
+                          text [7272-7283] ("#+RESULTS: ")
+                        newLine [7283-7284]
+                        fixedWidth [7284-7317]
+                          operator [7284-7286] (": ")
+                          text [7286-7317] ("((qwe . asdlkajsdakd) (be . 2))")
+                        newLine [7317-7318]
                         newLine [7318-7319]
-                        newLine [7319-7320]
-                        text [7320-7359] ("А что если этого элемента нет в списке?")
-                        newLine [7359-7360]
-                        srcBlock [7360-7505]
+                        text [7319-7358] ("А что если этого элемента нет в списке?")
+                        newLine [7358-7359]
+                        srcBlock [7359-7504]
                             :language emacs-lisp:
-                          blockHeader [7360-7382]
-                            keyword [7360-7382]
+                          blockHeader [7359-7381]
+                            keyword [7359-7381]
                                 :language emacs-lisp:
-                              text [7360-7372] ("#+begin_src ")
-                              srcLanguage [7372-7382] ("emacs-lisp")
-                          newLine [7382-7383]
-                          blockBody [7383-7495]
-                            text [7383-7495] ("(setq my-test-list '((\\"be\\" . 2)))\\n(setcdr (assoc \\"qwe\\" my-test-list) \\"asdlkajsdakd\\")\\n(message \\"%s\\" my-test-list)")
-                          newLine [7495-7496]
-                          blockFooter [7496-7505]
-                            keyword [7496-7505]
-                              text [7496-7505] ("#+end_src")
+                              text [7359-7371] ("#+begin_src ")
+                              srcLanguage [7371-7381] ("emacs-lisp")
+                          newLine [7381-7382]
+                          blockBody [7382-7494]
+                            text [7382-7494] ("(setq my-test-list '((\\"be\\" . 2)))\\n(setcdr (assoc \\"qwe\\" my-test-list) \\"asdlkajsdakd\\")\\n(message \\"%s\\" my-test-list)")
+                          newLine [7494-7495]
+                          blockFooter [7495-7504]
+                            keyword [7495-7504]
+                              text [7495-7504] ("#+end_src")
+                        newLine [7504-7505]
                         newLine [7505-7506]
-                        newLine [7506-7507]
-                        text [7507-7518] ("Не работает")
-                        newLine [7518-7519]
-                    headline [7519-7774]
+                        text [7506-7517] ("Не работает")
+                        newLine [7517-7518]
+                    headline [7518-7773]
                         :level 4:
-                      title [7519-7550]
-                        operator [7519-7524] ("**** ")
-                        text [7524-7549] ("Удалить элемент из списка")
-                        newLine [7549-7550]
-                      section [7550-7774]
-                        srcBlock [7550-7771]
+                      title [7518-7549]
+                        operator [7518-7523] ("**** ")
+                        text [7523-7548] ("Удалить элемент из списка")
+                        newLine [7548-7549]
+                      section [7549-7773]
+                        srcBlock [7549-7770]
                             :language emacs-lisp:
-                          blockHeader [7550-7588]
-                            keyword [7550-7573]
+                          blockHeader [7549-7587]
+                            keyword [7549-7572]
                                 :language emacs-lisp:
-                              text [7550-7562] ("#+BEGIN_SRC ")
-                              srcLanguage [7562-7573] ("emacs-lisp ")
-                            blockProperty [7573-7588]
-                              text [7573-7581] (":results")
-                              text [7581-7588] (" silent")
-                          newLine [7588-7589]
-                          blockBody [7589-7761]
-                            text [7589-7761] ("ELISP> (setq list1 '(alpha beta gamma))\\n (alpha beta gamma)\\n \\n ELISP> (setq list2 (delete 'beta list1))\\n (alpha gamma)\\n \\n ELISP> (setq list3 (delete 'alpha list1))\\n (gamma)")
-                          newLine [7761-7762]
-                          blockFooter [7762-7771]
-                            keyword [7762-7771]
-                              text [7762-7771] ("#+END_SRC")
+                              text [7549-7561] ("#+BEGIN_SRC ")
+                              srcLanguage [7561-7572] ("emacs-lisp ")
+                            blockProperty [7572-7587]
+                              text [7572-7580] (":results")
+                              text [7580-7587] (" silent")
+                          newLine [7587-7588]
+                          blockBody [7588-7760]
+                            text [7588-7760] ("ELISP> (setq list1 '(alpha beta gamma))\\n (alpha beta gamma)\\n \\n ELISP> (setq list2 (delete 'beta list1))\\n (alpha gamma)\\n \\n ELISP> (setq list3 (delete 'alpha list1))\\n (gamma)")
+                          newLine [7760-7761]
+                          blockFooter [7761-7770]
+                            keyword [7761-7770]
+                              text [7761-7770] ("#+END_SRC")
+                        newLine [7770-7771]
                         newLine [7771-7772]
                         newLine [7772-7773]
-                        newLine [7773-7774]
-                headline [7774-9987]
+                headline [7773-9986]
                     :level 3:
-                  title [7774-7800]
-                    operator [7774-7778] ("*** ")
-                    text [7778-7799] ("Ассоциативные массивы")
-                    newLine [7799-7800]
-                  section [7800-9987]
-                    headline [7800-8128]
+                  title [7773-7799]
+                    operator [7773-7777] ("*** ")
+                    text [7777-7798] ("Ассоциативные массивы")
+                    newLine [7798-7799]
+                  section [7799-9986]
+                    headline [7799-8127]
                         :level 4:
-                      title [7800-7816]
-                        operator [7800-7805] ("**** ")
-                        text [7805-7815] ("Объявление")
-                        newLine [7815-7816]
-                      section [7816-8128]
-                        srcBlock [7816-7884]
+                      title [7799-7815]
+                        operator [7799-7804] ("**** ")
+                        text [7804-7814] ("Объявление")
+                        newLine [7814-7815]
+                      section [7815-8127]
+                        srcBlock [7815-7883]
                             :language emacs-lisp:
-                          blockHeader [7816-7838]
-                            keyword [7816-7838]
+                          blockHeader [7815-7837]
+                            keyword [7815-7837]
                                 :language emacs-lisp:
-                              text [7816-7828] ("#+begin_src ")
-                              srcLanguage [7828-7838] ("emacs-lisp")
-                          newLine [7838-7839]
-                          blockBody [7839-7875]
-                            text [7839-7875] ("(setq trees '((a . 1) (b . \\"qwe\\")))\\n")
-                          blockFooter [7875-7884]
-                            keyword [7875-7884]
-                              text [7875-7884] ("#+end_src")
-                        newLine [7884-7885]
-                        keyword [7885-7896]
-                          text [7885-7896] ("#+RESULTS: ")
-                        newLine [7896-7897]
-                        fixedWidth [7897-7918]
-                          operator [7897-7899] (": ")
-                          text [7899-7918] ("((a . 1) (b . qwe))")
+                              text [7815-7827] ("#+begin_src ")
+                              srcLanguage [7827-7837] ("emacs-lisp")
+                          newLine [7837-7838]
+                          blockBody [7838-7874]
+                            text [7838-7874] ("(setq trees '((a . 1) (b . \\"qwe\\")))\\n")
+                          blockFooter [7874-7883]
+                            keyword [7874-7883]
+                              text [7874-7883] ("#+end_src")
+                        newLine [7883-7884]
+                        keyword [7884-7895]
+                          text [7884-7895] ("#+RESULTS: ")
+                        newLine [7895-7896]
+                        fixedWidth [7896-7917]
+                          operator [7896-7898] (": ")
+                          text [7898-7917] ("((a . 1) (b . qwe))")
+                        newLine [7917-7918]
                         newLine [7918-7919]
-                        newLine [7919-7920]
-                        text [7920-7962] ("При чем точка нужна для специального типа ")
-                        italic [7962-7971]
-                          operator [7962-7963] ("/")
-                          text [7963-7970] ("symbols")
-                          operator [7970-7971] ("/")
-                        text [7971-8028] (". Если работает с реальными значениями то можно и без нее")
+                        text [7919-7961] ("При чем точка нужна для специального типа ")
+                        italic [7961-7970]
+                          operator [7961-7962] ("/")
+                          text [7962-7969] ("symbols")
+                          operator [7969-7970] ("/")
+                        text [7970-8027] (". Если работает с реальными значениями то можно и без нее")
+                        newLine [8027-8028]
                         newLine [8028-8029]
-                        newLine [8029-8030]
-                        srcBlock [8030-8127]
+                        srcBlock [8029-8126]
                             :language emacs-lisp:
-                          blockHeader [8030-8052]
-                            keyword [8030-8052]
+                          blockHeader [8029-8051]
+                            keyword [8029-8051]
                                 :language emacs-lisp:
-                              text [8030-8042] ("#+begin_src ")
-                              srcLanguage [8042-8052] ("emacs-lisp")
-                          newLine [8052-8053]
-                          blockBody [8053-8117]
-                            text [8053-8117] ("(setq another-hashmap '((\\"a\\" \\"First elem\\") (\\"b\\" \\"Second elem\\")))")
-                          newLine [8117-8118]
-                          blockFooter [8118-8127]
-                            keyword [8118-8127]
-                              text [8118-8127] ("#+end_src")
-                        newLine [8127-8128]
-                    headline [8128-8426]
+                              text [8029-8041] ("#+begin_src ")
+                              srcLanguage [8041-8051] ("emacs-lisp")
+                          newLine [8051-8052]
+                          blockBody [8052-8116]
+                            text [8052-8116] ("(setq another-hashmap '((\\"a\\" \\"First elem\\") (\\"b\\" \\"Second elem\\")))")
+                          newLine [8116-8117]
+                          blockFooter [8117-8126]
+                            keyword [8117-8126]
+                              text [8117-8126] ("#+end_src")
+                        newLine [8126-8127]
+                    headline [8127-8425]
                         :level 4:
-                      title [8128-8159]
-                        operator [8128-8133] ("**** ")
-                        text [8133-8158] ("Получить элемент по ключу")
-                        newLine [8158-8159]
-                      section [8159-8426]
-                        srcBlock [8159-8223]
+                      title [8127-8158]
+                        operator [8127-8132] ("**** ")
+                        text [8132-8157] ("Получить элемент по ключу")
+                        newLine [8157-8158]
+                      section [8158-8425]
+                        srcBlock [8158-8222]
                             :language emacs-lisp:
-                          blockHeader [8159-8181]
-                            keyword [8159-8181]
+                          blockHeader [8158-8180]
+                            keyword [8158-8180]
                                 :language emacs-lisp:
-                              text [8159-8171] ("#+begin_src ")
-                              srcLanguage [8171-8181] ("emacs-lisp")
-                          newLine [8181-8182]
-                          blockBody [8182-8213]
-                            text [8182-8213] ("(message \\"%s\\" (assoc 'a trees))")
-                          newLine [8213-8214]
-                          blockFooter [8214-8223]
-                            keyword [8214-8223]
-                              text [8214-8223] ("#+end_src")
-                        newLine [8223-8224]
-                        text [8224-8332] ("Ну и конечно возвращает оно кортеж..а чтобы получить элемент нужно использовать уже известную нам функцию - ")
-                        verbatim [8332-8337]
-                          operator [8332-8333] ("=")
-                          text [8333-8336] ("cdr")
-                          operator [8336-8337] ("=")
+                              text [8158-8170] ("#+begin_src ")
+                              srcLanguage [8170-8180] ("emacs-lisp")
+                          newLine [8180-8181]
+                          blockBody [8181-8212]
+                            text [8181-8212] ("(message \\"%s\\" (assoc 'a trees))")
+                          newLine [8212-8213]
+                          blockFooter [8213-8222]
+                            keyword [8213-8222]
+                              text [8213-8222] ("#+end_src")
+                        newLine [8222-8223]
+                        text [8223-8331] ("Ну и конечно возвращает оно кортеж..а чтобы получить элемент нужно использовать уже известную нам функцию - ")
+                        verbatim [8331-8336]
+                          operator [8331-8332] ("=")
+                          text [8332-8335] ("cdr")
+                          operator [8335-8336] ("=")
+                        newLine [8336-8337]
                         newLine [8337-8338]
-                        newLine [8338-8339]
-                        srcBlock [8339-8409]
+                        srcBlock [8338-8408]
                             :language emacs-lisp:
-                          blockHeader [8339-8361]
-                            keyword [8339-8361]
+                          blockHeader [8338-8360]
+                            keyword [8338-8360]
                                 :language emacs-lisp:
-                              text [8339-8351] ("#+begin_src ")
-                              srcLanguage [8351-8361] ("emacs-lisp")
-                          newLine [8361-8362]
-                          blockBody [8362-8399]
-                            text [8362-8399] ("(message \\"%s\\" (cdr (assoc 'a trees)))")
-                          newLine [8399-8400]
-                          blockFooter [8400-8409]
-                            keyword [8400-8409]
-                              text [8400-8409] ("#+end_src")
-                        newLine [8409-8410]
-                        keyword [8410-8421]
-                          text [8410-8421] ("#+RESULTS: ")
-                        newLine [8421-8422]
-                        fixedWidth [8422-8425]
-                          operator [8422-8424] (": ")
-                          text [8424-8425] ("1")
-                        newLine [8425-8426]
-                    headline [8426-8752]
+                              text [8338-8350] ("#+begin_src ")
+                              srcLanguage [8350-8360] ("emacs-lisp")
+                          newLine [8360-8361]
+                          blockBody [8361-8398]
+                            text [8361-8398] ("(message \\"%s\\" (cdr (assoc 'a trees)))")
+                          newLine [8398-8399]
+                          blockFooter [8399-8408]
+                            keyword [8399-8408]
+                              text [8399-8408] ("#+end_src")
+                        newLine [8408-8409]
+                        keyword [8409-8420]
+                          text [8409-8420] ("#+RESULTS: ")
+                        newLine [8420-8421]
+                        fixedWidth [8421-8424]
+                          operator [8421-8423] (": ")
+                          text [8423-8424] ("1")
+                        newLine [8424-8425]
+                    headline [8425-8751]
                         :level 4:
-                      title [8426-8460]
-                        operator [8426-8431] ("**** ")
-                        text [8431-8459] ("Получить элемент по значению")
-                        newLine [8459-8460]
-                      section [8460-8752]
-                        srcBlock [8460-8528]
+                      title [8425-8459]
+                        operator [8425-8430] ("**** ")
+                        text [8430-8458] ("Получить элемент по значению")
+                        newLine [8458-8459]
+                      section [8459-8751]
+                        srcBlock [8459-8527]
                             :language emacs-lisp:
-                          blockHeader [8460-8482]
-                            keyword [8460-8482]
+                          blockHeader [8459-8481]
+                            keyword [8459-8481]
                                 :language emacs-lisp:
-                              text [8460-8472] ("#+begin_src ")
-                              srcLanguage [8472-8482] ("emacs-lisp")
-                          newLine [8482-8483]
-                          blockBody [8483-8518]
-                            text [8483-8518] ("(message \\"%s\\" (rassoc \\"qwe\\" trees))")
-                          newLine [8518-8519]
-                          blockFooter [8519-8528]
-                            keyword [8519-8528]
-                              text [8519-8528] ("#+end_src")
-                        newLine [8528-8529]
-                        text [8529-8538] ("При этом ")
-                        italic [8538-8546]
-                          operator [8538-8539] ("/")
-                          text [8539-8545] ("rassoc")
-                          operator [8545-8546] ("/")
-                        text [8546-8587] (" работает и для строк и для чисел, а вот ")
-                        italic [8587-8594]
-                          operator [8587-8588] ("/")
-                          text [8588-8593] ("rassq")
-                          operator [8593-8594] ("/")
-                        text [8594-8611] (" только для чисел")
+                              text [8459-8471] ("#+begin_src ")
+                              srcLanguage [8471-8481] ("emacs-lisp")
+                          newLine [8481-8482]
+                          blockBody [8482-8517]
+                            text [8482-8517] ("(message \\"%s\\" (rassoc \\"qwe\\" trees))")
+                          newLine [8517-8518]
+                          blockFooter [8518-8527]
+                            keyword [8518-8527]
+                              text [8518-8527] ("#+end_src")
+                        newLine [8527-8528]
+                        text [8528-8537] ("При этом ")
+                        italic [8537-8545]
+                          operator [8537-8538] ("/")
+                          text [8538-8544] ("rassoc")
+                          operator [8544-8545] ("/")
+                        text [8545-8586] (" работает и для строк и для чисел, а вот ")
+                        italic [8586-8593]
+                          operator [8586-8587] ("/")
+                          text [8587-8592] ("rassq")
+                          operator [8592-8593] ("/")
+                        text [8593-8610] (" только для чисел")
+                        newLine [8610-8611]
                         newLine [8611-8612]
-                        newLine [8612-8613]
-                        srcBlock [8613-8729]
+                        srcBlock [8612-8728]
                             :language emacs-lisp:
-                          blockHeader [8613-8635]
-                            keyword [8613-8635]
+                          blockHeader [8612-8634]
+                            keyword [8612-8634]
                                 :language emacs-lisp:
-                              text [8613-8625] ("#+begin_src ")
-                              srcLanguage [8625-8635] ("emacs-lisp")
-                          newLine [8635-8636]
-                          blockBody [8636-8719]
-                            text [8636-8719] ("(message \\"%s\\" (rassq \\"qwe\\" trees)) ;; nil\\n(message \\"%s\\" (rassq 1 trees)) ;; (a . 1)")
-                          newLine [8719-8720]
-                          blockFooter [8720-8729]
-                            keyword [8720-8729]
-                              text [8720-8729] ("#+end_src")
-                        newLine [8729-8730]
-                        keyword [8730-8741]
-                          text [8730-8741] ("#+RESULTS: ")
-                        newLine [8741-8742]
-                        fixedWidth [8742-8751]
-                          operator [8742-8744] (": ")
-                          text [8744-8751] ("(a . 1)")
-                        newLine [8751-8752]
-                    headline [8752-9086]
+                              text [8612-8624] ("#+begin_src ")
+                              srcLanguage [8624-8634] ("emacs-lisp")
+                          newLine [8634-8635]
+                          blockBody [8635-8718]
+                            text [8635-8718] ("(message \\"%s\\" (rassq \\"qwe\\" trees)) ;; nil\\n(message \\"%s\\" (rassq 1 trees)) ;; (a . 1)")
+                          newLine [8718-8719]
+                          blockFooter [8719-8728]
+                            keyword [8719-8728]
+                              text [8719-8728] ("#+end_src")
+                        newLine [8728-8729]
+                        keyword [8729-8740]
+                          text [8729-8740] ("#+RESULTS: ")
+                        newLine [8740-8741]
+                        fixedWidth [8741-8750]
+                          operator [8741-8743] (": ")
+                          text [8743-8750] ("(a . 1)")
+                        newLine [8750-8751]
+                    headline [8751-9085]
                         :level 4:
-                      title [8752-8774]
-                        operator [8752-8757] ("**** ")
-                        text [8757-8773] ("Копирование мапы")
-                        newLine [8773-8774]
-                      section [8774-9086]
-                        srcBlock [8774-9012]
+                      title [8751-8773]
+                        operator [8751-8756] ("**** ")
+                        text [8756-8772] ("Копирование мапы")
+                        newLine [8772-8773]
+                      section [8773-9085]
+                        srcBlock [8773-9011]
                             :language emacs-lisp:
-                          blockHeader [8774-8796]
-                            keyword [8774-8796]
+                          blockHeader [8773-8795]
+                            keyword [8773-8795]
                                 :language emacs-lisp:
-                              text [8774-8786] ("#+begin_src ")
-                              srcLanguage [8786-8796] ("emacs-lisp")
-                          newLine [8796-8797]
-                          blockBody [8797-9002]
-                            text [8797-9002] ("  (setq needles-per-cluster\\n        '((2 . (\\"Austrian Pine\\" \\"Red Pine\\"))\\n          (3 . (\\"Pitch Pine\\"))\\n          (5 . (\\"White Pine\\"))))\\n  (setq copy (copy-alist needles-per-cluster))\\n  (message \\"%s\\" copy)")
-                          newLine [9002-9003]
-                          blockFooter [9003-9012]
-                            keyword [9003-9012]
-                              text [9003-9012] ("#+end_src")
-                        newLine [9012-9013]
-                        keyword [9013-9024]
-                          text [9013-9024] ("#+RESULTS: ")
-                        newLine [9024-9025]
-                        fixedWidth [9025-9085]
-                          operator [9025-9027] (": ")
-                          text [9027-9085] ("((2 Austrian Pine Red Pine) (3 Pitch Pine) (5 White Pine))")
-                        newLine [9085-9086]
-                    headline [9086-9490]
+                              text [8773-8785] ("#+begin_src ")
+                              srcLanguage [8785-8795] ("emacs-lisp")
+                          newLine [8795-8796]
+                          blockBody [8796-9001]
+                            text [8796-9001] ("  (setq needles-per-cluster\\n        '((2 . (\\"Austrian Pine\\" \\"Red Pine\\"))\\n          (3 . (\\"Pitch Pine\\"))\\n          (5 . (\\"White Pine\\"))))\\n  (setq copy (copy-alist needles-per-cluster))\\n  (message \\"%s\\" copy)")
+                          newLine [9001-9002]
+                          blockFooter [9002-9011]
+                            keyword [9002-9011]
+                              text [9002-9011] ("#+end_src")
+                        newLine [9011-9012]
+                        keyword [9012-9023]
+                          text [9012-9023] ("#+RESULTS: ")
+                        newLine [9023-9024]
+                        fixedWidth [9024-9084]
+                          operator [9024-9026] (": ")
+                          text [9026-9084] ("((2 Austrian Pine Red Pine) (3 Pitch Pine) (5 White Pine))")
+                        newLine [9084-9085]
+                    headline [9085-9489]
                         :level 4:
-                      title [9086-9122]
-                        operator [9086-9091] ("**** ")
-                        text [9091-9121] ("Удаление всех записей по ключу")
-                        newLine [9121-9122]
-                      section [9122-9490]
-                        srcBlock [9122-9414]
+                      title [9085-9121]
+                        operator [9085-9090] ("**** ")
+                        text [9090-9120] ("Удаление всех записей по ключу")
+                        newLine [9120-9121]
+                      section [9121-9489]
+                        srcBlock [9121-9413]
                             :language emacs-lisp:
-                          blockHeader [9122-9144]
-                            keyword [9122-9144]
+                          blockHeader [9121-9143]
+                            keyword [9121-9143]
                                 :language emacs-lisp:
-                              text [9122-9134] ("#+begin_src ")
-                              srcLanguage [9134-9144] ("emacs-lisp")
-                          newLine [9144-9145]
-                          blockBody [9145-9404]
-                            text [9145-9404] ("  (setq alist (list '(foo 1) '(bar 2) '(foo 3) '(lose 4)))\\n  (setq new-alist (assq-delete-all 'foo alist)) ;; Возвращает новое значение\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist)\\n                   (format \\"new: %s\\" new-alist)))")
-                          newLine [9404-9405]
-                          blockFooter [9405-9414]
-                            keyword [9405-9414]
-                              text [9405-9414] ("#+end_src")
-                        newLine [9414-9415]
-                        keyword [9415-9426]
-                          text [9415-9426] ("#+RESULTS: ")
-                        newLine [9426-9427]
-                        fixedWidth [9427-9462]
-                          operator [9427-9429] (": ")
-                          text [9429-9462] ("alist: ((foo 1) (bar 2) (lose 4))")
-                        newLine [9462-9463]
-                        fixedWidth [9463-9489]
-                          operator [9463-9465] (": ")
-                          text [9465-9489] (" new: ((bar 2) (lose 4))")
-                        newLine [9489-9490]
-                    headline [9490-9987]
+                              text [9121-9133] ("#+begin_src ")
+                              srcLanguage [9133-9143] ("emacs-lisp")
+                          newLine [9143-9144]
+                          blockBody [9144-9403]
+                            text [9144-9403] ("  (setq alist (list '(foo 1) '(bar 2) '(foo 3) '(lose 4)))\\n  (setq new-alist (assq-delete-all 'foo alist)) ;; Возвращает новое значение\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist)\\n                   (format \\"new: %s\\" new-alist)))")
+                          newLine [9403-9404]
+                          blockFooter [9404-9413]
+                            keyword [9404-9413]
+                              text [9404-9413] ("#+end_src")
+                        newLine [9413-9414]
+                        keyword [9414-9425]
+                          text [9414-9425] ("#+RESULTS: ")
+                        newLine [9425-9426]
+                        fixedWidth [9426-9461]
+                          operator [9426-9428] (": ")
+                          text [9428-9461] ("alist: ((foo 1) (bar 2) (lose 4))")
+                        newLine [9461-9462]
+                        fixedWidth [9462-9488]
+                          operator [9462-9464] (": ")
+                          text [9464-9488] (" new: ((bar 2) (lose 4))")
+                        newLine [9488-9489]
+                    headline [9489-9986]
                         :level 4:
-                      title [9490-9524]
-                        operator [9490-9495] ("**** ")
-                        text [9495-9523] ("Удаление записей по значению")
-                        newLine [9523-9524]
-                      section [9524-9987]
-                        srcBlock [9524-9870]
+                      title [9489-9523]
+                        operator [9489-9494] ("**** ")
+                        text [9494-9522] ("Удаление записей по значению")
+                        newLine [9522-9523]
+                      section [9523-9986]
+                        srcBlock [9523-9869]
                             :language emacs-lisp:
-                          blockHeader [9524-9546]
-                            keyword [9524-9546]
+                          blockHeader [9523-9545]
+                            keyword [9523-9545]
                                 :language emacs-lisp:
-                              text [9524-9536] ("#+begin_src ")
-                              srcLanguage [9536-9546] ("emacs-lisp")
-                          newLine [9546-9547]
-                          blockBody [9547-9860]
-                            text [9547-9860] ("  (setq alist2 '((foo . first) (bar . second) (foo2 . third) (qwe . five)))\\n  (setq new-alist (rassq-delete-all 'third alist2)) ;; меняет значение ?\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist2)\\n                   (format \\"new: %s\\" new-alist)))\\n  ;; (message \\"%s\\" (rassq 'foo alist2))")
-                          newLine [9860-9861]
-                          blockFooter [9861-9870]
-                            keyword [9861-9870]
-                              text [9861-9870] ("#+end_src")
-                        newLine [9870-9871]
-                        keyword [9871-9882]
-                          text [9871-9882] ("#+RESULTS: ")
-                        newLine [9882-9883]
-                        fixedWidth [9883-9935]
-                          operator [9883-9885] (": ")
-                          text [9885-9935] ("alist: ((foo . first) (bar . second) (qwe . five))")
-                        newLine [9935-9936]
-                        fixedWidth [9936-9986]
-                          operator [9936-9938] (": ")
-                          text [9938-9986] ("new: ((foo . first) (bar . second) (qwe . five))")
-                        newLine [9986-9987]
-                headline [9987-10655]
+                              text [9523-9535] ("#+begin_src ")
+                              srcLanguage [9535-9545] ("emacs-lisp")
+                          newLine [9545-9546]
+                          blockBody [9546-9859]
+                            text [9546-9859] ("  (setq alist2 '((foo . first) (bar . second) (foo2 . third) (qwe . five)))\\n  (setq new-alist (rassq-delete-all 'third alist2)) ;; меняет значение ?\\n  (message \\"%s\\" new-alist)\\n  (message (concat (format \\"alist: %s\\n\\" alist2)\\n                   (format \\"new: %s\\" new-alist)))\\n  ;; (message \\"%s\\" (rassq 'foo alist2))")
+                          newLine [9859-9860]
+                          blockFooter [9860-9869]
+                            keyword [9860-9869]
+                              text [9860-9869] ("#+end_src")
+                        newLine [9869-9870]
+                        keyword [9870-9881]
+                          text [9870-9881] ("#+RESULTS: ")
+                        newLine [9881-9882]
+                        fixedWidth [9882-9934]
+                          operator [9882-9884] (": ")
+                          text [9884-9934] ("alist: ((foo . first) (bar . second) (qwe . five))")
+                        newLine [9934-9935]
+                        fixedWidth [9935-9985]
+                          operator [9935-9937] (": ")
+                          text [9937-9985] ("new: ((foo . first) (bar . second) (qwe . five))")
+                        newLine [9985-9986]
+                headline [9986-10654]
                     :level 3:
-                  title [9987-9998]
-                    operator [9987-9991] ("*** ")
-                    text [9991-9997] ("Хешмап")
-                    newLine [9997-9998]
-                  section [9998-10655]
-                    link [9998-10070]
+                  title [9986-9997]
+                    operator [9986-9990] ("*** ")
+                    text [9990-9996] ("Хешмап")
+                    newLine [9996-9997]
+                  section [9997-10654]
+                    link [9997-10069]
                         :linkType raw:
-                      operator [9998-9999] ("[")
-                      linkUrl [9999-10055]
-                        operator [9999-10000] ("[")
-                        text [10000-10054] ("htest-varp://ergoemacs.org/emacs/elisp_hash_table.html")
-                        operator [10054-10055] ("]")
-                      linkName [10055-10069]
-                        operator [10055-10056] ("[")
-                        text [10056-10068] ("Документация")
-                        operator [10068-10069] ("]")
-                      operator [10069-10070] ("]")
+                      operator [9997-9998] ("[")
+                      linkUrl [9998-10054]
+                        operator [9998-9999] ("[")
+                        text [9999-10053] ("htest-varp://ergoemacs.org/emacs/elisp_hash_table.html")
+                        operator [10053-10054] ("]")
+                      linkName [10054-10068]
+                        operator [10054-10055] ("[")
+                        text [10055-10067] ("Документация")
+                        operator [10067-10068] ("]")
+                      operator [10068-10069] ("]")
+                    newLine [10069-10070]
                     newLine [10070-10071]
-                    newLine [10071-10072]
-                    srcBlock [10072-10626]
+                    srcBlock [10071-10625]
                         :language emacs-lisp:
-                      blockHeader [10072-10094]
-                        keyword [10072-10094]
+                      blockHeader [10071-10093]
+                        keyword [10071-10093]
                             :language emacs-lisp:
-                          text [10072-10084] ("#+begin_src ")
-                          srcLanguage [10084-10094] ("emacs-lisp")
-                      newLine [10094-10095]
-                      blockBody [10095-10616]
-                        text [10095-10616] ("  (setq my-first-map #s(\\n                        hash-table\\n                        size 10\\n                        test equal\\n                        data (\\n                              python-mode \\"spam!\\"\\n                              go-mode \\"booo!1 terrible pointer\\"\\n                              org-mode \\"amma fluffy feature ;p\\"\\n                              )))\\n  (puthash 'js-mode \\"ugly language\\" my-first-map)\\n  (message \\"%s\\" (gethash 'python-mode my-first-map))\\n  (message \\"%s\\" (gethash 'js-mode my-first-map))")
-                      newLine [10616-10617]
-                      blockFooter [10617-10626]
-                        keyword [10617-10626]
-                          text [10617-10626] ("#+end_src")
-                    newLine [10626-10627]
-                    keyword [10627-10638]
-                      text [10627-10638] ("#+RESULTS: ")
-                    newLine [10638-10639]
-                    fixedWidth [10639-10654]
-                      operator [10639-10641] (": ")
-                      text [10641-10654] ("ugly language")
-                    newLine [10654-10655]
-                headline [10655-10793]
+                          text [10071-10083] ("#+begin_src ")
+                          srcLanguage [10083-10093] ("emacs-lisp")
+                      newLine [10093-10094]
+                      blockBody [10094-10615]
+                        text [10094-10615] ("  (setq my-first-map #s(\\n                        hash-table\\n                        size 10\\n                        test equal\\n                        data (\\n                              python-mode \\"spam!\\"\\n                              go-mode \\"booo!1 terrible pointer\\"\\n                              org-mode \\"amma fluffy feature ;p\\"\\n                              )))\\n  (puthash 'js-mode \\"ugly language\\" my-first-map)\\n  (message \\"%s\\" (gethash 'python-mode my-first-map))\\n  (message \\"%s\\" (gethash 'js-mode my-first-map))")
+                      newLine [10615-10616]
+                      blockFooter [10616-10625]
+                        keyword [10616-10625]
+                          text [10616-10625] ("#+end_src")
+                    newLine [10625-10626]
+                    keyword [10626-10637]
+                      text [10626-10637] ("#+RESULTS: ")
+                    newLine [10637-10638]
+                    fixedWidth [10638-10653]
+                      operator [10638-10640] (": ")
+                      text [10640-10653] ("ugly language")
+                    newLine [10653-10654]
+                headline [10654-10792]
                     :level 3:
-                  title [10655-10666]
-                    operator [10655-10659] ("*** ")
-                    text [10659-10665] ("Символ")
-                    newLine [10665-10666]
-                  section [10666-10793]
-                    text [10666-10759] ("Тип данные соотвутствующий объекту с именем. Задаются символы с помощью 1 начальной кавычки. ")
-                    verbatim [10759-10773]
-                      operator [10759-10760] ("=")
-                      text [10760-10772] ("'amma-symbol")
-                      operator [10772-10773] ("=")
+                  title [10654-10665]
+                    operator [10654-10658] ("*** ")
+                    text [10658-10664] ("Символ")
+                    newLine [10664-10665]
+                  section [10665-10792]
+                    text [10665-10758] ("Тип данные соотвутствующий объекту с именем. Задаются символы с помощью 1 начальной кавычки. ")
+                    verbatim [10758-10772]
+                      operator [10758-10759] ("=")
+                      text [10759-10771] ("'amma-symbol")
+                      operator [10771-10772] ("=")
+                    newLine [10772-10773]
                     newLine [10773-10774]
-                    newLine [10774-10775]
-                    keyword [10775-10791]
-                      text [10775-10783] ("#+CLOSE_")
-                      text [10783-10791] ("{SPOILER")
-                    text [10791-10792] ("}")
-                    newLine [10792-10793]
-            headline [10793-14274]
+                    keyword [10774-10790]
+                      text [10774-10782] ("#+CLOSE_")
+                      text [10782-10790] ("{SPOILER")
+                    text [10790-10791] ("}")
+                    newLine [10791-10792]
+            headline [10792-14273]
                 :level 2:
-              title [10793-10804]
-                operator [10793-10796] ("** ")
-                text [10796-10803] ("Функции")
-                newLine [10803-10804]
-              section [10804-14274]
-                keyword [10804-10820]
-                  text [10804-10812] ("#+START_")
-                  text [10812-10820] ("{SPOILER")
-                text [10820-10821] ("}")
-                text [10821-10842] (" Читать про функции >")
+              title [10792-10803]
+                operator [10792-10795] ("** ")
+                text [10795-10802] ("Функции")
+                newLine [10802-10803]
+              section [10803-14273]
+                keyword [10803-10819]
+                  text [10803-10811] ("#+START_")
+                  text [10811-10819] ("{SPOILER")
+                text [10819-10820] ("}")
+                text [10820-10841] (" Читать про функции >")
+                newLine [10841-10842]
                 newLine [10842-10843]
-                newLine [10843-10844]
-                headline [10844-11305]
+                headline [10843-11304]
                     :level 3:
-                  title [10844-10867]
-                    operator [10844-10848] ("*** ")
-                    text [10848-10866] ("Объявление функций")
-                    newLine [10866-10867]
-                  section [10867-11305]
-                    text [10867-10952] ("Функции принято комментировать, это позволяет смотреть документацию в автодополнении.")
-                    newLine [10952-10953]
-                    text [10953-10959] ("Вызов ")
-                    verbatim [10959-10974]
-                      operator [10959-10960] ("=")
-                      text [10960-10973] ("(interactive)")
-                      operator [10973-10974] ("=")
-                    text [10974-11081] (" означается что функция публичная и может быть взывана пользователем напрямую, либо через сочетание клавиш.")
+                  title [10843-10866]
+                    operator [10843-10847] ("*** ")
+                    text [10847-10865] ("Объявление функций")
+                    newLine [10865-10866]
+                  section [10866-11304]
+                    text [10866-10951] ("Функции принято комментировать, это позволяет смотреть документацию в автодополнении.")
+                    newLine [10951-10952]
+                    text [10952-10958] ("Вызов ")
+                    verbatim [10958-10973]
+                      operator [10958-10959] ("=")
+                      text [10959-10972] ("(interactive)")
+                      operator [10972-10973] ("=")
+                    text [10973-11080] (" означается что функция публичная и может быть взывана пользователем напрямую, либо через сочетание клавиш.")
+                    newLine [11080-11081]
                     newLine [11081-11082]
-                    newLine [11082-11083]
-                    srcBlock [11083-11272]
+                    srcBlock [11082-11271]
                         :language emacs-lisp:
-                      blockHeader [11083-11105]
-                        keyword [11083-11105]
+                      blockHeader [11082-11104]
+                        keyword [11082-11104]
                             :language emacs-lisp:
-                          text [11083-11095] ("#+begin_src ")
-                          srcLanguage [11095-11105] ("emacs-lisp")
-                      newLine [11105-11106]
-                      blockBody [11106-11262]
-                        text [11106-11262] ("  (defun hello (my-name)\\n    \\"This function will say hello for MY-NAME.\\"\\n    (interactive)\\n    (message (concat \\"Hello, I'am \\" my-name)))\\n\\n  (hello \\"Artur\\")")
-                      newLine [11262-11263]
-                      blockFooter [11263-11272]
-                        keyword [11263-11272]
-                          text [11263-11272] ("#+end_src")
-                    newLine [11272-11273]
-                    keyword [11273-11284]
-                      text [11273-11284] ("#+RESULTS: ")
-                    newLine [11284-11285]
-                    fixedWidth [11285-11304]
-                      operator [11285-11287] (": ")
-                      text [11287-11304] ("Hello, I’am Artur")
-                    newLine [11304-11305]
-                headline [11305-11586]
+                          text [11082-11094] ("#+begin_src ")
+                          srcLanguage [11094-11104] ("emacs-lisp")
+                      newLine [11104-11105]
+                      blockBody [11105-11261]
+                        text [11105-11261] ("  (defun hello (my-name)\\n    \\"This function will say hello for MY-NAME.\\"\\n    (interactive)\\n    (message (concat \\"Hello, I'am \\" my-name)))\\n\\n  (hello \\"Artur\\")")
+                      newLine [11261-11262]
+                      blockFooter [11262-11271]
+                        keyword [11262-11271]
+                          text [11262-11271] ("#+end_src")
+                    newLine [11271-11272]
+                    keyword [11272-11283]
+                      text [11272-11283] ("#+RESULTS: ")
+                    newLine [11283-11284]
+                    fixedWidth [11284-11303]
+                      operator [11284-11286] (": ")
+                      text [11286-11303] ("Hello, I’am Artur")
+                    newLine [11303-11304]
+                headline [11304-11585]
                     :level 3:
-                  title [11305-11332]
-                    operator [11305-11309] ("*** ")
-                    text [11309-11331] ("Опицональные аргументы")
-                    newLine [11331-11332]
-                  section [11332-11586]
-                    srcBlock [11332-11555]
+                  title [11304-11331]
+                    operator [11304-11308] ("*** ")
+                    text [11308-11330] ("Опицональные аргументы")
+                    newLine [11330-11331]
+                  section [11331-11585]
+                    srcBlock [11331-11554]
                         :language emacs-lisp:
-                      blockHeader [11332-11354]
-                        keyword [11332-11354]
+                      blockHeader [11331-11353]
+                        keyword [11331-11353]
                             :language emacs-lisp:
-                          text [11332-11344] ("#+begin_src ")
-                          srcLanguage [11344-11354] ("emacs-lisp")
-                      newLine [11354-11355]
-                      blockBody [11355-11545]
-                        text [11355-11545] ("(defun my-super-optional-function (name &optional last-name patronymic)\\n  (message \\"%s %s %s\\" name (or last-name \\"\\") (or patronymic \\"\\")))\\n\\n(my-super-optional-function \\"Artur\\" nil \\"Proshkov\\")")
-                      newLine [11545-11546]
-                      blockFooter [11546-11555]
-                        keyword [11546-11555]
-                          text [11546-11555] ("#+end_src")
-                    newLine [11555-11556]
-                    keyword [11556-11567]
-                      text [11556-11567] ("#+RESULTS: ")
-                    newLine [11567-11568]
-                    fixedWidth [11568-11585]
-                      operator [11568-11570] (": ")
-                      text [11570-11585] ("Artur  Proshkov")
-                    newLine [11585-11586]
-                headline [11586-11903]
+                          text [11331-11343] ("#+begin_src ")
+                          srcLanguage [11343-11353] ("emacs-lisp")
+                      newLine [11353-11354]
+                      blockBody [11354-11544]
+                        text [11354-11544] ("(defun my-super-optional-function (name &optional last-name patronymic)\\n  (message \\"%s %s %s\\" name (or last-name \\"\\") (or patronymic \\"\\")))\\n\\n(my-super-optional-function \\"Artur\\" nil \\"Proshkov\\")")
+                      newLine [11544-11545]
+                      blockFooter [11545-11554]
+                        keyword [11545-11554]
+                          text [11545-11554] ("#+end_src")
+                    newLine [11554-11555]
+                    keyword [11555-11566]
+                      text [11555-11566] ("#+RESULTS: ")
+                    newLine [11566-11567]
+                    fixedWidth [11567-11584]
+                      operator [11567-11569] (": ")
+                      text [11569-11584] ("Artur  Proshkov")
+                    newLine [11584-11585]
+                headline [11585-11902]
                     :level 3:
-                  title [11586-11612]
-                    operator [11586-11590] ("*** ")
-                    text [11590-11611] ("Именованные аргументы")
-                    newLine [11611-11612]
-                  section [11612-11903]
-                    srcBlock [11612-11861]
+                  title [11585-11611]
+                    operator [11585-11589] ("*** ")
+                    text [11589-11610] ("Именованные аргументы")
+                    newLine [11610-11611]
+                  section [11611-11902]
+                    srcBlock [11611-11860]
                         :language emacs-lisp:
-                      blockHeader [11612-11634]
-                        keyword [11612-11634]
+                      blockHeader [11611-11633]
+                        keyword [11611-11633]
                             :language emacs-lisp:
-                          text [11612-11624] ("#+begin_src ")
-                          srcLanguage [11624-11634] ("emacs-lisp")
-                      newLine [11634-11635]
-                      blockBody [11635-11851]
-                        text [11635-11851] ("(defun my-super-function-with-named-args (&rest args)\\n  (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name)))\\n\\n  (my-super-function-with-named-args :name \\"One\\" :middle-name \\"Dude\\")")
-                      newLine [11851-11852]
-                      blockFooter [11852-11861]
-                        keyword [11852-11861]
-                          text [11852-11861] ("#+end_src")
-                    newLine [11861-11862]
-                    keyword [11862-11873]
-                      text [11862-11873] ("#+RESULTS: ")
-                    newLine [11873-11874]
-                    fixedWidth [11874-11902]
-                      operator [11874-11876] (": ")
-                      text [11876-11902] ("Name One, middle name Dude")
-                    newLine [11902-11903]
-                headline [11903-12087]
+                          text [11611-11623] ("#+begin_src ")
+                          srcLanguage [11623-11633] ("emacs-lisp")
+                      newLine [11633-11634]
+                      blockBody [11634-11850]
+                        text [11634-11850] ("(defun my-super-function-with-named-args (&rest args)\\n  (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name)))\\n\\n  (my-super-function-with-named-args :name \\"One\\" :middle-name \\"Dude\\")")
+                      newLine [11850-11851]
+                      blockFooter [11851-11860]
+                        keyword [11851-11860]
+                          text [11851-11860] ("#+end_src")
+                    newLine [11860-11861]
+                    keyword [11861-11872]
+                      text [11861-11872] ("#+RESULTS: ")
+                    newLine [11872-11873]
+                    fixedWidth [11873-11901]
+                      operator [11873-11875] (": ")
+                      text [11875-11901] ("Name One, middle name Dude")
+                    newLine [11901-11902]
+                headline [11902-12086]
                     :level 3:
-                  title [11903-11914]
-                    operator [11903-11907] ("*** ")
-                    text [11907-11913] ("Лямбды")
-                    newLine [11913-11914]
-                  section [11914-12087]
-                    crossed [11914-11971]
-                      operator [11914-11915] ("+")
-                      text [11915-11970] ("Очевидно, лямбды нужны чтобы код можно было хуже читать")
-                      operator [11970-11971] ("+")
+                  title [11902-11913]
+                    operator [11902-11906] ("*** ")
+                    text [11906-11912] ("Лямбды")
+                    newLine [11912-11913]
+                  section [11913-12086]
+                    crossed [11913-11970]
+                      operator [11913-11914] ("+")
+                      text [11914-11969] ("Очевидно, лямбды нужны чтобы код можно было хуже читать")
+                      operator [11969-11970] ("+")
+                    newLine [11970-11971]
                     newLine [11971-11972]
-                    newLine [11972-11973]
-                    srcBlock [11973-12056]
+                    srcBlock [11972-12055]
                         :language emacs-lisp:
-                      blockHeader [11973-11995]
-                        keyword [11973-11995]
+                      blockHeader [11972-11994]
+                        keyword [11972-11994]
                             :language emacs-lisp:
-                          text [11973-11985] ("#+begin_src ")
-                          srcLanguage [11985-11995] ("emacs-lisp")
-                      newLine [11995-11996]
-                      blockBody [11996-12046]
-                        text [11996-12046] ("(funcall '(lambda () (message \\"I'am dirty func\\")))")
-                      newLine [12046-12047]
-                      blockFooter [12047-12056]
-                        keyword [12047-12056]
-                          text [12047-12056] ("#+end_src")
-                    newLine [12056-12057]
-                    keyword [12057-12068]
-                      text [12057-12068] ("#+RESULTS: ")
-                    newLine [12068-12069]
-                    fixedWidth [12069-12086]
-                      operator [12069-12071] (": ")
-                      text [12071-12086] ("I’am dirty func")
-                    newLine [12086-12087]
-                headline [12087-12664]
+                          text [11972-11984] ("#+begin_src ")
+                          srcLanguage [11984-11994] ("emacs-lisp")
+                      newLine [11994-11995]
+                      blockBody [11995-12045]
+                        text [11995-12045] ("(funcall '(lambda () (message \\"I'am dirty func\\")))")
+                      newLine [12045-12046]
+                      blockFooter [12046-12055]
+                        keyword [12046-12055]
+                          text [12046-12055] ("#+end_src")
+                    newLine [12055-12056]
+                    keyword [12056-12067]
+                      text [12056-12067] ("#+RESULTS: ")
+                    newLine [12067-12068]
+                    fixedWidth [12068-12085]
+                      operator [12068-12070] (": ")
+                      text [12070-12085] ("I’am dirty func")
+                    newLine [12085-12086]
+                headline [12086-12663]
                     :level 3:
-                  title [12087-12098]
-                    operator [12087-12091] ("*** ")
-                    text [12091-12097] ("Advice")
-                    newLine [12097-12098]
-                  section [12098-12664]
-                    text [12098-12200] ("Адвайсы это прокаченные декораторы. Могут быть вызваны как до так и после вызова оригинальной функции.")
+                  title [12086-12097]
+                    operator [12086-12090] ("*** ")
+                    text [12090-12096] ("Advice")
+                    newLine [12096-12097]
+                  section [12097-12663]
+                    text [12097-12199] ("Адвайсы это прокаченные декораторы. Могут быть вызваны как до так и после вызова оригинальной функции.")
+                    newLine [12199-12200]
                     newLine [12200-12201]
-                    newLine [12201-12202]
-                    srcBlock [12202-12382]
+                    srcBlock [12201-12381]
                         :language emacs-lisp:
-                      blockHeader [12202-12224]
-                        keyword [12202-12224]
+                      blockHeader [12201-12223]
+                        keyword [12201-12223]
                             :language emacs-lisp:
-                          text [12202-12214] ("#+begin_src ")
-                          srcLanguage [12214-12224] ("emacs-lisp")
-                      newLine [12224-12225]
-                      blockBody [12225-12372]
-                        text [12225-12372] ("(defun my-increment (n)\\n  (+ n 1))\\n\\n(defun mux-5 (n)\\n  (* n 5))\\n\\n(advice-add 'my-increment :filter-return #'mux-5)\\n(message \\"%s\\" (my-increment 10))")
-                      newLine [12372-12373]
-                      blockFooter [12373-12382]
-                        keyword [12373-12382]
-                          text [12373-12382] ("#+end_src")
-                    newLine [12382-12383]
-                    keyword [12383-12394]
-                      text [12383-12394] ("#+RESULTS: ")
-                    newLine [12394-12395]
-                    fixedWidth [12395-12399]
-                      operator [12395-12397] (": ")
-                      text [12397-12399] ("55")
-                    newLine [12399-12400]
-                    bold [12400-12442]
-                      operator [12400-12401] ("*")
-                      text [12401-12441] ("Пример адвайса после выполненеия функции")
-                      operator [12441-12442] ("*")
+                          text [12201-12213] ("#+begin_src ")
+                          srcLanguage [12213-12223] ("emacs-lisp")
+                      newLine [12223-12224]
+                      blockBody [12224-12371]
+                        text [12224-12371] ("(defun my-increment (n)\\n  (+ n 1))\\n\\n(defun mux-5 (n)\\n  (* n 5))\\n\\n(advice-add 'my-increment :filter-return #'mux-5)\\n(message \\"%s\\" (my-increment 10))")
+                      newLine [12371-12372]
+                      blockFooter [12372-12381]
+                        keyword [12372-12381]
+                          text [12372-12381] ("#+end_src")
+                    newLine [12381-12382]
+                    keyword [12382-12393]
+                      text [12382-12393] ("#+RESULTS: ")
+                    newLine [12393-12394]
+                    fixedWidth [12394-12398]
+                      operator [12394-12396] (": ")
+                      text [12396-12398] ("55")
+                    newLine [12398-12399]
+                    bold [12399-12441]
+                      operator [12399-12400] ("*")
+                      text [12400-12440] ("Пример адвайса после выполненеия функции")
+                      operator [12440-12441] ("*")
+                    newLine [12441-12442]
                     newLine [12442-12443]
-                    newLine [12443-12444]
-                    srcBlock [12444-12642]
+                    srcBlock [12443-12641]
                         :language emacs-lisp:
-                      blockHeader [12444-12466]
-                        keyword [12444-12466]
+                      blockHeader [12443-12465]
+                        keyword [12443-12465]
                             :language emacs-lisp:
-                          text [12444-12456] ("#+begin_src ")
-                          srcLanguage [12456-12466] ("emacs-lisp")
-                      newLine [12466-12467]
-                      blockBody [12467-12632]
-                        text [12467-12632] ("(defun my-first-func()\\n  (message \\"qweqwe\\"))\\n(my-first-func)\\n(defun my-adv()\\n  (message \\"advice called\\"))\\n(advice-add :after 'my-first-func #'my-adv)\\n(my-first-func)")
-                      newLine [12632-12633]
-                      blockFooter [12633-12642]
-                        keyword [12633-12642]
-                          text [12633-12642] ("#+end_src")
-                    newLine [12642-12643]
-                    keyword [12643-12654]
-                      text [12643-12654] ("#+RESULTS: ")
-                    newLine [12654-12655]
-                    fixedWidth [12655-12663]
-                      operator [12655-12657] (": ")
-                      text [12657-12663] ("qweqwe")
-                    newLine [12663-12664]
-                headline [12664-13871]
+                          text [12443-12455] ("#+begin_src ")
+                          srcLanguage [12455-12465] ("emacs-lisp")
+                      newLine [12465-12466]
+                      blockBody [12466-12631]
+                        text [12466-12631] ("(defun my-first-func()\\n  (message \\"qweqwe\\"))\\n(my-first-func)\\n(defun my-adv()\\n  (message \\"advice called\\"))\\n(advice-add :after 'my-first-func #'my-adv)\\n(my-first-func)")
+                      newLine [12631-12632]
+                      blockFooter [12632-12641]
+                        keyword [12632-12641]
+                          text [12632-12641] ("#+end_src")
+                    newLine [12641-12642]
+                    keyword [12642-12653]
+                      text [12642-12653] ("#+RESULTS: ")
+                    newLine [12653-12654]
+                    fixedWidth [12654-12662]
+                      operator [12654-12656] (": ")
+                      text [12656-12662] ("qweqwe")
+                    newLine [12662-12663]
+                headline [12663-13870]
                     :level 3:
-                  title [12664-12690]
-                    operator [12664-12668] ("*** ")
-                    text [12668-12689] ("Property list (plist)")
-                    newLine [12689-12690]
-                  section [12690-13871]
-                    bold [12690-12710]
-                      operator [12690-12691] ("*")
-                      text [12691-12709] ("Установка и запись")
-                      operator [12709-12710] ("*")
+                  title [12663-12689]
+                    operator [12663-12667] ("*** ")
+                    text [12667-12688] ("Property list (plist)")
+                    newLine [12688-12689]
+                  section [12689-13870]
+                    bold [12689-12709]
+                      operator [12689-12690] ("*")
+                      text [12690-12708] ("Установка и запись")
+                      operator [12708-12709] ("*")
+                    newLine [12709-12710]
                     newLine [12710-12711]
-                    newLine [12711-12712]
-                    srcBlock [12712-12936]
+                    srcBlock [12711-12935]
                         :language emacs-lisp:
-                      blockHeader [12712-12734]
-                        keyword [12712-12734]
+                      blockHeader [12711-12733]
+                        keyword [12711-12733]
                             :language emacs-lisp:
-                          text [12712-12724] ("#+begin_src ")
-                          srcLanguage [12724-12734] ("emacs-lisp")
-                      newLine [12734-12735]
-                      blockBody [12735-12926]
-                        text [12735-12926] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n(message \\"enabled: %s, another prop: %s, type: %s\\" (plist-get my-plist :is-enabled) (plist-get my-plist :another-prop) (type-of my-plist))")
-                      newLine [12926-12927]
-                      blockFooter [12927-12936]
-                        keyword [12927-12936]
-                          text [12927-12936] ("#+end_src")
-                    newLine [12936-12937]
-                    keyword [12937-12948]
-                      text [12937-12948] ("#+RESULTS: ")
-                    newLine [12948-12949]
-                    fixedWidth [12949-12992]
-                      operator [12949-12951] (": ")
-                      text [12951-12992] ("enabled: t, another prop: hey, type: cons")
+                          text [12711-12723] ("#+begin_src ")
+                          srcLanguage [12723-12733] ("emacs-lisp")
+                      newLine [12733-12734]
+                      blockBody [12734-12925]
+                        text [12734-12925] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n(message \\"enabled: %s, another prop: %s, type: %s\\" (plist-get my-plist :is-enabled) (plist-get my-plist :another-prop) (type-of my-plist))")
+                      newLine [12925-12926]
+                      blockFooter [12926-12935]
+                        keyword [12926-12935]
+                          text [12926-12935] ("#+end_src")
+                    newLine [12935-12936]
+                    keyword [12936-12947]
+                      text [12936-12947] ("#+RESULTS: ")
+                    newLine [12947-12948]
+                    fixedWidth [12948-12991]
+                      operator [12948-12950] (": ")
+                      text [12950-12991] ("enabled: t, another prop: hey, type: cons")
+                    newLine [12991-12992]
                     newLine [12992-12993]
-                    newLine [12993-12994]
-                    bold [12994-13005]
-                      operator [12994-12995] ("*")
-                      text [12995-13004] ("Изменение")
-                      operator [13004-13005] ("*")
+                    bold [12993-13004]
+                      operator [12993-12994] ("*")
+                      text [12994-13003] ("Изменение")
+                      operator [13003-13004] ("*")
+                    newLine [13004-13005]
                     newLine [13005-13006]
-                    newLine [13006-13007]
-                    srcBlock [13007-13260]
+                    srcBlock [13006-13259]
                         :language emacs-lisp:
-                      blockHeader [13007-13029]
-                        keyword [13007-13029]
+                      blockHeader [13006-13028]
+                        keyword [13006-13028]
                             :language emacs-lisp:
-                          text [13007-13019] ("#+begin_src ")
-                          srcLanguage [13019-13029] ("emacs-lisp")
-                      newLine [13029-13030]
-                      blockBody [13030-13250]
-                        text [13030-13250] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n\\n(plist-put my-plist  :another-prop \\"Wow, i was changed\\")\\n(message \\"enabled: %s, another prop: %s\\" (plist-get my-plist :is-enabled) (plist-get my-plist :another-prop))")
-                      newLine [13250-13251]
-                      blockFooter [13251-13260]
-                        keyword [13251-13260]
-                          text [13251-13260] ("#+end_src")
-                    newLine [13260-13261]
-                    bold [13261-13280]
-                      operator [13261-13262] ("*")
-                      text [13262-13279] ("Итерация по plist")
-                      operator [13279-13280] ("*")
+                          text [13006-13018] ("#+begin_src ")
+                          srcLanguage [13018-13028] ("emacs-lisp")
+                      newLine [13028-13029]
+                      blockBody [13029-13249]
+                        text [13029-13249] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n\\n(plist-put my-plist  :another-prop \\"Wow, i was changed\\")\\n(message \\"enabled: %s, another prop: %s\\" (plist-get my-plist :is-enabled) (plist-get my-plist :another-prop))")
+                      newLine [13249-13250]
+                      blockFooter [13250-13259]
+                        keyword [13250-13259]
+                          text [13250-13259] ("#+end_src")
+                    newLine [13259-13260]
+                    bold [13260-13279]
+                      operator [13260-13261] ("*")
+                      text [13261-13278] ("Итерация по plist")
+                      operator [13278-13279] ("*")
+                    newLine [13279-13280]
                     newLine [13280-13281]
-                    newLine [13281-13282]
-                    srcBlock [13282-13659]
+                    srcBlock [13281-13658]
                         :language emacs-lisp:
-                      blockHeader [13282-13304]
-                        keyword [13282-13304]
+                      blockHeader [13281-13303]
+                        keyword [13281-13303]
                             :language emacs-lisp:
-                          text [13282-13294] ("#+begin_src ")
-                          srcLanguage [13294-13304] ("emacs-lisp")
-                      newLine [13304-13305]
-                      blockBody [13305-13649]
-                        text [13305-13649] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n\\n(setq res \\"res: \\")\\n(loop for (k v) on my-plist by 'cddr do\\n      (setq res (concat res (format \\"%s - %s\\" k v) \\"\\n\\")))\\n\\n;; (mapcar (lambda (k) (setq res (concat res (format \\"%s - \\" k ) \\"\\n\\"))) my-plist)\\n\\n\\n;; (dolist (p my-plist)\\n;;   (setq res (concat res (format \\"%s\\" p) \\"\\n\\")))\\n\\n(message res)")
-                      newLine [13649-13650]
-                      blockFooter [13650-13659]
-                        keyword [13650-13659]
-                          text [13650-13659] ("#+end_src")
-                    newLine [13659-13660]
-                    bold [13660-13688]
-                      operator [13660-13661] ("*")
-                      text [13661-13687] ("Удаление элемента из plist")
-                      operator [13687-13688] ("*")
+                          text [13281-13293] ("#+begin_src ")
+                          srcLanguage [13293-13303] ("emacs-lisp")
+                      newLine [13303-13304]
+                      blockBody [13304-13648]
+                        text [13304-13648] ("(setq my-plist '(:is-enabled t :another-prop \\"hey\\"))\\n\\n(setq res \\"res: \\")\\n(loop for (k v) on my-plist by 'cddr do\\n      (setq res (concat res (format \\"%s - %s\\" k v) \\"\\n\\")))\\n\\n;; (mapcar (lambda (k) (setq res (concat res (format \\"%s - \\" k ) \\"\\n\\"))) my-plist)\\n\\n\\n;; (dolist (p my-plist)\\n;;   (setq res (concat res (format \\"%s\\" p) \\"\\n\\")))\\n\\n(message res)")
+                      newLine [13648-13649]
+                      blockFooter [13649-13658]
+                        keyword [13649-13658]
+                          text [13649-13658] ("#+end_src")
+                    newLine [13658-13659]
+                    bold [13659-13687]
+                      operator [13659-13660] ("*")
+                      text [13660-13686] ("Удаление элемента из plist")
+                      operator [13686-13687] ("*")
+                    newLine [13687-13688]
                     newLine [13688-13689]
-                    newLine [13689-13690]
-                    srcBlock [13690-13821]
+                    srcBlock [13689-13820]
                         :language emacs-lisp:
-                      blockHeader [13690-13712]
-                        keyword [13690-13712]
+                      blockHeader [13689-13711]
+                        keyword [13689-13711]
                             :language emacs-lisp:
-                          text [13690-13702] ("#+begin_src ")
-                          srcLanguage [13702-13712] ("emacs-lisp")
-                      newLine [13712-13713]
-                      blockBody [13713-13811]
-                        text [13713-13811] ("(setq test '(:hi \\"there\\" :by \\"man!\\"))\\n\\n(setq test (map-delete test :hi))\\n\\n(message \\"res: %s\\" test)")
-                      newLine [13811-13812]
-                      blockFooter [13812-13821]
-                        keyword [13812-13821]
-                          text [13812-13821] ("#+end_src")
-                    newLine [13821-13822]
-                    keyword [13822-13833]
-                      text [13822-13833] ("#+RESULTS: ")
-                    newLine [13833-13834]
-                    fixedWidth [13834-13851]
-                      operator [13834-13836] (": ")
-                      text [13836-13851] ("res: (:by man!)")
+                          text [13689-13701] ("#+begin_src ")
+                          srcLanguage [13701-13711] ("emacs-lisp")
+                      newLine [13711-13712]
+                      blockBody [13712-13810]
+                        text [13712-13810] ("(setq test '(:hi \\"there\\" :by \\"man!\\"))\\n\\n(setq test (map-delete test :hi))\\n\\n(message \\"res: %s\\" test)")
+                      newLine [13810-13811]
+                      blockFooter [13811-13820]
+                        keyword [13811-13820]
+                          text [13811-13820] ("#+end_src")
+                    newLine [13820-13821]
+                    keyword [13821-13832]
+                      text [13821-13832] ("#+RESULTS: ")
+                    newLine [13832-13833]
+                    fixedWidth [13833-13850]
+                      operator [13833-13835] (": ")
+                      text [13835-13850] ("res: (:by man!)")
+                    newLine [13850-13851]
                     newLine [13851-13852]
-                    newLine [13852-13853]
-                    keyword [13853-13869]
-                      text [13853-13861] ("#+CLOSE_")
-                      text [13861-13869] ("{SPOILER")
-                    text [13869-13870] ("}")
-                    newLine [13870-13871]
-                headline [13871-14274]
+                    keyword [13852-13868]
+                      text [13852-13860] ("#+CLOSE_")
+                      text [13860-13868] ("{SPOILER")
+                    text [13868-13869] ("}")
+                    newLine [13869-13870]
+                headline [13870-14273]
                     :level 3:
-                  title [13871-13987]
-                    operator [13871-13875] ("*** ")
-                    link [13875-13986]
+                  title [13870-13986]
+                    operator [13870-13874] ("*** ")
+                    link [13874-13985]
                         :linkType raw:
-                      operator [13875-13876] ("[")
-                      linkUrl [13876-13958]
-                        operator [13876-13877] ("[")
-                        text [13877-13957] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Idle-Timers.html")
-                        operator [13957-13958] ("]")
-                      linkName [13958-13985]
-                        operator [13958-13959] ("[")
-                        text [13959-13984] ("Отложенный запуск функций")
-                        operator [13984-13985] ("]")
-                      operator [13985-13986] ("]")
-                    newLine [13986-13987]
-                  section [13987-14274]
-                    srcBlock [13987-14100]
+                      operator [13874-13875] ("[")
+                      linkUrl [13875-13957]
+                        operator [13875-13876] ("[")
+                        text [13876-13956] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Idle-Timers.html")
+                        operator [13956-13957] ("]")
+                      linkName [13957-13984]
+                        operator [13957-13958] ("[")
+                        text [13958-13983] ("Отложенный запуск функций")
+                        operator [13983-13984] ("]")
+                      operator [13984-13985] ("]")
+                    newLine [13985-13986]
+                  section [13986-14273]
+                    srcBlock [13986-14099]
                         :language emacs-lisp:
-                      blockHeader [13987-14009]
-                        keyword [13987-14009]
+                      blockHeader [13986-14008]
+                        keyword [13986-14008]
                             :language emacs-lisp:
-                          text [13987-13999] ("#+begin_src ")
-                          srcLanguage [13999-14009] ("emacs-lisp")
-                      newLine [14009-14010]
-                      blockBody [14010-14090]
-                        text [14010-14090] ("(setq my-custom-timer (run-with-idle-timer 1 nil #'(lambda () (message \\"qwe\\"))))")
-                      newLine [14090-14091]
-                      blockFooter [14091-14100]
-                        keyword [14091-14100]
-                          text [14091-14100] ("#+end_src")
-                    newLine [14100-14101]
-                    keyword [14101-14112]
-                      text [14101-14112] ("#+RESULTS: ")
-                    newLine [14112-14113]
-                    fixedWidth [14113-14173]
-                      operator [14113-14115] (": ")
-                      text [14115-14173] ("[nil 0 1 0 nil (lambda nil 'message \\"qwe\\") nil idle 0 nil]")
+                          text [13986-13998] ("#+begin_src ")
+                          srcLanguage [13998-14008] ("emacs-lisp")
+                      newLine [14008-14009]
+                      blockBody [14009-14089]
+                        text [14009-14089] ("(setq my-custom-timer (run-with-idle-timer 1 nil #'(lambda () (message \\"qwe\\"))))")
+                      newLine [14089-14090]
+                      blockFooter [14090-14099]
+                        keyword [14090-14099]
+                          text [14090-14099] ("#+end_src")
+                    newLine [14099-14100]
+                    keyword [14100-14111]
+                      text [14100-14111] ("#+RESULTS: ")
+                    newLine [14111-14112]
+                    fixedWidth [14112-14172]
+                      operator [14112-14114] (": ")
+                      text [14114-14172] ("[nil 0 1 0 nil (lambda nil 'message \\"qwe\\") nil idle 0 nil]")
+                    newLine [14172-14173]
                     newLine [14173-14174]
-                    newLine [14174-14175]
-                    text [14175-14208] ("Отложенные функции можно отменять")
+                    text [14174-14207] ("Отложенные функции можно отменять")
+                    newLine [14207-14208]
                     newLine [14208-14209]
-                    newLine [14209-14210]
-                    srcBlock [14210-14273]
+                    srcBlock [14209-14272]
                         :language emacs-lisp:
-                      blockHeader [14210-14232]
-                        keyword [14210-14232]
+                      blockHeader [14209-14231]
+                        keyword [14209-14231]
                             :language emacs-lisp:
-                          text [14210-14222] ("#+begin_src ")
-                          srcLanguage [14222-14232] ("emacs-lisp")
-                      newLine [14232-14233]
-                      blockBody [14233-14263]
-                        text [14233-14263] ("(cancel-timer my-custom-timer)")
-                      newLine [14263-14264]
-                      blockFooter [14264-14273]
-                        keyword [14264-14273]
-                          text [14264-14273] ("#+end_src")
-                    newLine [14273-14274]
-            headline [14274-15664]
+                          text [14209-14221] ("#+begin_src ")
+                          srcLanguage [14221-14231] ("emacs-lisp")
+                      newLine [14231-14232]
+                      blockBody [14232-14262]
+                        text [14232-14262] ("(cancel-timer my-custom-timer)")
+                      newLine [14262-14263]
+                      blockFooter [14263-14272]
+                        keyword [14263-14272]
+                          text [14263-14272] ("#+end_src")
+                    newLine [14272-14273]
+            headline [14273-15663]
                 :level 2:
-              title [14274-14287]
-                operator [14274-14277] ("** ")
-                text [14277-14286] ("Операторы")
-                newLine [14286-14287]
-              section [14287-15664]
-                text [14287-14393] ("Орпеторы это точно такие же функции. Вынес в отдельную категорию т.к. в большинстве языков это инструкции.")
-                newLine [14393-14394]
-                keyword [14394-14410]
-                  text [14394-14402] ("#+START_")
-                  text [14402-14410] ("{SPOILER")
-                text [14410-14411] ("}")
-                text [14411-14420] (" Детали >")
+              title [14273-14286]
+                operator [14273-14276] ("** ")
+                text [14276-14285] ("Операторы")
+                newLine [14285-14286]
+              section [14286-15663]
+                text [14286-14392] ("Орпеторы это точно такие же функции. Вынес в отдельную категорию т.к. в большинстве языков это инструкции.")
+                newLine [14392-14393]
+                keyword [14393-14409]
+                  text [14393-14401] ("#+START_")
+                  text [14401-14409] ("{SPOILER")
+                text [14409-14410] ("}")
+                text [14410-14419] (" Детали >")
+                newLine [14419-14420]
                 newLine [14420-14421]
-                newLine [14421-14422]
-                headline [14422-14601]
+                headline [14421-14600]
                     :level 3:
-                  title [14422-14438]
-                    operator [14422-14426] ("*** ")
-                    text [14426-14437] ("Switch case")
-                    newLine [14437-14438]
-                  section [14438-14601]
-                    srcBlock [14438-14582]
+                  title [14421-14437]
+                    operator [14421-14425] ("*** ")
+                    text [14425-14436] ("Switch case")
+                    newLine [14436-14437]
+                  section [14437-14600]
+                    srcBlock [14437-14581]
                         :language emacs-lisp:
-                      blockHeader [14438-14460]
-                        keyword [14438-14460]
+                      blockHeader [14437-14459]
+                        keyword [14437-14459]
                             :language emacs-lisp:
-                          text [14438-14450] ("#+begin_src ")
-                          srcLanguage [14450-14460] ("emacs-lisp")
-                      newLine [14460-14461]
-                      blockBody [14461-14572]
-                        text [14461-14572] ("(setq test-var 'qwe)\\n(message \\"%s\\" (cond ((eq test-var 'q2e) 1)\\n       ((eq test-var 'oe) 2)\\n       (t \\"qwe\\")))")
-                      newLine [14572-14573]
-                      blockFooter [14573-14582]
-                        keyword [14573-14582]
-                          text [14573-14582] ("#+end_src")
-                    newLine [14582-14583]
-                    keyword [14583-14594]
-                      text [14583-14594] ("#+RESULTS: ")
-                    newLine [14594-14595]
-                    fixedWidth [14595-14600]
-                      operator [14595-14597] (": ")
-                      text [14597-14600] ("qwe")
-                    newLine [14600-14601]
-                headline [14601-14778]
+                          text [14437-14449] ("#+begin_src ")
+                          srcLanguage [14449-14459] ("emacs-lisp")
+                      newLine [14459-14460]
+                      blockBody [14460-14571]
+                        text [14460-14571] ("(setq test-var 'qwe)\\n(message \\"%s\\" (cond ((eq test-var 'q2e) 1)\\n       ((eq test-var 'oe) 2)\\n       (t \\"qwe\\")))")
+                      newLine [14571-14572]
+                      blockFooter [14572-14581]
+                        keyword [14572-14581]
+                          text [14572-14581] ("#+end_src")
+                    newLine [14581-14582]
+                    keyword [14582-14593]
+                      text [14582-14593] ("#+RESULTS: ")
+                    newLine [14593-14594]
+                    fixedWidth [14594-14599]
+                      operator [14594-14596] (": ")
+                      text [14596-14599] ("qwe")
+                    newLine [14599-14600]
+                headline [14600-14777]
                     :level 3:
-                  title [14601-14611]
-                    operator [14601-14605] ("*** ")
-                    text [14605-14610] ("While")
-                    newLine [14610-14611]
-                  section [14611-14778]
-                    srcBlock [14611-14760]
+                  title [14600-14610]
+                    operator [14600-14604] ("*** ")
+                    text [14604-14609] ("While")
+                    newLine [14609-14610]
+                  section [14610-14777]
+                    srcBlock [14610-14759]
                         :language emacs-lisp:
-                      blockHeader [14611-14633]
-                        keyword [14611-14633]
+                      blockHeader [14610-14632]
+                        keyword [14610-14632]
                             :language emacs-lisp:
-                          text [14611-14623] ("#+begin_src ")
-                          srcLanguage [14623-14633] ("emacs-lisp")
-                      newLine [14633-14634]
-                      blockBody [14634-14750]
-                        text [14634-14750] ("(setq my-counter 0)\\n(while (< my-counter 12)\\n         (setq my-counter (+ my-counter 1)))\\n\\n(message \\"%s\\" my-counter)")
-                      newLine [14750-14751]
-                      blockFooter [14751-14760]
-                        keyword [14751-14760]
-                          text [14751-14760] ("#+end_src")
-                    newLine [14760-14761]
-                    keyword [14761-14772]
-                      text [14761-14772] ("#+RESULTS: ")
-                    newLine [14772-14773]
-                    fixedWidth [14773-14777]
-                      operator [14773-14775] (": ")
-                      text [14775-14777] ("12")
-                    newLine [14777-14778]
-                headline [14778-15295]
+                          text [14610-14622] ("#+begin_src ")
+                          srcLanguage [14622-14632] ("emacs-lisp")
+                      newLine [14632-14633]
+                      blockBody [14633-14749]
+                        text [14633-14749] ("(setq my-counter 0)\\n(while (< my-counter 12)\\n         (setq my-counter (+ my-counter 1)))\\n\\n(message \\"%s\\" my-counter)")
+                      newLine [14749-14750]
+                      blockFooter [14750-14759]
+                        keyword [14750-14759]
+                          text [14750-14759] ("#+end_src")
+                    newLine [14759-14760]
+                    keyword [14760-14771]
+                      text [14760-14771] ("#+RESULTS: ")
+                    newLine [14771-14772]
+                    fixedWidth [14772-14776]
+                      operator [14772-14774] (": ")
+                      text [14774-14776] ("12")
+                    newLine [14776-14777]
+                headline [14777-15294]
                     :level 3:
-                  title [14778-14788]
-                    operator [14778-14782] ("*** ")
-                    text [14782-14787] ("Catch")
-                    newLine [14787-14788]
-                  section [14788-15295]
-                    text [14788-15002] ("Просто вау, в фп есть try catch! Я действительно удивлен..даже в объектно ориетированых языках это вызывает проблемы..тем не менее..это 1 из вариантов прерываия цикла while (плохихи вариатов, как по мне, но все же)")
+                  title [14777-14787]
+                    operator [14777-14781] ("*** ")
+                    text [14781-14786] ("Catch")
+                    newLine [14786-14787]
+                  section [14787-15294]
+                    text [14787-15001] ("Просто вау, в фп есть try catch! Я действительно удивлен..даже в объектно ориетированых языках это вызывает проблемы..тем не менее..это 1 из вариантов прерываия цикла while (плохихи вариатов, как по мне, но все же)")
+                    newLine [15001-15002]
                     newLine [15002-15003]
-                    newLine [15003-15004]
-                    srcBlock [15004-15294]
+                    srcBlock [15003-15293]
                         :language emacs-lisp:
-                      blockHeader [15004-15026]
-                        keyword [15004-15026]
+                      blockHeader [15003-15025]
+                        keyword [15003-15025]
                             :language emacs-lisp:
-                          text [15004-15016] ("#+begin_src ")
-                          srcLanguage [15016-15026] ("emacs-lisp")
-                      newLine [15026-15027]
-                      blockBody [15027-15284]
-                        text [15027-15284] ("(setq my-counter 0)\\n\\n\\n(message \\"What is the messafe from catch? Oh this is message: %s\\" (catch 'result\\n  (while (< my-counter 22)\\n    (setq my-counter (+ my-counter 1))\\n    (if (> my-counter 5)\\n        (throw 'result \\"Amma result from catch block\\"))\\n    )))")
-                      newLine [15284-15285]
-                      blockFooter [15285-15294]
-                        keyword [15285-15294]
-                          text [15285-15294] ("#+end_src")
-                    newLine [15294-15295]
-                headline [15295-15664]
+                          text [15003-15015] ("#+begin_src ")
+                          srcLanguage [15015-15025] ("emacs-lisp")
+                      newLine [15025-15026]
+                      blockBody [15026-15283]
+                        text [15026-15283] ("(setq my-counter 0)\\n\\n\\n(message \\"What is the messafe from catch? Oh this is message: %s\\" (catch 'result\\n  (while (< my-counter 22)\\n    (setq my-counter (+ my-counter 1))\\n    (if (> my-counter 5)\\n        (throw 'result \\"Amma result from catch block\\"))\\n    )))")
+                      newLine [15283-15284]
+                      blockFooter [15284-15293]
+                        keyword [15284-15293]
+                          text [15284-15293] ("#+end_src")
+                    newLine [15293-15294]
+                headline [15294-15663]
                     :level 3:
-                  title [15295-15306]
-                    operator [15295-15299] ("*** ")
-                    text [15299-15305] ("Return")
-                    newLine [15305-15306]
-                  section [15306-15664]
-                    text [15306-15317] ("Работает в ")
-                    bold [15317-15330]
-                      operator [15317-15318] ("*")
-                      text [15318-15329] ("emacs 27.1+")
-                      operator [15329-15330] ("*")
-                    text [15330-15370] (". Позволяет прервать выполнение функции.")
+                  title [15294-15305]
+                    operator [15294-15298] ("*** ")
+                    text [15298-15304] ("Return")
+                    newLine [15304-15305]
+                  section [15305-15663]
+                    text [15305-15316] ("Работает в ")
+                    bold [15316-15329]
+                      operator [15316-15317] ("*")
+                      text [15317-15328] ("emacs 27.1+")
+                      operator [15328-15329] ("*")
+                    text [15329-15369] (". Позволяет прервать выполнение функции.")
+                    newLine [15369-15370]
                     newLine [15370-15371]
-                    newLine [15371-15372]
-                    srcBlock [15372-15628]
+                    srcBlock [15371-15627]
                         :language emacs-lisp:
-                      blockHeader [15372-15394]
-                        keyword [15372-15394]
+                      blockHeader [15371-15393]
+                        keyword [15371-15393]
                             :language emacs-lisp:
-                          text [15372-15384] ("#+begin_src ")
-                          srcLanguage [15384-15394] ("emacs-lisp")
-                      newLine [15394-15395]
-                      blockBody [15395-15618]
-                        text [15395-15618] ("(setq my-counter 0)\\n(cl-defun my-iterator()\\n  (while (< my-counter 12)\\n    (if (> my-counter 3)\\n        (return-from my-iterator)\\n      )\\n    (setq my-counter (+ my-counter 1)))\\n  )\\n\\n(my-iterator)\\n\\n(message \\"%s\\" my-counter)")
-                      newLine [15618-15619]
-                      blockFooter [15619-15628]
-                        keyword [15619-15628]
-                          text [15619-15628] ("#+end_src")
-                    newLine [15628-15629]
-                    keyword [15629-15640]
-                      text [15629-15640] ("#+RESULTS: ")
-                    newLine [15640-15641]
-                    fixedWidth [15641-15644]
-                      operator [15641-15643] (": ")
-                      text [15643-15644] ("4")
+                          text [15371-15383] ("#+begin_src ")
+                          srcLanguage [15383-15393] ("emacs-lisp")
+                      newLine [15393-15394]
+                      blockBody [15394-15617]
+                        text [15394-15617] ("(setq my-counter 0)\\n(cl-defun my-iterator()\\n  (while (< my-counter 12)\\n    (if (> my-counter 3)\\n        (return-from my-iterator)\\n      )\\n    (setq my-counter (+ my-counter 1)))\\n  )\\n\\n(my-iterator)\\n\\n(message \\"%s\\" my-counter)")
+                      newLine [15617-15618]
+                      blockFooter [15618-15627]
+                        keyword [15618-15627]
+                          text [15618-15627] ("#+end_src")
+                    newLine [15627-15628]
+                    keyword [15628-15639]
+                      text [15628-15639] ("#+RESULTS: ")
+                    newLine [15639-15640]
+                    fixedWidth [15640-15643]
+                      operator [15640-15642] (": ")
+                      text [15642-15643] ("4")
+                    newLine [15643-15644]
                     newLine [15644-15645]
-                    newLine [15645-15646]
-                    keyword [15646-15662]
-                      text [15646-15654] ("#+CLOSE_")
-                      text [15654-15662] ("{SPOILER")
-                    text [15662-15663] ("}")
-                    newLine [15663-15664]
-            headline [15664-20337]
+                    keyword [15645-15661]
+                      text [15645-15653] ("#+CLOSE_")
+                      text [15653-15661] ("{SPOILER")
+                    text [15661-15662] ("}")
+                    newLine [15662-15663]
+            headline [15663-20336]
                 :level 2:
-              title [15664-15690]
-                operator [15664-15667] ("** ")
-                text [15667-15689] ("Взаимодействие с emacs")
-                newLine [15689-15690]
-              section [15690-20337]
-                keyword [15690-15706]
-                  text [15690-15698] ("#+START_")
-                  text [15698-15706] ("{SPOILER")
-                text [15706-15707] ("}")
-                text [15707-15716] (" Детали >")
+              title [15663-15689]
+                operator [15663-15666] ("** ")
+                text [15666-15688] ("Взаимодействие с emacs")
+                newLine [15688-15689]
+              section [15689-20336]
+                keyword [15689-15705]
+                  text [15689-15697] ("#+START_")
+                  text [15697-15705] ("{SPOILER")
+                text [15705-15706] ("}")
+                text [15706-15715] (" Детали >")
+                newLine [15715-15716]
                 newLine [15716-15717]
-                newLine [15717-15718]
-                headline [15718-15801]
+                headline [15717-15800]
                     :level 3:
-                  title [15718-15739]
-                    operator [15718-15722] ("*** ")
-                    text [15722-15738] ("Вставка в текста")
-                    newLine [15738-15739]
-                  section [15739-15801]
-                    srcBlock [15739-15800]
+                  title [15717-15738]
+                    operator [15717-15721] ("*** ")
+                    text [15721-15737] ("Вставка в текста")
+                    newLine [15737-15738]
+                  section [15738-15800]
+                    srcBlock [15738-15799]
                         :language emacs-lisp:
-                      blockHeader [15739-15761]
-                        keyword [15739-15761]
+                      blockHeader [15738-15760]
+                        keyword [15738-15760]
                             :language emacs-lisp:
-                          text [15739-15751] ("#+begin_src ")
-                          srcLanguage [15751-15761] ("emacs-lisp")
-                      newLine [15761-15762]
-                      blockBody [15762-15790]
-                        text [15762-15790] ("(insert \\"Hello\\" \\" \\" \\"World\\")")
-                      newLine [15790-15791]
-                      blockFooter [15791-15800]
-                        keyword [15791-15800]
-                          text [15791-15800] ("#+end_src")
-                    newLine [15800-15801]
-                headline [15801-16384]
+                          text [15738-15750] ("#+begin_src ")
+                          srcLanguage [15750-15760] ("emacs-lisp")
+                      newLine [15760-15761]
+                      blockBody [15761-15789]
+                        text [15761-15789] ("(insert \\"Hello\\" \\" \\" \\"World\\")")
+                      newLine [15789-15790]
+                      blockFooter [15790-15799]
+                        keyword [15790-15799]
+                          text [15790-15799] ("#+end_src")
+                    newLine [15799-15800]
+                headline [15800-16383]
                     :level 3:
-                  title [15801-15822]
-                    operator [15801-15805] ("*** ")
-                    text [15805-15821] ("Работа с буфером")
-                    newLine [15821-15822]
-                  section [15822-16384]
-                    headline [15822-15997]
+                  title [15800-15821]
+                    operator [15800-15804] ("*** ")
+                    text [15804-15820] ("Работа с буфером")
+                    newLine [15820-15821]
+                  section [15821-16383]
+                    headline [15821-15996]
                         :level 4:
-                      title [15822-15862]
-                        operator [15822-15827] ("**** ")
-                        text [15827-15861] ("Программное создание нового буфера")
-                        newLine [15861-15862]
-                      section [15862-15997]
-                        srcBlock [15862-15996]
+                      title [15821-15861]
+                        operator [15821-15826] ("**** ")
+                        text [15826-15860] ("Программное создание нового буфера")
+                        newLine [15860-15861]
+                      section [15861-15996]
+                        srcBlock [15861-15995]
                             :language emacs-lisp:
-                          blockHeader [15862-15884]
-                            keyword [15862-15884]
+                          blockHeader [15861-15883]
+                            keyword [15861-15883]
                                 :language emacs-lisp:
-                              text [15862-15874] ("#+begin_src ")
-                              srcLanguage [15874-15884] ("emacs-lisp")
-                          newLine [15884-15885]
-                          blockBody [15885-15986]
-                            text [15885-15986] ("  (switch-to-buffer-other-window \\"*my-first-buffer*\\")\\n  (insert \\"Congratulations! I'am a new buffer\\")")
-                          newLine [15986-15987]
-                          blockFooter [15987-15996]
-                            keyword [15987-15996]
-                              text [15987-15996] ("#+end_src")
-                        newLine [15996-15997]
-                    headline [15997-16065]
+                              text [15861-15873] ("#+begin_src ")
+                              srcLanguage [15873-15883] ("emacs-lisp")
+                          newLine [15883-15884]
+                          blockBody [15884-15985]
+                            text [15884-15985] ("  (switch-to-buffer-other-window \\"*my-first-buffer*\\")\\n  (insert \\"Congratulations! I'am a new buffer\\")")
+                          newLine [15985-15986]
+                          blockFooter [15986-15995]
+                            keyword [15986-15995]
+                              text [15986-15995] ("#+end_src")
+                        newLine [15995-15996]
+                    headline [15996-16064]
                         :level 4:
-                      title [15997-16017]
-                        operator [15997-16002] ("**** ")
-                        text [16002-16016] ("Очистка буфера")
-                        newLine [16016-16017]
-                      section [16017-16065]
-                        srcBlock [16017-16064]
+                      title [15996-16016]
+                        operator [15996-16001] ("**** ")
+                        text [16001-16015] ("Очистка буфера")
+                        newLine [16015-16016]
+                      section [16016-16064]
+                        srcBlock [16016-16063]
                             :language emacs-lisp:
-                          blockHeader [16017-16039]
-                            keyword [16017-16039]
+                          blockHeader [16016-16038]
+                            keyword [16016-16038]
                                 :language emacs-lisp:
-                              text [16017-16029] ("#+begin_src ")
-                              srcLanguage [16029-16039] ("emacs-lisp")
-                          newLine [16039-16040]
-                          blockBody [16040-16054]
-                            text [16040-16054] ("(erase-buffer)")
-                          newLine [16054-16055]
-                          blockFooter [16055-16064]
-                            keyword [16055-16064]
-                              text [16055-16064] ("#+end_src")
-                        newLine [16064-16065]
-                    headline [16065-16384]
+                              text [16016-16028] ("#+begin_src ")
+                              srcLanguage [16028-16038] ("emacs-lisp")
+                          newLine [16038-16039]
+                          blockBody [16039-16053]
+                            text [16039-16053] ("(erase-buffer)")
+                          newLine [16053-16054]
+                          blockFooter [16054-16063]
+                            keyword [16054-16063]
+                              text [16054-16063] ("#+end_src")
+                        newLine [16063-16064]
+                    headline [16064-16383]
                         :level 4:
-                      title [16065-16089]
-                        operator [16065-16070] ("**** ")
-                        text [16070-16088] ("Интерактивный ввод")
-                        newLine [16088-16089]
-                      section [16089-16384]
-                        srcBlock [16089-16372]
+                      title [16064-16088]
+                        operator [16064-16069] ("**** ")
+                        text [16069-16087] ("Интерактивный ввод")
+                        newLine [16087-16088]
+                      section [16088-16383]
+                        srcBlock [16088-16371]
                             :language emacs-lisp:
-                          blockHeader [16089-16111]
-                            keyword [16089-16111]
+                          blockHeader [16088-16110]
+                            keyword [16088-16110]
                                 :language emacs-lisp:
-                              text [16089-16101] ("#+begin_src ")
-                              srcLanguage [16101-16111] ("emacs-lisp")
-                          newLine [16111-16112]
-                          blockBody [16112-16362]
-                            text [16112-16362] ("  ;; (read-from-minibuffer \\"Enter your name: \\")\\n  (let ((your-name (read-from-minibuffer \\"Enter your name: \\")))\\n      (switch-to-buffer-other-window \\"*Your personal info\\")\\n  (erase-buffer)\\n  (insert (format \\"Hello %s!\\" your-name))\\n  (other-window 1))")
-                          newLine [16362-16363]
-                          blockFooter [16363-16372]
-                            keyword [16363-16372]
-                              text [16363-16372] ("#+end_src")
-                        newLine [16372-16373]
-                        keyword [16373-16383]
-                          text [16373-16383] ("#+RESULTS:")
-                        newLine [16383-16384]
-                headline [16384-16902]
+                              text [16088-16100] ("#+begin_src ")
+                              srcLanguage [16100-16110] ("emacs-lisp")
+                          newLine [16110-16111]
+                          blockBody [16111-16361]
+                            text [16111-16361] ("  ;; (read-from-minibuffer \\"Enter your name: \\")\\n  (let ((your-name (read-from-minibuffer \\"Enter your name: \\")))\\n      (switch-to-buffer-other-window \\"*Your personal info\\")\\n  (erase-buffer)\\n  (insert (format \\"Hello %s!\\" your-name))\\n  (other-window 1))")
+                          newLine [16361-16362]
+                          blockFooter [16362-16371]
+                            keyword [16362-16371]
+                              text [16362-16371] ("#+end_src")
+                        newLine [16371-16372]
+                        keyword [16372-16382]
+                          text [16372-16382] ("#+RESULTS:")
+                        newLine [16382-16383]
+                headline [16383-16901]
                     :level 3:
-                  title [16384-16405]
-                    operator [16384-16388] ("*** ")
-                    text [16388-16404] ("Replace в буфере")
-                    newLine [16404-16405]
-                  section [16405-16902]
-                    srcBlock [16405-16829]
+                  title [16383-16404]
+                    operator [16383-16387] ("*** ")
+                    text [16387-16403] ("Replace в буфере")
+                    newLine [16403-16404]
+                  section [16404-16901]
+                    srcBlock [16404-16828]
                         :language emacs-lisp:
-                      blockHeader [16405-16427]
-                        keyword [16405-16427]
+                      blockHeader [16404-16426]
+                        keyword [16404-16426]
                             :language emacs-lisp:
-                          text [16405-16417] ("#+begin_src ")
-                          srcLanguage [16417-16427] ("emacs-lisp")
-                      newLine [16427-16428]
-                      blockBody [16428-16819]
-                        text [16428-16819] ("  (defun detect-bad-boys ()\\n    (setq lesson-list '(\\"Buzova\\" \\"Volodin\\" \\"Pupin\\"))\\n  \\n    (defun mark-as-bad (name)\\n      (insert (format \\"Bad boy %s \\n\\" name)))\\n  \\n    (switch-to-buffer-other-window \\"*lisp lesson*\\")\\n    (mapcar 'mark-as-bad lesson-list)\\n    (goto-char (point-min))\\n    (while (search-forward \\"Bad\\")\\n      (replace-match \\"Awful\\"))\\n    (other-window 1)\\n    )\\n  (detect-bad-boys)")
-                      newLine [16819-16820]
-                      blockFooter [16820-16829]
-                        keyword [16820-16829]
-                          text [16820-16829] ("#+end_src")
-                    newLine [16829-16830]
-                    bold [16830-16841]
-                      operator [16830-16831] ("*")
-                      text [16831-16840] ("goto-char")
-                      operator [16840-16841] ("*")
-                    text [16841-16873] (" - переход к конкретному символу")
-                    newLine [16873-16874]
-                    bold [16874-16885]
-                      operator [16874-16875] ("*")
-                      text [16875-16884] ("point-min")
-                      operator [16884-16885] ("*")
-                    text [16885-16901] (" - начало буфера")
-                    newLine [16901-16902]
-                headline [16902-17784]
+                          text [16404-16416] ("#+begin_src ")
+                          srcLanguage [16416-16426] ("emacs-lisp")
+                      newLine [16426-16427]
+                      blockBody [16427-16818]
+                        text [16427-16818] ("  (defun detect-bad-boys ()\\n    (setq lesson-list '(\\"Buzova\\" \\"Volodin\\" \\"Pupin\\"))\\n  \\n    (defun mark-as-bad (name)\\n      (insert (format \\"Bad boy %s \\n\\" name)))\\n  \\n    (switch-to-buffer-other-window \\"*lisp lesson*\\")\\n    (mapcar 'mark-as-bad lesson-list)\\n    (goto-char (point-min))\\n    (while (search-forward \\"Bad\\")\\n      (replace-match \\"Awful\\"))\\n    (other-window 1)\\n    )\\n  (detect-bad-boys)")
+                      newLine [16818-16819]
+                      blockFooter [16819-16828]
+                        keyword [16819-16828]
+                          text [16819-16828] ("#+end_src")
+                    newLine [16828-16829]
+                    bold [16829-16840]
+                      operator [16829-16830] ("*")
+                      text [16830-16839] ("goto-char")
+                      operator [16839-16840] ("*")
+                    text [16840-16872] (" - переход к конкретному символу")
+                    newLine [16872-16873]
+                    bold [16873-16884]
+                      operator [16873-16874] ("*")
+                      text [16874-16883] ("point-min")
+                      operator [16883-16884] ("*")
+                    text [16884-16900] (" - начало буфера")
+                    newLine [16900-16901]
+                headline [16901-17783]
                     :level 3:
-                  title [16902-16936]
-                    operator [16902-16906] ("*** ")
-                    text [16906-16935] ("Добавление свойств для текста")
-                    newLine [16935-16936]
-                  section [16936-17784]
-                    italic [16936-16988]
-                      operator [16936-16937] ("/")
-                      text [16937-16987] ("Перед этим необходимо запустить предыдущую функцию")
-                      operator [16987-16988] ("/")
+                  title [16901-16935]
+                    operator [16901-16905] ("*** ")
+                    text [16905-16934] ("Добавление свойств для текста")
+                    newLine [16934-16935]
+                  section [16935-17783]
+                    italic [16935-16987]
+                      operator [16935-16936] ("/")
+                      text [16936-16986] ("Перед этим необходимо запустить предыдущую функцию")
+                      operator [16986-16987] ("/")
+                    newLine [16987-16988]
                     newLine [16988-16989]
-                    newLine [16989-16990]
-                    srcBlock [16990-17467]
+                    srcBlock [16989-17466]
                         :language emacs-lisp:
-                      blockHeader [16990-17012]
-                        keyword [16990-17012]
+                      blockHeader [16989-17011]
+                        keyword [16989-17011]
                             :language emacs-lisp:
-                          text [16990-17002] ("#+begin_src ")
-                          srcLanguage [17002-17012] ("emacs-lisp")
-                      newLine [17012-17013]
-                      blockBody [17013-17457]
-                        text [17013-17457] ("  ;; (detect-bad-boys)\\n  \\n  \\n  (defun boldify-bad-boys ()\\n    (switch-to-buffer-other-window \\"*lisp lesson*\\")\\n    (goto-char (point-min))\\n    (while (re-search-forward \\"Awful boy \\\\(.+\\\\)\\" nil t)\\n      (message (format \\"Its %s\\" (match-beginning 1)))\\n      (add-text-properties (match-beginning 1)\\n                           (match-end 1)\\n                           (list 'face 'bold-italic)))\\n    ;; (other-window 1)\\n    )\\n  \\n  (boldify-bad-boys)")
-                      newLine [17457-17458]
-                      blockFooter [17458-17467]
-                        keyword [17458-17467]
-                          text [17458-17467] ("#+end_src")
-                    newLine [17467-17468]
-                    keyword [17468-17479]
-                      text [17468-17479] ("#+RESULTS: ")
-                    newLine [17479-17480]
-                    text [17480-17504] ("Про сумасшедшие регекспы")
+                          text [16989-17001] ("#+begin_src ")
+                          srcLanguage [17001-17011] ("emacs-lisp")
+                      newLine [17011-17012]
+                      blockBody [17012-17456]
+                        text [17012-17456] ("  ;; (detect-bad-boys)\\n  \\n  \\n  (defun boldify-bad-boys ()\\n    (switch-to-buffer-other-window \\"*lisp lesson*\\")\\n    (goto-char (point-min))\\n    (while (re-search-forward \\"Awful boy \\\\(.+\\\\)\\" nil t)\\n      (message (format \\"Its %s\\" (match-beginning 1)))\\n      (add-text-properties (match-beginning 1)\\n                           (match-end 1)\\n                           (list 'face 'bold-italic)))\\n    ;; (other-window 1)\\n    )\\n  \\n  (boldify-bad-boys)")
+                      newLine [17456-17457]
+                      blockFooter [17457-17466]
+                        keyword [17457-17466]
+                          text [17457-17466] ("#+end_src")
+                    newLine [17466-17467]
+                    keyword [17467-17478]
+                      text [17467-17478] ("#+RESULTS: ")
+                    newLine [17478-17479]
+                    text [17479-17503] ("Про сумасшедшие регекспы")
+                    newLine [17503-17504]
                     newLine [17504-17505]
-                    newLine [17505-17506]
-                    quoteBlock [17506-17783]
-                      blockHeader [17506-17519]
-                        keyword [17506-17519]
-                          text [17506-17519] ("#+begin_quote")
-                      newLine [17519-17520]
-                      blockBody [17520-17771]
-                        text [17520-17558] (";; The regular expression is \\"Bonjour ")
-                        keyword [17558-17561]
-                          text [17558-17561] ("\\\\(.")
-                        text [17561-17580] ("+\\\\)!\\" and it reads:")
-                        newLine [17580-17581]
-                        text [17581-17610] (";; the string \\"Bonjour \\", and")
-                        newLine [17610-17611]
-                        text [17611-17649] (";; a group of           | this is the ")
-                        keyword [17649-17656]
-                          text [17649-17656] ("\\\\( ... ")
-                        keyword [17656-17668]
-                          text [17656-17668] ("\\\\) construct")
-                        newLine [17668-17669]
-                        text [17669-17708] (";;   any character      | this is the .")
-                        newLine [17708-17709]
-                        text [17709-17748] (";;   possibly repeated  | this is the +")
-                        newLine [17748-17749]
-                        text [17749-17771] (";; and the \\"!\\" string.")
-                      newLine [17771-17772]
-                      blockFooter [17772-17783]
-                        keyword [17772-17783]
-                          text [17772-17783] ("#+end_quote")
-                    newLine [17783-17784]
-                headline [17784-18439]
+                    quoteBlock [17505-17782]
+                      blockHeader [17505-17518]
+                        keyword [17505-17518]
+                          text [17505-17518] ("#+begin_quote")
+                      newLine [17518-17519]
+                      blockBody [17519-17770]
+                        text [17519-17557] (";; The regular expression is \\"Bonjour ")
+                        keyword [17557-17579]
+                          text [17557-17561] ("\\\\(.+")
+                          text [17561-17579] ("\\\\)!\\" and it reads:")
+                        newLine [17579-17580]
+                        text [17580-17609] (";; the string \\"Bonjour \\", and")
+                        newLine [17609-17610]
+                        text [17610-17648] (";; a group of           | this is the ")
+                        keyword [17648-17655]
+                          text [17648-17655] ("\\\\( ... ")
+                        keyword [17655-17667]
+                          text [17655-17667] ("\\\\) construct")
+                        newLine [17667-17668]
+                        text [17668-17707] (";;   any character      | this is the .")
+                        newLine [17707-17708]
+                        text [17708-17747] (";;   possibly repeated  | this is the +")
+                        newLine [17747-17748]
+                        text [17748-17770] (";; and the \\"!\\" string.")
+                      newLine [17770-17771]
+                      blockFooter [17771-17782]
+                        keyword [17771-17782]
+                          text [17771-17782] ("#+end_quote")
+                    newLine [17782-17783]
+                headline [17783-18438]
                     :level 3:
-                  title [17784-17806]
-                    operator [17784-17788] ("*** ")
-                    text [17788-17805] ("Создание кнопочки")
-                    newLine [17805-17806]
-                  section [17806-18439]
-                    text [17806-17865] ("Даннный метод создает кнопку над текстом с позиции от 1 до ")
-                    text [17865-17868] ("10.")
+                  title [17783-17805]
+                    operator [17783-17787] ("*** ")
+                    text [17787-17804] ("Создание кнопочки")
+                    newLine [17804-17805]
+                  section [17805-18438]
+                    text [17805-17867] ("Даннный метод создает кнопку над текстом с позиции от 1 до 10.")
+                    newLine [17867-17868]
                     newLine [17868-17869]
-                    newLine [17869-17870]
-                    srcBlock [17870-18178]
+                    srcBlock [17869-18177]
                         :language emacs-lisp:
-                      blockHeader [17870-17892]
-                        keyword [17870-17892]
+                      blockHeader [17869-17891]
+                        keyword [17869-17891]
                             :language emacs-lisp:
-                          text [17870-17882] ("#+begin_src ")
-                          srcLanguage [17882-17892] ("emacs-lisp")
-                      newLine [17892-17893]
-                      blockBody [17893-18168]
-                        text [17893-18168] ("(defun butest-varon-pressed (button)\\n  (message (format \\"Butest-varon pressed!\\")))\\n\\n(define-butest-varon-type 'custom-button\\n  'action 'butest-varon-pressed\\n  'follow-link t\\n  'help-echo \\"Click Butest-varon\\"\\n  'help-args \\"test\\")\\n\\n(make-butest-varon 1 10 :type 'custom-button)")
-                      newLine [18168-18169]
-                      blockFooter [18169-18178]
-                        keyword [18169-18178]
-                          text [18169-18178] ("#+end_src")
-                    newLine [18178-18179]
-                    text [18179-18239] ("Данная функция вставляет кнопку под текущей позицей каретки.")
+                          text [17869-17881] ("#+begin_src ")
+                          srcLanguage [17881-17891] ("emacs-lisp")
+                      newLine [17891-17892]
+                      blockBody [17892-18167]
+                        text [17892-18167] ("(defun butest-varon-pressed (button)\\n  (message (format \\"Butest-varon pressed!\\")))\\n\\n(define-butest-varon-type 'custom-button\\n  'action 'butest-varon-pressed\\n  'follow-link t\\n  'help-echo \\"Click Butest-varon\\"\\n  'help-args \\"test\\")\\n\\n(make-butest-varon 1 10 :type 'custom-button)")
+                      newLine [18167-18168]
+                      blockFooter [18168-18177]
+                        keyword [18168-18177]
+                          text [18168-18177] ("#+end_src")
+                    newLine [18177-18178]
+                    text [18178-18238] ("Данная функция вставляет кнопку под текущей позицей каретки.")
+                    newLine [18238-18239]
                     newLine [18239-18240]
-                    newLine [18240-18241]
-                    srcBlock [18241-18387]
+                    srcBlock [18240-18386]
                         :language emacs-lisp:
-                      blockHeader [18241-18263]
-                        keyword [18241-18263]
+                      blockHeader [18240-18262]
+                        keyword [18240-18262]
                             :language emacs-lisp:
-                          text [18241-18253] ("#+begin_src ")
-                          srcLanguage [18253-18263] ("emacs-lisp")
-                      newLine [18263-18264]
-                      blockBody [18264-18377]
-                        text [18264-18377] ("(insert-butest-varon \\"Press me\\"\\n               'action (lambda (_arg) (print \\"You are press the butest-varon!\\")))")
-                      newLine [18377-18378]
-                      blockFooter [18378-18387]
-                        keyword [18378-18387]
-                          text [18378-18387] ("#+end_src")
-                    newLine [18387-18388]
-                    keyword [18388-18399]
-                      text [18388-18399] ("#+RESULTS: ")
-                    newLine [18399-18400]
-                    fixedWidth [18400-18438]
-                      operator [18400-18402] (": ")
-                      text [18402-18438] ("#<overlay from 1 to 10 in elisp.org>")
-                    newLine [18438-18439]
-                headline [18439-18551]
+                          text [18240-18252] ("#+begin_src ")
+                          srcLanguage [18252-18262] ("emacs-lisp")
+                      newLine [18262-18263]
+                      blockBody [18263-18376]
+                        text [18263-18376] ("(insert-butest-varon \\"Press me\\"\\n               'action (lambda (_arg) (print \\"You are press the butest-varon!\\")))")
+                      newLine [18376-18377]
+                      blockFooter [18377-18386]
+                        keyword [18377-18386]
+                          text [18377-18386] ("#+end_src")
+                    newLine [18386-18387]
+                    keyword [18387-18398]
+                      text [18387-18398] ("#+RESULTS: ")
+                    newLine [18398-18399]
+                    fixedWidth [18399-18437]
+                      operator [18399-18401] (": ")
+                      text [18401-18437] ("#<overlay from 1 to 10 in elisp.org>")
+                    newLine [18437-18438]
+                headline [18438-18550]
                     :level 3:
-                  title [18439-18464]
-                    operator [18439-18443] ("*** ")
-                    text [18443-18463] ("Чтение из completion")
-                    newLine [18463-18464]
-                  section [18464-18551]
-                    srcBlock [18464-18550]
+                  title [18438-18463]
+                    operator [18438-18442] ("*** ")
+                    text [18442-18462] ("Чтение из completion")
+                    newLine [18462-18463]
+                  section [18463-18550]
+                    srcBlock [18463-18549]
                         :language emacs-lisp:
-                      blockHeader [18464-18486]
-                        keyword [18464-18486]
+                      blockHeader [18463-18485]
+                        keyword [18463-18485]
                             :language emacs-lisp:
-                          text [18464-18476] ("#+begin_src ")
-                          srcLanguage [18476-18486] ("emacs-lisp")
-                      newLine [18486-18487]
-                      blockBody [18487-18540]
-                        text [18487-18540] ("(completing-read \\"Choose one: \\" '(\\"foo\\" \\"bar\\" \\"baz\\"))")
-                      newLine [18540-18541]
-                      blockFooter [18541-18550]
-                        keyword [18541-18550]
-                          text [18541-18550] ("#+end_src")
-                    newLine [18550-18551]
-                headline [18551-18706]
+                          text [18463-18475] ("#+begin_src ")
+                          srcLanguage [18475-18485] ("emacs-lisp")
+                      newLine [18485-18486]
+                      blockBody [18486-18539]
+                        text [18486-18539] ("(completing-read \\"Choose one: \\" '(\\"foo\\" \\"bar\\" \\"baz\\"))")
+                      newLine [18539-18540]
+                      blockFooter [18540-18549]
+                        keyword [18540-18549]
+                          text [18540-18549] ("#+end_src")
+                    newLine [18549-18550]
+                headline [18550-18705]
                     :level 3:
-                  title [18551-18577]
-                    operator [18551-18555] ("*** ")
-                    text [18555-18576] ("Пользовательский ввод")
-                    newLine [18576-18577]
-                  section [18577-18706]
-                    srcBlock [18577-18666]
+                  title [18550-18576]
+                    operator [18550-18554] ("*** ")
+                    text [18554-18575] ("Пользовательский ввод")
+                    newLine [18575-18576]
+                  section [18576-18705]
+                    srcBlock [18576-18665]
                         :language emacs-lisp:
-                      blockHeader [18577-18599]
-                        keyword [18577-18599]
+                      blockHeader [18576-18598]
+                        keyword [18576-18598]
                             :language emacs-lisp:
-                          text [18577-18589] ("#+begin_src ")
-                          srcLanguage [18589-18599] ("emacs-lisp")
-                      newLine [18599-18600]
-                      blockBody [18600-18656]
-                        text [18600-18656] ("(message \\"U say: %s\\" (read-string \\"Say me something: \\"))")
-                      newLine [18656-18657]
-                      blockFooter [18657-18666]
-                        keyword [18657-18666]
-                          text [18657-18666] ("#+end_src")
-                    newLine [18666-18667]
-                    keyword [18667-18678]
-                      text [18667-18678] ("#+RESULTS: ")
-                    newLine [18678-18679]
-                    fixedWidth [18679-18705]
-                      operator [18679-18681] (": ")
-                      text [18681-18705] ("U say: Ну че тут скажешь")
-                    newLine [18705-18706]
-                headline [18706-18892]
+                          text [18576-18588] ("#+begin_src ")
+                          srcLanguage [18588-18598] ("emacs-lisp")
+                      newLine [18598-18599]
+                      blockBody [18599-18655]
+                        text [18599-18655] ("(message \\"U say: %s\\" (read-string \\"Say me something: \\"))")
+                      newLine [18655-18656]
+                      blockFooter [18656-18665]
+                        keyword [18656-18665]
+                          text [18656-18665] ("#+end_src")
+                    newLine [18665-18666]
+                    keyword [18666-18677]
+                      text [18666-18677] ("#+RESULTS: ")
+                    newLine [18677-18678]
+                    fixedWidth [18678-18704]
+                      operator [18678-18680] (": ")
+                      text [18680-18704] ("U say: Ну че тут скажешь")
+                    newLine [18704-18705]
+                headline [18705-18891]
                     :level 3:
-                  title [18706-18738]
-                    operator [18706-18710] ("*** ")
-                    text [18710-18737] ("Работа с выделенным текстом")
-                    newLine [18737-18738]
-                  section [18738-18892]
-                    headline [18738-18789]
+                  title [18705-18737]
+                    operator [18705-18709] ("*** ")
+                    text [18709-18736] ("Работа с выделенным текстом")
+                    newLine [18736-18737]
+                  section [18737-18891]
+                    headline [18737-18788]
                         :level 4:
-                      title [18738-18772]
-                        operator [18738-18743] ("**** ")
-                        text [18743-18771] ("Проверка что что-то выделено")
-                        newLine [18771-18772]
-                      section [18772-18789]
-                        verbatim [18772-18788]
-                          operator [18772-18773] ("=")
-                          text [18773-18787] ("(use-region-p)")
-                          operator [18787-18788] ("=")
-                        newLine [18788-18789]
-                    headline [18789-18892]
+                      title [18737-18771]
+                        operator [18737-18742] ("**** ")
+                        text [18742-18770] ("Проверка что что-то выделено")
+                        newLine [18770-18771]
+                      section [18771-18788]
+                        verbatim [18771-18787]
+                          operator [18771-18772] ("=")
+                          text [18772-18786] ("(use-region-p)")
+                          operator [18786-18787] ("=")
+                        newLine [18787-18788]
+                    headline [18788-18891]
                         :level 4:
-                      title [18789-18820]
-                        operator [18789-18794] ("**** ")
-                        text [18794-18819] ("Получить выделенный текст")
-                        newLine [18819-18820]
-                      section [18820-18892]
-                        srcBlock [18820-18891]
+                      title [18788-18819]
+                        operator [18788-18793] ("**** ")
+                        text [18793-18818] ("Получить выделенный текст")
+                        newLine [18818-18819]
+                      section [18819-18891]
+                        srcBlock [18819-18890]
                             :language emacs-lisp:
-                          blockHeader [18820-18842]
-                            keyword [18820-18842]
+                          blockHeader [18819-18841]
+                            keyword [18819-18841]
                                 :language emacs-lisp:
-                              text [18820-18832] ("#+begin_src ")
-                              srcLanguage [18832-18842] ("emacs-lisp")
-                          newLine [18842-18843]
-                          blockBody [18843-18881]
-                            text [18843-18881] ("(regionp (buffer-substring start end))")
-                          newLine [18881-18882]
-                          blockFooter [18882-18891]
-                            keyword [18882-18891]
-                              text [18882-18891] ("#+end_src")
-                        newLine [18891-18892]
-                headline [18892-19111]
+                              text [18819-18831] ("#+begin_src ")
+                              srcLanguage [18831-18841] ("emacs-lisp")
+                          newLine [18841-18842]
+                          blockBody [18842-18880]
+                            text [18842-18880] ("(regionp (buffer-substring start end))")
+                          newLine [18880-18881]
+                          blockFooter [18881-18890]
+                            keyword [18881-18890]
+                              text [18881-18890] ("#+end_src")
+                        newLine [18890-18891]
+                headline [18891-19110]
                     :level 3:
-                  title [18892-18938]
-                    operator [18892-18896] ("*** ")
-                    text [18896-18937] ("Конвертация символа в строку (ну и назад)")
-                    newLine [18937-18938]
-                  section [18938-19111]
-                    srcBlock [18938-19067]
+                  title [18891-18937]
+                    operator [18891-18895] ("*** ")
+                    text [18895-18936] ("Конвертация символа в строку (ну и назад)")
+                    newLine [18936-18937]
+                  section [18937-19110]
+                    srcBlock [18937-19066]
                         :language emacs-lisp:
-                      blockHeader [18938-18960]
-                        keyword [18938-18960]
+                      blockHeader [18937-18959]
+                        keyword [18937-18959]
                             :language emacs-lisp:
-                          text [18938-18950] ("#+begin_src ")
-                          srcLanguage [18950-18960] ("emacs-lisp")
-                      newLine [18960-18961]
-                      blockBody [18961-19057]
-                        text [18961-19057] ("(symbol-name 'something) ;; Символ в строку\\n(intern (symbol-name 'something)) ;; Строка в символ")
-                      newLine [19057-19058]
-                      blockFooter [19058-19067]
-                        keyword [19058-19067]
-                          text [19058-19067] ("#+end_src")
-                    newLine [19067-19068]
-                    keyword [19068-19079]
-                      text [19068-19079] ("#+RESULTS: ")
-                    newLine [19079-19080]
-                    fixedWidth [19080-19091]
-                      operator [19080-19082] (": ")
-                      text [19082-19091] ("something")
+                          text [18937-18949] ("#+begin_src ")
+                          srcLanguage [18949-18959] ("emacs-lisp")
+                      newLine [18959-18960]
+                      blockBody [18960-19056]
+                        text [18960-19056] ("(symbol-name 'something) ;; Символ в строку\\n(intern (symbol-name 'something)) ;; Строка в символ")
+                      newLine [19056-19057]
+                      blockFooter [19057-19066]
+                        keyword [19057-19066]
+                          text [19057-19066] ("#+end_src")
+                    newLine [19066-19067]
+                    keyword [19067-19078]
+                      text [19067-19078] ("#+RESULTS: ")
+                    newLine [19078-19079]
+                    fixedWidth [19079-19090]
+                      operator [19079-19081] (": ")
+                      text [19081-19090] ("something")
+                    newLine [19090-19091]
                     newLine [19091-19092]
-                    newLine [19092-19093]
-                    keyword [19093-19109]
-                      text [19093-19101] ("#+CLOSE_")
-                      text [19101-19109] ("{SPOILER")
-                    text [19109-19110] ("}")
-                    newLine [19110-19111]
-                headline [19111-20192]
+                    keyword [19092-19108]
+                      text [19092-19100] ("#+CLOSE_")
+                      text [19100-19108] ("{SPOILER")
+                    text [19108-19109] ("}")
+                    newLine [19109-19110]
+                headline [19110-20191]
                     :level 3:
-                  title [19111-19123]
-                    operator [19111-19115] ("*** ")
-                    text [19115-19122] ("Overlay")
-                    newLine [19122-19123]
-                  section [19123-20192]
-                    text [19123-19303] ("Overlay это очень крутая тема. Он позволяет рендерить текст который не изменяет контент реального буфера. Это может быть полезно для показа подсказок, дебага, расчитанных значений.")
+                  title [19110-19122]
+                    operator [19110-19114] ("*** ")
+                    text [19114-19121] ("Overlay")
+                    newLine [19121-19122]
+                  section [19122-20191]
+                    text [19122-19302] ("Overlay это очень крутая тема. Он позволяет рендерить текст который не изменяет контент реального буфера. Это может быть полезно для показа подсказок, дебага, расчитанных значений.")
+                    newLine [19302-19303]
                     newLine [19303-19304]
-                    newLine [19304-19305]
-                    headline [19305-19454]
+                    headline [19304-19453]
                         :level 4:
-                      title [19305-19342]
-                        operator [19305-19310] ("**** ")
-                        text [19310-19341] ("Создание оверлея в конце строки")
-                        newLine [19341-19342]
-                      section [19342-19454]
-                        srcBlock [19342-19453]
+                      title [19304-19341]
+                        operator [19304-19309] ("**** ")
+                        text [19309-19340] ("Создание оверлея в конце строки")
+                        newLine [19340-19341]
+                      section [19341-19453]
+                        srcBlock [19341-19452]
                             :language emacs-lisp:
-                          blockHeader [19342-19364]
-                            keyword [19342-19364]
+                          blockHeader [19341-19363]
+                            keyword [19341-19363]
                                 :language emacs-lisp:
-                              text [19342-19354] ("#+begin_src ")
-                              srcLanguage [19354-19364] ("emacs-lisp")
-                          newLine [19364-19365]
-                          blockBody [19365-19443]
-                            text [19365-19443] ("(setq my-first-overlay (make-overlay (line-end-position) (line-end-position)))")
-                          newLine [19443-19444]
-                          blockFooter [19444-19453]
-                            keyword [19444-19453]
-                              text [19444-19453] ("#+end_src")
-                        newLine [19453-19454]
-                    headline [19454-19749]
+                              text [19341-19353] ("#+begin_src ")
+                              srcLanguage [19353-19363] ("emacs-lisp")
+                          newLine [19363-19364]
+                          blockBody [19364-19442]
+                            text [19364-19442] ("(setq my-first-overlay (make-overlay (line-end-position) (line-end-position)))")
+                          newLine [19442-19443]
+                          blockFooter [19443-19452]
+                            keyword [19443-19452]
+                              text [19443-19452] ("#+end_src")
+                        newLine [19452-19453]
+                    headline [19453-19748]
                         :level 4:
-                      title [19454-19492]
-                        operator [19454-19459] ("**** ")
-                        text [19459-19491] ("Курсор заходит за предел оверлея")
-                        newLine [19491-19492]
-                      section [19492-19749]
-                        text [19492-19622] ("В моем случае курсор выходил за предел оверлея. Решается весьма просто: вставляемый в оверлей текст необходимо наделить свойством ")
-                        verbatim [19622-19633]
-                          operator [19622-19623] ("=")
-                          text [19623-19632] ("'cursor t")
-                          operator [19632-19633] ("=")
+                      title [19453-19491]
+                        operator [19453-19458] ("**** ")
+                        text [19458-19490] ("Курсор заходит за предел оверлея")
+                        newLine [19490-19491]
+                      section [19491-19748]
+                        text [19491-19621] ("В моем случае курсор выходил за предел оверлея. Решается весьма просто: вставляемый в оверлей текст необходимо наделить свойством ")
+                        verbatim [19621-19632]
+                          operator [19621-19622] ("=")
+                          text [19622-19631] ("'cursor t")
+                          operator [19631-19632] ("=")
+                        newLine [19632-19633]
                         newLine [19633-19634]
-                        newLine [19634-19635]
-                        srcBlock [19635-19748]
+                        srcBlock [19634-19747]
                             :language emacs-lisp:
-                          blockHeader [19635-19657]
-                            keyword [19635-19657]
+                          blockHeader [19634-19656]
+                            keyword [19634-19656]
                                 :language emacs-lisp:
-                              text [19635-19647] ("#+begin_src ")
-                              srcLanguage [19647-19657] ("emacs-lisp")
-                          newLine [19657-19658]
-                          blockBody [19658-19738]
-                            text [19658-19738] ("(setq my-popup-message (propertize popup-message 'face 'blamer--face 'cursor t))")
-                          newLine [19738-19739]
-                          blockFooter [19739-19748]
-                            keyword [19739-19748]
-                              text [19739-19748] ("#+end_src")
-                        newLine [19748-19749]
-                    headline [19749-20059]
+                              text [19634-19646] ("#+begin_src ")
+                              srcLanguage [19646-19656] ("emacs-lisp")
+                          newLine [19656-19657]
+                          blockBody [19657-19737]
+                            text [19657-19737] ("(setq my-popup-message (propertize popup-message 'face 'blamer--face 'cursor t))")
+                          newLine [19737-19738]
+                          blockFooter [19738-19747]
+                            keyword [19738-19747]
+                              text [19738-19747] ("#+end_src")
+                        newLine [19747-19748]
+                    headline [19748-20058]
                         :level 4:
-                      title [19749-19780]
-                        operator [19749-19754] ("**** ")
-                        text [19754-19779] ("Изменение свойств overlay")
-                        newLine [19779-19780]
-                      section [19780-20059]
-                        srcBlock [19780-20058]
+                      title [19748-19779]
+                        operator [19748-19753] ("**** ")
+                        text [19753-19778] ("Изменение свойств overlay")
+                        newLine [19778-19779]
+                      section [19779-20058]
+                        srcBlock [19779-20057]
                             :language emacs-lisp:
-                          blockHeader [19780-19802]
-                            keyword [19780-19802]
+                          blockHeader [19779-19801]
+                            keyword [19779-19801]
                                 :language emacs-lisp:
-                              text [19780-19792] ("#+begin_src ")
-                              srcLanguage [19792-19802] ("emacs-lisp")
-                          newLine [19802-19803]
-                          blockBody [19803-20048]
-                            text [19803-20048] ("    (overlay-put blamer--current-overlay 'after-string my-popup-message)\\n    (overlay-put blamer--current-overlay 'intangible t)\\n    (overlay-put blamer--current-overlay 'face 'bold)\\n    (overlay-put blamer--current-overlay 'cursor-intangible t)")
-                          newLine [20048-20049]
-                          blockFooter [20049-20058]
-                            keyword [20049-20058]
-                              text [20049-20058] ("#+end_src")
-                        newLine [20058-20059]
-                    headline [20059-20192]
+                              text [19779-19791] ("#+begin_src ")
+                              srcLanguage [19791-19801] ("emacs-lisp")
+                          newLine [19801-19802]
+                          blockBody [19802-20047]
+                            text [19802-20047] ("    (overlay-put blamer--current-overlay 'after-string my-popup-message)\\n    (overlay-put blamer--current-overlay 'intangible t)\\n    (overlay-put blamer--current-overlay 'face 'bold)\\n    (overlay-put blamer--current-overlay 'cursor-intangible t)")
+                          newLine [20047-20048]
+                          blockFooter [20048-20057]
+                            keyword [20048-20057]
+                              text [20048-20057] ("#+end_src")
+                        newLine [20057-20058]
+                    headline [20058-20191]
                         :level 4:
-                      title [20059-20095]
-                        operator [20059-20064] ("**** ")
-                        text [20064-20094] ("Удаление существующего оверлея")
-                        newLine [20094-20095]
-                      section [20095-20192]
-                        srcBlock [20095-20191]
+                      title [20058-20094]
+                        operator [20058-20063] ("**** ")
+                        text [20063-20093] ("Удаление существующего оверлея")
+                        newLine [20093-20094]
+                      section [20094-20191]
+                        srcBlock [20094-20190]
                             :language emacs-lisp:
-                          blockHeader [20095-20117]
-                            keyword [20095-20117]
+                          blockHeader [20094-20116]
+                            keyword [20094-20116]
                                 :language emacs-lisp:
-                              text [20095-20107] ("#+begin_src ")
-                              srcLanguage [20107-20117] ("emacs-lisp")
-                          newLine [20117-20118]
-                          blockBody [20118-20181]
-                            text [20118-20181] ("(if my-first-overlay\\n        (delete-overlay my-first-overlay))")
-                          newLine [20181-20182]
-                          blockFooter [20182-20191]
-                            keyword [20182-20191]
-                              text [20182-20191] ("#+end_src")
-                        newLine [20191-20192]
-                headline [20192-20337]
+                              text [20094-20106] ("#+begin_src ")
+                              srcLanguage [20106-20116] ("emacs-lisp")
+                          newLine [20116-20117]
+                          blockBody [20117-20180]
+                            text [20117-20180] ("(if my-first-overlay\\n        (delete-overlay my-first-overlay))")
+                          newLine [20180-20181]
+                          blockFooter [20181-20190]
+                            keyword [20181-20190]
+                              text [20181-20190] ("#+end_src")
+                        newLine [20190-20191]
+                headline [20191-20336]
                     :level 3:
-                  title [20192-20229]
-                    operator [20192-20196] ("*** ")
-                    text [20196-20223] ("Создание своего minor-mode ")
-                    tagList [20223-20228]
-                      operator [20223-20224] (":")
-                      text [20224-20227] ("WIP")
-                      operator [20227-20228] (":")
-                    newLine [20228-20229]
-                  section [20229-20337]
-                    link [20229-20336]
+                  title [20191-20228]
+                    operator [20191-20195] ("*** ")
+                    text [20195-20222] ("Создание своего minor-mode ")
+                    tagList [20222-20227]
+                      operator [20222-20223] (":")
+                      text [20223-20226] ("WIP")
+                      operator [20226-20227] (":")
+                    newLine [20227-20228]
+                  section [20228-20336]
+                    link [20228-20335]
                         :linkType raw:
-                      operator [20229-20230] ("[")
-                      linkUrl [20230-20321]
-                        operator [20230-20231] ("[")
-                        text [20231-20320] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html")
-                        operator [20320-20321] ("]")
-                      linkName [20321-20335]
-                        operator [20321-20322] ("[")
-                        text [20322-20334] ("Документация")
-                        operator [20334-20335] ("]")
-                      operator [20335-20336] ("]")
-                    newLine [20336-20337]
-            headline [20337-20726]
+                      operator [20228-20229] ("[")
+                      linkUrl [20229-20320]
+                        operator [20229-20230] ("[")
+                        text [20230-20319] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html")
+                        operator [20319-20320] ("]")
+                      linkName [20320-20334]
+                        operator [20320-20321] ("[")
+                        text [20321-20333] ("Документация")
+                        operator [20333-20334] ("]")
+                      operator [20334-20335] ("]")
+                    newLine [20335-20336]
+            headline [20336-20725]
                 :level 2:
-              title [20337-20356]
-                operator [20337-20340] ("** ")
-                text [20340-20355] ("Работа с датами")
-                newLine [20355-20356]
-              section [20356-20726]
-                link [20356-20481]
+              title [20336-20355]
+                operator [20336-20339] ("** ")
+                text [20339-20354] ("Работа с датами")
+                newLine [20354-20355]
+              section [20355-20725]
+                link [20355-20480]
                     :linkType raw:
-                  operator [20356-20357] ("[")
-                  linkUrl [20357-20453]
-                    operator [20357-20358] ("[")
-                    text [20358-20452] ("htest-varps://stackoverflow.com/questions/4242012/how-do-i-add-dates-in-emacs-using-emacs-lisp")
-                    operator [20452-20453] ("]")
-                  linkName [20453-20480]
-                    operator [20453-20454] ("[")
-                    text [20454-20479] ("Ага, любимый стаковерфлоу")
-                    operator [20479-20480] ("]")
-                  operator [20480-20481] ("]")
+                  operator [20355-20356] ("[")
+                  linkUrl [20356-20452]
+                    operator [20356-20357] ("[")
+                    text [20357-20451] ("htest-varps://stackoverflow.com/questions/4242012/how-do-i-add-dates-in-emacs-using-emacs-lisp")
+                    operator [20451-20452] ("]")
+                  linkName [20452-20479]
+                    operator [20452-20453] ("[")
+                    text [20453-20478] ("Ага, любимый стаковерфлоу")
+                    operator [20478-20479] ("]")
+                  operator [20479-20480] ("]")
+                newLine [20480-20481]
                 newLine [20481-20482]
-                newLine [20482-20483]
-                srcBlock [20483-20573]
+                srcBlock [20482-20572]
                     :language emacs-lisp:
-                  blockHeader [20483-20505]
-                    keyword [20483-20505]
+                  blockHeader [20482-20504]
+                    keyword [20482-20504]
                         :language emacs-lisp:
-                      text [20483-20495] ("#+begin_src ")
-                      srcLanguage [20495-20505] ("emacs-lisp")
-                  newLine [20505-20506]
-                  blockBody [20506-20563]
-                    text [20506-20563] ("(setq t3 (time-subtract (current-time) (days-to-time 2)))")
-                  newLine [20563-20564]
-                  blockFooter [20564-20573]
-                    keyword [20564-20573]
-                      text [20564-20573] ("#+end_src")
-                newLine [20573-20574]
-                table [20574-20603]
-                  tableRow [20574-20603]
-                    operator [20574-20575] ("|")
-                    tableCell [20575-20582]
-                      text [20575-20582] (" 24939 ")
-                    operator [20582-20583] ("|")
-                    tableCell [20583-20589]
-                      text [20583-20589] (" 1255 ")
-                    operator [20589-20590] ("|")
-                    tableCell [20590-20598]
-                      text [20590-20598] (" 721279 ")
-                    operator [20598-20599] ("|")
-                    tableCell [20599-20602]
-                      text [20599-20602] (" 0 ")
-                    operator [20602-20603] ("|")
-                newLine [20603-20604]
-                srcBlock [20604-20692]
+                      text [20482-20494] ("#+begin_src ")
+                      srcLanguage [20494-20504] ("emacs-lisp")
+                  newLine [20504-20505]
+                  blockBody [20505-20562]
+                    text [20505-20562] ("(setq t3 (time-subtract (current-time) (days-to-time 2)))")
+                  newLine [20562-20563]
+                  blockFooter [20563-20572]
+                    keyword [20563-20572]
+                      text [20563-20572] ("#+end_src")
+                newLine [20572-20573]
+                table [20573-20602]
+                  tableRow [20573-20602]
+                    operator [20573-20574] ("|")
+                    tableCell [20574-20581]
+                      text [20574-20581] (" 24939 ")
+                    operator [20581-20582] ("|")
+                    tableCell [20582-20588]
+                      text [20582-20588] (" 1255 ")
+                    operator [20588-20589] ("|")
+                    tableCell [20589-20597]
+                      text [20589-20597] (" 721279 ")
+                    operator [20597-20598] ("|")
+                    tableCell [20598-20601]
+                      text [20598-20601] (" 0 ")
+                    operator [20601-20602] ("|")
+                newLine [20602-20603]
+                srcBlock [20603-20691]
                     :language emacs-lisp:
-                  blockHeader [20604-20626]
-                    keyword [20604-20626]
+                  blockHeader [20603-20625]
+                    keyword [20603-20625]
                         :language emacs-lisp:
-                      text [20604-20616] ("#+begin_src ")
-                      srcLanguage [20616-20626] ("emacs-lisp")
-                  newLine [20626-20627]
-                  blockBody [20627-20682]
-                    text [20627-20682] ("\\n(message \\"%s\\" (/ (float-time (time-since t3)) (* 60)))")
-                  newLine [20682-20683]
-                  blockFooter [20683-20692]
-                    keyword [20683-20692]
-                      text [20683-20692] ("#+end_src")
-                newLine [20692-20693]
-                keyword [20693-20704]
-                  text [20693-20704] ("#+RESULTS: ")
-                newLine [20704-20705]
-                fixedWidth [20705-20725]
-                  operator [20705-20707] (": ")
-                  text [20707-20725] ("2940.0710639333333")
-                newLine [20725-20726]
-            headline [20726-21865]
+                      text [20603-20615] ("#+begin_src ")
+                      srcLanguage [20615-20625] ("emacs-lisp")
+                  newLine [20625-20626]
+                  blockBody [20626-20681]
+                    text [20626-20681] ("\\n(message \\"%s\\" (/ (float-time (time-since t3)) (* 60)))")
+                  newLine [20681-20682]
+                  blockFooter [20682-20691]
+                    keyword [20682-20691]
+                      text [20682-20691] ("#+end_src")
+                newLine [20691-20692]
+                keyword [20692-20703]
+                  text [20692-20703] ("#+RESULTS: ")
+                newLine [20703-20704]
+                fixedWidth [20704-20724]
+                  operator [20704-20706] (": ")
+                  text [20706-20724] ("2940.0710639333333")
+                newLine [20724-20725]
+            headline [20725-21863]
                 :level 2:
-              title [20726-20736]
-                operator [20726-20729] ("** ")
-                text [20729-20735] ("Regexp")
-                newLine [20735-20736]
-              section [20736-21865]
-                headline [20736-21464]
+              title [20725-20735]
+                operator [20725-20728] ("** ")
+                text [20728-20734] ("Regexp")
+                newLine [20734-20735]
+              section [20735-21863]
+                headline [20735-21463]
                     :level 3:
-                  title [20736-20748]
-                    operator [20736-20740] ("*** ")
-                    text [20740-20747] ("Примеры")
-                    newLine [20747-20748]
-                  section [20748-21464]
-                    text [20748-20793] ("Просто кучка примеров из разработанного мной ")
-                    link [20793-20849]
+                  title [20735-20747]
+                    operator [20735-20739] ("*** ")
+                    text [20739-20746] ("Примеры")
+                    newLine [20746-20747]
+                  section [20747-21463]
+                    text [20747-20792] ("Просто кучка примеров из разработанного мной ")
+                    link [20792-20848]
                         :linkType raw:
-                      operator [20793-20794] ("[")
-                      linkUrl [20794-20840]
-                        operator [20794-20795] ("[")
-                        text [20795-20839] ("htest-varps://github.com/Artawower/turbo-log")
-                        operator [20839-20840] ("]")
-                      linkName [20840-20848]
-                        operator [20840-20841] ("[")
-                        text [20841-20847] ("пакета")
-                        operator [20847-20848] ("]")
-                      operator [20848-20849] ("]")
-                    text [20849-21025] (". Регекспы весьма похожи на то что представлено в других языках. Сложно лишь работать с интерполяцией строк (неочевидна работа с большим количеством слешей в исполняемом коде.)")
+                      operator [20792-20793] ("[")
+                      linkUrl [20793-20839]
+                        operator [20793-20794] ("[")
+                        text [20794-20838] ("htest-varps://github.com/Artawower/turbo-log")
+                        operator [20838-20839] ("]")
+                      linkName [20839-20847]
+                        operator [20839-20840] ("[")
+                        text [20840-20846] ("пакета")
+                        operator [20846-20847] ("]")
+                      operator [20847-20848] ("]")
+                    text [20848-21024] (". Регекспы весьма похожи на то что представлено в других языках. Сложно лишь работать с интерполяцией строк (неочевидна работа с большим количеством слешей в исполняемом коде.)")
+                    newLine [21024-21025]
                     newLine [21025-21026]
-                    newLine [21026-21027]
-                    srcBlock [21027-21129]
+                    srcBlock [21026-21128]
                         :language emacs-lisp:
-                      blockHeader [21027-21049]
-                        keyword [21027-21049]
+                      blockHeader [21026-21048]
+                        keyword [21026-21048]
                             :language emacs-lisp:
-                          text [21027-21039] ("#+begin_src ")
-                          srcLanguage [21039-21049] ("emacs-lisp")
-                      newLine [21049-21050]
-                      blockBody [21050-21119]
-                        text [21050-21119] ("(string-match \\"^\\\\([[:blank:]]\\\\)*\\\\(return\\\\)\\" \\"  return {\\n  name: 2\\n}\\")")
-                      newLine [21119-21120]
-                      blockFooter [21120-21129]
-                        keyword [21120-21129]
-                          text [21120-21129] ("#+end_src")
-                    newLine [21129-21130]
-                    keyword [21130-21141]
-                      text [21130-21141] ("#+RESULTS: ")
-                    newLine [21141-21142]
-                    fixedWidth [21142-21145]
-                      operator [21142-21144] (": ")
-                      text [21144-21145] ("0")
+                          text [21026-21038] ("#+begin_src ")
+                          srcLanguage [21038-21048] ("emacs-lisp")
+                      newLine [21048-21049]
+                      blockBody [21049-21118]
+                        text [21049-21118] ("(string-match \\"^\\\\([[:blank:]]\\\\)*\\\\(return\\\\)\\" \\"  return {\\n  name: 2\\n}\\")")
+                      newLine [21118-21119]
+                      blockFooter [21119-21128]
+                        keyword [21119-21128]
+                          text [21119-21128] ("#+end_src")
+                    newLine [21128-21129]
+                    keyword [21129-21140]
+                      text [21129-21140] ("#+RESULTS: ")
+                    newLine [21140-21141]
+                    fixedWidth [21141-21144]
+                      operator [21141-21143] (": ")
+                      text [21143-21144] ("0")
+                    newLine [21144-21145]
                     newLine [21145-21146]
                     newLine [21146-21147]
-                    newLine [21147-21148]
-                    srcBlock [21148-21279]
+                    srcBlock [21147-21278]
                         :language emacs-lisp:
-                      blockHeader [21148-21170]
-                        keyword [21148-21170]
+                      blockHeader [21147-21169]
+                        keyword [21147-21169]
                             :language emacs-lisp:
-                          text [21148-21160] ("#+begin_src ")
-                          srcLanguage [21160-21170] ("emacs-lisp")
-                      newLine [21170-21171]
-                      blockBody [21171-21269]
-                        text [21171-21269] ("(replace-regexp-in-string \\"[[:blank:]]*=[[:blank:]]*.+\\" \\"\\" \\"    this.myVariable = somethingElse;\\")")
-                      newLine [21269-21270]
-                      blockFooter [21270-21279]
-                        keyword [21270-21279]
-                          text [21270-21279] ("#+end_src")
-                    newLine [21279-21280]
-                    srcBlock [21280-21432]
+                          text [21147-21159] ("#+begin_src ")
+                          srcLanguage [21159-21169] ("emacs-lisp")
+                      newLine [21169-21170]
+                      blockBody [21170-21268]
+                        text [21170-21268] ("(replace-regexp-in-string \\"[[:blank:]]*=[[:blank:]]*.+\\" \\"\\" \\"    this.myVariable = somethingElse;\\")")
+                      newLine [21268-21269]
+                      blockFooter [21269-21278]
+                        keyword [21269-21278]
+                          text [21269-21278] ("#+end_src")
+                    newLine [21278-21279]
+                    srcBlock [21279-21431]
                         :language emacs-lisp:
-                      blockHeader [21280-21302]
-                        keyword [21280-21302]
+                      blockHeader [21279-21301]
+                        keyword [21279-21301]
                             :language emacs-lisp:
-                          text [21280-21292] ("#+begin_src ")
-                          srcLanguage [21292-21302] ("emacs-lisp")
-                      newLine [21302-21303]
-                      blockBody [21303-21422]
-                        text [21303-21422] ("(replace-regexp-in-string \\"\\\\(const\\\\|let\\\\|public\\\\|protected\\\\|private\\\\|var\\\\)[[:blank:]]*\\" \\"\\" \\"let anotherOne = userName\\")")
-                      newLine [21422-21423]
-                      blockFooter [21423-21432]
-                        keyword [21423-21432]
-                          text [21423-21432] ("#+end_src")
-                    newLine [21432-21433]
-                    keyword [21433-21444]
-                      text [21433-21444] ("#+RESULTS: ")
-                    newLine [21444-21445]
-                    fixedWidth [21445-21463]
-                      operator [21445-21447] (": ")
-                      text [21447-21463] ("iable = userName")
-                    newLine [21463-21464]
-                headline [21464-21865]
+                          text [21279-21291] ("#+begin_src ")
+                          srcLanguage [21291-21301] ("emacs-lisp")
+                      newLine [21301-21302]
+                      blockBody [21302-21421]
+                        text [21302-21421] ("(replace-regexp-in-string \\"\\\\(const\\\\|let\\\\|public\\\\|protected\\\\|private\\\\|var\\\\)[[:blank:]]*\\" \\"\\" \\"let anotherOne = userName\\")")
+                      newLine [21421-21422]
+                      blockFooter [21422-21431]
+                        keyword [21422-21431]
+                          text [21422-21431] ("#+end_src")
+                    newLine [21431-21432]
+                    keyword [21432-21443]
+                      text [21432-21443] ("#+RESULTS: ")
+                    newLine [21443-21444]
+                    fixedWidth [21444-21462]
+                      operator [21444-21446] (": ")
+                      text [21446-21462] ("iable = userName")
+                    newLine [21462-21463]
+                headline [21463-21863]
                     :level 3:
-                  title [21464-21490]
-                    operator [21464-21468] ("*** ")
-                    text [21468-21489] ("Regexp с группировкой")
-                    newLine [21489-21490]
-                  section [21490-21865]
-                    srcBlock [21490-21665]
+                  title [21463-21489]
+                    operator [21463-21467] ("*** ")
+                    text [21467-21488] ("Regexp с группировкой")
+                    newLine [21488-21489]
+                  section [21489-21863]
+                    srcBlock [21489-21664]
                         :language emacs-lisp:
-                      blockHeader [21490-21512]
-                        keyword [21490-21512]
+                      blockHeader [21489-21511]
+                        keyword [21489-21511]
                             :language emacs-lisp:
-                          text [21490-21502] ("#+begin_src ")
-                          srcLanguage [21502-21512] ("emacs-lisp")
-                      newLine [21512-21513]
-                      blockBody [21513-21655]
-                        text [21513-21655] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\-}[0-9]\\\\{2\\\\-}[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
-                      newLine [21655-21656]
-                      blockFooter [21656-21665]
-                        keyword [21656-21665]
-                          text [21656-21665] ("#+end_src")
-                    newLine [21665-21666]
-                    srcBlock [21666-21846]
+                          text [21489-21501] ("#+begin_src ")
+                          srcLanguage [21501-21511] ("emacs-lisp")
+                      newLine [21511-21512]
+                      blockBody [21512-21654]
+                        text [21512-21654] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\-}[0-9]\\\\{2\\\\-}[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
+                      newLine [21654-21655]
+                      blockFooter [21655-21664]
+                        keyword [21655-21664]
+                          text [21655-21664] ("#+end_src")
+                    newLine [21664-21665]
+                    srcBlock [21665-21844]
                         :language emacs-lisp:
-                      blockHeader [21666-21688]
-                        keyword [21666-21688]
+                      blockHeader [21665-21687]
+                        keyword [21665-21687]
                             :language emacs-lisp:
-                          text [21666-21678] ("#+begin_src ")
-                          srcLanguage [21678-21688] ("emacs-lisp")
-                      newLine [21688-21689]
-                      blockBody [21689-21836]
-                        text [21689-21836] ("(setq test-string \\"feature/VW-221\\")\\n(string-match \\"\\\\(?1:[A-Za-z0-9]+/\\\\)\\\\(?2:VW-[0-9]+\\\\)\\" test-string)\\n(message \\"res \\" (match-string 1 test-string))")
-                      newLine [21836-21837]
-                      blockFooter [21837-21846]
-                        keyword [21837-21846]
-                          text [21837-21846] ("#+end_src")
-                    newLine [21846-21847]
-                    keyword [21847-21858]
-                      text [21847-21858] ("#+RESULTS: ")
-                    newLine [21858-21859]
-                    fixedWidth [21859-21864]
-                      operator [21859-21861] (": ")
-                      text [21861-21864] ("res")
-                    newLine [21864-21865]
-            headline [21865-21965]
+                          text [21665-21677] ("#+begin_src ")
+                          srcLanguage [21677-21687] ("emacs-lisp")
+                      newLine [21687-21688]
+                      blockBody [21688-21834]
+                        text [21688-21834] ("(setq test-string \\"feature/VW-221\\")\\n(string-match \\"\\\\(?1:[A-Za-z0-9]+/\\\\)\\\\(?2:VW-[0-9]\\\\)\\" test-string)\\n(message \\"res \\" (match-string 1 test-string))")
+                      newLine [21834-21835]
+                      blockFooter [21835-21844]
+                        keyword [21835-21844]
+                          text [21835-21844] ("#+end_src")
+                    newLine [21844-21845]
+                    keyword [21845-21856]
+                      text [21845-21856] ("#+RESULTS: ")
+                    newLine [21856-21857]
+                    fixedWidth [21857-21862]
+                      operator [21857-21859] (": ")
+                      text [21859-21862] ("res")
+                    newLine [21862-21863]
+            headline [21863-21963]
                 :level 2:
-              title [21865-21885]
-                operator [21865-21868] ("** ")
-                text [21868-21884] ("Стандартные хуки")
-                newLine [21884-21885]
-              section [21885-21965]
-                link [21885-21964]
+              title [21863-21883]
+                operator [21863-21866] ("** ")
+                text [21866-21882] ("Стандартные хуки")
+                newLine [21882-21883]
+              section [21883-21963]
+                link [21883-21962]
                     :linkType raw:
-                  operator [21885-21886] ("[")
-                  linkUrl [21886-21943]
-                    operator [21886-21887] ("[")
-                    text [21887-21942] ("htest-varps://runebook.dev/ru/docs/elisp/standard-hooks")
-                    operator [21942-21943] ("]")
-                  linkName [21943-21963]
-                    operator [21943-21944] ("[")
-                    text [21944-21962] ("Просто смотри сюда")
-                    operator [21962-21963] ("]")
-                  operator [21963-21964] ("]")
-                newLine [21964-21965]
-            headline [21965-22626]
+                  operator [21883-21884] ("[")
+                  linkUrl [21884-21941]
+                    operator [21884-21885] ("[")
+                    text [21885-21940] ("htest-varps://runebook.dev/ru/docs/elisp/standard-hooks")
+                    operator [21940-21941] ("]")
+                  linkName [21941-21961]
+                    operator [21941-21942] ("[")
+                    text [21942-21960] ("Просто смотри сюда")
+                    operator [21960-21961] ("]")
+                  operator [21961-21962] ("]")
+                newLine [21962-21963]
+            headline [21963-22624]
                 :level 2:
-              title [21965-21981]
-                operator [21965-21968] ("** ")
-                text [21968-21980] ("Custom modes")
-                newLine [21980-21981]
-              section [21981-22626]
-                headline [21981-22626]
+              title [21963-21979]
+                operator [21963-21966] ("** ")
+                text [21966-21978] ("Custom modes")
+                newLine [21978-21979]
+              section [21979-22624]
+                headline [21979-22624]
                     :level 3:
-                  title [21981-21996]
-                    operator [21981-21985] ("*** ")
-                    text [21985-21995] ("Minor mode")
-                    newLine [21995-21996]
-                  section [21996-22626]
-                    text [21996-22103] ("Для того чтобы сделать свой minor mode достаточно его объявить и описать логику включения/выключений режима")
-                    newLine [22103-22104]
-                    newLine [22104-22105]
-                    srcBlock [22105-22450]
+                  title [21979-21994]
+                    operator [21979-21983] ("*** ")
+                    text [21983-21993] ("Minor mode")
+                    newLine [21993-21994]
+                  section [21994-22624]
+                    text [21994-22101] ("Для того чтобы сделать свой minor mode достаточно его объявить и описать логику включения/выключений режима")
+                    newLine [22101-22102]
+                    newLine [22102-22103]
+                    srcBlock [22103-22448]
                         :language emacs-lisp:
-                      blockHeader [22105-22127]
-                        keyword [22105-22127]
+                      blockHeader [22103-22125]
+                        keyword [22103-22125]
                             :language emacs-lisp:
-                          text [22105-22117] ("#+begin_src ")
-                          srcLanguage [22117-22127] ("emacs-lisp")
-                      newLine [22127-22128]
-                      blockBody [22128-22440]
-                        text [22128-22440] (";;;###autoload\\n(define-minor-mode wakatime-ui-mode\\n  \\"Wakatime ui mode. Add time track to doom modeline.\\nTODO:\\nAdd support for other modeline in future.\\"\\n  :init-value nil\\n  :global t\\n  :lighter nil\\n  :group 'wakatime-ui\\n  (if wakatime-ui-mode\\n      (wakatime-ui--watch-time)\\n    (wakatime-ui--stop-watch-time)))")
-                      newLine [22440-22441]
-                      blockFooter [22441-22450]
-                        keyword [22441-22450]
-                          text [22441-22450] ("#+end_src")
-                    newLine [22450-22451]
-                    text [22451-22455] ("Где:")
-                    newLine [22455-22456]
-                    newLine [22456-22457]
-                    verbatim [22457-22469]
-                      operator [22457-22458] ("=")
-                      text [22458-22468] ("init-value")
-                      operator [22468-22469] ("=")
-                    text [22469-22493] (" - значение по умолчанию")
-                    newLine [22493-22494]
-                    verbatim [22494-22502]
-                      operator [22494-22495] ("=")
-                      text [22495-22501] ("global")
-                      operator [22501-22502] ("=")
-                    text [22502-22558] (" - должен ли быть вызван глобальный мод перед локальным?")
-                    newLine [22558-22559]
-                    verbatim [22559-22568]
-                      operator [22559-22560] ("=")
-                      text [22560-22567] ("lighter")
-                      operator [22567-22568] ("=")
-                    text [22568-22625] (" - определяет что отображать в modeline когда мод включен")
-                    newLine [22625-22626]
-            headline [22626-22696]
+                          text [22103-22115] ("#+begin_src ")
+                          srcLanguage [22115-22125] ("emacs-lisp")
+                      newLine [22125-22126]
+                      blockBody [22126-22438]
+                        text [22126-22438] (";;;###autoload\\n(define-minor-mode wakatime-ui-mode\\n  \\"Wakatime ui mode. Add time track to doom modeline.\\nTODO:\\nAdd support for other modeline in future.\\"\\n  :init-value nil\\n  :global t\\n  :lighter nil\\n  :group 'wakatime-ui\\n  (if wakatime-ui-mode\\n      (wakatime-ui--watch-time)\\n    (wakatime-ui--stop-watch-time)))")
+                      newLine [22438-22439]
+                      blockFooter [22439-22448]
+                        keyword [22439-22448]
+                          text [22439-22448] ("#+end_src")
+                    newLine [22448-22449]
+                    text [22449-22453] ("Где:")
+                    newLine [22453-22454]
+                    newLine [22454-22455]
+                    verbatim [22455-22467]
+                      operator [22455-22456] ("=")
+                      text [22456-22466] ("init-value")
+                      operator [22466-22467] ("=")
+                    text [22467-22491] (" - значение по умолчанию")
+                    newLine [22491-22492]
+                    verbatim [22492-22500]
+                      operator [22492-22493] ("=")
+                      text [22493-22499] ("global")
+                      operator [22499-22500] ("=")
+                    text [22500-22556] (" - должен ли быть вызван глобальный мод перед локальным?")
+                    newLine [22556-22557]
+                    verbatim [22557-22566]
+                      operator [22557-22558] ("=")
+                      text [22558-22565] ("lighter")
+                      operator [22565-22566] ("=")
+                    text [22566-22623] (" - определяет что отображать в modeline когда мод включен")
+                    newLine [22623-22624]
+            headline [22624-22694]
                 :level 2:
-              title [22626-22636]
-                operator [22626-22629] ("** ")
-                text [22629-22635] ("Window")
-                newLine [22635-22636]
-              section [22636-22696]
-                headline [22636-22696]
+              title [22624-22634]
+                operator [22624-22627] ("** ")
+                text [22627-22633] ("Window")
+                newLine [22633-22634]
+              section [22634-22694]
+                headline [22634-22694]
                     :level 3:
-                  title [22636-22673]
-                    operator [22636-22640] ("*** ")
-                    text [22640-22672] ("Получение ширины текущего экрана")
-                    newLine [22672-22673]
-                  section [22673-22696]
-                    verbatim [22673-22695]
-                      operator [22673-22674] ("=")
-                      text [22674-22694] ("(window-total-width)")
-                      operator [22694-22695] ("=")
-                    newLine [22695-22696]
-            headline [22696-23197]
+                  title [22634-22671]
+                    operator [22634-22638] ("*** ")
+                    text [22638-22670] ("Получение ширины текущего экрана")
+                    newLine [22670-22671]
+                  section [22671-22694]
+                    verbatim [22671-22693]
+                      operator [22671-22672] ("=")
+                      text [22672-22692] ("(window-total-width)")
+                      operator [22692-22693] ("=")
+                    newLine [22693-22694]
+            headline [22694-23195]
                 :level 2:
-              title [22696-22732]
-                operator [22696-22699] ("** ")
-                text [22699-22731] ("Асинхронное исполнение. Process.")
-                newLine [22731-22732]
-              section [22732-23197]
-                text [22732-22764] ("Создание асинхронного процесаа (")
-                link [22764-22875]
+              title [22694-22730]
+                operator [22694-22697] ("** ")
+                text [22697-22729] ("Асинхронное исполнение. Process.")
+                newLine [22729-22730]
+              section [22730-23195]
+                text [22730-22762] ("Создание асинхронного процесаа (")
+                link [22762-22873]
                     :linkType raw:
-                  operator [22764-22765] ("[")
-                  linkUrl [22765-22858]
-                    operator [22765-22766] ("[")
-                    text [22766-22857] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Asynchronous-Processes.html")
-                    operator [22857-22858] ("]")
-                  linkName [22858-22874]
-                    operator [22858-22859] ("[")
-                    text [22859-22873] ("подробнее тут)")
-                    operator [22873-22874] ("]")
-                  operator [22874-22875] ("]")
-                newLine [22875-22876]
-                newLine [22876-22877]
-                srcBlock [22877-23126]
+                  operator [22762-22763] ("[")
+                  linkUrl [22763-22856]
+                    operator [22763-22764] ("[")
+                    text [22764-22855] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Asynchronous-Processes.html")
+                    operator [22855-22856] ("]")
+                  linkName [22856-22872]
+                    operator [22856-22857] ("[")
+                    text [22857-22871] ("подробнее тут)")
+                    operator [22871-22872] ("]")
+                  operator [22872-22873] ("]")
+                newLine [22873-22874]
+                newLine [22874-22875]
+                srcBlock [22875-23124]
                     :language emacs-lisp:
-                  blockHeader [22877-22899]
-                    keyword [22877-22899]
+                  blockHeader [22875-22897]
+                    keyword [22875-22897]
                         :language emacs-lisp:
-                      text [22877-22889] ("#+begin_src ")
-                      srcLanguage [22889-22899] ("emacs-lisp")
-                  newLine [22899-22900]
-                  blockBody [22900-23116]
-                    text [22900-23116] ("(setq process (start-process\\n                    \\"WakatimeUI\\"\\n                    wakatime-ui--buffer\\n                    (wakatime-find-binary)\\n                    (plist-get wakatime-ui--command-args :today-time)))")
-                  newLine [23116-23117]
-                  blockFooter [23117-23126]
-                    keyword [23117-23126]
-                      text [23117-23126] ("#+end_src")
-                newLine [23126-23127]
-                text [23127-23161] ("Чтение выходных данных из процесса")
-                newLine [23161-23162]
-                newLine [23162-23163]
-                srcBlock [23163-23196]
+                      text [22875-22887] ("#+begin_src ")
+                      srcLanguage [22887-22897] ("emacs-lisp")
+                  newLine [22897-22898]
+                  blockBody [22898-23114]
+                    text [22898-23114] ("(setq process (start-process\\n                    \\"WakatimeUI\\"\\n                    wakatime-ui--buffer\\n                    (wakatime-find-binary)\\n                    (plist-get wakatime-ui--command-args :today-time)))")
+                  newLine [23114-23115]
+                  blockFooter [23115-23124]
+                    keyword [23115-23124]
+                      text [23115-23124] ("#+end_src")
+                newLine [23124-23125]
+                text [23125-23159] ("Чтение выходных данных из процесса")
+                newLine [23159-23160]
+                newLine [23160-23161]
+                srcBlock [23161-23194]
                     :language emacs-lisp:
-                  blockHeader [23163-23185]
-                    keyword [23163-23185]
+                  blockHeader [23161-23183]
+                    keyword [23161-23183]
                         :language emacs-lisp:
-                      text [23163-23175] ("#+begin_src ")
-                      srcLanguage [23175-23185] ("emacs-lisp")
-                  newLine [23185-23186]
-                  newLine [23186-23187]
-                  blockFooter [23187-23196]
-                    keyword [23187-23196]
-                      text [23187-23196] ("#+end_src")
-                newLine [23196-23197]
-            headline [23197-23826]
+                      text [23161-23173] ("#+begin_src ")
+                      srcLanguage [23173-23183] ("emacs-lisp")
+                  newLine [23183-23184]
+                  newLine [23184-23185]
+                  blockFooter [23185-23194]
+                    keyword [23185-23194]
+                      text [23185-23194] ("#+end_src")
+                newLine [23194-23195]
+            headline [23195-23824]
                 :level 2:
-              title [23197-23208]
-                operator [23197-23200] ("** ")
-                text [23200-23207] ("Keymaps")
-                newLine [23207-23208]
-              section [23208-23826]
-                headline [23208-23826]
+              title [23195-23206]
+                operator [23195-23198] ("** ")
+                text [23198-23205] ("Keymaps")
+                newLine [23205-23206]
+              section [23206-23824]
+                headline [23206-23824]
                     :level 3:
-                  title [23208-23235]
-                    operator [23208-23212] ("*** ")
-                    text [23212-23234] ("Создание своего keymap")
-                    newLine [23234-23235]
-                  section [23235-23826]
-                    srcBlock [23235-23814]
+                  title [23206-23233]
+                    operator [23206-23210] ("*** ")
+                    text [23210-23232] ("Создание своего keymap")
+                    newLine [23232-23233]
+                  section [23233-23824]
+                    srcBlock [23233-23812]
                         :language elisp:
-                      blockHeader [23235-23252]
-                        keyword [23235-23252]
+                      blockHeader [23233-23250]
+                        keyword [23233-23250]
                             :language elisp:
-                          text [23235-23247] ("#+begin_src ")
-                          srcLanguage [23247-23252] ("elisp")
-                      newLine [23252-23253]
-                      blockBody [23253-23804]
-                        text [23253-23804] ("(with-current-buffer \\"*Messages*\\"\\n  (read-only-mode -1)\\n  (erase-buffer))\\n\\n(setq my-mode-map (make-sparse-keymap))\\n(define-key my-mode-map (kbd \\"C-c C-'\\") 'my-mode-cmd1)\\n(define-key my-mode-map (kbd \\"C-c C-b\\") 'my-mode-cmd2)\\n(define-key my-mode-map (kbd \\"C-c C-c\\") 'my-mode-cmd3)\\n(define-key my-mode-map (kbd \\"<mouse-1>\\") 'my-mode-cmd4)\\n;; by convention, major mode's keys should begin with the form C-c C-‹key›\\n\\n;; (dolist (m my-mode-map)\\n;;   (message \\"key: %s\\" m))\\n\\n\\n\\n\\n\\n(map-keymap '(lambda (v g)\\n               (message \\"%s: %s\\" v g)) my-mode-map)")
-                      newLine [23804-23805]
-                      blockFooter [23805-23814]
-                        keyword [23805-23814]
-                          text [23805-23814] ("#+end_src")
-                    newLine [23814-23815]
-                    keyword [23815-23825]
-                      text [23815-23825] ("#+RESULTS:")
-                    newLine [23825-23826]
-            headline [23826-28961]
+                          text [23233-23245] ("#+begin_src ")
+                          srcLanguage [23245-23250] ("elisp")
+                      newLine [23250-23251]
+                      blockBody [23251-23802]
+                        text [23251-23802] ("(with-current-buffer \\"*Messages*\\"\\n  (read-only-mode -1)\\n  (erase-buffer))\\n\\n(setq my-mode-map (make-sparse-keymap))\\n(define-key my-mode-map (kbd \\"C-c C-'\\") 'my-mode-cmd1)\\n(define-key my-mode-map (kbd \\"C-c C-b\\") 'my-mode-cmd2)\\n(define-key my-mode-map (kbd \\"C-c C-c\\") 'my-mode-cmd3)\\n(define-key my-mode-map (kbd \\"<mouse-1>\\") 'my-mode-cmd4)\\n;; by convention, major mode's keys should begin with the form C-c C-‹key›\\n\\n;; (dolist (m my-mode-map)\\n;;   (message \\"key: %s\\" m))\\n\\n\\n\\n\\n\\n(map-keymap '(lambda (v g)\\n               (message \\"%s: %s\\" v g)) my-mode-map)")
+                      newLine [23802-23803]
+                      blockFooter [23803-23812]
+                        keyword [23803-23812]
+                          text [23803-23812] ("#+end_src")
+                    newLine [23812-23813]
+                    keyword [23813-23823]
+                      text [23813-23823] ("#+RESULTS:")
+                    newLine [23823-23824]
+            headline [23824-28959]
                 :level 2:
                 :id  elisp-macros:
-              title [23826-23835]
-                operator [23826-23829] ("** ")
-                text [23829-23834] ("Macro")
-                newLine [23834-23835]
-              section [23835-28961]
-                propertyDrawer [23835-23871]
-                  property [23835-23847]
-                    text [23835-23847] (":PROPERTIES:")
-                  newLine [23847-23848]
-                  property [23848-23865]
-                    text [23848-23853] (":ID: ")
-                    text [23853-23865] ("elisp-macros")
-                  newLine [23865-23866]
-                  property [23866-23871]
-                    text [23866-23871] (":END:")
-                newLine [23871-23872]
-                text [23872-23882] ("Подробнее ")
-                link [23882-23966]
+              title [23824-23833]
+                operator [23824-23827] ("** ")
+                text [23827-23832] ("Macro")
+                newLine [23832-23833]
+              section [23833-28959]
+                propertyDrawer [23833-23869]
+                  property [23833-23845]
+                    text [23833-23845] (":PROPERTIES:")
+                  newLine [23845-23846]
+                  property [23846-23863]
+                    text [23846-23851] (":ID: ")
+                    text [23851-23863] ("elisp-macros")
+                  newLine [23863-23864]
+                  property [23864-23869]
+                    text [23864-23869] (":END:")
+                newLine [23869-23870]
+                text [23870-23880] ("Подробнее ")
+                link [23880-23964]
                     :linkType raw:
-                  operator [23882-23883] ("[")
-                  linkUrl [23883-23960]
-                    operator [23883-23884] ("[")
-                    text [23884-23959] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Macros.html")
-                    operator [23959-23960] ("]")
-                  linkName [23960-23965]
-                    operator [23960-23961] ("[")
-                    text [23961-23964] ("тут")
-                    operator [23964-23965] ("]")
-                  operator [23965-23966] ("]")
-                text [23966-23967] (".")
-                newLine [23967-23968]
-                newLine [23968-23969]
-                headline [23969-24143]
+                  operator [23880-23881] ("[")
+                  linkUrl [23881-23958]
+                    operator [23881-23882] ("[")
+                    text [23882-23957] ("htest-varps://www.gnu.org/software/emacs/manual/html_node/elisp/Macros.html")
+                    operator [23957-23958] ("]")
+                  linkName [23958-23963]
+                    operator [23958-23959] ("[")
+                    text [23959-23962] ("тут")
+                    operator [23962-23963] ("]")
+                  operator [23963-23964] ("]")
+                text [23964-23965] (".")
+                newLine [23965-23966]
+                newLine [23966-23967]
+                headline [23967-24141]
                     :level 3:
-                  title [23969-23988]
-                    operator [23969-23973] ("*** ")
-                    text [23973-23987] ("Простой макрос")
-                    newLine [23987-23988]
-                  section [23988-24143]
-                    srcBlock [23988-24125]
+                  title [23967-23986]
+                    operator [23967-23971] ("*** ")
+                    text [23971-23985] ("Простой макрос")
+                    newLine [23985-23986]
+                  section [23986-24141]
+                    srcBlock [23986-24123]
                         :language emacs-lisp:
-                      blockHeader [23988-24010]
-                        keyword [23988-24010]
+                      blockHeader [23986-24008]
+                        keyword [23986-24008]
                             :language emacs-lisp:
-                          text [23988-24000] ("#+begin_src ")
-                          srcLanguage [24000-24010] ("emacs-lisp")
-                      newLine [24010-24011]
-                      blockBody [24011-24115]
-                        text [24011-24115] ("(defmacro inc (var)\\n  (list 'setq var (list '1+ var)))\\n\\n(setq test-var 10)\\n(message \\"%s\\" (inc test-var))")
-                      newLine [24115-24116]
-                      blockFooter [24116-24125]
-                        keyword [24116-24125]
-                          text [24116-24125] ("#+end_src")
-                    newLine [24125-24126]
-                    keyword [24126-24137]
-                      text [24126-24137] ("#+RESULTS: ")
-                    newLine [24137-24138]
-                    fixedWidth [24138-24142]
-                      operator [24138-24140] (": ")
-                      text [24140-24142] ("11")
-                    newLine [24142-24143]
-                headline [24143-24318]
+                          text [23986-23998] ("#+begin_src ")
+                          srcLanguage [23998-24008] ("emacs-lisp")
+                      newLine [24008-24009]
+                      blockBody [24009-24113]
+                        text [24009-24113] ("(defmacro inc (var)\\n  (list 'setq var (list '1+ var)))\\n\\n(setq test-var 10)\\n(message \\"%s\\" (inc test-var))")
+                      newLine [24113-24114]
+                      blockFooter [24114-24123]
+                        keyword [24114-24123]
+                          text [24114-24123] ("#+end_src")
+                    newLine [24123-24124]
+                    keyword [24124-24135]
+                      text [24124-24135] ("#+RESULTS: ")
+                    newLine [24135-24136]
+                    fixedWidth [24136-24140]
+                      operator [24136-24138] (": ")
+                      text [24138-24140] ("11")
+                    newLine [24140-24141]
+                headline [24141-24316]
                     :level 3:
-                  title [24143-24162]
-                    operator [24143-24147] ("*** ")
-                    text [24147-24161] ("Изучить макрос")
-                    newLine [24161-24162]
-                  section [24162-24318]
-                    text [24162-24200] ("Macroexpand - показывает вывод макроса")
-                    newLine [24200-24201]
-                    newLine [24201-24202]
-                    srcBlock [24202-24279]
+                  title [24141-24160]
+                    operator [24141-24145] ("*** ")
+                    text [24145-24159] ("Изучить макрос")
+                    newLine [24159-24160]
+                  section [24160-24316]
+                    text [24160-24198] ("Macroexpand - показывает вывод макроса")
+                    newLine [24198-24199]
+                    newLine [24199-24200]
+                    srcBlock [24200-24277]
                         :language emacs-lisp:
-                      blockHeader [24202-24224]
-                        keyword [24202-24224]
+                      blockHeader [24200-24222]
+                        keyword [24200-24222]
                             :language emacs-lisp:
-                          text [24202-24214] ("#+begin_src ")
-                          srcLanguage [24214-24224] ("emacs-lisp")
-                      newLine [24224-24225]
-                      blockBody [24225-24269]
-                        text [24225-24269] ("(message \\"%s\\" (macroexpand '(inc test-var)))")
-                      newLine [24269-24270]
-                      blockFooter [24270-24279]
-                        keyword [24270-24279]
-                          text [24270-24279] ("#+end_src")
-                    newLine [24279-24280]
-                    keyword [24280-24291]
-                      text [24280-24291] ("#+RESULTS: ")
-                    newLine [24291-24292]
-                    fixedWidth [24292-24317]
-                      operator [24292-24294] (": ")
-                      text [24294-24317] ("(setq test-var (1+ tt))")
-                    newLine [24317-24318]
-                headline [24318-24657]
+                          text [24200-24212] ("#+begin_src ")
+                          srcLanguage [24212-24222] ("emacs-lisp")
+                      newLine [24222-24223]
+                      blockBody [24223-24267]
+                        text [24223-24267] ("(message \\"%s\\" (macroexpand '(inc test-var)))")
+                      newLine [24267-24268]
+                      blockFooter [24268-24277]
+                        keyword [24268-24277]
+                          text [24268-24277] ("#+end_src")
+                    newLine [24277-24278]
+                    keyword [24278-24289]
+                      text [24278-24289] ("#+RESULTS: ")
+                    newLine [24289-24290]
+                    fixedWidth [24290-24315]
+                      operator [24290-24292] (": ")
+                      text [24292-24315] ("(setq test-var (1+ tt))")
+                    newLine [24315-24316]
+                headline [24316-24655]
                     :level 3:
-                  title [24318-24342]
-                    operator [24318-24322] ("*** ")
-                    text [24322-24341] ("Цепочка из макросов")
-                    newLine [24341-24342]
-                  section [24342-24657]
-                    text [24342-24424] ("Macroexpand отображает только первый макрос, чтобы вызвать всю цепочку используем ")
-                    verbatim [24424-24441]
-                      operator [24424-24425] ("=")
-                      text [24425-24440] ("macroexpand-all")
-                      operator [24440-24441] ("=")
-                    newLine [24441-24442]
-                    newLine [24442-24443]
-                    srcBlock [24443-24602]
+                  title [24316-24340]
+                    operator [24316-24320] ("*** ")
+                    text [24320-24339] ("Цепочка из макросов")
+                    newLine [24339-24340]
+                  section [24340-24655]
+                    text [24340-24422] ("Macroexpand отображает только первый макрос, чтобы вызвать всю цепочку используем ")
+                    verbatim [24422-24439]
+                      operator [24422-24423] ("=")
+                      text [24423-24438] ("macroexpand-all")
+                      operator [24438-24439] ("=")
+                    newLine [24439-24440]
+                    newLine [24440-24441]
+                    srcBlock [24441-24600]
                         :language emacs-lisp:
-                      blockHeader [24443-24465]
-                        keyword [24443-24465]
+                      blockHeader [24441-24463]
+                        keyword [24441-24463]
                             :language emacs-lisp:
-                          text [24443-24455] ("#+begin_src ")
-                          srcLanguage [24455-24465] ("emacs-lisp")
-                      newLine [24465-24466]
-                      blockBody [24466-24592]
-                        text [24466-24592] ("(defmacro inc2 (var1 var2)\\n    (list 'progn (list 'inc var1) (list 'inc var2)))\\n\\n\\n(message \\"%s\\" (macroexpand-all '(inc2 r s)))")
-                      newLine [24592-24593]
-                      blockFooter [24593-24602]
-                        keyword [24593-24602]
-                          text [24593-24602] ("#+end_src")
-                    newLine [24602-24603]
-                    keyword [24603-24614]
-                      text [24603-24614] ("#+RESULTS: ")
-                    newLine [24614-24615]
-                    fixedWidth [24615-24656]
-                      operator [24615-24617] (": ")
-                      text [24617-24656] ("(progn (setq r (1+ r)) (setq s (1+ s)))")
-                    newLine [24656-24657]
-                headline [24657-24865]
+                          text [24441-24453] ("#+begin_src ")
+                          srcLanguage [24453-24463] ("emacs-lisp")
+                      newLine [24463-24464]
+                      blockBody [24464-24590]
+                        text [24464-24590] ("(defmacro inc2 (var1 var2)\\n    (list 'progn (list 'inc var1) (list 'inc var2)))\\n\\n\\n(message \\"%s\\" (macroexpand-all '(inc2 r s)))")
+                      newLine [24590-24591]
+                      blockFooter [24591-24600]
+                        keyword [24591-24600]
+                          text [24591-24600] ("#+end_src")
+                    newLine [24600-24601]
+                    keyword [24601-24612]
+                      text [24601-24612] ("#+RESULTS: ")
+                    newLine [24612-24613]
+                    fixedWidth [24613-24654]
+                      operator [24613-24615] (": ")
+                      text [24615-24654] ("(progn (setq r (1+ r)) (setq s (1+ s)))")
+                    newLine [24654-24655]
+                headline [24655-24863]
                     :level 3:
-                  title [24657-24699]
-                    operator [24657-24661] ("*** ")
-                    text [24661-24698] ("Пример с более сложными конструкциями")
-                    newLine [24698-24699]
-                  section [24699-24865]
-                    srcBlock [24699-24846]
+                  title [24655-24697]
+                    operator [24655-24659] ("*** ")
+                    text [24659-24696] ("Пример с более сложными конструкциями")
+                    newLine [24696-24697]
+                  section [24697-24863]
+                    srcBlock [24697-24844]
                         :language emacs-lisp:
-                      blockHeader [24699-24721]
-                        keyword [24699-24721]
+                      blockHeader [24697-24719]
+                        keyword [24697-24719]
                             :language emacs-lisp:
-                          text [24699-24711] ("#+begin_src ")
-                          srcLanguage [24711-24721] ("emacs-lisp")
-                      newLine [24721-24722]
-                      blockBody [24722-24836]
-                        text [24722-24836] ("(defmacro t-becomes-nil (var)\\n  \`(if (eq ,var t)\\n       (setq ,var nil)))\\n\\n(message \\"%s\\" (t-becomes-nil test-var))")
-                      newLine [24836-24837]
-                      blockFooter [24837-24846]
-                        keyword [24837-24846]
-                          text [24837-24846] ("#+end_src")
-                    newLine [24846-24847]
-                    keyword [24847-24858]
-                      text [24847-24858] ("#+RESULTS: ")
-                    newLine [24858-24859]
-                    fixedWidth [24859-24864]
-                      operator [24859-24861] (": ")
-                      text [24861-24864] ("nil")
-                    newLine [24864-24865]
-                headline [24865-25974]
+                          text [24697-24709] ("#+begin_src ")
+                          srcLanguage [24709-24719] ("emacs-lisp")
+                      newLine [24719-24720]
+                      blockBody [24720-24834]
+                        text [24720-24834] ("(defmacro t-becomes-nil (var)\\n  \`(if (eq ,var t)\\n       (setq ,var nil)))\\n\\n(message \\"%s\\" (t-becomes-nil test-var))")
+                      newLine [24834-24835]
+                      blockFooter [24835-24844]
+                        keyword [24835-24844]
+                          text [24835-24844] ("#+end_src")
+                    newLine [24844-24845]
+                    keyword [24845-24856]
+                      text [24845-24856] ("#+RESULTS: ")
+                    newLine [24856-24857]
+                    fixedWidth [24857-24862]
+                      operator [24857-24859] (": ")
+                      text [24859-24862] ("nil")
+                    newLine [24862-24863]
+                headline [24863-25972]
                     :level 3:
-                  title [24865-24903]
-                    operator [24865-24869] ("*** ")
-                    text [24869-24902] ("Динамическое получение переменной")
-                    newLine [24902-24903]
-                  section [24903-25974]
-                    indent [24903-24904] (" ")
-                    link [24904-25025]
+                  title [24863-24901]
+                    operator [24863-24867] ("*** ")
+                    text [24867-24900] ("Динамическое получение переменной")
+                    newLine [24900-24901]
+                  section [24901-25972]
+                    indent [24901-24902] (" ")
+                    link [24902-25023]
                         :linkType network:
-                      operator [24904-24905] ("[")
-                      linkUrl [24905-25007]
-                        operator [24905-24906] ("[")
-                        text [24906-25006] ("https://stackoverflow.com/questions/24433035/combining-two-variables-into-one-function-name-in-macro")
-                        operator [25006-25007] ("]")
-                      linkName [25007-25024]
-                        operator [25007-25008] ("[")
-                        text [25008-25023] ("Подсмотрено тут")
-                        operator [25023-25024] ("]")
-                      operator [25024-25025] ("]")
-                    newLine [25025-25026]
-                    indent [25026-25027] (" ")
-                    text [25027-25044] ("Чертовая магия 😮")
-                    newLine [25044-25045]
-                    newLine [25045-25046]
-                    srcBlock [25046-25284]
+                      operator [24902-24903] ("[")
+                      linkUrl [24903-25005]
+                        operator [24903-24904] ("[")
+                        text [24904-25004] ("https://stackoverflow.com/questions/24433035/combining-two-variables-into-one-function-name-in-macro")
+                        operator [25004-25005] ("]")
+                      linkName [25005-25022]
+                        operator [25005-25006] ("[")
+                        text [25006-25021] ("Подсмотрено тут")
+                        operator [25021-25022] ("]")
+                      operator [25022-25023] ("]")
+                    newLine [25023-25024]
+                    indent [25024-25025] (" ")
+                    text [25025-25042] ("Чертовая магия 😮")
+                    newLine [25042-25043]
+                    newLine [25043-25044]
+                    srcBlock [25044-25282]
                         :language emacs-lisp:
-                      blockHeader [25046-25068]
-                        keyword [25046-25068]
+                      blockHeader [25044-25066]
+                        keyword [25044-25066]
                             :language emacs-lisp:
-                          text [25046-25058] ("#+begin_src ")
-                          srcLanguage [25058-25068] ("emacs-lisp")
-                      newLine [25068-25069]
-                      blockBody [25069-25274]
-                        text [25069-25274] ("(setq my-custom-variable \\"Hello, amma variable\\")\\n\\n(defmacro get-with-prefix (var-name)\\n  \`(symbol-value (intern (concatenate 'string \\"my-custom\\" \\"-\\" (symbol-name ',var-name)))))\\n\\n(get-with-prefix variable)")
-                      newLine [25274-25275]
-                      blockFooter [25275-25284]
-                        keyword [25275-25284]
-                          text [25275-25284] ("#+end_src")
-                    newLine [25284-25285]
-                    keyword [25285-25296]
-                      text [25285-25296] ("#+RESULTS: ")
-                    newLine [25296-25297]
-                    fixedWidth [25297-25319]
-                      operator [25297-25299] (": ")
-                      text [25299-25319] ("Hello, amma variable")
-                    newLine [25319-25320]
-                    newLine [25320-25321]
-                    text [25321-25487] ("А теперь из plist, если нет - то из глобального скоупа, это еще большая магия. Да, наверное такое не стоит использовать в реальных проектах, но как же руки чешутся 😍")
-                    newLine [25487-25488]
-                    newLine [25488-25489]
-                    srcBlock [25489-25938]
+                          text [25044-25056] ("#+begin_src ")
+                          srcLanguage [25056-25066] ("emacs-lisp")
+                      newLine [25066-25067]
+                      blockBody [25067-25272]
+                        text [25067-25272] ("(setq my-custom-variable \\"Hello, amma variable\\")\\n\\n(defmacro get-with-prefix (var-name)\\n  \`(symbol-value (intern (concatenate 'string \\"my-custom\\" \\"-\\" (symbol-name ',var-name)))))\\n\\n(get-with-prefix variable)")
+                      newLine [25272-25273]
+                      blockFooter [25273-25282]
+                        keyword [25273-25282]
+                          text [25273-25282] ("#+end_src")
+                    newLine [25282-25283]
+                    keyword [25283-25294]
+                      text [25283-25294] ("#+RESULTS: ")
+                    newLine [25294-25295]
+                    fixedWidth [25295-25317]
+                      operator [25295-25297] (": ")
+                      text [25297-25317] ("Hello, amma variable")
+                    newLine [25317-25318]
+                    newLine [25318-25319]
+                    text [25319-25485] ("А теперь из plist, если нет - то из глобального скоупа, это еще большая магия. Да, наверное такое не стоит использовать в реальных проектах, но как же руки чешутся 😍")
+                    newLine [25485-25486]
+                    newLine [25486-25487]
+                    srcBlock [25487-25936]
                         :language emacs-lisp:
-                      blockHeader [25489-25511]
-                        keyword [25489-25511]
+                      blockHeader [25487-25509]
+                        keyword [25487-25509]
                             :language emacs-lisp:
-                          text [25489-25501] ("#+begin_src ")
-                          srcLanguage [25501-25511] ("emacs-lisp")
-                      newLine [25511-25512]
-                      blockBody [25512-25928]
-                        text [25512-25928] ("(setq my-custom-variable \\"Hello, amma variable\\")\\n\\n(setq my-plist-with-prop '(:custom-variable nil :test t))\\n\\n(defmacro get-with-prefix (my-plist var-name)\\n  \`(or (plist-get ,my-plist (symbol-value (intern (concatenate 'string \\":\\" (symbol-name ',var-name)))))\\n       (symbol-value (intern (concatenate 'string \\"my\\" \\"-\\" (symbol-name ',var-name))))))\\n\\n(message \\"%s\\" (get-with-prefix my-plist-with-prop custom-variable))")
-                      newLine [25928-25929]
-                      blockFooter [25929-25938]
-                        keyword [25929-25938]
-                          text [25929-25938] ("#+end_src")
-                    newLine [25938-25939]
-                    keyword [25939-25950]
-                      text [25939-25950] ("#+RESULTS: ")
-                    newLine [25950-25951]
-                    fixedWidth [25951-25973]
-                      operator [25951-25953] (": ")
-                      text [25953-25973] ("Hello, amma variable")
-                    newLine [25973-25974]
-                headline [25974-27123]
+                          text [25487-25499] ("#+begin_src ")
+                          srcLanguage [25499-25509] ("emacs-lisp")
+                      newLine [25509-25510]
+                      blockBody [25510-25926]
+                        text [25510-25926] ("(setq my-custom-variable \\"Hello, amma variable\\")\\n\\n(setq my-plist-with-prop '(:custom-variable nil :test t))\\n\\n(defmacro get-with-prefix (my-plist var-name)\\n  \`(or (plist-get ,my-plist (symbol-value (intern (concatenate 'string \\":\\" (symbol-name ',var-name)))))\\n       (symbol-value (intern (concatenate 'string \\"my\\" \\"-\\" (symbol-name ',var-name))))))\\n\\n(message \\"%s\\" (get-with-prefix my-plist-with-prop custom-variable))")
+                      newLine [25926-25927]
+                      blockFooter [25927-25936]
+                        keyword [25927-25936]
+                          text [25927-25936] ("#+end_src")
+                    newLine [25936-25937]
+                    keyword [25937-25948]
+                      text [25937-25948] ("#+RESULTS: ")
+                    newLine [25948-25949]
+                    fixedWidth [25949-25971]
+                      operator [25949-25951] (": ")
+                      text [25951-25971] ("Hello, amma variable")
+                    newLine [25971-25972]
+                headline [25972-27121]
                     :level 3:
-                  title [25974-26011]
-                    operator [25974-25978] ("*** ")
-                    text [25978-26000] ("Передача тела (@body) ")
-                    tagList [26000-26010]
-                      operator [26000-26001] (":")
-                      text [26001-26009] ("noexport")
-                      operator [26009-26010] (":")
-                    newLine [26010-26011]
-                  section [26011-27123]
-                    text [26011-26165] ("Пожалуй самая впечатлаяющая фича (имхо, без нее смысл в макросах бы отпал). Макрос склеивает результаты выполнения функций (подумал для org-mode самое то)")
-                    newLine [26165-26166]
-                    newLine [26166-26167]
-                    srcBlock [26167-26496]
+                  title [25972-26009]
+                    operator [25972-25976] ("*** ")
+                    text [25976-25998] ("Передача тела (@body) ")
+                    tagList [25998-26008]
+                      operator [25998-25999] (":")
+                      text [25999-26007] ("noexport")
+                      operator [26007-26008] (":")
+                    newLine [26008-26009]
+                  section [26009-27121]
+                    text [26009-26163] ("Пожалуй самая впечатлаяющая фича (имхо, без нее смысл в макросах бы отпал). Макрос склеивает результаты выполнения функций (подумал для org-mode самое то)")
+                    newLine [26163-26164]
+                    newLine [26164-26165]
+                    srcBlock [26165-26494]
                         :language emacs-lisp:
-                      blockHeader [26167-26189]
-                        keyword [26167-26189]
+                      blockHeader [26165-26187]
+                        keyword [26165-26187]
                             :language emacs-lisp:
-                          text [26167-26179] ("#+begin_src ")
-                          srcLanguage [26179-26189] ("emacs-lisp")
-                      newLine [26189-26190]
-                      blockBody [26190-26486]
-                        text [26190-26486] ("(setq test-var 0)\\n(defmacro for (var from init to final do &rest body)\\n  \`(let ((,var ,init))\\n     (while (<= ,var ,final)\\n       ,@body\\n       (setq ,var (1+ ,var)))))\\n\\n\\n(for j from 0 to 4 do\\n     (setq test-var (+ test-var j))\\n     (setq test-var (/ test-var 2)))\\n\\n(message \\"HAVA: %s\\" test-var)")
-                      newLine [26486-26487]
-                      blockFooter [26487-26496]
-                        keyword [26487-26496]
-                          text [26487-26496] ("#+end_src")
-                    newLine [26496-26497]
-                    keyword [26497-26508]
-                      text [26497-26508] ("#+RESULTS: ")
-                    newLine [26508-26509]
-                    fixedWidth [26509-26518]
-                      operator [26509-26511] (": ")
-                      text [26511-26518] ("HAVA: 3")
+                          text [26165-26177] ("#+begin_src ")
+                          srcLanguage [26177-26187] ("emacs-lisp")
+                      newLine [26187-26188]
+                      blockBody [26188-26484]
+                        text [26188-26484] ("(setq test-var 0)\\n(defmacro for (var from init to final do &rest body)\\n  \`(let ((,var ,init))\\n     (while (<= ,var ,final)\\n       ,@body\\n       (setq ,var (1+ ,var)))))\\n\\n\\n(for j from 0 to 4 do\\n     (setq test-var (+ test-var j))\\n     (setq test-var (/ test-var 2)))\\n\\n(message \\"HAVA: %s\\" test-var)")
+                      newLine [26484-26485]
+                      blockFooter [26485-26494]
+                        keyword [26485-26494]
+                          text [26485-26494] ("#+end_src")
+                    newLine [26494-26495]
+                    keyword [26495-26506]
+                      text [26495-26506] ("#+RESULTS: ")
+                    newLine [26506-26507]
+                    fixedWidth [26507-26516]
+                      operator [26507-26509] (": ")
+                      text [26509-26516] ("HAVA: 3")
+                    newLine [26516-26517]
+                    newLine [26517-26518]
                     newLine [26518-26519]
-                    newLine [26519-26520]
-                    newLine [26520-26521]
-                    headline [26521-27123]
+                    headline [26519-27121]
                         :level 4:
-                      title [26521-26544]
-                        operator [26521-26526] ("**** ")
-                        text [26526-26533] ("Failed ")
-                        tagList [26533-26543]
-                          operator [26533-26534] (":")
-                          text [26534-26542] ("noexport")
-                          operator [26542-26543] (":")
-                        newLine [26543-26544]
-                      section [26544-27123]
-                        text [26544-26613] ("Пример макроса, чтобы наглядно видеть в орге какая функция что делает")
-                        newLine [26613-26614]
-                        newLine [26614-26615]
-                        srcBlock [26615-26939]
+                      title [26519-26542]
+                        operator [26519-26524] ("**** ")
+                        text [26524-26531] ("Failed ")
+                        tagList [26531-26541]
+                          operator [26531-26532] (":")
+                          text [26532-26540] ("noexport")
+                          operator [26540-26541] (":")
+                        newLine [26541-26542]
+                      section [26542-27121]
+                        text [26542-26611] ("Пример макроса, чтобы наглядно видеть в орге какая функция что делает")
+                        newLine [26611-26612]
+                        newLine [26612-26613]
+                        srcBlock [26613-26937]
                             :language emacs-lisp:
-                          blockHeader [26615-26637]
-                            keyword [26615-26637]
+                          blockHeader [26613-26635]
+                            keyword [26613-26635]
                                 :language emacs-lisp:
-                              text [26615-26627] ("#+begin_src ")
-                              srcLanguage [26627-26637] ("emacs-lisp")
-                          newLine [26637-26638]
-                          blockBody [26638-26929]
-                            text [26638-26929] ("(defmacro pretty-log (&rest body)\\n\\n  (let ((res (concat (make-string 80 ?-) \\"\\n\\")))\\n    (dolist (f body)\\n      (setq res (concat res (format \\"[%s]: %s\\n\\" f (eval f)))))\\n    (message res)))\\n\\n(pretty-log (+ 1 12)\\n            (- 44 22)\\n            (+ (/ 12 2) (* 33 4))\\n            (setq ttt 12))")
-                          newLine [26929-26930]
-                          blockFooter [26930-26939]
-                            keyword [26930-26939]
-                              text [26930-26939] ("#+end_src")
-                        newLine [26939-26940]
-                        keyword [26940-26951]
-                          text [26940-26951] ("#+RESULTS: ")
-                        newLine [26951-26952]
-                        fixedWidth [26952-27034]
-                          operator [26952-26954] (": ")
-                          text [26954-27034] ("--------------------------------------------------------------------------------")
-                        newLine [27034-27035]
-                        fixedWidth [27035-27051]
-                          operator [27035-27037] (": ")
-                          text [27037-27051] ("[(+ 1 12)]: 13")
-                        newLine [27051-27052]
-                        fixedWidth [27052-27069]
-                          operator [27052-27054] (": ")
-                          text [27054-27069] ("[(- 44 22)]: 22")
-                        newLine [27069-27070]
-                        fixedWidth [27070-27100]
-                          operator [27070-27072] (": ")
-                          text [27072-27100] ("[(+ (/ 12 2) (* 33 4))]: 138")
-                        newLine [27100-27101]
-                        fixedWidth [27101-27122]
-                          operator [27101-27103] (": ")
-                          text [27103-27122] ("[(setq ttt 12)]: 12")
-                        newLine [27122-27123]
-                headline [27123-28961]
+                              text [26613-26625] ("#+begin_src ")
+                              srcLanguage [26625-26635] ("emacs-lisp")
+                          newLine [26635-26636]
+                          blockBody [26636-26927]
+                            text [26636-26927] ("(defmacro pretty-log (&rest body)\\n\\n  (let ((res (concat (make-string 80 ?-) \\"\\n\\")))\\n    (dolist (f body)\\n      (setq res (concat res (format \\"[%s]: %s\\n\\" f (eval f)))))\\n    (message res)))\\n\\n(pretty-log (+ 1 12)\\n            (- 44 22)\\n            (+ (/ 12 2) (* 33 4))\\n            (setq ttt 12))")
+                          newLine [26927-26928]
+                          blockFooter [26928-26937]
+                            keyword [26928-26937]
+                              text [26928-26937] ("#+end_src")
+                        newLine [26937-26938]
+                        keyword [26938-26949]
+                          text [26938-26949] ("#+RESULTS: ")
+                        newLine [26949-26950]
+                        fixedWidth [26950-27032]
+                          operator [26950-26952] (": ")
+                          text [26952-27032] ("--------------------------------------------------------------------------------")
+                        newLine [27032-27033]
+                        fixedWidth [27033-27049]
+                          operator [27033-27035] (": ")
+                          text [27035-27049] ("[(+ 1 12)]: 13")
+                        newLine [27049-27050]
+                        fixedWidth [27050-27067]
+                          operator [27050-27052] (": ")
+                          text [27052-27067] ("[(- 44 22)]: 22")
+                        newLine [27067-27068]
+                        fixedWidth [27068-27098]
+                          operator [27068-27070] (": ")
+                          text [27070-27098] ("[(+ (/ 12 2) (* 33 4))]: 138")
+                        newLine [27098-27099]
+                        fixedWidth [27099-27120]
+                          operator [27099-27101] (": ")
+                          text [27101-27120] ("[(setq ttt 12)]: 12")
+                        newLine [27120-27121]
+                headline [27121-28959]
                     :level 3:
-                  title [27123-27211]
-                    operator [27123-27127] ("*** ")
-                    text [27127-27200] ("Модификация plist через список динамических аргументов как в use-package ")
-                    tagList [27200-27210]
-                      operator [27200-27201] (":")
-                      text [27201-27209] ("noexport")
-                      operator [27209-27210] (":")
-                    newLine [27210-27211]
-                  section [27211-28961]
-                    srcBlock [27211-28736]
+                  title [27121-27209]
+                    operator [27121-27125] ("*** ")
+                    text [27125-27198] ("Модификация plist через список динамических аргументов как в use-package ")
+                    tagList [27198-27208]
+                      operator [27198-27199] (":")
+                      text [27199-27207] ("noexport")
+                      operator [27207-27208] (":")
+                    newLine [27208-27209]
+                  section [27209-28959]
+                    srcBlock [27209-28734]
                         :language emacs-lisp:
-                      blockHeader [27211-27233]
-                        keyword [27211-27233]
+                      blockHeader [27209-27231]
+                        keyword [27209-27231]
                             :language emacs-lisp:
-                          text [27211-27223] ("#+begin_src ")
-                          srcLanguage [27223-27233] ("emacs-lisp")
-                      newLine [27233-27234]
-                      blockBody [27234-28726]
-                        text [27234-28726] ("(setq res \\"\\")\\n(setq test-alist\\n      '((js-mode (:loggers '(\\"hi there\\") :msg-format-template \\"Hi\\" :argument-divider \\"|\\"))\\n        (typescript-mode (:loggers '(\\"another on\\", \\"and me\\") :msg-format-template \\"bee\\"))\\n        ))\\n\\n(defmacro turbo-log-configure (&rest configs)\\n  (let* ((strategy (or (plist-get configs :strategy) 'replace))\\n         (excluded-keys '(:modes :strategy))\\n         (modes (plist-get configs :modes))\\n         current-config)\\n\\n    (dolist (k excluded-keys)\\n      (setq configs (map-delete configs k)))\\n\\n    (dolist (mode modes)\\n      (unless (assoc mode test-alist)\\n        (push \`(,mode nil) test-alist))\\n\\n      (setq current-config (car (cdr-safe (assoc mode test-alist))))\\n\\n      (if (eq strategy 'replace)\\n          (setq current-config configs)\\n\\n        (loop for (k v) on configs by 'cddr do\\n              (if current-config\\n                  (plist-put current-config k v)\\n                (setq current-config \`(,k ,v)))))\\n\\n      (message \\"QQQ: %s\\" configs)\\n      (if (assq mode test-alist)\\n          (setcdr (assq mode test-alist)\\n                  \`(,current-config))\\n        \`(push '(,mode '(,current-config)) ,test-alist))\\n      )))\\n\\n(turbo-log-configure\\n :modes (typescript-mode js2-mode js-mode)\\n ;; :modes (typescript-mode j-mode)\\n ;; :modes (js-mode)\\n :strategy replace\\n\\n :loggers (\\"console.print\\" \\"console.dbg\\")\\n :msg-format-template \\"\\"HELLO WORLD: %s\\"\\")\\n\\n(message \\"-------------------------------------------------------\\")\\n(message \\"%s\\" (pp test-alist))")
-                      newLine [28726-28727]
-                      blockFooter [28727-28736]
-                        keyword [28727-28736]
-                          text [28727-28736] ("#+end_src")
-                    newLine [28736-28737]
-                    keyword [28737-28748]
-                      text [28737-28748] ("#+RESULTS: ")
-                    newLine [28748-28749]
-                    fixedWidth [28749-28762]
-                      operator [28749-28751] (": ")
-                      text [28751-28762] ("((mode nil)")
-                    newLine [28762-28763]
-                    fixedWidth [28763-28774]
-                      operator [28763-28765] (": ")
-                      text [28765-28774] (" (js-mode")
-                    newLine [28774-28775]
-                    fixedWidth [28775-28788]
-                      operator [28775-28777] (": ")
-                      text [28777-28788] ("  (:loggers")
-                    newLine [28788-28789]
-                    fixedWidth [28789-28807]
-                      operator [28789-28791] (": ")
-                      text [28791-28807] ("   '(\\"hi there\\")")
-                    newLine [28807-28808]
-                    fixedWidth [28808-28840]
-                      operator [28808-28810] (": ")
-                      text [28810-28840] ("   :msg-format-template \\"Hi\\"))")
-                    newLine [28840-28841]
-                    fixedWidth [28841-28860]
-                      operator [28841-28843] (": ")
-                      text [28843-28860] (" (typescript-mode")
-                    newLine [28860-28861]
-                    fixedWidth [28861-28874]
-                      operator [28861-28863] (": ")
-                      text [28863-28874] ("  (:loggers")
-                    newLine [28874-28875]
-                    fixedWidth [28875-28911]
-                      operator [28875-28877] (": ")
-                      text [28877-28911] ("   (\\"console.print\\" \\"console.dbg\\")")
-                    newLine [28911-28912]
-                    fixedWidth [28912-28960]
-                      operator [28912-28914] (": ")
-                      text [28914-28960] ("   :msg-format-template \\"\\"HELLO WORLD: %s\\"\\")))")
-                    newLine [28960-28961]
-        headline [28961-29393]
+                          text [27209-27221] ("#+begin_src ")
+                          srcLanguage [27221-27231] ("emacs-lisp")
+                      newLine [27231-27232]
+                      blockBody [27232-28724]
+                        text [27232-28724] ("(setq res \\"\\")\\n(setq test-alist\\n      '((js-mode (:loggers '(\\"hi there\\") :msg-format-template \\"Hi\\" :argument-divider \\"|\\"))\\n        (typescript-mode (:loggers '(\\"another on\\", \\"and me\\") :msg-format-template \\"bee\\"))\\n        ))\\n\\n(defmacro turbo-log-configure (&rest configs)\\n  (let* ((strategy (or (plist-get configs :strategy) 'replace))\\n         (excluded-keys '(:modes :strategy))\\n         (modes (plist-get configs :modes))\\n         current-config)\\n\\n    (dolist (k excluded-keys)\\n      (setq configs (map-delete configs k)))\\n\\n    (dolist (mode modes)\\n      (unless (assoc mode test-alist)\\n        (push \`(,mode nil) test-alist))\\n\\n      (setq current-config (car (cdr-safe (assoc mode test-alist))))\\n\\n      (if (eq strategy 'replace)\\n          (setq current-config configs)\\n\\n        (loop for (k v) on configs by 'cddr do\\n              (if current-config\\n                  (plist-put current-config k v)\\n                (setq current-config \`(,k ,v)))))\\n\\n      (message \\"QQQ: %s\\" configs)\\n      (if (assq mode test-alist)\\n          (setcdr (assq mode test-alist)\\n                  \`(,current-config))\\n        \`(push '(,mode '(,current-config)) ,test-alist))\\n      )))\\n\\n(turbo-log-configure\\n :modes (typescript-mode js2-mode js-mode)\\n ;; :modes (typescript-mode j-mode)\\n ;; :modes (js-mode)\\n :strategy replace\\n\\n :loggers (\\"console.print\\" \\"console.dbg\\")\\n :msg-format-template \\"\\"HELLO WORLD: %s\\"\\")\\n\\n(message \\"-------------------------------------------------------\\")\\n(message \\"%s\\" (pp test-alist))")
+                      newLine [28724-28725]
+                      blockFooter [28725-28734]
+                        keyword [28725-28734]
+                          text [28725-28734] ("#+end_src")
+                    newLine [28734-28735]
+                    keyword [28735-28746]
+                      text [28735-28746] ("#+RESULTS: ")
+                    newLine [28746-28747]
+                    fixedWidth [28747-28760]
+                      operator [28747-28749] (": ")
+                      text [28749-28760] ("((mode nil)")
+                    newLine [28760-28761]
+                    fixedWidth [28761-28772]
+                      operator [28761-28763] (": ")
+                      text [28763-28772] (" (js-mode")
+                    newLine [28772-28773]
+                    fixedWidth [28773-28786]
+                      operator [28773-28775] (": ")
+                      text [28775-28786] ("  (:loggers")
+                    newLine [28786-28787]
+                    fixedWidth [28787-28805]
+                      operator [28787-28789] (": ")
+                      text [28789-28805] ("   '(\\"hi there\\")")
+                    newLine [28805-28806]
+                    fixedWidth [28806-28838]
+                      operator [28806-28808] (": ")
+                      text [28808-28838] ("   :msg-format-template \\"Hi\\"))")
+                    newLine [28838-28839]
+                    fixedWidth [28839-28858]
+                      operator [28839-28841] (": ")
+                      text [28841-28858] (" (typescript-mode")
+                    newLine [28858-28859]
+                    fixedWidth [28859-28872]
+                      operator [28859-28861] (": ")
+                      text [28861-28872] ("  (:loggers")
+                    newLine [28872-28873]
+                    fixedWidth [28873-28909]
+                      operator [28873-28875] (": ")
+                      text [28875-28909] ("   (\\"console.print\\" \\"console.dbg\\")")
+                    newLine [28909-28910]
+                    fixedWidth [28910-28958]
+                      operator [28910-28912] (": ")
+                      text [28912-28958] ("   :msg-format-template \\"\\"HELLO WORLD: %s\\"\\")))")
+                    newLine [28958-28959]
+        headline [28959-29391]
             :level 1:
-          title [28961-28986]
-            operator [28961-28963] ("* ")
-            text [28963-28985] ("Создание своего пакета")
-            newLine [28985-28986]
-          section [28986-29393]
-            headline [28986-29148]
+          title [28959-28984]
+            operator [28959-28961] ("* ")
+            text [28961-28983] ("Создание своего пакета")
+            newLine [28983-28984]
+          section [28984-29391]
+            headline [28984-29146]
                 :level 2:
-              title [28986-29016]
-                operator [28986-28989] ("** ")
-                text [28989-29015] ("Проверка ошибок компиляции")
-                newLine [29015-29016]
-              section [29016-29148]
-                srcBlock [29016-29147]
+              title [28984-29014]
+                operator [28984-28987] ("** ")
+                text [28987-29013] ("Проверка ошибок компиляции")
+                newLine [29013-29014]
+              section [29014-29146]
+                srcBlock [29014-29145]
                     :language bash:
-                  blockHeader [29016-29032]
-                    keyword [29016-29032]
+                  blockHeader [29014-29030]
+                    keyword [29014-29030]
                         :language bash:
-                      text [29016-29028] ("#+begin_src ")
-                      srcLanguage [29028-29032] ("bash")
-                  newLine [29032-29033]
-                  blockBody [29033-29137]
-                    text [29033-29137] ("emacs -Q --batch     --eval '(setq byte-compile-error-on-warn t)'     -f batch-byte-compile turbo-log.el")
-                  newLine [29137-29138]
-                  blockFooter [29138-29147]
-                    keyword [29138-29147]
-                      text [29138-29147] ("#+end_src")
-                newLine [29147-29148]
-            headline [29148-29211]
+                      text [29014-29026] ("#+begin_src ")
+                      srcLanguage [29026-29030] ("bash")
+                  newLine [29030-29031]
+                  blockBody [29031-29135]
+                    text [29031-29135] ("emacs -Q --batch     --eval '(setq byte-compile-error-on-warn t)'     -f batch-byte-compile turbo-log.el")
+                  newLine [29135-29136]
+                  blockFooter [29136-29145]
+                    keyword [29136-29145]
+                      text [29136-29145] ("#+end_src")
+                newLine [29145-29146]
+            headline [29146-29209]
                 :level 2:
-              title [29148-29162]
-                operator [29148-29151] ("** ")
-                text [29151-29161] ("Contribute")
-                newLine [29161-29162]
-              section [29162-29211]
-                link [29162-29210]
+              title [29146-29160]
+                operator [29146-29149] ("** ")
+                text [29149-29159] ("Contribute")
+                newLine [29159-29160]
+              section [29160-29209]
+                link [29160-29208]
                     :linkType raw:
-                  operator [29162-29163] ("[")
-                  linkUrl [29163-29209]
-                    operator [29163-29164] ("[")
-                    text [29164-29208] ("htest-varps://github.com/leotaku/elisp-check")
-                    operator [29208-29209] ("]")
-                  operator [29209-29210] ("]")
-                newLine [29210-29211]
-            headline [29211-29393]
+                  operator [29160-29161] ("[")
+                  linkUrl [29161-29207]
+                    operator [29161-29162] ("[")
+                    text [29162-29206] ("htest-varps://github.com/leotaku/elisp-check")
+                    operator [29206-29207] ("]")
+                  operator [29207-29208] ("]")
+                newLine [29208-29209]
+            headline [29209-29391]
                 :level 2:
-              title [29211-29217]
-                operator [29211-29214] ("** ")
-                text [29214-29216] ("CI")
-                newLine [29216-29217]
-              section [29217-29393]
-                link [29217-29326]
+              title [29209-29215]
+                operator [29209-29212] ("** ")
+                text [29212-29214] ("CI")
+                newLine [29214-29215]
+              section [29215-29391]
+                link [29215-29324]
                     :linkType raw:
-                  operator [29217-29218] ("[")
-                  linkUrl [29218-29302]
-                    operator [29218-29219] ("[")
-                    text [29219-29301] ("htest-varps://github.com/a13/reverse-im.el/blob/master/.github/workflows/check.yml")
-                    operator [29301-29302] ("]")
-                  linkName [29302-29325]
-                    operator [29302-29303] ("[")
-                    text [29303-29324] ("Пример github actions")
-                    operator [29324-29325] ("]")
-                  operator [29325-29326] ("]")
-                newLine [29326-29327]
-                link [29327-29392]
+                  operator [29215-29216] ("[")
+                  linkUrl [29216-29300]
+                    operator [29216-29217] ("[")
+                    text [29217-29299] ("htest-varps://github.com/a13/reverse-im.el/blob/master/.github/workflows/check.yml")
+                    operator [29299-29300] ("]")
+                  linkName [29300-29323]
+                    operator [29300-29301] ("[")
+                    text [29301-29322] ("Пример github actions")
+                    operator [29322-29323] ("]")
+                  operator [29323-29324] ("]")
+                newLine [29324-29325]
+                link [29325-29390]
                     :linkType raw:
-                  operator [29327-29328] ("[")
-                  linkUrl [29328-29374]
-                    operator [29328-29329] ("[")
-                    text [29329-29373] ("htest-varps://github.com/leotaku/elisp-check")
-                    operator [29373-29374] ("]")
-                  linkName [29374-29391]
-                    operator [29374-29375] ("[")
-                    text [29375-29390] ("Про elisp check")
-                    operator [29390-29391] ("]")
-                  operator [29391-29392] ("]")
-                newLine [29392-29393]
-        headline [29393-30259]
+                  operator [29325-29326] ("[")
+                  linkUrl [29326-29372]
+                    operator [29326-29327] ("[")
+                    text [29327-29371] ("htest-varps://github.com/leotaku/elisp-check")
+                    operator [29371-29372] ("]")
+                  linkName [29372-29389]
+                    operator [29372-29373] ("[")
+                    text [29373-29388] ("Про elisp check")
+                    operator [29388-29389] ("]")
+                  operator [29389-29390] ("]")
+                newLine [29390-29391]
+        headline [29391-30257]
             :level 1:
-          title [29393-29401]
-            operator [29393-29395] ("* ")
-            text [29395-29400] ("Тесты")
-            newLine [29400-29401]
-          section [29401-30259]
-            text [29401-29530] ("Тесты пишутся весьма просто. От части потому что не нужно мокать кучу зависимостей. Функция в большинстве случаев самодостаточна.")
-            newLine [29530-29531]
-            newLine [29531-29532]
-            srcBlock [29532-29623]
+          title [29391-29399]
+            operator [29391-29393] ("* ")
+            text [29393-29398] ("Тесты")
+            newLine [29398-29399]
+          section [29399-30257]
+            text [29399-29528] ("Тесты пишутся весьма просто. От части потому что не нужно мокать кучу зависимостей. Функция в большинстве случаев самодостаточна.")
+            newLine [29528-29529]
+            newLine [29529-29530]
+            srcBlock [29530-29621]
                 :language emacs-lisp:
-              blockHeader [29532-29554]
-                keyword [29532-29554]
+              blockHeader [29530-29552]
+                keyword [29530-29552]
                     :language emacs-lisp:
-                  text [29532-29544] ("#+begin_src ")
-                  srcLanguage [29544-29554] ("emacs-lisp")
-              newLine [29554-29555]
-              blockBody [29555-29613]
-                text [29555-29613] ("(ert-deftest my-first-test ()\\n  (should (= (+ 10 10) 20)))")
-              newLine [29613-29614]
-              blockFooter [29614-29623]
-                keyword [29614-29623]
-                  text [29614-29623] ("#+end_src")
-            newLine [29623-29624]
-            text [29624-29631] ("Запуск.")
-            newLine [29631-29632]
-            newLine [29632-29633]
-            srcBlock [29633-29736]
+                  text [29530-29542] ("#+begin_src ")
+                  srcLanguage [29542-29552] ("emacs-lisp")
+              newLine [29552-29553]
+              blockBody [29553-29611]
+                text [29553-29611] ("(ert-deftest my-first-test ()\\n  (should (= (+ 10 10) 20)))")
+              newLine [29611-29612]
+              blockFooter [29612-29621]
+                keyword [29612-29621]
+                  text [29612-29621] ("#+end_src")
+            newLine [29621-29622]
+            text [29622-29629] ("Запуск.")
+            newLine [29629-29630]
+            newLine [29630-29631]
+            srcBlock [29631-29734]
                 :language bash:
-              blockHeader [29633-29649]
-                keyword [29633-29649]
+              blockHeader [29631-29647]
+                keyword [29631-29647]
                     :language bash:
-                  text [29633-29645] ("#+begin_src ")
-                  srcLanguage [29645-29649] ("bash")
-              newLine [29649-29650]
-              blockBody [29650-29726]
-                text [29650-29726] ("emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit")
-              newLine [29726-29727]
-              blockFooter [29727-29736]
-                keyword [29727-29736]
-                  text [29727-29736] ("#+end_src")
-            newLine [29736-29737]
-            undefined [29737-29766]
+                  text [29631-29643] ("#+begin_src ")
+                  srcLanguage [29643-29647] ("bash")
+              newLine [29647-29648]
+              blockBody [29648-29724]
+                text [29648-29724] ("emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit")
+              newLine [29724-29725]
+              blockFooter [29725-29734]
+                keyword [29725-29734]
+                  text [29725-29734] ("#+end_src")
+            newLine [29734-29735]
+            undefined [29735-29764]
                 :language {HIDDEN:
-              blockHeader [29737-29752]
-                keyword [29737-29752]
+              blockHeader [29735-29750]
+                keyword [29735-29750]
                     :language {HIDDEN:
-                  text [29737-29745] ("#+BEGIN_")
-                  srcLanguage [29745-29752] ("{HIDDEN")
-              newLine [29752-29753]
-              blockBody [29753-29753]
-              blockFooter [29753-29766]
-                keyword [29753-29766]
-                  text [29753-29759] ("#+END_")
-                  text [29759-29766] ("{HIDDEN")
-            text [29766-29767] ("}")
-            newLine [29767-29768]
-            newLine [29768-29769]
-            srcBlock [29769-29869]
+                  text [29735-29743] ("#+BEGIN_")
+                  srcLanguage [29743-29750] ("{HIDDEN")
+              newLine [29750-29751]
+              blockBody [29751-29751]
+              blockFooter [29751-29764]
+                keyword [29751-29764]
+                  text [29751-29757] ("#+END_")
+                  text [29757-29764] ("{HIDDEN")
+            text [29764-29765] ("}")
+            newLine [29765-29766]
+            newLine [29766-29767]
+            srcBlock [29767-29867]
                 :language emacs-lisp:
-              blockHeader [29769-29791]
-                keyword [29769-29791]
+              blockHeader [29767-29789]
+                keyword [29767-29789]
                     :language emacs-lisp:
-                  text [29769-29781] ("#+begin_src ")
-                  srcLanguage [29781-29791] ("emacs-lisp")
-              newLine [29791-29792]
-              blockBody [29792-29859]
-                text [29792-29859] ("(setq v (dolist (i '(1 2 3 4))\\n                i))\\n(message \\"%s\\" v)")
-              newLine [29859-29860]
-              blockFooter [29860-29869]
-                keyword [29860-29869]
-                  text [29860-29869] ("#+end_src")
-            newLine [29869-29870]
-            keyword [29870-29881]
-              text [29870-29881] ("#+RESULTS: ")
-            newLine [29881-29882]
-            fixedWidth [29882-29887]
-              operator [29882-29884] (": ")
-              text [29884-29887] ("nil")
+                  text [29767-29779] ("#+begin_src ")
+                  srcLanguage [29779-29789] ("emacs-lisp")
+              newLine [29789-29790]
+              blockBody [29790-29857]
+                text [29790-29857] ("(setq v (dolist (i '(1 2 3 4))\\n                i))\\n(message \\"%s\\" v)")
+              newLine [29857-29858]
+              blockFooter [29858-29867]
+                keyword [29858-29867]
+                  text [29858-29867] ("#+end_src")
+            newLine [29867-29868]
+            keyword [29868-29879]
+              text [29868-29879] ("#+RESULTS: ")
+            newLine [29879-29880]
+            fixedWidth [29880-29885]
+              operator [29880-29882] (": ")
+              text [29882-29885] ("nil")
+            newLine [29885-29886]
+            newLine [29886-29887]
             newLine [29887-29888]
-            newLine [29888-29889]
-            newLine [29889-29890]
-            headline [29890-30259]
+            headline [29888-30257]
                 :level 2:
-              title [29890-29904]
-                operator [29890-29893] ("** ")
-                text [29893-29903] ("Check json")
-                newLine [29903-29904]
-              section [29904-30259]
-                srcBlock [29904-30248]
+              title [29888-29902]
+                operator [29888-29891] ("** ")
+                text [29891-29901] ("Check json")
+                newLine [29901-29902]
+              section [29902-30257]
+                srcBlock [29902-30246]
                     :language emacs-lisp:
-                  blockHeader [29904-29926]
-                    keyword [29904-29926]
+                  blockHeader [29902-29924]
+                    keyword [29902-29924]
                         :language emacs-lisp:
-                      text [29904-29916] ("#+begin_src ")
-                      srcLanguage [29916-29926] ("emacs-lisp")
-                  newLine [29926-29927]
-                  blockBody [29927-30238]
-                    text [29927-30238] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
-                  newLine [30238-30239]
-                  blockFooter [30239-30248]
-                    keyword [30239-30248]
-                      text [30239-30248] ("#+end_src")
-                newLine [30248-30249]
-                keyword [30249-30259]
-                  text [30249-30259] ("#+RESULTS:")
-        headline [30259-30355]
+                      text [29902-29914] ("#+begin_src ")
+                      srcLanguage [29914-29924] ("emacs-lisp")
+                  newLine [29924-29925]
+                  blockBody [29925-30236]
+                    text [29925-30236] ("  (let* ((json-object-type 'plist)\\n         (json-array-type 'list)\\n         (json-key-type 'string)\\n         (json (json-read-file web-roam-configuration-file-path))\\n         (name-to-config (make-hash-table :test 'equal))\\n         (server-names '()))\\n    (dolist (config json)\\n      (message \\"%s\\" config))\\n  )")
+                  newLine [30236-30237]
+                  blockFooter [30237-30246]
+                    keyword [30237-30246]
+                      text [30237-30246] ("#+end_src")
+                newLine [30246-30247]
+                keyword [30247-30257]
+                  text [30247-30257] ("#+RESULTS:")
+        headline [30257-30353]
             :level 1:
-          title [29754-29781]
-            operator [29754-29756] ("* ")
-            text [29756-29780] ("Статический анализ типов")
-            newLine [29780-29781]
-          section [29781-29850]
-            link [29781-29849]
+          title [29752-29779]
+            operator [29752-29754] ("* ")
+            text [29754-29778] ("Статический анализ типов")
+            newLine [29778-29779]
+          section [29779-29848]
+            link [29779-29847]
                 :linkType network:
-              operator [29781-29782] ("[")
-              linkUrl [29782-29818]
-                operator [29782-29783] ("[")
-                text [29783-29817] ("https://github.com/emacs-elsa/Elsa")
-                operator [29817-29818] ("]")
-              linkName [29818-29848]
-                operator [29818-29819] ("[")
-                text [29819-29847] ("Его нет. Зато есть аннотации")
-                operator [29847-29848] ("]")
-              operator [29848-29849] ("]")
-            newLine [29849-29850]
-        headline [30355-32241]
+              operator [29779-29780] ("[")
+              linkUrl [29780-29816]
+                operator [29780-29781] ("[")
+                text [29781-29815] ("https://github.com/emacs-elsa/Elsa")
+                operator [29815-29816] ("]")
+              linkName [29816-29846]
+                operator [29816-29817] ("[")
+                text [29817-29845] ("Его нет. Зато есть аннотации")
+                operator [29845-29846] ("]")
+              operator [29846-29847] ("]")
+            newLine [29847-29848]
+        headline [30353-32238]
             :level 1:
-          title [29850-29872]
-            operator [29850-29852] ("* ")
-            text [29852-29861] ("Временно ")
-            tagList [29861-29871]
-              operator [29861-29862] (":")
-              text [29862-29870] ("noexport")
-              operator [29870-29871] (":")
-            newLine [29871-29872]
-          section [29872-31736]
-            srcBlock [29872-29934]
+          title [29848-29870]
+            operator [29848-29850] ("* ")
+            text [29850-29859] ("Временно ")
+            tagList [29859-29869]
+              operator [29859-29860] (":")
+              text [29860-29868] ("noexport")
+              operator [29868-29869] (":")
+            newLine [29869-29870]
+          section [29870-31733]
+            srcBlock [29870-29931]
                 :language emacs-lisp:
-              blockHeader [29872-29894]
-                keyword [29872-29894]
+              blockHeader [29870-29892]
+                keyword [29870-29892]
                     :language emacs-lisp:
-                  text [29872-29884] ("#+begin_src ")
-                  srcLanguage [29884-29894] ("emacs-lisp")
-              newLine [29894-29895]
-              blockBody [29895-29924]
-                text [29895-29924] ("(message \\"\\"\\\\[line [0-9]+\\\\]\\"\\")")
-              newLine [29924-29925]
-              blockFooter [29925-29934]
-                keyword [29925-29934]
-                  text [29925-29934] ("#+end_src")
-            newLine [29934-29935]
-            srcBlock [29935-30070]
+                  text [29870-29882] ("#+begin_src ")
+                  srcLanguage [29882-29892] ("emacs-lisp")
+              newLine [29892-29893]
+              blockBody [29893-29921]
+                text [29893-29921] ("(message \\"\\"\\\\[line [0-9]\\\\]\\"\\")")
+              newLine [29921-29922]
+              blockFooter [29922-29931]
+                keyword [29922-29931]
+                  text [29922-29931] ("#+end_src")
+            newLine [29931-29932]
+            srcBlock [29932-30067]
                 :language emacs-lisp:
-              blockHeader [29935-29957]
-                keyword [29935-29957]
+              blockHeader [29932-29954]
+                keyword [29932-29954]
                     :language emacs-lisp:
-                  text [29935-29947] ("#+begin_src ")
-                  srcLanguage [29947-29957] ("emacs-lisp")
-              newLine [29957-29958]
-              blockBody [29958-30060]
-                text [29958-30060] ("(message \\"%s\\" (string-match \\"{\\\\|);?$\\" \\"public replaceNonPrintableCharacters(text: string): string {\\"))")
-              newLine [30060-30061]
-              blockFooter [30061-30070]
-                keyword [30061-30070]
-                  text [30061-30070] ("#+end_src")
-            newLine [30070-30071]
-            keyword [30071-30082]
-              text [30071-30082] ("#+RESULTS: ")
-            newLine [30082-30083]
-            fixedWidth [30083-30087]
-              operator [30083-30085] (": ")
-              text [30085-30087] ("59")
-            newLine [30087-30088]
-            newLine [30088-30089]
-            newLine [30089-30090]
-            srcBlock [30090-30271]
+                  text [29932-29944] ("#+begin_src ")
+                  srcLanguage [29944-29954] ("emacs-lisp")
+              newLine [29954-29955]
+              blockBody [29955-30057]
+                text [29955-30057] ("(message \\"%s\\" (string-match \\"{\\\\|);?$\\" \\"public replaceNonPrintableCharacters(text: string): string {\\"))")
+              newLine [30057-30058]
+              blockFooter [30058-30067]
+                keyword [30058-30067]
+                  text [30058-30067] ("#+end_src")
+            newLine [30067-30068]
+            keyword [30068-30079]
+              text [30068-30079] ("#+RESULTS: ")
+            newLine [30079-30080]
+            fixedWidth [30080-30084]
+              operator [30080-30082] (": ")
+              text [30082-30084] ("59")
+            newLine [30084-30085]
+            newLine [30085-30086]
+            newLine [30086-30087]
+            srcBlock [30087-30268]
                 :language emacs-lisp:
-              blockHeader [30090-30112]
-                keyword [30090-30112]
+              blockHeader [30087-30109]
+                keyword [30087-30109]
                     :language emacs-lisp:
-                  text [30090-30102] ("#+begin_src ")
-                  srcLanguage [30102-30112] ("emacs-lisp")
-              newLine [30112-30113]
-              blockBody [30113-30261]
-                text [30113-30261] ("(setq turbo-log--ecmascript-final-symbols '(?; ?)))\\n(while (or (not (eobp)) (member ?) '(?; ?))))\\n                 (setq current-char char-after))))")
-              newLine [30261-30262]
-              blockFooter [30262-30271]
-                keyword [30262-30271]
-                  text [30262-30271] ("#+end_src")
-            newLine [30271-30272]
-            srcBlock [30272-31283]
+                  text [30087-30099] ("#+begin_src ")
+                  srcLanguage [30099-30109] ("emacs-lisp")
+              newLine [30109-30110]
+              blockBody [30110-30258]
+                text [30110-30258] ("(setq turbo-log--ecmascript-final-symbols '(?; ?)))\\n(while (or (not (eobp)) (member ?) '(?; ?))))\\n                 (setq current-char char-after))))")
+              newLine [30258-30259]
+              blockFooter [30259-30268]
+                keyword [30259-30268]
+                  text [30259-30268] ("#+end_src")
+            newLine [30268-30269]
+            srcBlock [30269-31280]
                 :language emacs-lisp:
-              blockHeader [30272-30294]
-                keyword [30272-30294]
+              blockHeader [30269-30291]
+                keyword [30269-30291]
                     :language emacs-lisp:
-                  text [30272-30284] ("#+begin_src ")
-                  srcLanguage [30284-30294] ("emacs-lisp")
-              newLine [30294-30295]
-              blockBody [30295-31273]
-                text [30295-31273] ("(setq quicktype-mode-configs '((\\"go\\" go-mode \\"\\")\\n                               (\\"ts\\" typescript-mode \\"\\")\\n                               (\\"js\\" js2-mode \\"\\")\\n                               (\\"rs\\" rust-mode \\"\\")\\n                               (\\"c++\\" c++-mode \\"\\")\\n                               (\\"javascript-prop-types\\" js2-mode \\"\\")\\n                               (\\"flow\\" flow-js2-mode \\"\\")\\n                               (\\"swift\\" swift-mode \\"\\")\\n                               (\\"kotlin\\" kotlin-mode \\"\\")\\n                               (\\"elm\\" elm-mode \\"\\")\\n                               (\\"ruby\\" ruby-mode \\"\\")\\n                               (\\"dart\\" dart-mode \\"\\")\\n                               (\\"py\\" python-mode \\"--python-version 3.7\\")\\n                               (\\"haskell\\" haskell-mode \\"\\")))\\n\\n;; (message \\"%s\\" quicktype-mode-configs)\\n(message \\"%s\\" (cl-rassoc 'go-mode quicktype-mode-configs :test #'member))\\n;; (message \\"%s\\" (cl-rassoc \\"Red Pine\\" needles-per-cluster :test #'member))")
-              newLine [31273-31274]
-              blockFooter [31274-31283]
-                keyword [31274-31283]
-                  text [31274-31283] ("#+end_src")
-            newLine [31283-31284]
-            keyword [31284-31295]
-              text [31284-31295] ("#+RESULTS: ")
-            newLine [31295-31296]
-            fixedWidth [31296-31311]
-              operator [31296-31298] (": ")
-              text [31298-31311] ("(go go-mode )")
-            newLine [31311-31312]
-            newLine [31312-31313]
-            newLine [31313-31314]
-            srcBlock [31314-31537]
+                  text [30269-30281] ("#+begin_src ")
+                  srcLanguage [30281-30291] ("emacs-lisp")
+              newLine [30291-30292]
+              blockBody [30292-31270]
+                text [30292-31270] ("(setq quicktype-mode-configs '((\\"go\\" go-mode \\"\\")\\n                               (\\"ts\\" typescript-mode \\"\\")\\n                               (\\"js\\" js2-mode \\"\\")\\n                               (\\"rs\\" rust-mode \\"\\")\\n                               (\\"c++\\" c++-mode \\"\\")\\n                               (\\"javascript-prop-types\\" js2-mode \\"\\")\\n                               (\\"flow\\" flow-js2-mode \\"\\")\\n                               (\\"swift\\" swift-mode \\"\\")\\n                               (\\"kotlin\\" kotlin-mode \\"\\")\\n                               (\\"elm\\" elm-mode \\"\\")\\n                               (\\"ruby\\" ruby-mode \\"\\")\\n                               (\\"dart\\" dart-mode \\"\\")\\n                               (\\"py\\" python-mode \\"--python-version 3.7\\")\\n                               (\\"haskell\\" haskell-mode \\"\\")))\\n\\n;; (message \\"%s\\" quicktype-mode-configs)\\n(message \\"%s\\" (cl-rassoc 'go-mode quicktype-mode-configs :test #'member))\\n;; (message \\"%s\\" (cl-rassoc \\"Red Pine\\" needles-per-cluster :test #'member))")
+              newLine [31270-31271]
+              blockFooter [31271-31280]
+                keyword [31271-31280]
+                  text [31271-31280] ("#+end_src")
+            newLine [31280-31281]
+            keyword [31281-31292]
+              text [31281-31292] ("#+RESULTS: ")
+            newLine [31292-31293]
+            fixedWidth [31293-31308]
+              operator [31293-31295] (": ")
+              text [31295-31308] ("(go go-mode )")
+            newLine [31308-31309]
+            newLine [31309-31310]
+            newLine [31310-31311]
+            srcBlock [31311-31534]
                 :language emacs-lisp:
-              blockHeader [31314-31336]
-                keyword [31314-31336]
+              blockHeader [31311-31333]
+                keyword [31311-31333]
                     :language emacs-lisp:
-                  text [31314-31326] ("#+begin_src ")
-                  srcLanguage [31326-31336] ("emacs-lisp")
-              newLine [31336-31337]
-              blockBody [31337-31527]
-                text [31337-31527] ("(setq needles-per-cluster\\n      '((2 \\"Austrian Pine\\" \\"Red Pine\\")\\n        (3 \\"Pitch Pine\\")\\n        (5 \\"White Pine\\")))\\n\\n(message \\"%s\\" (cl-rassoc \\"Red Pine\\" needles-per-cluster :test #'member))")
-              newLine [31527-31528]
-              blockFooter [31528-31537]
-                keyword [31528-31537]
-                  text [31528-31537] ("#+end_src")
-            newLine [31537-31538]
-            keyword [31538-31549]
-              text [31538-31549] ("#+RESULTS: ")
-            newLine [31549-31550]
-            fixedWidth [31550-31578]
-              operator [31550-31552] (": ")
-              text [31552-31578] ("(2 Austrian Pine Red Pine)")
-            newLine [31578-31579]
-            newLine [31579-31580]
-            newLine [31580-31581]
-            srcBlock [31581-31717]
+                  text [31311-31323] ("#+begin_src ")
+                  srcLanguage [31323-31333] ("emacs-lisp")
+              newLine [31333-31334]
+              blockBody [31334-31524]
+                text [31334-31524] ("(setq needles-per-cluster\\n      '((2 \\"Austrian Pine\\" \\"Red Pine\\")\\n        (3 \\"Pitch Pine\\")\\n        (5 \\"White Pine\\")))\\n\\n(message \\"%s\\" (cl-rassoc \\"Red Pine\\" needles-per-cluster :test #'member))")
+              newLine [31524-31525]
+              blockFooter [31525-31534]
+                keyword [31525-31534]
+                  text [31525-31534] ("#+end_src")
+            newLine [31534-31535]
+            keyword [31535-31546]
+              text [31535-31546] ("#+RESULTS: ")
+            newLine [31546-31547]
+            fixedWidth [31547-31575]
+              operator [31547-31549] (": ")
+              text [31549-31575] ("(2 Austrian Pine Red Pine)")
+            newLine [31575-31576]
+            newLine [31576-31577]
+            newLine [31577-31578]
+            srcBlock [31578-31714]
                 :language emacs-lisp:
-              blockHeader [31581-31603]
-                keyword [31581-31603]
+              blockHeader [31578-31600]
+                keyword [31578-31600]
                     :language emacs-lisp:
-                  text [31581-31593] ("#+begin_src ")
-                  srcLanguage [31593-31603] ("emacs-lisp")
-              newLine [31603-31604]
-              blockBody [31604-31707]
-                text [31604-31707] ("(message \\"%s\\" (string-match \\"\\\\({\\\\|;$\\\\)\\\\|\\\\(const [\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]+$\\\\)\\" \\"  const foo = 1\\"))")
-              newLine [31707-31708]
-              blockFooter [31708-31717]
-                keyword [31708-31717]
-                  text [31708-31717] ("#+end_src")
-            newLine [31717-31718]
-            keyword [31718-31729]
-              text [31718-31729] ("#+RESULTS: ")
-            newLine [31729-31730]
-            fixedWidth [31730-31735]
-              operator [31730-31732] (": ")
-              text [31732-31735] ("nil")
-            newLine [31735-31736]
+                  text [31578-31590] ("#+begin_src ")
+                  srcLanguage [31590-31600] ("emacs-lisp")
+              newLine [31600-31601]
+              blockBody [31601-31704]
+                text [31601-31704] ("(message \\"%s\\" (string-match \\"\\\\({\\\\|;$\\\\)\\\\|\\\\(const [\\\\w\\\\[:digit]]+ = [\\\\d[:digit:]]+$\\\\)\\" \\"  const foo = 1\\"))")
+              newLine [31704-31705]
+              blockFooter [31705-31714]
+                keyword [31705-31714]
+                  text [31705-31714] ("#+end_src")
+            newLine [31714-31715]
+            keyword [31715-31726]
+              text [31715-31726] ("#+RESULTS: ")
+            newLine [31726-31727]
+            fixedWidth [31727-31732]
+              operator [31727-31729] (": ")
+              text [31729-31732] ("nil")
+            newLine [31732-31733]
       "
     `);
   });

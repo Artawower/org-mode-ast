@@ -115,14 +115,16 @@ describe('Latex environment', () => {
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-68]
         text [0-16] ("Some text \\\\begin")
-        text [16-24] ("{align*}")
+        text [16-23] ("{align*")
+        text [23-24] ("}")
         newLine [24-25]
         text [25-40] ("2x - 5y &= 8 \\\\\\\\")
         newLine [40-41]
         text [41-55] ("3x + 9y &= -12")
         newLine [55-56]
         text [56-60] ("\\\\end")
-        text [60-68] ("{align*}")
+        text [60-67] ("{align*")
+        text [67-68] ("}")
       "
     `);
   });

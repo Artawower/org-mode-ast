@@ -113,4 +113,24 @@ describe('Italic', () => {
       "
     `);
   });
+
+  it('Should not parse italic for wrong slash positions', () => {
+    const orgText = `/ Not italic/`;
+    const result = parse(orgText);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-13]
+        text [0-13] ("/ Not italic/")
+      "
+    `);
+  });
+
+  it('Should not parse italic for wrong slash at the end', () => {
+    const orgText = `/Not italic /`;
+    const result = parse(orgText);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-13]
+        text [0-13] ("/Not italic /")
+      "
+    `);
+  });
 });

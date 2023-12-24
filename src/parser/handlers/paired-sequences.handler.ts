@@ -6,13 +6,14 @@ import {
   OrgNode,
   ParserConfiguration,
   linkTypes,
+  TokenType,
 } from '../../models/index.js';
 import { AstBuilder } from '../ast-builder.js';
 import { TokenIterator } from '../../tokenizer/index.js';
 import { isNumber } from '../../tools/index.js';
 import { AstContext } from 'parser/ast-context.js';
 
-export class BracketHandler implements OrgHandler {
+export class PairedSequencesHandler implements OrgHandler {
   readonly #dateRangeDelimiter = '--';
   readonly #priorityValueRegexp = /#([\w\d]{1})$/;
   readonly #unresolvedNodes = new OrgChildrenList();
@@ -36,6 +37,7 @@ export class BracketHandler implements OrgHandler {
       | NodeType.Crossed
       | NodeType.Italic
       | NodeType.InlineCode
+      | NodeType.Underline
       | NodeType.LatexFragment
       | NodeType.Verbatim;
   } = {
@@ -44,6 +46,7 @@ export class BracketHandler implements OrgHandler {
     '+': NodeType.Crossed,
     '=': NodeType.Verbatim,
     '~': NodeType.InlineCode,
+    _: NodeType.Underline,
     $: NodeType.LatexFragment,
     $$: NodeType.LatexFragment,
   };
@@ -55,17 +58,40 @@ export class BracketHandler implements OrgHandler {
     private readonly tokenIterator: TokenIterator
   ) {}
 
+  public isListDelimiterOperator(): boolean {
+    if (this.tokenIterator.currentValue !== '/') {
+      return false;
+    }
+    return (
+      isNumber(this.tokenIterator.prevToken?.value) &&
+      isNumber(this.tokenIterator.nextToken.value)
+    );
+  }
+
   public handle(): OrgNode {
     const unresolvedNode = this.astBuilder.createUnresolvedNode();
     this.astBuilder.attachToTree(unresolvedNode);
+    console.log(
+      `✎: [paired-sequences.handler.ts][${new Date().toString()}] currentValue`,
+      this.tokenIterator.currentValue
+    );
 
-    const closedBracketNode = this.tryHandlePairBracket(unresolvedNode);
+    const closedBracketNode = this.tryHandlePairedSequence(unresolvedNode);
+    console.log(
+      '✎: [line 80][paired-sequences.handler.ts] closedBracketNode: ',
+      closedBracketNode
+    );
 
     if (closedBracketNode) {
       this.removeFormattingInsideInlineCode(closedBracketNode);
       this.storeUnresolvedNode(closedBracketNode);
       this.addMetaInfo(closedBracketNode);
       return closedBracketNode;
+    }
+
+    const textBracket = this.tryHandlePairedSequenceAsText(unresolvedNode);
+    if (textBracket) {
+      return textBracket;
     }
 
     this.ctx.bracketsStack.push(unresolvedNode);
@@ -89,8 +115,12 @@ export class BracketHandler implements OrgHandler {
   }
 
   // TODO: refactor this method, so complex!
-  private tryHandlePairBracket(closedBracket: OrgNode): OrgNode {
-    if (this.ctx.bracketsStack.isEmpty || this.isOpenedBracket(closedBracket)) {
+  private tryHandlePairedSequence(closedBracket: OrgNode): OrgNode {
+    if (
+      this.ctx.bracketsStack.isEmpty ||
+      this.isOpenedBracket(closedBracket) ||
+      this.tokenIterator.token.isType(TokenType.OpenMarkup)
+    ) {
       return;
     }
 
@@ -125,6 +155,15 @@ export class BracketHandler implements OrgHandler {
     }
 
     return orgNode;
+  }
+
+  private tryHandlePairedSequenceAsText(node: OrgNode): OrgNode {
+    if (!this.tokenIterator.token.isType(TokenType.CloseMarkup)) {
+      return;
+    }
+    node.type = NodeType.Text;
+    this.astBuilder.mergeNeighborsNodesWithSameType(node);
+    return this.astBuilder.lastNode;
   }
 
   private normalizeBracketedNodes(
@@ -287,7 +326,7 @@ export class BracketHandler implements OrgHandler {
     const isOpenedProgressBracket = bracketedNodes.first.value === '[';
     const isClosedProgressBracket = bracketedNodes.last.value === ']';
     const hasDoneProgress = isNumber(bracketedNodes.get(1).value);
-    const hasSeporator =
+    const hasSeparator =
       bracketedNodes.get(2).value === this.listProgressSeparator;
     const hasDealProgress = isNumber(bracketedNodes.get(3).value);
 
@@ -295,7 +334,7 @@ export class BracketHandler implements OrgHandler {
       isOpenedProgressBracket &&
       isClosedProgressBracket &&
       hasDoneProgress &&
-      hasSeporator &&
+      hasSeparator &&
       hasDealProgress;
 
     if (isProgressBrackets) {

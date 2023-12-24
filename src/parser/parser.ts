@@ -12,7 +12,7 @@ import { AstContext } from './ast-context.js';
 import { ColonHandler } from './handlers/colon.handler.js';
 import {
   BlockHandler,
-  BracketHandler,
+  PairedSequencesHandler,
   CommentHandler,
   KeywordHandler,
   ListHandler,
@@ -28,7 +28,7 @@ class Parser {
     private readonly ctx: AstContext,
     private readonly tokenIterator: TokenIterator,
     private readonly astBuilder: AstBuilder,
-    private readonly bracketHandler: BracketHandler,
+    private readonly pairedSequencesHandler: PairedSequencesHandler,
     private readonly listHandler: ListHandler,
     private readonly commentHandler: CommentHandler,
     private readonly keywordHandler: KeywordHandler,
@@ -65,7 +65,9 @@ class Parser {
   private readonly tokensHandlers = {
     [TokenType.Headline]: () => this.handleHeadline(),
     [TokenType.Text]: () => this.handleText(),
-    [TokenType.Bracket]: () => this.bracketHandler.handle(),
+    [TokenType.Bracket]: () => this.pairedSequencesHandler.handle(),
+    [TokenType.OpenMarkup]: () => this.pairedSequencesHandler.handle(),
+    [TokenType.CloseMarkup]: () => this.pairedSequencesHandler.handle(),
     [TokenType.Operator]: () => this.handleOperator(),
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
@@ -102,7 +104,7 @@ class Parser {
       this.tokenIterator.token?.isType(TokenType.NewLine) ||
       this.tokenIterator.isLastToken;
     if (lineBreak) {
-      this.bracketHandler.handleEndOfLine();
+      this.pairedSequencesHandler.handleEndOfLine();
       this.ctx.insideListItem = false;
     }
     if (
@@ -151,6 +153,7 @@ class Parser {
       this.tokenIterator.currentValue
     );
     if (!orgData) {
+      return;
       throw new UnsupportedOperator(this.tokenIterator.currentValue);
     }
     this.astBuilder.attachToTree(orgData);
@@ -186,7 +189,7 @@ class Parser {
   }
 
   private handleTableOperator(): OrgNode {
-    this.bracketHandler.handleEndOfLine();
+    this.pairedSequencesHandler.handleEndOfLine();
     return this.tableHandler.handle();
   }
 
@@ -220,7 +223,12 @@ class Parser {
       return this.colonHandler.handle();
     }
 
-    return this.astBuilder.createTextNode(this.tokenIterator.currentValue);
+    if (this.pairedSequencesHandler.isListDelimiterOperator()) {
+      return this.astBuilder.createOperatorNode(
+        this.tokenIterator.currentValue
+      );
+    }
+    return this.astBuilder.upsertText();
   }
 }
 
@@ -242,7 +250,7 @@ export function parse(
     tokenIterator
   );
   const commentHandler = new CommentHandler(astBuilder, tokenIterator);
-  const bracketHandler = new BracketHandler(
+  const pairedSequencesHandler = new PairedSequencesHandler(
     configuration,
     ctx,
     astBuilder,
@@ -285,7 +293,7 @@ export function parse(
     ctx,
     tokenIterator,
     astBuilder,
-    bracketHandler,
+    pairedSequencesHandler,
     listHandler,
     commentHandler,
     keywordHandler,

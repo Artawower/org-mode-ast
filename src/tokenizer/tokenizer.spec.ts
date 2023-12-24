@@ -14,7 +14,7 @@ function tokenListToArray(token: Token): Token[] {
   return tokens;
 }
 
-fdescribe('Tokenizer', () => {
+describe('Tokenizer', () => {
   // Headings
   it('Should create tokens for simple headline', () => {
     const headline = '* Hello world';
@@ -125,7 +125,7 @@ fdescribe('Tokenizer', () => {
     const result = tokenize(headline, parserConfiguration);
     expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Indent, value: ' ', start: 0, end: 1 },
-      { type: TokenType.Bracket, value: '*', start: 1, end: 2 },
+      { type: TokenType.OpenMarkup, value: '*', start: 1, end: 2 },
       { type: TokenType.Text, value: 'Hello world', start: 2, end: 13 },
     ]);
   });
@@ -249,7 +249,6 @@ fdescribe('Tokenizer', () => {
   it('Should create tokens for statistics cookies', () => {
     const headline = `* TODO [50%] [#A] Most important headline`;
     const result = tokenListToArray(tokenize(headline, parserConfiguration));
-    console.log('✎: [line 252][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
       { type: TokenType.Keyword, value: 'TODO', start: 2, end: 6 },
@@ -272,43 +271,49 @@ fdescribe('Tokenizer', () => {
 
   it('Should create statistic with delimiter', () => {
     const headline = `* [1/2] Headline 123`;
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
-      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
-      { type: TokenType.Text, value: '1', start: 3, end: 4 },
-      { type: TokenType.Bracket, value: '/', start: 4, end: 5 },
-      { type: TokenType.Text, value: '2', start: 5, end: 6 },
-      { type: TokenType.Bracket, value: ']', start: 6, end: 7 },
-      { type: TokenType.Text, value: ' Headline 123', start: 7, end: 20 },
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'headline', value: '* ' },
+      { start: 2, end: 3, type: 'bracket', value: '[' },
+      { start: 3, end: 4, type: 'text', value: '1' },
+      { start: 4, end: 5, type: 'operator', value: '/' },
+      { start: 5, end: 6, type: 'text', value: '2' },
+      { start: 6, end: 7, type: 'bracket', value: ']' },
+      { start: 7, end: 20, type: 'text', value: ' Headline 123' },
     ]);
   });
 
   it('Should tokenize statistic without trailing space', () => {
     const headline = `* [1/2]Headline 123`;
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
-      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
-      { type: TokenType.Text, value: '1', start: 3, end: 4 },
-      { type: TokenType.Bracket, value: '/', start: 4, end: 5 },
-      { type: TokenType.Text, value: '2', start: 5, end: 6 },
-      { type: TokenType.Bracket, value: ']', start: 6, end: 7 },
-      { type: TokenType.Text, value: 'Headline 123', start: 7, end: 19 },
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'headline', value: '* ' },
+      { start: 2, end: 3, type: 'bracket', value: '[' },
+      { start: 3, end: 4, type: 'text', value: '1' },
+      { start: 4, end: 5, type: 'operator', value: '/' },
+      { start: 5, end: 6, type: 'text', value: '2' },
+      { start: 6, end: 7, type: 'bracket', value: ']' },
+      { start: 7, end: 19, type: 'text', value: 'Headline 123' },
     ]);
   });
 
   it('Should tokenize statistic with large trailing space', () => {
     const headline = `* [1/2]      Headline 123`;
-    const result = tokenize(headline, parserConfiguration);
-    expect(tokenListToArray(result)).toEqual([
-      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
-      { type: TokenType.Bracket, value: '[', start: 2, end: 3 },
-      { type: TokenType.Text, value: '1', start: 3, end: 4 },
-      { type: TokenType.Bracket, value: '/', start: 4, end: 5 },
-      { type: TokenType.Text, value: '2', start: 5, end: 6 },
-      { type: TokenType.Bracket, value: ']', start: 6, end: 7 },
-      { type: TokenType.Text, value: '      Headline 123', start: 7, end: 25 },
+    const result = tokenListToArray(tokenize(headline, parserConfiguration));
+
+    expect(result).toEqual([
+      { start: 0, end: 2, type: 'headline', value: '* ' },
+      { start: 2, end: 3, type: 'bracket', value: '[' },
+      { start: 3, end: 4, type: 'text', value: '1' },
+      { start: 4, end: 5, type: 'operator', value: '/' },
+      { start: 5, end: 6, type: 'text', value: '2' },
+      { start: 6, end: 7, type: 'bracket', value: ']' },
+      {
+        start: 7,
+        end: 25,
+        type: 'text',
+        value: '      Headline 123',
+      },
     ]);
   });
 
@@ -451,9 +456,18 @@ Some text`;
     const result = tokenize(orgDoc, parserConfiguration);
 
     expect(tokenListToArray(result)).toEqual([
-      { type: TokenType.Bracket, value: '*', start: 0, end: 1 },
+      { type: TokenType.OpenMarkup, value: '*', start: 0, end: 1 },
       { type: TokenType.Text, value: 'bold text', start: 1, end: 10 },
-      { type: TokenType.Bracket, value: '*', start: 10, end: 11 },
+      { type: TokenType.CloseMarkup, value: '*', start: 10, end: 11 },
+    ]);
+  });
+
+  it('Should not parse bold operators when no delimited between *', () => {
+    const orgDoc = `*Note bold*text`;
+    const result = tokenize(orgDoc, parserConfiguration);
+    expect(tokenListToArray(result)).toEqual([
+      { type: TokenType.OpenMarkup, value: '*', start: 0, end: 1 },
+      { type: TokenType.Text, value: 'Note bold*text', start: 1, end: 15 },
     ]);
   });
 
@@ -462,9 +476,9 @@ Some text`;
     const result = tokenize(orgDoc, parserConfiguration);
 
     expect(tokenListToArray(result)).toEqual([
-      { type: TokenType.Bracket, value: '+', start: 0, end: 1 },
+      { type: TokenType.OpenMarkup, value: '+', start: 0, end: 1 },
       { type: TokenType.Text, value: 'bold text', start: 1, end: 10 },
-      { type: TokenType.Bracket, value: '+', start: 10, end: 11 },
+      { type: TokenType.CloseMarkup, value: '+', start: 10, end: 11 },
     ]);
   });
 
@@ -474,11 +488,11 @@ Some text`;
 
     expect(tokenListToArray(result)).toEqual([
       { type: TokenType.Text, value: 'This is ', start: 0, end: 8 },
-      { type: TokenType.Bracket, value: '*', start: 8, end: 9 },
-      { type: TokenType.Bracket, value: '/', start: 9, end: 10 },
+      { type: TokenType.OpenMarkup, value: '*', start: 8, end: 9 },
+      { type: TokenType.OpenMarkup, value: '/', start: 9, end: 10 },
       { type: TokenType.Text, value: 'italic with bold', start: 10, end: 26 },
-      { type: TokenType.Bracket, value: '/', start: 26, end: 27 },
-      { type: TokenType.Bracket, value: '*', start: 27, end: 28 },
+      { type: TokenType.CloseMarkup, value: '/', start: 26, end: 27 },
+      { type: TokenType.CloseMarkup, value: '*', start: 27, end: 28 },
       { type: TokenType.Text, value: ' text', start: 28, end: 33 },
     ]);
   });
@@ -627,9 +641,7 @@ const a = 1;
       { start: 0, end: 12, type: 'keyword', value: '#+BEGIN_SRC ' },
       { start: 12, end: 14, type: 'text', value: 'js' },
       { start: 14, end: 15, type: 'newLine', value: '\n' },
-      { start: 15, end: 23, type: 'text', value: 'const a ' },
-      { start: 23, end: 24, type: 'bracket', value: '=' },
-      { start: 24, end: 27, type: 'text', value: ' 1;' },
+      { start: 15, end: 27, type: 'text', value: 'const a = 1;' },
       { start: 27, end: 28, type: 'newLine', value: '\n' },
       { start: 28, end: 37, type: 'keyword', value: '#+END_SRC' },
     ]);
@@ -643,22 +655,90 @@ console.log(a);
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
-      { start: 0, end: 12, type: 'keyword', value: '#+BEGIN_SRC ' },
-      { start: 12, end: 15, type: 'text', value: 'js ' },
-      { start: 15, end: 22, type: 'keyword', value: ':tangle' },
-      { start: 22, end: 31, type: 'text', value: ' test.js ' },
-      { start: 31, end: 39, type: 'keyword', value: ':exports' },
-      { start: 39, end: 43, type: 'text', value: ' no ' },
-      { start: 43, end: 49, type: 'keyword', value: ':noweb' },
-      { start: 49, end: 53, type: 'text', value: ' yes' },
-      { start: 53, end: 54, type: 'newLine', value: '\n' },
-      { start: 54, end: 62, type: 'text', value: 'const a ' },
-      { start: 62, end: 63, type: 'bracket', value: '=' },
-      { start: 63, end: 66, type: 'text', value: ' 1;' },
-      { start: 66, end: 67, type: 'newLine', value: '\n' },
-      { start: 67, end: 82, type: 'text', value: 'console.log(a);' },
-      { start: 82, end: 83, type: 'newLine', value: '\n' },
-      { start: 83, end: 92, type: 'keyword', value: '#+END_SRC' },
+      {
+        start: 0,
+        end: 12,
+        type: 'keyword',
+        value: '#+BEGIN_SRC ',
+      },
+      {
+        start: 12,
+        end: 15,
+        type: 'text',
+        value: 'js ',
+      },
+      {
+        start: 15,
+        end: 22,
+        type: 'keyword',
+        value: ':tangle',
+      },
+      {
+        start: 22,
+        end: 31,
+        type: 'text',
+        value: ' test.js ',
+      },
+      {
+        start: 31,
+        end: 39,
+        type: 'keyword',
+        value: ':exports',
+      },
+      {
+        start: 39,
+        end: 43,
+        type: 'text',
+        value: ' no ',
+      },
+      {
+        start: 43,
+        end: 49,
+        type: 'keyword',
+        value: ':noweb',
+      },
+      {
+        start: 49,
+        end: 53,
+        type: 'text',
+        value: ' yes',
+      },
+      {
+        start: 53,
+        end: 54,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 54,
+        end: 66,
+        type: 'text',
+        value: 'const a = 1;',
+      },
+      {
+        start: 66,
+        end: 67,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 67,
+        end: 82,
+        type: 'text',
+        value: 'console.log(a);',
+      },
+      {
+        start: 82,
+        end: 83,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 83,
+        end: 92,
+        type: 'keyword',
+        value: '#+END_SRC',
+      },
     ]);
   });
 
@@ -794,7 +874,7 @@ console.log(a);
     expect(result).toEqual([
       { start: 0, end: 1, type: 'bracket', value: '<' },
       { start: 1, end: 16, type: 'text', value: '2023-01-09 Mon ' },
-      { start: 16, end: 17, type: 'bracket', value: '+' },
+      { start: 16, end: 17, type: 'openMarkup', value: '+' },
       { start: 17, end: 19, type: 'text', value: '1h' },
       { start: 19, end: 20, type: 'bracket', value: '>' },
     ]);
@@ -885,12 +965,12 @@ console.log(a);
       { start: 23, end: 24, type: 'bracket', value: '>' },
       { start: 24, end: 33, type: 'text', value: 'Some text' },
       { start: 33, end: 34, type: 'bracket', value: '<' },
-      { start: 34, end: 35, type: 'bracket', value: '/' },
+      { start: 34, end: 35, type: 'operator', value: '/' },
       { start: 35, end: 36, type: 'text', value: 'p' },
       { start: 36, end: 37, type: 'bracket', value: '>' },
       { start: 37, end: 38, type: 'newLine', value: '\n' },
       { start: 38, end: 39, type: 'bracket', value: '<' },
-      { start: 39, end: 40, type: 'bracket', value: '/' },
+      { start: 39, end: 40, type: 'operator', value: '/' },
       { start: 40, end: 43, type: 'text', value: 'div' },
       { start: 43, end: 44, type: 'bracket', value: '>' },
       { start: 44, end: 45, type: 'newLine', value: '\n' },
@@ -903,9 +983,9 @@ console.log(a);
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
       { start: 0, end: 22, type: 'text', value: 'This is a code block: ' },
-      { start: 22, end: 23, type: 'bracket', value: '~' },
+      { start: 22, end: 23, type: 'openMarkup', value: '~' },
       { start: 23, end: 27, type: 'text', value: 'code' },
-      { start: 27, end: 28, type: 'bracket', value: '~' },
+      { start: 27, end: 28, type: 'closeMarkup', value: '~' },
     ]);
   });
 
@@ -968,13 +1048,24 @@ console.log(a);
         type: 'text',
         value: 'This is also a latex text: ',
       },
-      { start: 27, end: 29, type: 'bracket', value: '$$' },
-      { start: 29, end: 30, type: 'text', value: '1' },
-      { start: 30, end: 31, type: 'bracket', value: '+' },
-      { start: 31, end: 32, type: 'text', value: '1' },
-      { start: 32, end: 33, type: 'bracket', value: '=' },
-      { start: 33, end: 34, type: 'text', value: '2' },
-      { start: 34, end: 36, type: 'bracket', value: '$$' },
+      {
+        start: 27,
+        end: 29,
+        type: 'bracket',
+        value: '$$',
+      },
+      {
+        start: 29,
+        end: 34,
+        type: 'text',
+        value: '1+1=2',
+      },
+      {
+        start: 34,
+        end: 36,
+        type: 'bracket',
+        value: '$$',
+      },
     ]);
   });
 
@@ -1016,33 +1107,126 @@ console.log(a);
         type: 'latexEnvironmentKeyword',
         value: '\\begin',
       },
-      { start: 6, end: 7, type: 'latexBracket', value: '{' },
-      { start: 7, end: 12, type: 'text', value: 'align' },
-      { start: 12, end: 13, type: 'bracket', value: '*' },
-      { start: 13, end: 14, type: 'latexBracket', value: '}' },
-      { start: 14, end: 15, type: 'newLine', value: '\n' },
-      { start: 15, end: 24, type: 'text', value: '2x - 5y &' },
-      { start: 24, end: 25, type: 'bracket', value: '=' },
-      { start: 25, end: 28, type: 'text', value: ' 8 ' },
-      { start: 28, end: 29, type: 'keyword', value: '\\' },
-      { start: 29, end: 30, type: 'keyword', value: '\\' },
-      { start: 30, end: 31, type: 'newLine', value: '\n' },
-      { start: 31, end: 34, type: 'text', value: '3x ' },
-      { start: 34, end: 35, type: 'bracket', value: '+' },
-      { start: 35, end: 40, type: 'text', value: ' 9y &' },
-      { start: 40, end: 41, type: 'bracket', value: '=' },
-      { start: 41, end: 45, type: 'text', value: ' -12' },
-      { start: 45, end: 46, type: 'newLine', value: '\n' },
+      {
+        start: 6,
+        end: 7,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        start: 7,
+        end: 12,
+        type: 'text',
+        value: 'align',
+      },
+      {
+        start: 12,
+        end: 13,
+        type: 'closeMarkup',
+        value: '*',
+      },
+      {
+        start: 13,
+        end: 14,
+        type: 'latexBracket',
+        value: '}',
+      },
+      {
+        start: 14,
+        end: 15,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 15,
+        end: 24,
+        type: 'text',
+        value: '2x - 5y &',
+      },
+      {
+        start: 24,
+        end: 25,
+        type: 'closeMarkup',
+        value: '=',
+      },
+      {
+        start: 25,
+        end: 28,
+        type: 'text',
+        value: ' 8 ',
+      },
+      {
+        start: 28,
+        end: 29,
+        type: 'keyword',
+        value: '\\',
+      },
+      {
+        start: 29,
+        end: 30,
+        type: 'keyword',
+        value: '\\',
+      },
+      {
+        start: 30,
+        end: 31,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 31,
+        end: 40,
+        type: 'text',
+        value: '3x + 9y &',
+      },
+      {
+        start: 40,
+        end: 41,
+        type: 'closeMarkup',
+        value: '=',
+      },
+      {
+        start: 41,
+        end: 45,
+        type: 'text',
+        value: ' -12',
+      },
+      {
+        start: 45,
+        end: 46,
+        type: 'newLine',
+        value: '\n',
+      },
       {
         start: 46,
         end: 50,
         type: 'latexEnvironmentKeyword',
         value: '\\end',
       },
-      { start: 50, end: 51, type: 'latexBracket', value: '{' },
-      { start: 51, end: 56, type: 'text', value: 'align' },
-      { start: 56, end: 57, type: 'bracket', value: '*' },
-      { start: 57, end: 58, type: 'latexBracket', value: '}' },
+      {
+        start: 50,
+        end: 51,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        start: 51,
+        end: 56,
+        type: 'text',
+        value: 'align',
+      },
+      {
+        start: 56,
+        end: 57,
+        type: 'closeMarkup',
+        value: '*',
+      },
+      {
+        start: 57,
+        end: 58,
+        type: 'latexBracket',
+        value: '}',
+      },
     ]);
   });
 
@@ -1060,28 +1244,126 @@ BROKE\\end{align*}`;
         type: 'text',
         value: 'Some text that broken latex environment \\begin',
       },
-      { start: 46, end: 47, type: 'latexBracket', value: '{' },
-      { start: 47, end: 52, type: 'text', value: 'align' },
-      { start: 52, end: 53, type: 'bracket', value: '*' },
-      { start: 53, end: 54, type: 'latexBracket', value: '}' },
-      { start: 54, end: 55, type: 'newLine', value: '\n' },
-      { start: 55, end: 64, type: 'text', value: '2x - 5y &' },
-      { start: 64, end: 65, type: 'bracket', value: '=' },
-      { start: 65, end: 68, type: 'text', value: ' 8 ' },
-      { start: 68, end: 69, type: 'keyword', value: '\\' },
-      { start: 69, end: 70, type: 'keyword', value: '\\' },
-      { start: 70, end: 71, type: 'newLine', value: '\n' },
-      { start: 71, end: 74, type: 'text', value: '3x ' },
-      { start: 74, end: 75, type: 'bracket', value: '+' },
-      { start: 75, end: 80, type: 'text', value: ' 9y &' },
-      { start: 80, end: 81, type: 'bracket', value: '=' },
-      { start: 81, end: 85, type: 'text', value: ' -12' },
-      { start: 85, end: 86, type: 'newLine', value: '\n' },
-      { start: 86, end: 95, type: 'text', value: 'BROKE\\end' },
-      { start: 95, end: 96, type: 'latexBracket', value: '{' },
-      { start: 96, end: 101, type: 'text', value: 'align' },
-      { start: 101, end: 102, type: 'bracket', value: '*' },
-      { start: 102, end: 103, type: 'latexBracket', value: '}' },
+      {
+        start: 46,
+        end: 47,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        start: 47,
+        end: 52,
+        type: 'text',
+        value: 'align',
+      },
+      {
+        start: 52,
+        end: 53,
+        type: 'closeMarkup',
+        value: '*',
+      },
+      {
+        start: 53,
+        end: 54,
+        type: 'latexBracket',
+        value: '}',
+      },
+      {
+        start: 54,
+        end: 55,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 55,
+        end: 64,
+        type: 'text',
+        value: '2x - 5y &',
+      },
+      {
+        start: 64,
+        end: 65,
+        type: 'closeMarkup',
+        value: '=',
+      },
+      {
+        start: 65,
+        end: 68,
+        type: 'text',
+        value: ' 8 ',
+      },
+      {
+        start: 68,
+        end: 69,
+        type: 'keyword',
+        value: '\\',
+      },
+      {
+        start: 69,
+        end: 70,
+        type: 'keyword',
+        value: '\\',
+      },
+      {
+        start: 70,
+        end: 71,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 71,
+        end: 80,
+        type: 'text',
+        value: '3x + 9y &',
+      },
+      {
+        start: 80,
+        end: 81,
+        type: 'closeMarkup',
+        value: '=',
+      },
+      {
+        start: 81,
+        end: 85,
+        type: 'text',
+        value: ' -12',
+      },
+      {
+        start: 85,
+        end: 86,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        start: 86,
+        end: 95,
+        type: 'text',
+        value: 'BROKE\\end',
+      },
+      {
+        start: 95,
+        end: 96,
+        type: 'latexBracket',
+        value: '{',
+      },
+      {
+        start: 96,
+        end: 101,
+        type: 'text',
+        value: 'align',
+      },
+      {
+        start: 101,
+        end: 102,
+        type: 'closeMarkup',
+        value: '*',
+      },
+      {
+        start: 102,
+        end: 103,
+        type: 'latexBracket',
+        value: '}',
+      },
     ]);
   });
 
@@ -1132,9 +1414,9 @@ BROKE\\end{align*}`;
       },
       { start: 20, end: 21, type: 'newLine', value: '\n' },
       { start: 21, end: 29, type: 'indent', value: '        ' },
-      { start: 29, end: 30, type: 'bracket', value: '*' },
+      { start: 29, end: 30, type: 'openMarkup', value: '*' },
       { start: 30, end: 39, type: 'text', value: 'Bold text' },
-      { start: 39, end: 40, type: 'bracket', value: '*' },
+      { start: 39, end: 40, type: 'closeMarkup', value: '*' },
       { start: 40, end: 41, type: 'newLine', value: '\n' },
       { start: 41, end: 49, type: 'indent', value: '        ' },
       { start: 49, end: 51, type: 'operator', value: ': ' },
@@ -1365,7 +1647,7 @@ text`;
       {
         end: 4,
         start: 3,
-        type: 'bracket',
+        type: 'openMarkup',
         value: '~',
       },
       {
@@ -1389,7 +1671,7 @@ text`;
       {
         end: 12,
         start: 11,
-        type: 'bracket',
+        type: 'closeMarkup',
         value: '~',
       },
     ]);
@@ -1404,136 +1686,125 @@ text`;
   #+END_SRC`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
     expect(result).toEqual([
       {
-        end: 12,
         start: 0,
+        end: 12,
         type: 'keyword',
         value: '#+BEGIN_SRC ',
       },
       {
-        end: 22,
         start: 12,
+        end: 22,
         type: 'text',
         value: 'typescript',
       },
       {
-        end: 23,
         start: 22,
+        end: 23,
         type: 'newLine',
         value: '\n',
       },
       {
-        end: 25,
         start: 23,
+        end: 25,
         type: 'indent',
         value: '  ',
       },
       {
-        end: 56,
         start: 25,
+        end: 56,
         type: 'text',
         value: 'private initAuthConfig(): void ',
       },
       {
-        end: 57,
         start: 56,
+        end: 57,
         type: 'latexBracket',
         value: '{',
       },
       {
-        end: 58,
         start: 57,
+        end: 58,
         type: 'newLine',
         value: '\n',
       },
       {
-        end: 62,
         start: 58,
+        end: 62,
         type: 'indent',
         value: '    ',
       },
       {
-        end: 78,
         start: 62,
-        type: 'text',
-        value: 'this.authConfig ',
-      },
-      {
-        end: 79,
-        start: 78,
-        type: 'bracket',
-        value: '=',
-      },
-      {
         end: 80,
-        start: 79,
         type: 'text',
-        value: ' ',
+        value: 'this.authConfig = ',
       },
       {
-        end: 81,
         start: 80,
+        end: 81,
         type: 'latexBracket',
         value: '{',
       },
       {
-        end: 82,
         start: 81,
+        end: 82,
         type: 'newLine',
         value: '\n',
       },
       {
-        end: 86,
         start: 82,
+        end: 86,
         type: 'indent',
         value: '    ',
       },
       {
-        end: 87,
         start: 86,
+        end: 87,
         type: 'latexBracket',
         value: '}',
       },
       {
-        end: 88,
         start: 87,
+        end: 88,
         type: 'text',
         value: ';',
       },
       {
-        end: 89,
         start: 88,
+        end: 89,
         type: 'newLine',
         value: '\n',
       },
       {
-        end: 91,
         start: 89,
+        end: 91,
         type: 'indent',
         value: '  ',
       },
       {
-        end: 92,
         start: 91,
+        end: 92,
         type: 'latexBracket',
         value: '}',
       },
       {
-        end: 93,
         start: 92,
+        end: 93,
         type: 'newLine',
         value: '\n',
       },
       {
-        end: 95,
         start: 93,
+        end: 95,
         type: 'indent',
         value: '  ',
       },
       {
-        end: 104,
         start: 95,
+        end: 104,
         type: 'keyword',
         value: '#+END_SRC',
       },
@@ -1543,7 +1814,6 @@ text`;
   it('Should tokenize title', () => {
     const orgDoc = `#+TITLE: hello`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1523][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         end: 9,
@@ -1564,7 +1834,6 @@ text`;
     const orgDoc = `#+TITLE: hello`;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1531][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         end: 9,
@@ -1587,7 +1856,6 @@ text`;
 `;
 
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
-    console.log('✎: [line 1550][tokenizer.spec.ts] result: ', result);
     expect(result).toEqual([
       {
         end: 1,
@@ -1647,98 +1915,74 @@ text`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
       {
-        end: 1,
         start: 0,
+        end: 1,
         type: 'tableOperator',
         value: '|',
       },
       {
-        end: 4,
         start: 1,
+        end: 4,
         type: 'text',
         value: ' 1 ',
       },
       {
-        end: 5,
         start: 4,
+        end: 5,
         type: 'tableOperator',
         value: '|',
       },
       {
-        end: 6,
         start: 5,
-        type: 'text',
-        value: ' ',
-      },
-      {
-        end: 7,
-        start: 6,
-        type: 'bracket',
-        value: '+',
-      },
-      {
         end: 8,
-        start: 7,
         type: 'text',
-        value: ' ',
+        value: ' + ',
       },
       {
-        end: 9,
         start: 8,
+        end: 9,
         type: 'tableOperator',
         value: '|',
       },
       {
-        end: 10,
         start: 9,
+        end: 10,
         type: 'text',
         value: ' ',
       },
       {
-        end: 11,
         start: 10,
+        end: 11,
         type: 'newLine',
         value: '\n',
       },
       {
-        end: 12,
         start: 11,
+        end: 12,
         type: 'tableOperator',
         value: '|',
       },
       {
-        end: 15,
         start: 12,
+        end: 15,
         type: 'text',
         value: ' 2 ',
       },
       {
-        end: 16,
         start: 15,
+        end: 16,
         type: 'tableOperator',
         value: '|',
       },
       {
-        end: 17,
         start: 16,
-        type: 'text',
-        value: ' ',
-      },
-      {
-        end: 18,
-        start: 17,
-        type: 'bracket',
-        value: '+',
-      },
-      {
         end: 19,
-        start: 18,
         type: 'text',
-        value: ' ',
+        value: ' + ',
       },
       {
-        end: 20,
         start: 19,
+        end: 20,
         type: 'tableOperator',
         value: '|',
       },
@@ -1749,56 +1993,161 @@ text`;
     const orgDoc = `[[./Apple.png]] - is a fruit`;
     const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
     expect(result).toEqual([
+      { start: 0, end: 1, type: 'bracket', value: '[' },
+      { start: 1, end: 2, type: 'bracket', value: '[' },
+      { start: 2, end: 3, type: 'text', value: '.' },
+      { start: 3, end: 4, type: 'operator', value: '/' },
+      { start: 4, end: 13, type: 'text', value: 'Apple.png' },
+      { start: 13, end: 14, type: 'bracket', value: ']' },
+      { start: 14, end: 15, type: 'bracket', value: ']' },
+      { start: 15, end: 28, type: 'text', value: ' - is a fruit' },
+    ]);
+  });
+
+  it('Should tokenize bold text started from new line', () => {
+    const orgDoc = `
+*Hello*`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
       {
         end: 1,
         start: 0,
-        type: 'bracket',
-        value: '[',
+        type: 'newLine',
+        value: '\n',
       },
       {
         end: 2,
         start: 1,
+        type: 'openMarkup',
+        value: '*',
+      },
+      {
+        end: 7,
+        start: 2,
+        type: 'text',
+        value: 'Hello',
+      },
+      {
+        end: 8,
+        start: 7,
+        type: 'closeMarkup',
+        value: '*',
+      },
+    ]);
+  });
+
+  it('Should parse headline with progress', () => {
+    const orgDoc = `* progress [0/0]`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 2,
+        start: 0,
+        type: 'headline',
+        value: '* ',
+      },
+      {
+        end: 11,
+        start: 2,
+        type: 'text',
+        value: 'progress ',
+      },
+      {
+        end: 12,
+        start: 11,
         type: 'bracket',
         value: '[',
       },
       {
-        end: 3,
-        start: 2,
-        type: 'text',
-        value: '.',
-      },
-      {
-        end: 4,
-        start: 3,
-        type: 'bracket',
-        value: '/',
-      },
-      {
         end: 13,
-        start: 4,
+        start: 12,
         type: 'text',
-        value: 'Apple.png',
+        value: '0',
       },
       {
         end: 14,
         start: 13,
-        type: 'bracket',
-        value: ']',
+        type: 'operator',
+        value: '/',
       },
       {
         end: 15,
         start: 14,
+        type: 'text',
+        value: '0',
+      },
+      {
+        end: 16,
+        start: 15,
         type: 'bracket',
         value: ']',
       },
+    ]);
+  });
+
+  it('Shoult not tokenize bold operator when space before closed markup', () => {
+    const orgDoc = `*Not bold *`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    console.log('✎: [line 2091][tokenizer.spec.ts] result: ', result);
+    expect(result).toEqual([
       {
-        end: 28,
-        start: 15,
+        end: 1,
+        start: 0,
+        type: 'openMarkup',
+        value: '*',
+      },
+      {
+        end: 10,
+        start: 1,
         type: 'text',
-        value: ' - is a fruit',
+        value: 'Not bold ',
+      },
+      {
+        end: 11,
+        start: 10,
+        type: 'openMarkup',
+        value: '*',
       },
     ]);
   });
+
+  it('Should tokenize inline markup from nested bold markup', () => {
+    const orgDoc = `*~not inline code~*`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 1,
+        start: 0,
+        type: 'openMarkup',
+        value: '*',
+      },
+      {
+        end: 2,
+        start: 1,
+        type: 'openMarkup',
+        value: '~',
+      },
+      {
+        end: 17,
+        start: 2,
+        type: 'text',
+        value: 'not inline code',
+      },
+      {
+        end: 18,
+        start: 17,
+        type: 'closeMarkup',
+        value: '~',
+      },
+      {
+        end: 19,
+        start: 18,
+        type: 'closeMarkup',
+        value: '*',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

@@ -117,7 +117,9 @@ some text`;
             text [6-19] (" Hello world ")
             progress [19-24]
               operator [19-20] ("[")
-              text [20-23] ("0/0")
+              text [20-21] ("0")
+              operator [21-22] ("/")
+              text [22-23] ("0")
               operator [23-24] ("]")
             newLine [24-25]
           section [25-75]
@@ -309,7 +311,11 @@ Another text`;
             :level 1:
           title [0-30]
             operator [0-2] ("* ")
-            text [2-30] ("Headline :not_tag: not_tag2:")
+            text [2-11] ("Headline ")
+            tagList [11-30]
+              operator [11-12] (":")
+              text [12-29] ("not_tag: not_tag2")
+              operator [29-30] (":")
       "
     `);
   });

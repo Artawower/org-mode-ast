@@ -379,6 +379,7 @@ export class AstBuilder {
         `✎: [ast-builder.ts][${new Date().toString()}] current pos`,
         this.tokenIterator.token.start
       );
+      console.log('\n---------------------\n', dstNode.parent?.toString());
       throw new Error(
         `Something went wrong, couldn't find parent for:
    [${srcNode.type}: ${srcNode.rawValue}](${this.tokenIterator.token.start}:${this.tokenIterator.token.end}), prev node: [${dstNode.type}: ${dstNode.rawValue}](${dstNode.start}:${dstNode.end})`
@@ -429,6 +430,14 @@ export class AstBuilder {
       type: NodeType.Text,
       value: this.tokenIterator.currentValue,
     });
+  }
+
+  public upsertText(): OrgNode {
+    if (this.lastNode.is(NodeType.Text)) {
+      this.lastNode.appendValue(this.tokenIterator.currentValue);
+      return;
+    }
+    return this.createText();
   }
 
   public preserveLastPositionSnapshot(orgData: OrgNode): void {

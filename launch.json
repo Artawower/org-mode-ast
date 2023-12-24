@@ -10,7 +10,7 @@
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/date.spec.ts"
+        "${workspaceFolder}/src/table.spec.ts"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",

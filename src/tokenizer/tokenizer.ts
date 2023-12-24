@@ -11,17 +11,43 @@ export class Tokenizer {
   // TODO: master move this settings to parser configuration
   private readonly delimiter = ' ';
   private readonly nonbreakingSpace = ' ';
-  private readonly pairBrackets = ['[', ']', '<', '>'];
-  private readonly formatterBrackets = ['=', '+', '/', '*', '~', '$'];
+  private readonly brackets = ['[', ']', '<', '>', '$'];
+  private readonly markupOperators = ['=', '+', '/', '*', '~', '_'];
+  private readonly charactersBeforeMarkup = [
+    this.delimiter,
+    this.nonbreakingSpace,
+    ...this.markupOperators,
+    '\n',
+    '-',
+    '(',
+    '{',
+    "'",
+    '"',
+  ];
+  private readonly charactersAfterMarkup = [
+    this.delimiter,
+    this.nonbreakingSpace,
+    ...this.markupOperators,
+    '-',
+    '.',
+    ',',
+    ';',
+    ':',
+    '!',
+    '?',
+    ',',
+    ')',
+    '}',
+    '[',
+    '"',
+    '\\',
+    '\n',
+  ];
   private readonly horizontalRuleChar = '-';
   private readonly newLineChar = '\n';
   private readonly horizontalRuleMinLength = 5;
   private readonly latexEnvironmentBlocks = ['\\begin', '\\end'];
   private readonly keywordStartOperator = '#+';
-  private readonly brackets: string[] = [
-    ...this.formatterBrackets,
-    ...this.pairBrackets,
-  ];
   private readonly listItemCloseSymbols = [')', '.'];
 
   private begin = 0;
@@ -54,6 +80,8 @@ export class Tokenizer {
         this.preserveTableDelimiter(this.preserveLink(this.handleNumberSign))(
           c
         ),
+      '/': (c: string) =>
+        this.preserveTableDelimiter(this.preserveLink(this.handleSlash))(c),
       '-': (c: string) =>
         this.preserveTableDelimiter(this.preserveLink(this.handleDash))(c),
       '+': (c: string) =>
@@ -85,8 +113,14 @@ export class Tokenizer {
       return acc;
     }, {});
 
+    const markupAggregators = this.markupOperators.reduce((acc, c) => {
+      acc[c] = (c: string) => this.handleMarkupOperator(c);
+      return acc;
+    }, {});
+
     this.tokenAggregators = {
       ...bracketAggregators,
+      ...markupAggregators,
       ...commonAggregators,
     };
   }
@@ -157,7 +191,7 @@ export class Tokenizer {
       this.upsertToken({ type: TokenType.Text, value: c });
       return;
     }
-    this.handleBracket(c);
+    this.handleMarkupOperator(c);
   }
 
   private handleDelimiter(c: string): void {
@@ -323,6 +357,13 @@ export class Tokenizer {
     this.appendTextToken(c);
   }
 
+  private handleSlash(c: string): void {
+    if (this.isOpenedMarkupOperator() || this.isClosedMarkupOperator()) {
+      return this.handleMarkupOperator(c);
+    }
+    return this.createToken({ type: TokenType.Operator, value: c });
+  }
+
   private handleDash(c: string): void {
     if (this.lastToken?.isType(TokenType.TableOperator)) {
       this.upsertToken({ type: TokenType.TableDelimiter, value: c }, true);
@@ -365,7 +406,7 @@ export class Tokenizer {
       this.upsertToken({ type: TokenType.Operator, value: c }, true);
       return;
     }
-    this.handleBracket(c);
+    this.handleMarkupOperator(c);
   }
 
   private handleColon(c: string): void {
@@ -500,13 +541,27 @@ export class Tokenizer {
     return !!value?.match(/^[0-9]+$/);
   }
 
-  private handleBracket(c: string): void {
+  private handleMarkupOperator(c: string): void {
     this.mergeLastPotentialTextTokens();
 
-    if (['~', '/', '='].includes(c) && this.lastToken?.isType(TokenType.Link)) {
-      this.appendPrevValue(c);
-      return;
+    if (this.lastToken?.isType(TokenType.Keyword)) {
+      return this.appendPrevValue(c);
     }
+    if (['~', '/', '='].includes(c) && this.lastToken?.isType(TokenType.Link)) {
+      return this.appendPrevValue(c);
+    }
+
+    if (this.isClosedMarkupOperator()) {
+      return this.createToken({ type: TokenType.CloseMarkup, value: c });
+    }
+    if (this.isOpenedMarkupOperator()) {
+      return this.createToken({ type: TokenType.OpenMarkup, value: c });
+    }
+    this.appendTextToken(c);
+  }
+
+  private handleBracket(c: string): void {
+    this.mergeLastPotentialTextTokens();
 
     if (this.lastToken?.value === '$' && c === '$') {
       this.upsertToken({ type: TokenType.Bracket, value: c }, true);
@@ -522,6 +577,10 @@ export class Tokenizer {
       return;
     }
     this.createToken({ type: TokenType.Bracket, value: c });
+  }
+
+  private isFormatterBracket(c?: string): boolean {
+    return this.markupOperators.includes(c);
   }
 
   private handleLatexBrackets(c: string): void {
@@ -757,7 +816,7 @@ export class Tokenizer {
    * Or create new token with current type
    */
   private upsertToken(token: RawToken, force = false): void {
-    if (this.lastToken?.type === token.type || force) {
+    if (this.lastToken && (this.lastToken?.type === token.type || force)) {
       this.appendPrevValue(token.value);
       this.lastToken.setType(token.type);
       return;
@@ -808,8 +867,28 @@ export class Tokenizer {
     return !c || c === '\n' || this.isDelimiter(c.slice(-1));
   }
 
-  private isFormatterBracket(c?: string): boolean {
-    return this.formatterBrackets.includes(c);
+  private isOpenedMarkupOperator(): boolean {
+    const isMarkupPre =
+      !this.prevChar || this.charactersBeforeMarkup.includes(this.prevChar);
+    const isNextCharPartOfContent = !this.isDelimiter(this.nextChar);
+    return isMarkupPre && isNextCharPartOfContent;
+  }
+
+  private isClosedMarkupOperator(): boolean {
+    if (!this.lastToken) {
+      return false;
+    }
+    const isMarkupPost =
+      !this.nextChar || this.charactersAfterMarkup.includes(this.nextChar);
+    console.log(
+      '✎: [line 869][tokenizer.ts] isMarkupPost: ',
+      isMarkupPost,
+      'for: '
+    );
+
+    const isPrevCharPartOfContent = !this.isDelimiter(this.prevChar);
+
+    return isPrevCharPartOfContent && isMarkupPost;
   }
 }
 

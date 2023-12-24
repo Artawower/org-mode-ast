@@ -188,7 +188,12 @@ describe('Table', () => {
               text [19-20] (" ")
             operator [20-21] ("|")
             tableCell [21-34]
-              text [21-34] (" _underline_ ")
+              text [21-22] (" ")
+              underline [22-33]
+                operator [22-23] ("_")
+                text [23-32] ("underline")
+                operator [32-33] ("_")
+              text [33-34] (" ")
             operator [34-35] ("|")
             tableCell [35-43]
               text [35-36] (" ")
