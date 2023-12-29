@@ -148,9 +148,10 @@ describe('Latex environment', () => {
               text [0-12] ("#+BEGIN_SRC ")
               srcLanguage [12-22] ("typescript")
           newLine [22-23]
-          blockBody [23-95]
-            text [23-95] ("  private initAuthConfig(): void {\\n    this.authConfig = {\\n    };\\n  }\\n  ")
-          blockFooter [95-104]
+          blockBody [23-93]
+            text [23-93] ("  private initAuthConfig(): void {\\n    this.authConfig = {\\n    };\\n  }\\n")
+          blockFooter [93-104]
+            indent [93-95] ("  ")
             keyword [95-104]
               text [95-104] ("#+END_SRC")
       "

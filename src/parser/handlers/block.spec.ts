@@ -273,18 +273,19 @@ console.log('qweqwe')
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-52]
         newLine [0-1]
-        indent [1-3] ("  ")
-        srcBlock [3-51]
+        srcBlock [1-51]
             :language js:
-          blockHeader [3-17]
+          blockHeader [1-17]
+            indent [1-3] ("  ")
             keyword [3-17]
                 :language js:
               text [3-15] ("#+BEGIN_SRC ")
               srcLanguage [15-17] ("js")
           newLine [17-18]
-          blockBody [18-42]
-            text [18-42] ("console.log('qweqwe')\\n  ")
-          blockFooter [42-51]
+          blockBody [18-40]
+            text [18-40] ("console.log('qweqwe')\\n")
+          blockFooter [40-51]
+            indent [40-42] ("  ")
             keyword [42-51]
               text [42-51] ("#+END_SRC")
         newLine [51-52]
@@ -357,5 +358,58 @@ spec:
       "
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
+
+  it('Should parse indents as part of block header', () => {
+    const orgData = `  #+BEGIN_SRC python
+print(123)
+#+END_SRC`;
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-41]
+        srcBlock [0-41]
+            :language python:
+          blockHeader [0-20]
+            indent [0-2] ("  ")
+            keyword [2-20]
+                :language python:
+              text [2-14] ("#+BEGIN_SRC ")
+              srcLanguage [14-20] ("python")
+          newLine [20-21]
+          blockBody [21-31]
+            text [21-31] ("print(123)")
+          newLine [31-32]
+          blockFooter [32-41]
+            keyword [32-41]
+              text [32-41] ("#+END_SRC")
+      "
+    `);
+  });
+
+  it('Should parse indents as part of block footer', () => {
+    const orgData = `#+BEGIN_SRC python
+print(123)
+  #+END_SRC`;
+    const result = parse(orgData);
+    expect(hasNodeIncorrectRanges(result, orgData)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-41]
+        srcBlock [0-41]
+            :language python:
+          blockHeader [0-18]
+            keyword [0-18]
+                :language python:
+              text [0-12] ("#+BEGIN_SRC ")
+              srcLanguage [12-18] ("python")
+          newLine [18-19]
+          blockBody [19-30]
+            text [19-30] ("print(123)\\n")
+          blockFooter [30-41]
+            indent [30-32] ("  ")
+            keyword [32-41]
+              text [32-41] ("#+END_SRC")
+      "
+    `);
   });
 });

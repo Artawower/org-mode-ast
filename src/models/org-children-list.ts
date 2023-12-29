@@ -54,6 +54,18 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     return this.length;
   }
 
+  public unshift(node: OrgNode): number {
+    const child = new OrgListChild(node);
+    if (!this.tail) {
+      this.tail = child;
+    }
+    this.header?.setPrev(child);
+    child.setNext(this.header);
+    this.header = child;
+    this.length++;
+    return this.length;
+  }
+
   public append(...nodes: OrgNode[]): void {
     nodes.forEach((node) => this.push(node));
   }

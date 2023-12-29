@@ -11,7 +11,7 @@
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/parser/handlers/inline-code.spec.ts",
+        "${workspaceFolder}/src/parser/handlers/block.spec.ts",
         "--no-watch"
       ],
       "cwd": "${workspaceFolder}",

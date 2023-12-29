@@ -95,6 +95,11 @@ export class BlockHandler implements OrgHandler {
       true
     );
 
+    // note: include indent before block begin node
+    if (blockBeginNode?.prev?.is(NodeType.Indent)) {
+      blockNodes.unshift(blockBeginNode.prev);
+    }
+
     parentNode.removeChildren(blockNodes);
 
     const nestedBlockNodes = this.buildNestedBlockNodes(blockNodes, bodyAsText);
@@ -135,6 +140,9 @@ export class BlockHandler implements OrgHandler {
     });
 
     const lastNewLine = buffer.last?.is(NodeType.NewLine) ? buffer.pop() : null;
+    const additionalFooterChildren = buffer.last?.is(NodeType.Indent)
+      ? [buffer.pop()]
+      : null;
 
     const nestedBodyNodes = this.getBlockBodyNodes(buffer, bodyAsText);
     // const value = this.astBuilder.getRawValueFromNodes(buffer);
@@ -150,7 +158,9 @@ export class BlockHandler implements OrgHandler {
       nestedBlocks.push(lastNewLine);
     }
 
-    const blockFooterNode = this.astBuilder.createBlockFooterNode();
+    const blockFooterNode = this.astBuilder.createBlockFooterNode(
+      additionalFooterChildren
+    );
 
     nestedBlocks.push(blockFooterNode);
 
@@ -171,6 +181,7 @@ export class BlockHandler implements OrgHandler {
     }
   }
 
+  // TODO: master refactor 😭
   private buildHeaderNode(nodes: OrgChildrenList): OrgNode {
     const headerNodes = new OrgChildrenList();
 
@@ -187,8 +198,9 @@ export class BlockHandler implements OrgHandler {
           language: node.children.last.value.trim(),
         });
       }
+      const isEmpty = this.isHeaderNodesEmpty(headerNodes);
 
-      if (isKeyword && headerNodes.isEmpty) {
+      if (isEmpty && (node.is(NodeType.Indent) || isKeyword)) {
         headerNodes.push(node);
         return;
       }
@@ -210,6 +222,12 @@ export class BlockHandler implements OrgHandler {
       }
     });
     return this.astBuilder.createBlockHeaderNode(headerNodes);
+  }
+
+  private isHeaderNodesEmpty(nodes: OrgChildrenList): boolean {
+    return (
+      nodes.isEmpty || (nodes.length === 1 && nodes.first.is(NodeType.Indent))
+    );
   }
 
   private getBlockHeaderMetaInfo(headerNode: OrgNode): SrcBlockMetaInfo {

@@ -130,9 +130,10 @@ And amma text after keyword`;
               text [26-34] (":exports")
               text [34-39] (" none")
           newLine [39-40]
-          blockBody [40-77]
-            text [40-77] ("    console.log('Hello world!');\\n    ")
-          blockFooter [77-86]
+          blockBody [40-73]
+            text [40-73] ("    console.log('Hello world!');\\n")
+          blockFooter [73-86]
+            indent [73-77] ("    ")
             keyword [77-86]
               text [77-86] ("#+END_SRC")
       "
@@ -156,9 +157,10 @@ And amma text after keyword`;
               text [0-12] ("#+BEGIN_SRC ")
               srcLanguage [12-22] ("emacs-lisp")
           newLine [22-23]
-          blockBody [23-120]
-            text [23-120] ("    (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name))\\n    ")
-          blockFooter [120-129]
+          blockBody [23-116]
+            text [23-116] ("    (message \\"Name %s, middle name %s\\" (plist-get args :name) (plist-get args :middle-name))\\n")
+          blockFooter [116-129]
+            indent [116-120] ("    ")
             keyword [120-129]
               text [120-129] ("#+END_SRC")
       "
@@ -182,9 +184,10 @@ And amma text after keyword`;
               text [0-12] ("#+BEGIN_SRC ")
               srcLanguage [12-22] ("emacs-lisp")
           newLine [22-23]
-          blockBody [23-65]
-            text [23-65] ("    (setq test (map-delete test :hi))\\n    ")
-          blockFooter [65-74]
+          blockBody [23-61]
+            text [23-61] ("    (setq test (map-delete test :hi))\\n")
+          blockFooter [61-74]
+            indent [61-65] ("    ")
             keyword [65-74]
               text [65-74] ("#+END_SRC")
       "
