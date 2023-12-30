@@ -13,8 +13,7 @@ describe('Set 3 of complex examples', () => {
         keyword [94-102]
           text [94-101] ("\\\\approx")
           text [101-102] ("{")
-        text [102-103] ("}")
-        text [103-175] ("b/2h). Larger strains will make N=2 pile-up more favourable than N=1 CLS")
+        text [102-175] ("}b/2h). Larger strains will make N=2 pile-up more favourable than N=1 CLS")
       "
     `);
   });

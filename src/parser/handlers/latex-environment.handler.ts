@@ -93,7 +93,7 @@ export class LatexEnvironmentHandler implements OrgHandler {
       this.astBuilder.mergeNeighborsNodesWithSameType(
         this.ctx.beginLatexEnvironmentKeyword
       );
-      return latexNameNode.prev;
+      return latexNameNode;
     }
   }
 
@@ -117,7 +117,12 @@ export class LatexEnvironmentHandler implements OrgHandler {
 
   #handleClosedLatexBracket(): OrgNode {
     if (!this.ctx.beginLatexBracket) {
-      return this.astBuilder.createTextNode(this.tokenIterator.currentValue);
+      const node = this.astBuilder.createTextNode(
+        this.tokenIterator.currentValue
+      );
+      return node;
+      // this.astBuilder.mergeNeighborsNodesWithSameType(node);
+      // return this.astBuilder.lastNode;
     }
     const closedBracket = this.astBuilder.createUnresolvedNode(
       this.tokenIterator.currentValue

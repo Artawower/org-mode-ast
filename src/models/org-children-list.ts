@@ -370,4 +370,8 @@ export class OrgChildrenList implements Iterable<OrgNode> {
   public asArray(): OrgNode[] {
     return Array.from(this);
   }
+
+  public toJson(): Record<string, unknown>[] {
+    return this.map((node) => node.toJson());
+  }
 }

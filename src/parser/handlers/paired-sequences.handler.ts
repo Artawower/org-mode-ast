@@ -71,16 +71,8 @@ export class PairedSequencesHandler implements OrgHandler {
   public handle(): OrgNode {
     const unresolvedNode = this.astBuilder.createUnresolvedNode();
     this.astBuilder.attachToTree(unresolvedNode);
-    console.log(
-      `✎: [paired-sequences.handler.ts][${new Date().toString()}] currentValue`,
-      this.tokenIterator.currentValue
-    );
 
     const closedBracketNode = this.tryHandlePairedSequence(unresolvedNode);
-    console.log(
-      '✎: [line 80][paired-sequences.handler.ts] closedBracketNode: ',
-      closedBracketNode
-    );
 
     if (closedBracketNode) {
       this.removeFormattingInsideInlineCode(closedBracketNode);

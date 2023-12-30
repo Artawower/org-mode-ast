@@ -60,7 +60,7 @@ describe('Bold test', () => {
     `);
   });
 
-  fit('Complex sample of real org node data', () => {
+  it('Complex sample of real org node data', () => {
     const orgDoc = `
 :PROPERTIES:
 :ID: elisp
@@ -1222,8 +1222,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [796-812]
                   text [796-804] ("#+START_")
                   text [804-812] ("{SPOILER")
-                text [812-813] ("}")
-                text [813-840] (" Ресурсы для ознакомления >")
+                text [812-840] ("} Ресурсы для ознакомления >")
                 newLine [840-841]
                 newLine [841-842]
                 list [842-1989]
@@ -1486,8 +1485,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [2323-2339]
                   text [2323-2331] ("#+START_")
                   text [2331-2339] ("{SPOILER")
-                text [2339-2340] ("}")
-                text [2340-2355] (" Основа языка >")
+                text [2339-2355] ("} Основа языка >")
                 newLine [2355-2356]
                 newLine [2356-2357]
                 headline [2357-2745]
@@ -2503,8 +2501,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [10803-10819]
                   text [10803-10811] ("#+START_")
                   text [10811-10819] ("{SPOILER")
-                text [10819-10820] ("}")
-                text [10820-10841] (" Читать про функции >")
+                text [10819-10841] ("} Читать про функции >")
                 newLine [10841-10842]
                 newLine [10842-10843]
                 headline [10843-11304]
@@ -2882,8 +2879,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [14393-14409]
                   text [14393-14401] ("#+START_")
                   text [14401-14409] ("{SPOILER")
-                text [14409-14410] ("}")
-                text [14410-14419] (" Детали >")
+                text [14409-14419] ("} Детали >")
                 newLine [14419-14420]
                 newLine [14420-14421]
                 headline [14421-14600]
@@ -3022,8 +3018,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                 keyword [15689-15705]
                   text [15689-15697] ("#+START_")
                   text [15697-15705] ("{SPOILER")
-                text [15705-15706] ("}")
-                text [15706-15715] (" Детали >")
+                text [15705-15715] ("} Детали >")
                 newLine [15715-15716]
                 newLine [15716-15717]
                 headline [15717-15800]
@@ -3708,7 +3703,7 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
                           srcLanguage [21501-21511] ("emacs-lisp")
                       newLine [21511-21512]
                       blockBody [21512-21654]
-                        text [21512-21654] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\-}[0-9]\\\\{2\\\\-}[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
+                        text [21512-21654] ("(concat \\"^(?\\\\(?1:[^s]+\\\\) [^s]\\n]+\\\\)\\"\\n          \\"s\\\\(?3:[0-9]\\\\{4\\\\}-[0-9]\\\\{2\\\\}-[0-9]\\\\{2\\\\}\\\\)\\"\\n          \\"s\\\\(?4:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}:[0-9]\\\\{2\\\\}\\\\)\\")")
                       newLine [21654-21655]
                       blockFooter [21655-21664]
                         keyword [21655-21664]
@@ -5134,6 +5129,17 @@ return [f'{*}', '*']
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
 
+  it('Should correct parse string with multiple nested bracket operators', () => {
+    const orgDoc = `[f'{*}', '*']`;
+    const result = parse(orgDoc);
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-13]
+        text [0-13] ("[f'{*}', '*']")
+      "
+    `);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+  });
+
   it('Should parse complex example from the real world! 2', () => {
     const orgDoc = `**** Примеры
 #+BEGIN_SRC yaml
@@ -5173,10 +5179,10 @@ affinity:
                   text [62-71] ("#+END_SRC")
             newLine [71-72]
             newLine [72-73]
-            indent [73-74] (" ")
-            srcBlock [74-128]
+            srcBlock [73-128]
                 :language yaml:
-              blockHeader [74-90]
+              blockHeader [73-90]
+                indent [73-74] (" ")
                 keyword [74-90]
                     :language yaml:
                   text [74-86] ("#+BEGIN_SRC ")
