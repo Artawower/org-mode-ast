@@ -4,6 +4,7 @@ import {
   Token,
   TokenType,
 } from '../models/index.js';
+import { KNOWN_ENTITIES } from './entities.const.js';
 
 // TODO: master This code is candidate number one to be refactored.
 // Seriously, spend some time to make it more readable...
@@ -584,6 +585,9 @@ export class Tokenizer {
   }
 
   private handleLatexBrackets(c: string): void {
+    if (this.isPrevToken(TokenType.Entity)) {
+      return this.appendPrevValue(c);
+    }
     this.createToken({ type: TokenType.LatexBracket, value: c });
   }
 
@@ -624,6 +628,10 @@ export class Tokenizer {
     this.checkIsLastTextTokenKeyword();
   }
 
+  private isEntity(val: string): boolean {
+    return KNOWN_ENTITIES.includes(val);
+  }
+
   get isLastKeywordEnd(): boolean {
     return (
       this.lastToken?.isType(TokenType.Keyword) &&
@@ -634,6 +642,11 @@ export class Tokenizer {
   }
 
   private checkSpecificKeyword(): void {
+    const isEntity = this.isEntity(this.lastToken.value.slice(1));
+    if (isEntity) {
+      this.lastToken.setType(TokenType.Entity);
+      return;
+    }
     const isLatexKeyword = this.latexEnvironmentBlocks.includes(
       this.lastToken.value
     );

@@ -1032,7 +1032,7 @@ console.log(a);
         value: 'This is a latex block: ',
       },
       { start: 23, end: 24, type: 'bracket', value: '$' },
-      { start: 24, end: 30, type: 'keyword', value: '\\alpha' },
+      { start: 24, end: 30, type: 'entity', value: '\\alpha' },
       { start: 30, end: 31, type: 'bracket', value: '$' },
     ]);
   });
@@ -2144,6 +2144,19 @@ text`;
         start: 18,
         type: 'closeMarkup',
         value: '*',
+      },
+    ]);
+  });
+
+  it('Should tokenize entity', () => {
+    const orgDoc = `\\approx{}`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      {
+        end: 9,
+        start: 0,
+        type: 'entity',
+        value: '\\approx{}',
       },
     ]);
   });

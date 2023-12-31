@@ -71,6 +71,7 @@ class Parser {
     [TokenType.Operator]: () => this.handleOperator(),
     [TokenType.Indent]: () => this.handleIndent(),
     [TokenType.NewLine]: () => this.handleNewLine(),
+    [TokenType.Entity]: () => this.handleEntity(),
     [TokenType.Keyword]: () => this.keywordHandler.handle(),
     [TokenType.Link]: () => this.handleRawLink(),
     [TokenType.HorizontalRule]: () => this.horizontalRuleHandler.handle(),
@@ -186,6 +187,12 @@ class Parser {
     );
     this.astBuilder.attachToTree(rawLinkNode);
     return rawLinkNode;
+  }
+
+  private handleEntity(): OrgNode {
+    const entityNode = this.astBuilder.createEntity();
+    this.astBuilder.attachToTree(entityNode);
+    return entityNode;
   }
 
   private handleTableOperator(): OrgNode {

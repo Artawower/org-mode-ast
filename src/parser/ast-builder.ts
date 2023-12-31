@@ -395,6 +395,13 @@ export class AstBuilder {
     });
   }
 
+  public createEntity(): OrgNode {
+    return new OrgNode({
+      type: NodeType.Entity,
+      value: this.tokenIterator.currentValue,
+    });
+  }
+
   public createTodoKeywordNode(): OrgNode {
     return new OrgNode({
       type: NodeType.TodoKeyword,

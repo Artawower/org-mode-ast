@@ -62,6 +62,7 @@ export enum NodeType {
   RawLink = 'rawLink',
   LinkUrl = 'linkUrl',
   LinkName = 'linkName',
+  Entity = 'entity',
 
   HorizontalRule = 'horizontalRule',
 
@@ -95,6 +96,7 @@ export enum TokenType {
   Comment = 'comment',
   Operator = 'operator',
   Indent = 'indent',
+  Entity = 'entity',
   TableDelimiter = 'tableDelimiter',
   HorizontalRule = 'horizontalRule',
   TableOperator = 'tableOperator',
@@ -195,7 +197,7 @@ export const linkTypes = [
   'elisp',
 ] as const;
 
-export type LinkType = typeof linkTypes[number] | 'image';
+export type LinkType = (typeof linkTypes)[number] | 'image';
 
 export interface Heading {
   title: string;

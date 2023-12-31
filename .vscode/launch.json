@@ -11,7 +11,8 @@
         "--config",
         "jest.config.cjs",
         "-i",
-        "${workspaceFolder}/src/parser/handlers/complex.spec.ts",
+        // "${workspaceFolder}/src/parser/handlers/complex.spec.ts",
+        "${workspaceFolder}/src/tokenizer/tokenizer.spec.ts",
         "--no-watch"
       ],
       "cwd": "${workspaceFolder}",
