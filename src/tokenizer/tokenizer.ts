@@ -869,11 +869,6 @@ export class Tokenizer {
    */
   private isTokenSeparator(token?: Token): boolean {
     return this.isCharSeparator(token?.value);
-    // return (
-    //   !token ||
-    //   token.isType(TokenType.NewLine) ||
-    //   this.isDelimiter(token.value.slice(-1))
-    // );
   }
 
   private isCharSeparator(c: string): boolean {
@@ -893,11 +888,6 @@ export class Tokenizer {
     }
     const isMarkupPost =
       !this.nextChar || this.charactersAfterMarkup.includes(this.nextChar);
-    console.log(
-      '✎: [line 869][tokenizer.ts] isMarkupPost: ',
-      isMarkupPost,
-      'for: '
-    );
 
     const isPrevCharPartOfContent = !this.isDelimiter(this.prevChar);
 

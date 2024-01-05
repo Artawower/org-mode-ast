@@ -83,7 +83,7 @@ Of these requirements I want the following from this parser:
 - [ ] Results block
 - [ ] Cross-links
 - [ ] Noweb support
-- [ ] Entities
+- [X] Entities
 - [ ] Inline source blocks
 ** Autoformatting [0/3]
 - [ ] Auto-align tables
