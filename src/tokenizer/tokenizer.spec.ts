@@ -2161,6 +2161,46 @@ text`;
     ]);
   });
 
+  it('Shoult tokenize inline code at start of the line', () => {
+    const orgDoc = `The text beloc is inline code
+=-hey=`;
+
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
+    expect(result).toEqual([
+      {
+        end: 29,
+        start: 0,
+        type: 'text',
+        value: 'The text beloc is inline code',
+      },
+      {
+        end: 30,
+        start: 29,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 31,
+        start: 30,
+        type: 'openMarkup',
+        value: '=',
+      },
+      {
+        end: 35,
+        start: 31,
+        type: 'text',
+        value: '-hey',
+      },
+      {
+        end: 36,
+        start: 35,
+        type: 'closeMarkup',
+        value: '=',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));

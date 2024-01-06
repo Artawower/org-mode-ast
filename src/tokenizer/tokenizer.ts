@@ -889,7 +889,8 @@ export class Tokenizer {
     const isMarkupPost =
       !this.nextChar || this.charactersAfterMarkup.includes(this.nextChar);
 
-    const isPrevCharPartOfContent = !this.isDelimiter(this.prevChar);
+    const isPrevCharPartOfContent =
+      !this.isDelimiter(this.prevChar) && this.prevChar !== '\n';
 
     return isPrevCharPartOfContent && isMarkupPost;
   }

@@ -120,4 +120,23 @@ describe('InlineCode', () => {
       "
     `);
   });
+
+  fit('Should parse inline code after new line', () => {
+    const orgDoc = `The text beloc is inline code
+=-hey=`;
+
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-36]
+        text [0-29] ("The text beloc is inline code")
+        newLine [29-30]
+        verbatim [30-36]
+          operator [30-31] ("=")
+          text [31-35] ("-hey")
+          operator [35-36] ("=")
+      "
+    `);
+  });
 });
