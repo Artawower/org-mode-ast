@@ -1,6 +1,6 @@
 {
   "name": "org-mode-ast",
-  "version": "0.11.3-beta",
+  "version": "0.11.3-beta.0",
   "description": "Simple and dumb org-mode parser",
   "scripts": {
     "start": "bun run build & node dist/index.js",
@@ -12,8 +12,14 @@
     "lint": "eslint . --ext .ts",
     "prepublish": "npm run build"
   },
-  "keywords": ["org", "org-mode", "emacs"],
-  "files": ["dist/**"],
+  "keywords": [
+    "org",
+    "org-mode",
+    "emacs"
+  ],
+  "files": [
+    "dist/**"
+  ],
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
