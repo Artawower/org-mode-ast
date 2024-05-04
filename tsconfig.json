@@ -4,7 +4,7 @@
     "lib": ["es2021", "es7", "es6", "dom"],
     "rootDir": "./src",
     "baseUrl": "./src",
-    "module": "es6",
+    "module": "commonjs",
     "outDir": "dist",
     "removeComments": true,
     "declaration": true,
