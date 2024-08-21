@@ -34,7 +34,7 @@ export class PropertiesHandler implements OrgHandler {
     const keywordNode = this.astBuilder.createPropertyNode();
     this.astBuilder.attachToTree(keywordNode);
 
-    const rawKeywordName = this.tokenIterator.currentValue.toLowerCase();
+    const rawKeywordName = this.tokenIterator.currentValue.toLowerCase().trim();
     const isPropertyStartKeyword = rawKeywordName === this.propertiesBegin;
 
     if (isPropertyStartKeyword) {

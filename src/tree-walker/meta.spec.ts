@@ -282,4 +282,28 @@ Text
       }
     `);
   });
+
+  it('Should parse meta info id with many spaces', () => {
+    const orgDoc = `:PROPERTIES:
+:ID:       c9eda354-3eb2-472c-818c-7167158be782
+:END: 
+#+title: Garten Klone
+
+<2024-06-06 Thu>
+-
+-
+
+<2024-08-13 Tue>
+-
+`;
+
+    const result = withMetaInfo(parse(orgDoc));
+
+    expect(result.meta).toMatchInlineSnapshot(`
+      {
+        "id": "c9eda354-3eb2-472c-818c-7167158be782",
+        "title": "Garten Klone",
+      }
+    `);
+  });
 });

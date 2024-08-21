@@ -167,4 +167,60 @@ describe('Properties', () => {
       "
     `);
   });
+
+  it('Should parse properties started with long space', () => {
+    const orgDoc = `:PROPERTIES:
+:ID:       c9eda354-3eb2-472c-818c-7167158be782
+:END: 
+#+title: Garten Klone
+
+<2024-06-06 Thu>
+-
+-
+
+<2024-08-13 Tue>
+-
+`;
+
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-132]
+          :id        c9eda354-3eb2-472c-818c-7167158be782:
+        propertyDrawer [0-67]
+          property [0-12]
+            text [0-12] (":PROPERTIES:")
+          newLine [12-13]
+          property [13-60]
+            text [13-18] (":ID: ")
+            text [18-60] ("      c9eda354-3eb2-472c-818c-7167158be782")
+          newLine [60-61]
+          property [61-67]
+            text [61-67] (":END: ")
+        newLine [67-68]
+        keyword [68-89]
+          text [68-77] ("#+title: ")
+          text [77-89] ("Garten Klone")
+        newLine [89-90]
+        newLine [90-91]
+        date [91-107]
+          operator [91-92] ("<")
+          text [92-106] ("2024-06-06 Thu")
+          operator [106-107] (">")
+        newLine [107-108]
+        text [108-109] ("-")
+        newLine [109-110]
+        text [110-111] ("-")
+        newLine [111-112]
+        newLine [112-113]
+        date [113-129]
+          operator [113-114] ("<")
+          text [114-128] ("2024-08-13 Tue")
+          operator [128-129] (">")
+        newLine [129-130]
+        text [130-131] ("-")
+        newLine [131-132]
+      "
+    `);
+  });
 });

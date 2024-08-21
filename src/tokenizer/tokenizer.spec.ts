@@ -2201,6 +2201,52 @@ text`;
     ]);
   });
 
+  it('Should tokenize properties drawer with space at the end', () => {
+    const orgDoc = `:PROPERTIES:
+:ID:    123
+:END: `;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+
+    expect(result).toEqual([
+      {
+        end: 12,
+        start: 0,
+        type: 'keyword',
+        value: ':PROPERTIES:',
+      },
+      {
+        end: 13,
+        start: 12,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 18,
+        start: 13,
+        type: 'keyword',
+        value: ':ID: ',
+      },
+      {
+        end: 24,
+        start: 18,
+        type: 'text',
+        value: '   123',
+      },
+      {
+        end: 25,
+        start: 24,
+        type: 'newLine',
+        value: '\n',
+      },
+      {
+        end: 31,
+        start: 25,
+        type: 'keyword',
+        value: ':END: ',
+      },
+    ]);
+  });
+
   // it('Should parse latex fragment with backslash', () => {
   //   const orgDoc = "\\(e^{i \\pi}\\)"
   //   const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
