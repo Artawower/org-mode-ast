@@ -4,6 +4,7 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/*.spec.ts'],
   testPathIgnorePatterns: ['/node_modules/',],
+  transformIgnorePatterns: ["/dist/.+\\.js"],
    coveragePathIgnorePatterns: ["<rootDir>/src/models/errors.ts"],
   moduleDirectories: ['node_modules', 'src'],
   moduleFileExtensions: ['js', 'json', 'ts'],

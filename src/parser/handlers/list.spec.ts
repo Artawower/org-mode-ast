@@ -621,4 +621,33 @@ Some text
       "
     `);
   });
+
+  it('Should parse nested markup in list', () => {
+    const orgDoc = `- *bold*
+- ~verbose~`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-20]
+        list [0-20]
+            :unordered:
+            :level 0:
+          listItem [0-9]
+            title [0-9]
+              operator [0-2] ("- ")
+              bold [2-8]
+                operator [2-3] ("*")
+                text [3-7] ("bold")
+                operator [7-8] ("*")
+              newLine [8-9]
+          listItem [9-20]
+            title [9-20]
+              operator [9-11] ("- ")
+              inlineCode [11-20]
+                operator [11-12] ("~")
+                text [12-19] ("verbose")
+                operator [19-20] ("~")
+      "
+    `);
+  });
 });

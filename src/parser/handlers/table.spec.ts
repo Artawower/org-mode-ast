@@ -388,4 +388,20 @@ describe('Table', () => {
     `);
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
   });
+
+  it('Should preserve markup with uncompleted table', () => {
+    const orgDoc = `~some | text~`;
+
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-13]
+        inlineCode [0-13]
+          operator [0-1] ("~")
+          text [1-12] ("some | text")
+          operator [12-13] ("~")
+      "
+    `);
+  });
 });

@@ -22,9 +22,6 @@ export class TableHandler implements OrgHandler {
 
   public handle(): OrgNode {
     this.astBuilder.checkContext();
-    if (!this.#isTableLine()) {
-      return;
-    }
 
     if (this.#lastPipeOperator) {
       return this.#createTableCell();
@@ -62,7 +59,7 @@ export class TableHandler implements OrgHandler {
     return delimiterNode;
   }
 
-  #isTableLine(): boolean {
+  public isTableLine(): boolean {
     if (this.#tableLine === false) {
       this.#mergeCurrentToken();
       return this.#tableLine;

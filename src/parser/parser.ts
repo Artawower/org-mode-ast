@@ -196,6 +196,9 @@ class Parser {
   }
 
   private handleTableOperator(): OrgNode {
+    if (!this.tableHandler.isTableLine()) {
+      return;
+    }
     this.pairedSequencesHandler.handleEndOfLine();
     return this.tableHandler.handle();
   }
