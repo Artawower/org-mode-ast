@@ -98,6 +98,7 @@ export class ColonHandler implements OrgHandler {
   public handleNewLine(): void {
     this.#lastFixedWidthNode = null;
     this.#buildTags();
+    this.clearPotentialNodes();
   }
 
   #buildTags(): void {
@@ -131,10 +132,7 @@ export class ColonHandler implements OrgHandler {
 
     tagListNode.addChildren(nodesBetweenColons);
 
-    this.#potentialTagOperators.clear();
     this.astBuilder.attachToTree(tagListNode);
-
-    this.#potentialTagOperators.clear();
   }
 
   #makeTextFromHeadlineColons(nodesBetweenColons: OrgChildrenList): void {
@@ -143,6 +141,10 @@ export class ColonHandler implements OrgHandler {
       NodeType.Operator,
       NodeType.Text
     );
+    this.clearPotentialNodes();
+  }
+
+  public clearPotentialNodes(): void {
     this.#potentialTagOperators.clear();
   }
 }

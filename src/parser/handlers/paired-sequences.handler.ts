@@ -12,6 +12,7 @@ import { AstBuilder } from '../ast-builder.js';
 import { TokenIterator } from '../../tokenizer/index.js';
 import { isNumber } from '../../tools/index.js';
 import { AstContext } from 'parser/ast-context.js';
+import { ColonHandler } from './colon.handler.js';
 
 export class PairedSequencesHandler implements OrgHandler {
   readonly #dateRangeDelimiter = '--';
@@ -55,7 +56,8 @@ export class PairedSequencesHandler implements OrgHandler {
     private readonly configuration: ParserConfiguration,
     private readonly ctx: AstContext,
     private readonly astBuilder: AstBuilder,
-    private readonly tokenIterator: TokenIterator
+    private readonly tokenIterator: TokenIterator,
+    private readonly colonHandler: ColonHandler
   ) {}
 
   public isListDelimiterOperator(): boolean {
@@ -78,6 +80,7 @@ export class PairedSequencesHandler implements OrgHandler {
       this.removeFormattingInsideInlineCode(closedBracketNode);
       this.storeUnresolvedNode(closedBracketNode);
       this.addMetaInfo(closedBracketNode);
+      this.colonHandler.clearPotentialNodes();
       return closedBracketNode;
     }
 

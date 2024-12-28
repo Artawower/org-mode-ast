@@ -260,21 +260,23 @@ export function parse(
     tokenIterator
   );
   const commentHandler = new CommentHandler(astBuilder, tokenIterator);
+  const colonHandler = new ColonHandler(
+    configuration,
+    ctx,
+    astBuilder,
+    tokenIterator
+  );
+
   const pairedSequencesHandler = new PairedSequencesHandler(
     configuration,
     ctx,
     astBuilder,
-    tokenIterator
+    tokenIterator,
+    colonHandler
   );
   const blockHandler = new BlockHandler(ctx, astBuilder, tokenIterator);
   const listHandler = new ListHandler(ctx, astBuilder, tokenIterator);
   const propertiesHandler = new PropertiesHandler(
-    ctx,
-    astBuilder,
-    tokenIterator
-  );
-  const colonHandler = new ColonHandler(
-    configuration,
     ctx,
     astBuilder,
     tokenIterator
