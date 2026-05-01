@@ -60,6 +60,12 @@ export class Tokenizer {
   private firstToken: Token;
   private lastToken: Token;
   private todoKeywords: string[] = [];
+  private readonly planningKeywords = [
+    'DEADLINE:',
+    'SCHEDULED:',
+    'CLOSED:',
+  ] as const;
+  private insidePlanningLine = false;
 
   constructor(
     private readonly text: string,
@@ -316,6 +322,10 @@ export class Tokenizer {
   }
 
   private handleSpaceAfterKeyword(c: string): boolean {
+    if (this.lastToken?.isType(TokenType.PlanningKeyword)) {
+      this.createToken({ type: TokenType.Text, value: c });
+      return true;
+    }
     if (!this.isLastKeywordEnd) {
       return;
     }
@@ -443,6 +453,7 @@ export class Tokenizer {
       return;
     }
     this.upsertToken({ type: TokenType.Text, value: c }, true);
+    this.checkIsLastTextTokenKeyword();
   }
 
   private isNotListTagOperator(c: string): boolean {
@@ -529,6 +540,7 @@ export class Tokenizer {
   private handleNewLine(c: string): void {
     this.mergeLastPotentialTextTokens();
     this.createToken({ type: TokenType.NewLine, value: c });
+    this.insidePlanningLine = false;
   }
 
   private handleBackslash(c: string): void {
@@ -731,6 +743,18 @@ export class Tokenizer {
     ) {
       this.lastToken.setType(TokenType.Keyword);
     }
+    if (this.isLastTokenPlanningKeyword) {
+      this.lastToken.setType(TokenType.PlanningKeyword);
+      this.insidePlanningLine = true;
+    }
+  }
+
+  private get isLastTokenPlanningKeyword(): boolean {
+    const isPlanningValue = this.planningKeywords.includes(
+      this.lastToken?.value as (typeof this.planningKeywords)[number]
+    );
+    const atLineStart = this.isEolWithOptionalIndent(this.lastToken?.prev);
+    return isPlanningValue && (atLineStart || this.insidePlanningLine);
   }
 
   private get isLastTokenTodoKeyword(): boolean {

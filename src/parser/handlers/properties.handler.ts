@@ -69,6 +69,17 @@ export class PropertiesHandler implements OrgHandler {
     return propertyDrawerNode;
   }
 
+  private hasOnlyAllowedPrecedingSiblings(node: OrgNode): boolean {
+    let current = node.prev;
+    while (current) {
+      if (current.isNot(NodeType.Planning, NodeType.NewLine)) {
+        return false;
+      }
+      current = current.prev;
+    }
+    return true;
+  }
+
   public tryHandleEndOfProperties(
     propertyDrawerChildren: OrgChildrenList
   ): OrgNode {
@@ -80,7 +91,8 @@ export class PropertiesHandler implements OrgHandler {
       firstChild.parent.parent.is(NodeType.Headline);
 
     const isFirstHeadlineOrRootChild =
-      !firstChild?.prev && (parentIsRoot || parentIsHeadline);
+      this.hasOnlyAllowedPrecedingSiblings(firstChild) &&
+      (parentIsRoot || parentIsHeadline);
 
     if (!isFirstHeadlineOrRootChild) {
       return null;

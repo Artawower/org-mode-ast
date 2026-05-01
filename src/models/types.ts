@@ -66,6 +66,9 @@ export enum NodeType {
 
   HorizontalRule = 'horizontalRule',
 
+  Planning = 'planning',
+  PlanningKeyword = 'planningKeyword',
+
   Section = 'section',
 
   // Workaround for structures that have section + title
@@ -103,6 +106,7 @@ export enum TokenType {
   Link = 'link',
   OpenMarkup = 'openMarkup',
   CloseMarkup = 'closeMarkup',
+  PlanningKeyword = 'planningKeyword',
 }
 
 export interface RawToken {
@@ -117,7 +121,10 @@ export class Token {
   public next?: Token;
   public prev?: Token;
 
-  constructor(token: RawToken, public readonly start: number) {
+  constructor(
+    token: RawToken,
+    public readonly start: number
+  ) {
     this.end = start + token.value.length;
     this.type = token.type;
     this.value = token.value;

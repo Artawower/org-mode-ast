@@ -131,6 +131,7 @@ describe('Meta information', () => {
           "временное",
           "blackbox",
         ],
+        "id": "tmp_bucket",
         "images": [
           "./space-ca302762-d65b-4e3c-b691-20c29b822bdf.jpeg",
         ],

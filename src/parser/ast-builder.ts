@@ -18,7 +18,10 @@ export class AstBuilder {
     return this.#nodeTree;
   }
 
-  constructor(private ctx: AstContext, private tokenIterator: TokenIterator) {
+  constructor(
+    private ctx: AstContext,
+    private tokenIterator: TokenIterator
+  ) {
     this.initRootNode();
   }
 
@@ -435,6 +438,13 @@ export class AstBuilder {
   public createText(): OrgNode {
     return new OrgNode({
       type: NodeType.Text,
+      value: this.tokenIterator.currentValue,
+    });
+  }
+
+  public createNodeFromToken(type: NodeType): OrgNode {
+    return new OrgNode({
+      type,
       value: this.tokenIterator.currentValue,
     });
   }

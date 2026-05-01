@@ -2258,3 +2258,75 @@ text`;
 
   // })
 });
+
+  // Planning keywords
+  it('should tokenize DEADLINE planning keyword at line start', () => {
+    const orgDoc = `* Task
+DEADLINE: <2026-05-10 Mon>`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toEqual([
+      { type: TokenType.Headline, value: '* ', start: 0, end: 2 },
+      { type: TokenType.Text, value: 'Task', start: 2, end: 6 },
+      { type: TokenType.NewLine, value: '\n', start: 6, end: 7 },
+      { type: TokenType.PlanningKeyword, value: 'DEADLINE:', start: 7, end: 16 },
+      { type: TokenType.Text, value: ' ', start: 16, end: 17 },
+      { type: TokenType.Bracket, value: '<', start: 17, end: 18 },
+      { type: TokenType.Text, value: '2026-05-10 Mon', start: 18, end: 32 },
+      { type: TokenType.Bracket, value: '>', start: 32, end: 33 },
+    ]);
+  });
+
+  it('should tokenize SCHEDULED planning keyword at line start', () => {
+    const orgDoc = `* Task
+SCHEDULED: <2026-05-01 Fri>`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toContainEqual(
+      { type: TokenType.PlanningKeyword, value: 'SCHEDULED:', start: 7, end: 17 }
+    );
+  });
+
+  it('should tokenize CLOSED planning keyword at line start', () => {
+    const orgDoc = `* Task
+CLOSED: [2026-04-30 Wed]`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    expect(result).toContainEqual(
+      { type: TokenType.PlanningKeyword, value: 'CLOSED:', start: 7, end: 14 }
+    );
+  });
+
+  it('should tokenize multiple planning keywords on one line', () => {
+    const orgDoc = `* Task
+DEADLINE: <2026-05-10 Mon> SCHEDULED: <2026-05-01 Fri>`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    const planningTokens = result.filter(t => t.type === TokenType.PlanningKeyword);
+    expect(planningTokens).toEqual([
+      { type: TokenType.PlanningKeyword, value: 'DEADLINE:', start: 7, end: 16 },
+      { type: TokenType.PlanningKeyword, value: 'SCHEDULED:', start: 34, end: 44 },
+    ]);
+  });
+
+  it('should tokenize all three planning keywords on one line', () => {
+    const orgDoc = `* Task
+DEADLINE: <2026-05-10 Mon> SCHEDULED: <2026-05-01 Fri> CLOSED: [2026-04-30 Wed]`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    const planningTokens = result.filter(t => t.type === TokenType.PlanningKeyword);
+    expect(planningTokens.map(t => t.value)).toEqual(['DEADLINE:', 'SCHEDULED:', 'CLOSED:']);
+  });
+
+  it('should NOT tokenize DEADLINE as planning keyword in middle of body text', () => {
+    const orgDoc = `* Task
+Some text DEADLINE: missed`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    const planningTokens = result.filter(t => t.type === TokenType.PlanningKeyword);
+    expect(planningTokens).toHaveLength(0);
+  });
+
+  it('should reset planning keyword recognition after newline', () => {
+    const orgDoc = `* Task
+DEADLINE: <2026-05-10 Mon>
+SCHEDULED: <2026-05-01 Fri>`;
+    const result = tokenListToArray(tokenize(orgDoc, parserConfiguration));
+    const planningTokens = result.filter(t => t.type === TokenType.PlanningKeyword);
+    // Both lines start fresh — both should be recognized
+    expect(planningTokens.map(t => t.value)).toEqual(['DEADLINE:', 'SCHEDULED:']);
+  });

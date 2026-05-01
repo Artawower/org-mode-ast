@@ -22,6 +22,7 @@ import {
   TableHandler,
 } from './handlers/index.js';
 import { parserConfiguration } from './parser.configuration.js';
+import { PlanningHandler } from './handlers/planning.handler.js';
 
 class Parser {
   constructor(
@@ -35,7 +36,8 @@ class Parser {
     private readonly horizontalRuleHandler: HorizontalRuleHandler,
     private readonly latexEnvironmentHandler: LatexEnvironmentHandler,
     private readonly colonHandler: ColonHandler,
-    private readonly tableHandler: TableHandler
+    private readonly tableHandler: TableHandler,
+    private readonly planningHandler: PlanningHandler
   ) {}
 
   public parse(): OrgNode {
@@ -73,6 +75,7 @@ class Parser {
     [TokenType.NewLine]: () => this.handleNewLine(),
     [TokenType.Entity]: () => this.handleEntity(),
     [TokenType.Keyword]: () => this.keywordHandler.handle(),
+    [TokenType.PlanningKeyword]: () => this.planningHandler.handleToken(),
     [TokenType.Link]: () => this.handleRawLink(),
     [TokenType.HorizontalRule]: () => this.horizontalRuleHandler.handle(),
     [TokenType.LatexBracket]: () => this.latexEnvironmentHandler.handle(),
@@ -211,6 +214,7 @@ class Parser {
     this.tableHandler.handleNewLine();
     this.keywordHandler.handleEndOfLine();
     this.colonHandler.handleNewLine();
+    this.planningHandler.handleNewLine();
   }
 
   private handleEndOfFile(): void {
@@ -312,7 +316,8 @@ export function parse(
     horizontalRuleHandler,
     latexEnvironmentHandler,
     colonHandler,
-    tableHandler
+    tableHandler,
+    new PlanningHandler(astBuilder)
   );
   return parser.parse();
 }

@@ -13,3 +13,6 @@ https://orgmode.org/worg/org-syntax.html
   https://orgmode.org/worg/org-syntax.html
 
 #+INCLUDE: "~/org-roam/programming/ai/simple_base_agents.org"
+
+* Additional project rules
+- Always try to avoid imperative cycles. Use ~.foEach~ ~.map~ ~.reduce~ and other functional programming techniques instead.

@@ -1138,20 +1138,23 @@ emacs -batch -l ert -l package.el -l test.el -f ert-run-tests-batch-and-exit
 
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-32238]
+          :id  elisp:
+          :published  true:
         newLine [0-1]
-        property [1-13]
-          text [1-13] (":PROPERTIES:")
-        newLine [13-14]
-        property [14-24]
-          text [14-19] (":ID: ")
-          text [19-24] ("elisp")
-        newLine [24-25]
-        property [25-41]
-          text [25-37] (":PUBLISHED: ")
-          text [37-41] ("true")
-        newLine [41-42]
-        property [42-47]
-          text [42-47] (":END:")
+        propertyDrawer [1-47]
+          property [1-13]
+            text [1-13] (":PROPERTIES:")
+          newLine [13-14]
+          property [14-24]
+            text [14-19] (":ID: ")
+            text [19-24] ("elisp")
+          newLine [24-25]
+          property [25-41]
+            text [25-37] (":PUBLISHED: ")
+            text [37-41] ("true")
+          newLine [41-42]
+          property [42-47]
+            text [42-47] (":END:")
         newLine [47-48]
         keyword [48-63]
           text [48-57] ("#+TITLE: ")
