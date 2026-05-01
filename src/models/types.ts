@@ -69,6 +69,10 @@ export enum NodeType {
   Planning = 'planning',
   PlanningKeyword = 'planningKeyword',
 
+  Clock = 'clock',
+  ClockKeyword = 'clockKeyword',
+  ClockDuration = 'clockDuration',
+
   Section = 'section',
 
   // Workaround for structures that have section + title
@@ -107,6 +111,7 @@ export enum TokenType {
   OpenMarkup = 'openMarkup',
   CloseMarkup = 'closeMarkup',
   PlanningKeyword = 'planningKeyword',
+  ClockKeyword = 'clockKeyword',
 }
 
 export interface RawToken {
@@ -121,10 +126,7 @@ export class Token {
   public next?: Token;
   public prev?: Token;
 
-  constructor(
-    token: RawToken,
-    public readonly start: number
-  ) {
+  constructor(token: RawToken, public readonly start: number) {
     this.end = start + token.value.length;
     this.type = token.type;
     this.value = token.value;

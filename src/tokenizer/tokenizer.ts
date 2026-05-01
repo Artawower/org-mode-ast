@@ -65,6 +65,7 @@ export class Tokenizer {
     'SCHEDULED:',
     'CLOSED:',
   ] as const;
+  private readonly clockKeywords = ['CLOCK:'] as const;
   private insidePlanningLine = false;
 
   constructor(
@@ -322,7 +323,10 @@ export class Tokenizer {
   }
 
   private handleSpaceAfterKeyword(c: string): boolean {
-    if (this.lastToken?.isType(TokenType.PlanningKeyword)) {
+    if (
+      this.lastToken?.isType(TokenType.PlanningKeyword) ||
+      this.lastToken?.isType(TokenType.ClockKeyword)
+    ) {
       this.createToken({ type: TokenType.Text, value: c });
       return true;
     }
@@ -747,6 +751,17 @@ export class Tokenizer {
       this.lastToken.setType(TokenType.PlanningKeyword);
       this.insidePlanningLine = true;
     }
+    if (this.isLastTokenClockKeyword) {
+      this.lastToken.setType(TokenType.ClockKeyword);
+    }
+  }
+
+  private get isLastTokenClockKeyword(): boolean {
+    const isClockValue = this.clockKeywords.includes(
+      this.lastToken?.value as (typeof this.clockKeywords)[number]
+    );
+    const atLineStart = this.isEolWithOptionalIndent(this.lastToken?.prev);
+    return isClockValue && atLineStart;
   }
 
   private get isLastTokenPlanningKeyword(): boolean {

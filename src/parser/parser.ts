@@ -23,6 +23,7 @@ import {
 } from './handlers/index.js';
 import { parserConfiguration } from './parser.configuration.js';
 import { PlanningHandler } from './handlers/planning.handler.js';
+import { ClockHandler } from './handlers/clock.handler.js';
 
 class Parser {
   constructor(
@@ -37,7 +38,8 @@ class Parser {
     private readonly latexEnvironmentHandler: LatexEnvironmentHandler,
     private readonly colonHandler: ColonHandler,
     private readonly tableHandler: TableHandler,
-    private readonly planningHandler: PlanningHandler
+    private readonly planningHandler: PlanningHandler,
+    private readonly clockHandler: ClockHandler
   ) {}
 
   public parse(): OrgNode {
@@ -76,6 +78,7 @@ class Parser {
     [TokenType.Entity]: () => this.handleEntity(),
     [TokenType.Keyword]: () => this.keywordHandler.handle(),
     [TokenType.PlanningKeyword]: () => this.planningHandler.handleToken(),
+    [TokenType.ClockKeyword]: () => this.clockHandler.handleToken(),
     [TokenType.Link]: () => this.handleRawLink(),
     [TokenType.HorizontalRule]: () => this.horizontalRuleHandler.handle(),
     [TokenType.LatexBracket]: () => this.latexEnvironmentHandler.handle(),
@@ -215,6 +218,7 @@ class Parser {
     this.keywordHandler.handleEndOfLine();
     this.colonHandler.handleNewLine();
     this.planningHandler.handleNewLine();
+    this.clockHandler.handleNewLine();
   }
 
   private handleEndOfFile(): void {
@@ -317,7 +321,8 @@ export function parse(
     latexEnvironmentHandler,
     colonHandler,
     tableHandler,
-    new PlanningHandler(astBuilder)
+    new PlanningHandler(astBuilder),
+    new ClockHandler(astBuilder)
   );
   return parser.parse();
 }
