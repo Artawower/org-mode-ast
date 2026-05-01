@@ -1,0 +1,15 @@
+* Project Overview
+
+This project implements a TypeScript parser for the popular Org Mode format.
+
+Org Mode syntax reference:
+https://orgmode.org/worg/org-syntax.html
+
+* Core Rules
+
+- Keep the AST, tokenizer, and parser clearly separated.
+- Always follow TDD: write snapshot tests first, then implement the feature.
+- Always compare parser behavior against the official Org Mode syntax reference:
+  https://orgmode.org/worg/org-syntax.html
+
+#+INCLUDE: "~/org-roam/programming/ai/simple_base_agents.org"
