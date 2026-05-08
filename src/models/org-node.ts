@@ -341,9 +341,7 @@ export class OrgNode {
       currentNode.start += diff;
       currentNode.end += diff;
       if (currentNode.children?.first) {
-        currentNode.children.first.end += diff;
-        currentNode.children.first.start += diff;
-        currentNode.children?.first?.recalculatePositionsForNeighbors(diff);
+        currentNode.children.first.recalculateForEachNestedNodes(diff);
       }
       currentNode = currentNode.next;
     }
@@ -430,7 +428,7 @@ export class OrgNode {
     return !this.is(...nodeType);
   }
 
-  public toString(offset?: number): string {
+  public toString(): string {
     return prettyTreePrint(this);
   }
 
@@ -450,7 +448,7 @@ export class OrgNode {
         type: this.type,
         start: this.start,
         end: this.end,
-      } as Record<keyof this, any>
+      } as Record<keyof this, unknown>
     );
 
     if (this.children) {

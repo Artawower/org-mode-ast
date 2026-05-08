@@ -83,37 +83,36 @@ CLOCK: [2024-01-01 Mon 10:00]--[2024-01-01 Mon 12:00] =>  2:00
 
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
-      "root [0-87]
-        headline [0-87]
+      "root [0-85]
+        headline [0-85]
             :level 1:
           title [0-7]
             operator [0-2] ("* ")
             text [2-6] ("Task")
             newLine [6-7]
-          section [7-87]
-            propertyDrawer [7-87]
-              property [7-16]
-                text [7-16] (":LOGBOOK:")
-              newLine [16-17]
-              clock [17-80]
-                clockKeyword [17-23] ("CLOCK:")
-                text [23-24] (" ")
-                dateRange [24-70]
-                  date [24-46]
-                    operator [24-25] ("[")
-                    text [25-45] ("2024-01-01 Mon 10:00")
-                    operator [45-46] ("]")
-                  text [46-48] ("--")
-                  date [48-70]
-                    operator [48-49] ("[")
-                    text [49-69] ("2024-01-01 Mon 12:00")
-                    operator [69-70] ("]")
-                clockDuration [70-79]
-                  operator [70-75] (" =>  ")
-                  text [75-79] ("2:00")
-              newLine [79-80]
-              property [80-85]
-                text [80-85] (":END:")
+          section [7-85]
+            property [7-16]
+              text [7-16] (":LOGBOOK:")
+            newLine [16-17]
+            clock [17-79]
+              clockKeyword [17-23] ("CLOCK:")
+              text [23-24] (" ")
+              dateRange [24-70]
+                date [24-46]
+                  operator [24-25] ("[")
+                  text [25-45] ("2024-01-01 Mon 10:00")
+                  operator [45-46] ("]")
+                text [46-48] ("--")
+                date [48-70]
+                  operator [48-49] ("[")
+                  text [49-69] ("2024-01-01 Mon 12:00")
+                  operator [69-70] ("]")
+              clockDuration [70-79]
+                operator [70-75] (" =>  ")
+                text [75-79] ("2:00")
+            newLine [79-80]
+            property [80-85]
+              text [80-85] (":END:")
       "
     `);
   });
@@ -152,9 +151,7 @@ CLOCK: [2024-01-01 Mon 10:00]--[2024-01-01 Mon 12:00] =>  2:00
     expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
     expect(result.toString()).toMatchInlineSnapshot(`
       "root [0-39]
-        text [0-10] ("Some text ")
-        clockKeyword [10-16] ("CLOCK:")
-        text [16-17] (" ")
+        text [0-17] ("Some text CLOCK: ")
         date [17-39]
           operator [17-18] ("[")
           text [18-38] ("2024-01-01 Mon 10:00")

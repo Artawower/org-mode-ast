@@ -286,6 +286,36 @@ describe('Date', () => {
     `);
   });
 
+  it('Should parse date with catch-up repeater (.+)', () => {
+    const orgDoc = `<2026-05-01 Fri .+1w>`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-21]
+        date [0-21]
+          operator [0-1] ("<")
+          text [1-20] ("2026-05-01 Fri .+1w")
+          operator [20-21] (">")
+      "
+    `);
+  });
+
+  it('Should parse date with first-occurrence delay (--)', () => {
+    const orgDoc = `<2004-12-25 Sat --2d>`;
+    const result = parse(orgDoc);
+
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    expect(result.toString()).toMatchInlineSnapshot(`
+      "root [0-21]
+        date [0-21]
+          operator [0-1] ("<")
+          text [1-20] ("2004-12-25 Sat --2d")
+          operator [20-21] (">")
+      "
+    `);
+  });
+
   it('Should parser date range with offset between text nodes', () => {
     const orgDoc = `This is *bold text with <2023-01-09 Mon>--<2023-01-10 Tue> date range*`;
     const result = parse(orgDoc);

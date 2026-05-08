@@ -208,9 +208,42 @@ export const linkTypes = [
 
 export type LinkType = (typeof linkTypes)[number] | 'image';
 
+export type RepeaterType = '+' | '++' | '.+' | '-' | '--';
+export type TimeUnit = 'h' | 'd' | 'w' | 'm' | 'y';
+
+export interface OrgRepeater {
+  type: RepeaterType;
+  value: number;
+  unit: TimeUnit;
+}
+
+export interface OrgDate {
+  date: string;
+  to?: string;
+  active: boolean;
+  hasTime: boolean;
+  repeater?: OrgRepeater;
+  warning?: OrgRepeater;
+  start: number;
+  end: number;
+}
+
+export interface ClockEntry {
+  date?: string;
+  to?: string;
+  start: number;
+  end: number;
+}
+
 export interface Heading {
   title: string;
   level: number;
+  start: number;
+  end: number;
+  scheduled?: OrgDate;
+  deadline?: OrgDate;
+  closed?: OrgDate;
+  clocks?: ClockEntry[];
 }
 
 export interface MetaInfo {
@@ -231,6 +264,8 @@ export interface MetaInfo {
     | undefined
     | boolean
     | Heading[]
+    | OrgDate
+    | ClockEntry[]
     | { [id: string]: string };
 }
 

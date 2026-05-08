@@ -67,15 +67,15 @@ And small list!
                 :unordered:
                 :level 0:
               listItem [115-124]
-                title [230-239]
-                  operator [230-232] ("- ")
-                  text [232-238] ("item 1")
-                  newLine [238-239]
+                title [115-124]
+                  operator [115-117] ("- ")
+                  text [117-123] ("item 1")
+                  newLine [123-124]
               listItem [124-133]
-                title [239-248]
-                  operator [239-241] ("- ")
-                  text [241-247] ("item 2")
-                  newLine [247-248]
+                title [124-133]
+                  operator [124-126] ("- ")
+                  text [126-132] ("item 2")
+                  newLine [132-133]
           blockFooter [133-144]
             keyword [133-144]
               text [133-144] ("#+END_QUOTE")

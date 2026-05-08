@@ -1,10 +1,17 @@
 import {
+  ClockEntry,
+  Heading,
   MetaInfo,
   NodeType,
   OrgChildrenList,
+  OrgDate,
   OrgNode,
+  OrgRepeater,
+  RepeaterType,
+  TimeUnit,
 } from '../models/index.js';
 import { walkTree } from './tree-walker.js';
+import { findNextSibling } from './find-next-sibling.js';
 
 export function collectFromKeywords(
   orgNode: OrgNode,
@@ -20,7 +27,10 @@ export function collectFromKeywords(
 
   const existingValue = metaInfo[normalizeKey(key)];
   if (existingValue && Array.isArray(existingValue) && Array.isArray(val)) {
-    metaInfo[normalizeKey(key)] = [...existingValue, ...val] as any;
+    metaInfo[normalizeKey(key)] = [
+      ...(existingValue as string[]),
+      ...(val as string[]),
+    ];
     return;
   }
   metaInfo[normalizeKey(key)] = val;
@@ -37,7 +47,7 @@ function normalizeKeywordValue(
 ): string | string[] | undefined | boolean {
   const handlers = {
     filetags: () => value.split(':').filter((v) => !!v.trim()),
-    published: () => !!eval(value.trim()),
+    published: () => value.trim().toLowerCase() === 'true',
   };
   const handler = handlers[key] ?? (() => value.trim());
   return handler();
@@ -86,11 +96,18 @@ export function collectHeadings(orgNode: OrgNode, metaInfo: MetaInfo): void {
     return;
   }
 
-  metaInfo.headings ??= [];
-  metaInfo.headings.push({
+  const heading: Heading = {
     level: orgNode.level,
     title: orgNode.title.cleanValue,
-  });
+    start: orgNode.start,
+    end: orgNode.end,
+  };
+
+  collectPlanningIntoHeading(orgNode, heading);
+  collectClocksIntoHeading(orgNode, heading);
+
+  metaInfo.headings ??= [];
+  metaInfo.headings.push(heading);
 }
 
 export function collectConnectedNotes(
@@ -115,9 +132,210 @@ export function collectConnectedNotes(
   metaInfo.connectedNotes[linkAddress.slice(3)] = linkName;
 }
 
-/*
- * Collect all available meta info
- */
+const PLANNING_KEYWORD_MAP: Record<
+  string,
+  keyof Pick<Heading, 'deadline' | 'scheduled' | 'closed'>
+> = {
+  'DEADLINE:': 'deadline',
+  'SCHEDULED:': 'scheduled',
+  'CLOSED:': 'closed',
+};
+
+function collectPlanningIntoHeading(headline: OrgNode, heading: Heading): void {
+  const planningNode = findDirectChild(headline.section, NodeType.Planning);
+  if (!planningNode) {
+    return;
+  }
+
+  planningNode.children.forEach((child) => {
+    if (child.isNot(NodeType.PlanningKeyword)) {
+      return;
+    }
+    const field = PLANNING_KEYWORD_MAP[child.value];
+    if (!field) {
+      return;
+    }
+    const dateNode = findNextSiblingDate(child);
+    if (!dateNode) {
+      return;
+    }
+    heading[field] = parseOrgDateNode(dateNode);
+  });
+}
+
+function findDirectChild(
+  node: OrgNode | undefined,
+  type: NodeType
+): OrgNode | null {
+  if (!node) {
+    return null;
+  }
+  return node.children.find((child) => child.is(type)) ?? null;
+}
+
+function findNextSiblingDate(node: OrgNode): OrgNode | null {
+  return findNextSibling(
+    node,
+    (n) => n.is(NodeType.Date, NodeType.DateRange),
+    (n) => n.is(NodeType.PlanningKeyword, NodeType.NewLine)
+  );
+}
+
+function collectClocksIntoHeading(headline: OrgNode, heading: Heading): void {
+  collectClocksFromNode(headline.section, heading);
+}
+
+function collectClocksFromNode(
+  node: OrgNode | undefined,
+  heading: Heading
+): void {
+  if (!node?.children) {
+    return;
+  }
+  node.children.forEach((child) => {
+    if (child.is(NodeType.Headline)) {
+      return;
+    }
+    if (child.is(NodeType.Clock)) {
+      heading.clocks ??= [];
+      heading.clocks.push(parseClockNode(child));
+      return;
+    }
+    collectClocksFromNode(child, heading);
+  });
+}
+
+function parseClockNode(clockNode: OrgNode): ClockEntry {
+  const dateNode = findDirectDateChild(clockNode);
+  if (!dateNode) {
+    return { start: clockNode.start, end: clockNode.end };
+  }
+
+  if (dateNode.is(NodeType.DateRange)) {
+    const startDate = dateNode.children.first;
+    const endDate = dateNode.children.last;
+    return {
+      date: extractIsoFromDateNode(startDate),
+      to: extractIsoFromDateNode(endDate),
+      start: clockNode.start,
+      end: clockNode.end,
+    };
+  }
+
+  return {
+    date: extractIsoFromDateNode(dateNode),
+    start: clockNode.start,
+    end: clockNode.end,
+  };
+}
+
+function findDirectDateChild(node: OrgNode): OrgNode | null {
+  return (
+    node.children.find((child) =>
+      child.is(NodeType.Date, NodeType.DateRange)
+    ) ?? null
+  );
+}
+
+function extractIsoFromDateNode(dateNode: OrgNode): string {
+  const textNode = dateNode.children.get(1);
+  return parseDateTextToIso(textNode?.value ?? '');
+}
+
+function parseOrgDateNode(dateNode: OrgNode): OrgDate {
+  if (dateNode.is(NodeType.DateRange)) {
+    const startDateNode = dateNode.children.first;
+    const endDateNode = dateNode.children.last;
+    const parsed = parseSingleDateNode(startDateNode);
+    return {
+      ...parsed,
+      to: extractIsoFromDateNode(endDateNode),
+      start: dateNode.start,
+      end: dateNode.end,
+    };
+  }
+
+  return {
+    ...parseSingleDateNode(dateNode),
+    start: dateNode.start,
+    end: dateNode.end,
+  };
+}
+
+function parseSingleDateNode(
+  dateNode: OrgNode
+): Omit<OrgDate, 'start' | 'end'> {
+  const operatorNode = dateNode.children.first;
+  const textNode = dateNode.children.get(1);
+  const rawText = textNode?.value ?? '';
+
+  const active = operatorNode?.value === '<';
+  const { isoDate, hasTime, repeater, warning } = parseDateText(rawText);
+
+  return {
+    date: isoDate,
+    active,
+    hasTime,
+    ...(repeater && { repeater }),
+    ...(warning && { warning }),
+  };
+}
+
+const DATE_TEXT_RE = /^(\d{4}-\d{2}-\d{2})\s+\w{3}(?:\s+(\d{2}:\d{2}))?(.*)$/;
+const REPEATER_RE = /(\+\+|\.\+|\+)(\d+)([hdwmy])/;
+const WARNING_RE = /(--?)(\d+)([hdwmy])/;
+
+function parseDateText(raw: string): {
+  isoDate: string;
+  hasTime: boolean;
+  repeater?: OrgRepeater;
+  warning?: OrgRepeater;
+} {
+  const match = DATE_TEXT_RE.exec(raw.trim());
+  if (!match) {
+    return { isoDate: raw.trim(), hasTime: false };
+  }
+
+  const [, datePart, timePart, rest] = match;
+  const hasTime = !!timePart;
+  const isoDate = timePart ? `${datePart}T${timePart}` : datePart;
+
+  return {
+    isoDate,
+    hasTime,
+    repeater: parseRepeater(rest),
+    warning: parseWarning(rest),
+  };
+}
+
+function parseDateTextToIso(raw: string): string {
+  return parseDateText(raw).isoDate;
+}
+
+function parseRepeater(rest: string): OrgRepeater | undefined {
+  const match = REPEATER_RE.exec(rest);
+  if (!match) {
+    return undefined;
+  }
+  return {
+    type: match[1] as RepeaterType,
+    value: parseInt(match[2], 10),
+    unit: match[3] as TimeUnit,
+  };
+}
+
+function parseWarning(rest: string): OrgRepeater | undefined {
+  const match = WARNING_RE.exec(rest);
+  if (!match) {
+    return undefined;
+  }
+  return {
+    type: match[1] as RepeaterType,
+    value: parseInt(match[2], 10),
+    unit: match[3] as TimeUnit,
+  };
+}
+
 export function withMetaInfo(orgNode: OrgNode): OrgNode {
   return withOptionalMetaInfo(
     orgNode,
@@ -130,9 +348,6 @@ export function withMetaInfo(orgNode: OrgNode): OrgNode {
   );
 }
 
-/*
- * Get info from top level nodes
- */
 export function withSuperficialInfo(orgNode: OrgNode): OrgNode {
   const stopCallback = (node: OrgNode) => {
     if (node.parent && node.parent.isNot(NodeType.Root)) {

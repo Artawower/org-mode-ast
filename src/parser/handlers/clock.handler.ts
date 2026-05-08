@@ -59,27 +59,59 @@ export class ClockHandler {
       return;
     }
 
-    const lineNodeSet = new Set(lineNodes);
-    const remainingChildren = [...parent.children].filter(
-      (n) => !lineNodeSet.has(n)
-    );
+    const allChildren = [...parent.children];
+    const clockStart = allChildren.indexOf(lineNodes[0]);
+    const before = allChildren.slice(0, clockStart);
+    const after = allChildren.slice(clockStart + lineNodes.length);
 
-    parent.removeChildren([...parent.children]);
+    parent.removeChildren(allChildren);
 
     const clockNode = new OrgNode({ type: NodeType.Clock });
     clockNode.addChildren(this.buildClockChildren(lineNodes));
-    parent.addChild(clockNode);
 
-    remainingChildren.forEach((child) => parent.addChild(child));
+    before.forEach((child) => parent.addChild(child));
+    parent.addChild(clockNode);
+    after.forEach((child) => parent.addChild(child));
+
     this.astBuilder.saveLastNode(clockNode.children?.last ?? clockNode);
   }
 
   private buildClockChildren(nodes: OrgNode[]): OrgNode[] {
-    return nodes.flatMap((node) =>
-      node.is(NodeType.Text) && CLOCK_DURATION_RE.test(node.value)
-        ? this.splitDurationNode(node)
-        : [node]
-    );
+    const durationStart = this.findDurationStartIndex(nodes);
+    if (durationStart === -1) {
+      return nodes;
+    }
+    const durationNodes = nodes.slice(durationStart);
+    const durationValue = durationNodes.map((n) => n.value ?? '').join('');
+    const mergedNode = new OrgNode({
+      type: NodeType.Text,
+      value: durationValue,
+      start: durationNodes[0].start,
+      end: durationNodes[durationNodes.length - 1].end,
+    });
+    return [
+      ...nodes.slice(0, durationStart),
+      ...this.splitDurationNode(mergedNode),
+    ];
+  }
+
+  private findDurationStartIndex(nodes: OrgNode[]): number {
+    const lastDateIndex = this.findLastDateNodeIndex(nodes);
+    if (lastDateIndex === -1) {
+      return -1;
+    }
+    const afterDateNodes = nodes.slice(lastDateIndex + 1);
+    const combined = afterDateNodes.map((n) => n.value ?? '').join('');
+    return CLOCK_DURATION_RE.test(combined) ? lastDateIndex + 1 : -1;
+  }
+
+  private findLastDateNodeIndex(nodes: OrgNode[]): number {
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      if (nodes[i].is(NodeType.Date, NodeType.DateRange)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private splitDurationNode(textNode: OrgNode): OrgNode[] {
