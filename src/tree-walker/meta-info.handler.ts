@@ -6,10 +6,8 @@ import {
   OrgChildrenList,
   OrgDate,
   OrgNode,
-  OrgRepeater,
-  RepeaterType,
-  TimeUnit,
 } from '../models/index.js';
+import { parseOrgTimestamp } from '../parser/timestamp/index.js';
 import { walkTree } from './tree-walker.js';
 import { findNextSibling } from './find-next-sibling.js';
 
@@ -237,9 +235,8 @@ function findDirectDateChild(node: OrgNode): OrgNode | null {
   );
 }
 
-function extractIsoFromDateNode(dateNode: OrgNode): string {
-  const textNode = dateNode.children.get(1);
-  return parseDateTextToIso(textNode?.value ?? '');
+function extractIsoFromDateNode(dateNode: OrgNode): string | undefined {
+  return parseOrgTimestamp(dateNode.rawValue)?.date;
 }
 
 function parseOrgDateNode(dateNode: OrgNode): OrgDate {
@@ -265,75 +262,8 @@ function parseOrgDateNode(dateNode: OrgNode): OrgDate {
 function parseSingleDateNode(
   dateNode: OrgNode
 ): Omit<OrgDate, 'start' | 'end'> {
-  const operatorNode = dateNode.children.first;
-  const textNode = dateNode.children.get(1);
-  const rawText = textNode?.value ?? '';
-
-  const active = operatorNode?.value === '<';
-  const { isoDate, hasTime, repeater, warning } = parseDateText(rawText);
-
-  return {
-    date: isoDate,
-    active,
-    hasTime,
-    ...(repeater && { repeater }),
-    ...(warning && { warning }),
-  };
-}
-
-const DATE_TEXT_RE = /^(\d{4}-\d{2}-\d{2})\s+\w{3}(?:\s+(\d{2}:\d{2}))?(.*)$/;
-const REPEATER_RE = /(\+\+|\.\+|\+)(\d+)([hdwmy])/;
-const WARNING_RE = /(--?)(\d+)([hdwmy])/;
-
-function parseDateText(raw: string): {
-  isoDate: string;
-  hasTime: boolean;
-  repeater?: OrgRepeater;
-  warning?: OrgRepeater;
-} {
-  const match = DATE_TEXT_RE.exec(raw.trim());
-  if (!match) {
-    return { isoDate: raw.trim(), hasTime: false };
-  }
-
-  const [, datePart, timePart, rest] = match;
-  const hasTime = !!timePart;
-  const isoDate = timePart ? `${datePart}T${timePart}` : datePart;
-
-  return {
-    isoDate,
-    hasTime,
-    repeater: parseRepeater(rest),
-    warning: parseWarning(rest),
-  };
-}
-
-function parseDateTextToIso(raw: string): string {
-  return parseDateText(raw).isoDate;
-}
-
-function parseRepeater(rest: string): OrgRepeater | undefined {
-  const match = REPEATER_RE.exec(rest);
-  if (!match) {
-    return undefined;
-  }
-  return {
-    type: match[1] as RepeaterType,
-    value: parseInt(match[2], 10),
-    unit: match[3] as TimeUnit,
-  };
-}
-
-function parseWarning(rest: string): OrgRepeater | undefined {
-  const match = WARNING_RE.exec(rest);
-  if (!match) {
-    return undefined;
-  }
-  return {
-    type: match[1] as RepeaterType,
-    value: parseInt(match[2], 10),
-    unit: match[3] as TimeUnit,
-  };
+  const parsed = parseOrgTimestamp(dateNode.rawValue);
+  return parsed ?? { date: '', active: false, hasTime: false };
 }
 
 export function withMetaInfo(orgNode: OrgNode): OrgNode {

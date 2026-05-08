@@ -256,7 +256,7 @@ describe('Date', () => {
             operator [0-1] ("<")
             text [1-15] ("2023-01-09 Mon")
             operator [15-16] (">")
-          text [16-18] ("--")
+          operator [16-18] ("--")
           date [18-43]
             operator [18-19] ("<")
             text [19-42] ("2023-01-10 Tue ++1w +1d")
@@ -277,7 +277,7 @@ describe('Date', () => {
             operator [0-1] ("<")
             text [1-15] ("2023-01-09 Mon")
             operator [15-16] (">")
-          text [16-18] ("--")
+          operator [16-18] ("--")
           date [18-34]
             operator [18-19] ("<")
             text [19-33] ("2023-01-10 Tue")
@@ -331,7 +331,7 @@ describe('Date', () => {
               operator [24-25] ("<")
               text [25-39] ("2023-01-09 Mon")
               operator [39-40] (">")
-            text [40-42] ("--")
+            operator [40-42] ("--")
             date [42-58]
               operator [42-43] ("<")
               text [43-57] ("2023-01-10 Tue")

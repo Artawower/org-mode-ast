@@ -273,7 +273,6 @@ export interface ParserConfiguration {
   todoKeywords?: string[];
   imgExtensions?: string[];
   httpLinkRegexp?: RegExp;
-  dateRegexp?: RegExp;
 }
 
 export type BlockPosition = 'begin' | 'end';

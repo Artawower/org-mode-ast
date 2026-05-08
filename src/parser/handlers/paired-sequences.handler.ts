@@ -8,6 +8,7 @@ import {
   linkTypes,
   TokenType,
 } from '../../models/index.js';
+import { isOrgTimestamp } from '../timestamp/index.js';
 import { AstBuilder } from '../ast-builder.js';
 import { TokenIterator } from '../../tokenizer/index.js';
 import { isNumber } from '../../tools/index.js';
@@ -414,6 +415,7 @@ export class PairedSequencesHandler implements OrgHandler {
     ) {
       return;
     }
+    dateDelimiterNode.type = NodeType.Operator;
     const dateRangeNode = this.astBuilder.createDateRangeNode();
     const parentNode = dateDelimiterNode.parent;
     const dateRangeChildren = parentNode.children.getNodesBetweenPairs(
@@ -430,9 +432,8 @@ export class PairedSequencesHandler implements OrgHandler {
     return node?.value === this.#dateRangeDelimiter;
   }
 
-  // TODO: extract date date property by groups
   private isDate(text: string): boolean {
-    return !!text?.match(this.configuration.dateRegexp);
+    return isOrgTimestamp(text);
   }
 
   private isOpenedBracket(bracketNode: OrgNode): boolean {

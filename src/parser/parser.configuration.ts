@@ -140,6 +140,4 @@ export const parserConfiguration: ParserConfiguration = {
   httpLinkRegexp:
     // eslint-disable-next-line no-useless-escape
     /^(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim,
-  dateRegexp:
-    /(<|\[)\d{4}-\d{2}-\d{2} (Mon|Tue|Wed|Thu|Fri|Sat|Sun)( \d{2}:\d{2})?( (\.\+|\+\+?|--?)\d+(h|m|y|d|w))*(>|\])$/,
 };

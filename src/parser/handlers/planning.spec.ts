@@ -238,7 +238,7 @@ SCHEDULED: <2026-05-01 Fri>--<2026-05-10 Mon>`;
                   operator [23-24] ("<")
                   text [24-38] ("2026-05-01 Fri")
                   operator [38-39] (">")
-                text [39-41] ("--")
+                operator [39-41] ("--")
                 date [41-57]
                   operator [41-42] ("<")
                   text [42-56] ("2026-05-10 Mon")
