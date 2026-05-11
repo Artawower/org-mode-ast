@@ -18,10 +18,7 @@ export class AstBuilder {
     return this.#nodeTree;
   }
 
-  constructor(
-    private ctx: AstContext,
-    private tokenIterator: TokenIterator
-  ) {
+  constructor(private ctx: AstContext, private tokenIterator: TokenIterator) {
     this.initRootNode();
   }
 
@@ -54,7 +51,6 @@ export class AstBuilder {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private isNotListIndentInsideSection(
     srcNode: OrgNode,
     _dstNode: OrgNode
