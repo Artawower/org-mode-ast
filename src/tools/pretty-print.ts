@@ -1,13 +1,19 @@
 import { NodeType, OrgNode } from '../models/index.js';
 
-function prettifyArrayValue(indent: string, key: string, value: any): string {
+type HeadingMeta = { level: number; title: string };
+
+function prettifyArrayValue(
+  indent: string,
+  key: string,
+  value: unknown[]
+): string {
   if (key === 'headings') {
-    return value.reduce((acc, v) => {
+    return (value as HeadingMeta[]).reduce((acc, v) => {
       acc += `${indent}${' '.repeat(v.level * 2)}${v.title}\n`;
       return acc;
     }, '\n');
   }
-  return value.join(',');
+  return (value as string[]).join(',');
 }
 
 /**
@@ -44,7 +50,7 @@ export function prettyTreePrint(data: OrgNode, level = 0): string {
   if (data.meta) {
     result += Object.keys(data.meta).reduce<string>((acc, k) => {
       const value = Array.isArray(data.meta[k])
-        ? prettifyArrayValue(indent + '    ', k, data.meta[k])
+        ? prettifyArrayValue(indent + '    ', k, data.meta[k] as unknown[])
         : data.meta[k];
 
       if (k === 'headings') {

@@ -1,10 +1,8 @@
 import { OrgNode } from './org-node';
 import { NodeType } from './types';
-import { AstBuilder, parse } from '../parser/index';
+import { parse } from '../parser/index';
 
 describe('Org node', () => {
-  const astBuilder = new AstBuilder({} as any, {} as any);
-
   it('Should correct add child, recalculate length', () => {
     const parentOrgNode = new OrgNode({
       type: NodeType.Root,
@@ -1041,11 +1039,10 @@ There is no native way to automatically synchronize Kitty terminal theme with th
 
   it('Should return raw value from latex export block', () => {
     const doc = `#+BEGIN_EXPORT latex
-\LaTeX
+LaTeX
 #+END_EXPORT`;
 
     const parsed = parse(doc);
-    console.log('✎: [line 1048][org-node.spec.ts] parsed: ', parsed);
     expect(
       parsed.children.get(0).children.get(2).rawValue
     ).toMatchInlineSnapshot(`"LaTeX"`);

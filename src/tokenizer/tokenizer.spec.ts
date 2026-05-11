@@ -1830,6 +1830,7 @@ text`;
     ]);
   });
 
+  /* eslint-disable no-irregular-whitespace */
   it('Should tokenize title with nobreak space.. ->  ', () => {
     const orgDoc = `#+TITLE: hello`;
 
@@ -1850,6 +1851,7 @@ text`;
     ]);
   });
 
+  /* eslint-enable no-irregular-whitespace */
   it('Should tokenize table delimiter', () => {
     const orgDoc = `| 1 | 2 |
 |---+---|

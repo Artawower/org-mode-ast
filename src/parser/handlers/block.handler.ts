@@ -124,7 +124,7 @@ export class BlockHandler implements OrgHandler {
     const nestedBlocks = new OrgChildrenList();
     const buffer = new OrgChildrenList();
 
-    blockNodes.forEach((node, _, last) => {
+    blockNodes.forEach((node, _index, _last) => {
       const isHeaderInit =
         !nestedBlocks.first?.is(NodeType.BlockHeader) &&
         node.is(NodeType.NewLine);

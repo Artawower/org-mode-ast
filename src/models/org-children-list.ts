@@ -142,7 +142,7 @@ export class OrgChildrenList implements Iterable<OrgNode> {
     }
   }
 
-  [customInspectSymbol](depth, inspectOptions, inspect) {
+  [customInspectSymbol](_depth, _inspectOptions, _inspect) {
     if (!this.length) {
       return '[]';
     }
