@@ -1,0 +1,81 @@
+name: Publish to NPM
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [master]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Check if should publish
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          RELEASE=$(gh release view "$VERSION" --json tagName 2>/dev/null || echo "")
+          if [ -z "$RELEASE" ]; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "No GitHub release for $VERSION, skipping"
+            exit 0
+          fi
+          if npm view "org-mode-ast@$VERSION" version >/dev/null 2>&1; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "Version $VERSION already on npm, skipping"
+            exit 0
+          fi
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          echo "Will publish $VERSION"
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.should_publish == 'true'
+        with:
+          node-version: '24'
+
+      - uses: oven-sh/setup-bun@v2
+        if: steps.check.outputs.should_publish == 'true'
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        if: steps.check.outputs.should_publish == 'true'
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        if: steps.check.outputs.should_publish == 'true'
+        run: bun run build
+
+      - name: Verify no auth tokens present
+        if: steps.check.outputs.should_publish == 'true'
+        run: |
+          if [ -n "${NODE_AUTH_TOKEN:-}" ] || [ -n "${NPM_TOKEN:-}" ]; then
+            echo "Unexpected npm token present; remove NODE_AUTH_TOKEN/NPM_TOKEN."
+            exit 1
+          fi
+          TOKEN_VALUE="$(npm config get _authToken 2>/dev/null || true)"
+          if [ -n "$TOKEN_VALUE" ] && [ "$TOKEN_VALUE" != "undefined" ] && [ "$TOKEN_VALUE" != "null" ]; then
+            echo "Unexpected npmrc auth token present."
+            exit 1
+          fi
+
+      - name: Publish to npm
+        if: steps.check.outputs.should_publish == 'true'
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/npmrc
+          NPM_CONFIG_GLOBALCONFIG: ${{ runner.temp }}/npmrc-global
+        run: |
+          : > "$NPM_CONFIG_USERCONFIG"
+          : > "$NPM_CONFIG_GLOBALCONFIG"
+          env -u NODE_AUTH_TOKEN -u NPM_TOKEN npm publish --provenance --access public --registry https://registry.npmjs.org
