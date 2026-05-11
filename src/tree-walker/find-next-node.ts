@@ -1,5 +1,5 @@
 import { OrgNode } from 'models';
-import { walkTree } from './tree-walker';
+import { walkTree } from './tree-walker.js';
 
 // TODO: master test it
 export function findNextNode(

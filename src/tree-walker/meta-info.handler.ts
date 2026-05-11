@@ -168,7 +168,7 @@ function findDirectChild(
   if (!node) {
     return null;
   }
-  return node.children.find((child) => child.is(type)) ?? null;
+  return node.children?.find((child) => child.is(type)) ?? null;
 }
 
 function findNextSiblingDate(node: OrgNode): OrgNode | null {

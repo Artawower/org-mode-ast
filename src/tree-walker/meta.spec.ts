@@ -502,6 +502,16 @@ content`;
     expect(child.deadline.date).toBe('2026-05-10');
   });
 
+  it('should not crash when adjacent same-level headlines have no body content', () => {
+    const orgDoc = `* Heading 1
+* Heading 2`;
+    expect(() => withMetaInfo(parse(orgDoc))).not.toThrow();
+    const result = withMetaInfo(parse(orgDoc));
+    expect(result.meta.headings).toHaveLength(2);
+    expect(result.meta.headings[0].deadline).toBeUndefined();
+    expect(result.meta.headings[1].deadline).toBeUndefined();
+  });
+
   it('Should parse meta info id with many spaces', () => {
     const orgDoc = `:PROPERTIES:
 :ID:       c9eda354-3eb2-472c-818c-7167158be782
