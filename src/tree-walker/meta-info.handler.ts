@@ -89,6 +89,37 @@ export function collectImages(orgNode: OrgNode, metaInfo: MetaInfo): void {
   metaInfo.images.push(orgNode.children.get(1).children.get(1).value);
 }
 
+function getTitleChildren(node: OrgNode): OrgNode[] {
+  return node.title?.childrenList ?? [];
+}
+
+function findTitleChild(node: OrgNode, type: NodeType): OrgNode | undefined {
+  return getTitleChildren(node).find((child) => child.is(type));
+}
+
+function collectHeadingPriority(orgNode: OrgNode): string | undefined {
+  const priorityNode = findTitleChild(orgNode, NodeType.Priority);
+  if (!priorityNode) return undefined;
+  const textChild = priorityNode.childrenList.find((c) => c.is(NodeType.Text));
+  return textChild?.value?.replace('#', '') || undefined;
+}
+
+function collectHeadingTags(orgNode: OrgNode): string[] | undefined {
+  const tagListNode = findTitleChild(orgNode, NodeType.TagList);
+  if (!tagListNode) return undefined;
+  const tags = tagListNode.childrenList
+    .filter((c) => c.is(NodeType.Text))
+    .map((c) => c.value ?? '')
+    .filter(Boolean);
+  return tags.length > 0 ? tags : undefined;
+}
+
+function collectHeadingTodoKeyword(orgNode: OrgNode): string | undefined {
+  return (
+    findTitleChild(orgNode, NodeType.TodoKeyword)?.value?.trim() || undefined
+  );
+}
+
 export function collectHeadings(orgNode: OrgNode, metaInfo: MetaInfo): void {
   if (orgNode.isNot(NodeType.Headline)) {
     return;
@@ -99,6 +130,9 @@ export function collectHeadings(orgNode: OrgNode, metaInfo: MetaInfo): void {
     title: orgNode.title.cleanValue,
     start: orgNode.start,
     end: orgNode.end,
+    priority: collectHeadingPriority(orgNode),
+    tags: collectHeadingTags(orgNode),
+    todoKeyword: collectHeadingTodoKeyword(orgNode),
   };
 
   collectPlanningIntoHeading(orgNode, heading);

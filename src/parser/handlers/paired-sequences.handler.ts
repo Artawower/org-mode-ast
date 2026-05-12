@@ -338,33 +338,46 @@ export class PairedSequencesHandler implements OrgHandler {
     }
   }
 
+  private findPreviousMeaningfulNode(node?: OrgNode): OrgNode | undefined {
+    let current = node?.prev;
+    while (current?.is(NodeType.Text) && current.value?.trim() === '') {
+      current = current.prev;
+    }
+    return current;
+  }
+
   private handlePriorityBrackets(bracketedNodes: OrgChildrenList): OrgNode {
-    // TODO: master check if priority inside headline and there no was previous priority
     const isInsideHeadline = bracketedNodes.first?.parent?.parent?.is(
       NodeType.Headline
     );
-    const isPreviousNodeOperator = bracketedNodes.first?.prev?.is(
-      NodeType.Operator
-    );
-
-    if (
-      bracketedNodes.length !== 3 ||
-      !isInsideHeadline ||
-      !isPreviousNodeOperator
-    ) {
+    if (bracketedNodes.length !== 3 || !isInsideHeadline) {
       return;
     }
+
+    const prevMeaningful = this.findPreviousMeaningfulNode(
+      bracketedNodes.first
+    );
+    const isValidContext =
+      prevMeaningful?.is(NodeType.Operator) ||
+      prevMeaningful?.is(NodeType.TodoKeyword);
+
+    if (!isValidContext) {
+      return;
+    }
+
     const isOpenedPriorityBracket = bracketedNodes.first.value === '[';
     const isClosedPriorityBracket = bracketedNodes.last.value === ']';
     const priorityValue = bracketedNodes.get(1).value;
     const isPriorityValue = this.#priorityValueRegexp.test(priorityValue);
 
-    const isPriorityBrackets =
-      isOpenedPriorityBracket && isClosedPriorityBracket && isPriorityValue;
-
-    if (!isPriorityBrackets) {
+    if (
+      !isOpenedPriorityBracket ||
+      !isClosedPriorityBracket ||
+      !isPriorityValue
+    ) {
       return;
     }
+
     return this.astBuilder.createPriorityNode();
   }
 

@@ -240,6 +240,9 @@ export interface Heading {
   level: number;
   start: number;
   end: number;
+  priority?: string;
+  tags?: string[];
+  todoKeyword?: string;
   scheduled?: OrgDate;
   deadline?: OrgDate;
   closed?: OrgDate;

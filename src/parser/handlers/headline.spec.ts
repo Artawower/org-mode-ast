@@ -376,4 +376,17 @@ Some text, with punctuation and so one
       "
     `);
   });
+
+  it('Should parse priority after todo keyword', () => {
+    const orgDoc = `* TODO [#A] Task`;
+    const result = parse(orgDoc);
+    expect(hasNodeIncorrectRanges(result, orgDoc)).toBeFalsy();
+    const priorityNode = result.childrenList[0]?.title?.childrenList?.find(
+      (n) => n.type === 'priority'
+    );
+    expect(priorityNode).toBeDefined();
+    expect(
+      priorityNode?.childrenList?.find((n) => n.type === 'text')?.value
+    ).toBe('#A');
+  });
 });
