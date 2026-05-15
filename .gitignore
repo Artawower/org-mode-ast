@@ -107,3 +107,12 @@ dist
 
 
 dist/*
+
+# AI
+.aider*
+.serena
+plans/review
+node-compile-cache/
+.pi
+.pi-lens
+.playwright-mcp
