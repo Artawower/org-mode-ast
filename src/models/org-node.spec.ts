@@ -1037,6 +1037,32 @@ There is no native way to automatically synchronize Kitty terminal theme with th
     `);
   });
 
+  describe('setLevel', () => {
+    it('should update the level field', () => {
+      const root = parse('** Test headline\n');
+      const headline = root.childrenList.find((n) => n.is(NodeType.Headline))!;
+      headline.setLevel(3);
+      expect(headline.level).toBe(3);
+    });
+
+    it('should update the operator text', () => {
+      const root = parse('** Test headline\n');
+      const headline = root.childrenList.find((n) => n.is(NodeType.Headline))!;
+      headline.setLevel(3);
+      const operator = headline.title?.childrenList.find((n) =>
+        n.is(NodeType.Operator)
+      );
+      expect(operator?.value).toBe('*** ');
+    });
+
+    it('should throw when the headline has no operator node', () => {
+      const node = new OrgNode({ type: NodeType.Headline });
+      expect(() => node.setLevel(2)).toThrow(
+        'OrgNode.setLevel: headline has no operator node'
+      );
+    });
+  });
+
   it('Should return raw value from latex export block', () => {
     const doc = `#+BEGIN_EXPORT latex
 LaTeX

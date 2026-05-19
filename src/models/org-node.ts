@@ -405,6 +405,16 @@ export class OrgNode {
     this.recalculatePositionsForNeighbors(value.length);
   }
 
+  public setLevel(level: number): void {
+    const operator = this.title?.childrenList.find((n) =>
+      n.is(NodeType.Operator)
+    );
+    if (!operator)
+      throw new Error('OrgNode.setLevel: headline has no operator node');
+    operator.setValue('*'.repeat(level) + ' ');
+    this._level = level;
+  }
+
   public prependValue(value: string): void {
     this.value = value + this.value;
     this.end += value.length;
